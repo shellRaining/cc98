@@ -8,7 +8,7 @@
 
 ## 提交
 
-使用 Conventional Commits，格式 `<type>(<scope>): <summary>`。type 必填，scope 可选。摘要用祈使语气，英文，小写开头，不加句号。
+使用 Conventional Commits，格式 `<type>(<scope>): <摘要>`。type 必填（英文小写），scope 可选，摘要正文用中文，不加句号。
 
 type 清单：
 
@@ -23,7 +23,7 @@ type 清单：
 - `ci`：CI 配置
 - `revert`：回滚
 
-例：`feat(auth): add oidc token refresh`、`docs: update tech stack adr`、`fix(router): handle topic page anchor`。
+例：`feat(auth): 加入 OIDC token 刷新`、`docs: 更新技术选型 ADR`、`fix(router): 修复帖子页锚点跳转`。
 
 复杂改动追加正文，空行分隔，说做了什么和为什么，不必贴实现过程。
 

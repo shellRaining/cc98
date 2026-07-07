@@ -44,6 +44,7 @@ packages/ubb              UBB 渲染器（只读）+ UBB→Markdown 转换器
 
 ## 核心约束
 
+- 项目语言用中文：commit message、文档、用户可见文案、代码注释一律中文（type 前缀如 `feat:` 是英文，摘要正文中文）
 - 边界处 parse data shapes：用 Zod，schema 在 `apps/website/src/api/schemas.ts`
 - HTTP 一律走 `apps/website/src/lib/http.ts` 的 `apiFetch`（ofetch 实例），不在组件里直接 fetch
 - 服务端状态走 vue-query（query key 集中在 `api/queries.ts`），客户端状态走 Pinia，不混用
