@@ -8,8 +8,36 @@
     "build": "tsc && vp build",
     "preview": "vp preview"
   },
+  "dependencies": {
+    "@microsoft/signalr": "catalog:",
+    "@tanstack/vue-query": "catalog:",
+    "@vueuse/core": "catalog:",
+    "@vueuse/integrations": "catalog:",
+    "aplayer": "catalog:",
+    "clsx": "catalog:",
+    "dayjs": "catalog:",
+    "dplayer": "catalog:",
+    "hls.js": "catalog:",
+    "katex": "catalog:",
+    "markdown-it": "catalog:",
+    "md-editor-v3": "catalog:",
+    "nanoid": "catalog:",
+    "ofetch": "catalog:",
+    "pinia": "catalog:",
+    "pinia-plugin-persistedstate": "catalog:",
+    "reka-ui": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:",
+    "vue-virtual-scroller": "catalog:",
+    "zod": "catalog:"
+  },
   "devDependencies": {
+    "@types/markdown-it": "catalog:",
+    "@unocss/preset-attributify": "catalog:",
+    "@unocss/preset-typography": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
     "typescript": "~6.0.2",
+    "unocss": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   }

@@ -1,0 +1,55 @@
+:root {
+  --cc98-color-primary: #2f5fd6;
+  --cc98-color-accent: #d64545;
+  --cc98-color-text: #1a1a1a;
+  --cc98-color-text-muted: #6b7280;
+  --cc98-color-bg: #ffffff;
+  --cc98-color-bg-elevated: #f9fafb;
+  --cc98-color-border: #e5e7eb;
+}
+
+:root[data-theme="dark"] {
+  --cc98-color-primary: #7aa2ff;
+  --cc98-color-accent: #ff7a7a;
+  --cc98-color-text: #f3f4f6;
+  --cc98-color-text-muted: #9ca3af;
+  --cc98-color-bg: #111418;
+  --cc98-color-bg-elevated: #1c1f26;
+  --cc98-color-border: #2a2e37;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--cc98-color-bg);
+  color: var(--cc98-color-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--cc98-color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--cc98-color-accent);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
