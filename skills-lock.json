@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "read": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "skillPath": "skills/read/SKILL.md",
+      "computedHash": "94851b6aab87875881b5e710de2b85fbdae36de16a51d62d94a0feaef05c803b"
+    },
+    "write": {
+      "source": "tw93/Waza",
+      "sourceType": "github",
+      "skillPath": "skills/write/SKILL.md",
+      "computedHash": "6b53c660dd27698f1eea22b1e14eee9e2623acfb66b1f91f184bf32d0c70b1c4"
+    }
+  }
+}
