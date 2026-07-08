@@ -2,15 +2,7 @@ export const UBB_VERSION = "0.0.0";
 
 export type { UbbNode, UbbTextNode, UbbTagNode, UbbAttrs } from "./types.ts";
 
-/**
- * 把 UBB 文本解析成 AST。
- *
- * 尚未实现，当前为 TDD 红阶段占位。
- * 实现见 docs/exec-plans/2026-07-08-ubb-migration.md 阶段 1。
- */
-export function parseUbb(_src: string): import("./types.ts").UbbNode[] {
-  throw new Error("parseUbb 尚未实现");
-}
+export { parseUbb } from "./parser.ts";
 
 export type UbbRenderOptions = {
   allowImage: boolean;
