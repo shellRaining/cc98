@@ -7,7 +7,7 @@
 ```
 apps/website              面向用户的 Web 应用（Vue 3.6 SPA）
 packages/utils            可复用 TypeScript 工具
-packages/ubb              UBB 渲染器（只读）+ UBB→Markdown 转换器
+packages/ubb              UBB 解析器（parseUbb）+ HTML/Markdown 双导出器
 ```
 
 ## 分层与依赖方向
