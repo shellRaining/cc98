@@ -4,6 +4,7 @@ export type { UbbNode, UbbTextNode, UbbTagNode, UbbAttrs } from "./types.ts";
 
 export { parseUbb } from "./parser.ts";
 export { ubbToMarkdown } from "./to-markdown.ts";
+export { ubbToHtml } from "./to-html.ts";
 
 export type UbbRenderOptions = {
   allowImage: boolean;
