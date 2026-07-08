@@ -232,17 +232,21 @@ function forceClose(segment: Seg, newParent: TagSeg): void {
     return;
   }
 
-  // 未关闭的 autoclose 标签：保留为标签节点
+  // 未关闭的 autoclose 标签：保留为空标签节点，子段提升到 newParent 作为兄弟
   if (segment.tag !== null && segment.mode === "autoclose") {
-    segment.parent = newParent;
-    segment.closed = true;
-    // 子段在标签下 forceClose（保留层级）
-    const subs = segment.children;
-    segment.children = [];
-    for (const sub of subs) {
-      forceClose(sub, segment);
+    const autocloseTag: TagSeg = {
+      kind: "tag",
+      tag: segment.tag,
+      mode: segment.mode,
+      children: [],
+      closed: true,
+      parent: newParent,
+    };
+    newParent.children.push(autocloseTag);
+    // 子段提升到 newParent（与 autocloseTag 同级）
+    for (const sub of segment.children) {
+      forceClose(sub, newParent);
     }
-    newParent.children.push(segment);
     return;
   }
 
