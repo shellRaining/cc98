@@ -1,8 +1,10 @@
 import { ofetch, type FetchOptions, type $Fetch } from "ofetch";
+import { createLogger } from "./logger";
 
 const BASE_URL = "https://api-v2.cc98.org";
 
 const TOKEN_STORAGE_KEY = "cc98:auth-token";
+const httpLogger = createLogger("http");
 
 interface StoredToken {
   accessToken: string;
@@ -32,6 +34,18 @@ export const authState = {
   save: saveToken,
 };
 
+function describeRequest(request: RequestInfo | URL): string {
+  if (typeof request === "string") {
+    return request;
+  }
+
+  if (request instanceof URL) {
+    return request.toString();
+  }
+
+  return request.url;
+}
+
 export const apiFetch = ofetch.create({
   baseURL: BASE_URL,
   retry: 1,
@@ -44,7 +58,8 @@ export const apiFetch = ofetch.create({
       options.headers = headers;
     }
   },
-  onResponseError({ response }) {
+  onResponseError({ request, response }) {
+    httpLogger.warn({ request: describeRequest(request), status: response.status }, "API 请求失败");
     if (response.status === 401) {
       saveToken(null);
     }

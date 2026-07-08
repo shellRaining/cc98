@@ -25,6 +25,7 @@
     "ofetch": "catalog:",
     "pinia": "catalog:",
     "pinia-plugin-persistedstate": "catalog:",
+    "pino": "catalog:",
     "reka-ui": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:",

@@ -37,6 +37,7 @@ catalog:
   dayjs: 1.11.21
   nanoid: 5.1.16
   clsx: 2.1.1
+  pino: 10.3.1
 overrides:
   vite: "catalog:"
   vitest: "catalog:"

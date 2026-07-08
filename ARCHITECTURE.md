@@ -27,6 +27,10 @@ packages/*    → 外部依赖
 
 横切关注点（auth / telemetry / feature flags 等）走单一显式入口接入，引入时在本文档登记。
 
+已登记入口：
+
+- 日志：`apps/website/src/lib/logger.ts`。当前基于 pino browser 输出到浏览器 console；后续远端上报、脱敏、采样等能力都在该入口扩展。
+
 ## apps/website 内部分层
 
 ```
