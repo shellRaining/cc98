@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { authState } from "../lib/http";
+import { loginWithPassword, clearAuth, hasValidAuth, onAuthLost } from "../lib/auth";
+import { typedGet } from "../lib/http";
+import { meUserSchema } from "../api/schemas";
 
 export interface AuthUser {
   id: number;
   name: string;
   avatarUrl: string | null;
-  permission: string[];
+  privilege: string;
 }
 
 const USER_STORAGE_KEY = "cc98:user";
@@ -20,39 +22,89 @@ function loadUser(): AuthUser | null {
   }
 }
 
-export const useUserStore = defineStore(
-  "user",
-  () => {
-    const user = ref<AuthUser | null>(loadUser());
-    const hasToken = ref<boolean>(authState.load() !== null);
+function persistUser(user: AuthUser | null): void {
+  try {
+    if (user) {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(USER_STORAGE_KEY);
+    }
+  } catch {
+    // 存储不可用时静默降级
+  }
+}
 
-    const isLoggedIn = computed(() => hasToken.value && user.value !== null);
+function pickAvatar(me: { portraitUrl?: string | null; photourl?: string | null }): string | null {
+  return me.portraitUrl ?? me.photourl ?? null;
+}
 
-    function setUser(next: AuthUser | null) {
-      user.value = next;
-      if (next) {
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(next));
-      } else {
-        localStorage.removeItem(USER_STORAGE_KEY);
-      }
+export class AccountLockedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AccountLockedError";
+  }
+}
+
+export class LoginError extends Error {
+  readonly status?: number;
+  constructor(message: string, status?: number) {
+    super(message);
+    this.name = "LoginError";
+    this.status = status;
+  }
+}
+
+export const useUserStore = defineStore("user", () => {
+  const user = ref<AuthUser | null>(loadUser());
+  const hasToken = ref<boolean>(hasValidAuth());
+
+  const isLoggedIn = computed(() => hasToken.value && user.value !== null);
+
+  onAuthLost(() => {
+    hasToken.value = false;
+    user.value = null;
+    persistUser(null);
+  });
+
+  function setUser(next: AuthUser | null) {
+    user.value = next;
+    persistUser(next);
+  }
+
+  async function login(username: string, password: string): Promise<void> {
+    try {
+      await loginWithPassword(username, password);
+    } catch {
+      throw new LoginError("登录失败，请检查用户名和密码");
+    }
+    hasToken.value = true;
+
+    const raw = await typedGet<unknown>("/me");
+    const me = meUserSchema.parse(raw);
+
+    if (me.lockState === 1 || me.lockState === 2) {
+      logout();
+      throw new AccountLockedError("账号已锁定");
     }
 
-    function setAuthed(next: AuthUser) {
-      hasToken.value = true;
-      setUser(next);
-    }
+    setUser({
+      id: me.id,
+      name: me.name,
+      avatarUrl: pickAvatar(me),
+      privilege: me.privilege ?? "",
+    });
+  }
 
-    function logout() {
-      authState.save(null);
-      hasToken.value = false;
-      setUser(null);
+  function logout(): void {
+    clearAuth();
+    hasToken.value = false;
+    setUser(null);
+    try {
+      sessionStorage.clear();
+    } catch {
+      // 无 sessionStorage 环境静默
     }
+  }
 
-    return { user, hasToken, isLoggedIn, setUser, setAuthed, logout };
-  },
-  {
-    persist: {
-      pick: ["hasToken"],
-    },
-  },
-);
+  return { user, hasToken, isLoggedIn, setUser, login, logout };
+});

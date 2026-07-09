@@ -1,6 +1,12 @@
 import { queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../lib/http";
-import { boardGroupSchema, globalConfigSchema, postSchema, topicSchema } from "./schemas";
+import {
+  boardGroupSchema,
+  globalConfigSchema,
+  meUserSchema,
+  postSchema,
+  topicSchema,
+} from "./schemas";
 
 export const queryKeys = {
   boards: ["boards"] as const,
@@ -11,6 +17,7 @@ export const queryKeys = {
   topicPosts: (topicId: number, from: number, size: number) =>
     ["topic", topicId, "posts", from, size] as const,
   globalConfig: ["global-config"] as const,
+  currentUser: ["current-user"] as const,
 };
 
 export const boardsQuery = queryOptions({
@@ -27,6 +34,15 @@ export const globalConfigQuery = queryOptions({
   queryFn: async () => {
     const data = await typedGet<unknown>("/config/global");
     return globalConfigSchema.parse(data);
+  },
+  staleTime: 5 * 60 * 1000,
+});
+
+export const currentUserQuery = queryOptions({
+  queryKey: queryKeys.currentUser,
+  queryFn: async () => {
+    const data = await typedGet<unknown>("/me");
+    return meUserSchema.parse(data);
   },
   staleTime: 5 * 60 * 1000,
 });

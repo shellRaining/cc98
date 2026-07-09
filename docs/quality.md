@@ -2,38 +2,36 @@
 
 提交前必须通过的门槛。
 
-## 强制命令
+## 提交门槛
 
+```bash
+vp run ready # 等价于 vp check（format + lint + typecheck）+ vp run -r test + vp run -r build。任一失败就不能提交。
 ```
-vp run ready
-```
 
-等价于 `vp check`（format + lint + typecheck）+ `vp run -r test` + `vp run -r build`。任一失败就不能提交。
-
-pre-commit 钩子（`.vite-hooks/pre-commit`）跑 `vp staged` 处理暂存区。
-
-## Lint 与 Format
-
-经 vite-plus 调用 oxlint（type-aware）和 oxfmt，配置在 `vite.config.ts` 的 `lint` 段，违反规则会阻断提交。
-
-新增自定义规则时，把修复指引直接写进报错信息里。
-
-## 类型
-
-TypeScript strict。`module: esnext`，`moduleResolution: bundler`，`noEmit`，`verbatimModuleSyntax`，`erasableSyntaxOnly`。
-
-`.vue` 文件经 `vue-shims.d.ts` 声明模块，否则 tsc 报 TS2307。
+pre-commit 钩子（`.vite-hooks/pre-commit`）跑 `vp staged` 处理暂存区，对暂存区文件跑 format + lint + typecheck 的增量检查
 
 ## 测试
 
-Vitest。`packages/*` 必须有测试（见 `packages/utils/tests/`）。`apps/*` 按需。
+项目使用 Vitest 框架进行测试
+
+### TDD 测试
 
 如果需要进行 TDD 测试，有以下几项规定：
 
-1. 禁止主 agent 直接去写测试，禁止主 agent 同时编写测试和实现代码。应让另一个 agent（比方说派遣一个子 agent）去编写测试代码，然后由主 agent 进行实现。
+1. 禁止主 agent 同时编写测试和实现代码。应让另一个 agent（比方说派遣一个子 agent）去编写测试代码，然后由主 agent 进行实现。
 2. 禁止为了通过测试而直接修改测试代码。如果确实需要修改测试代码，必须向开发者讲清原因。
+3. 禁止编写显而易见的测试代码。值得测的是有分支、有状态、有边界的逻辑，比方说懒刷新的并发去重等。TDD 适合内部逻辑复杂、外部可观察的任务
 
-## 结构约束
+### 端到端验证
+
+需要用浏览器实际登录、点击、验证接口可达性时，先复用已在运行的 dev server，不要重复启动。
+
+- 先探测默认端口 5173 是否在运行：`lsof -i :5173` 或 `curl -s -o /dev/null -w "%{http_code}" localhost:5173`。
+- 已在运行就直接用（`http://localhost:5173`），不要新起实例。
+- 仅当确认未运行时才 `vp run dev`，并记下实际端口（可能因占用自动换成 5174 等）。
+- 验证完毕若自己启动了 server，负责关闭它，不留后台进程。
+
+## 代码质量约束
 
 - 公共 API 必须有类型导出（`export type` / `export interface`）
 - API 响应一律经 Zod schema parse（`api/schemas.ts`），不裸用 `any`

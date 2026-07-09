@@ -4,22 +4,8 @@
 
 - 无头组件：Reka UI（不带 shadcn-vue，样式自写）
 - 原子 CSS：UnoCSS（preset-uno + preset-attributify + preset-typography）
-- 设计 token：CSS 变量驱动，定义在 `apps/website/src/styles/global.css`
+- 设计准则：CSS 变量驱动，定义在 `apps/website/src/styles/global.css`
 - UnoCSS theme 把语义 class 映射到 CSS 变量（`apps/website/uno.config.ts`）
-
-## 设计 token
-
-色板（CSS 变量，light/dark 双套）：
-
-- `--cc98-color-primary` 主色（链接、主按钮）
-- `--cc98-color-accent` 强调色（hover、危险操作）
-- `--cc98-color-text` 正文
-- `--cc98-color-text-muted` 次要文本
-- `--cc98-color-bg` 页面背景
-- `--cc98-color-bg-elevated` 卡片/头部/底部背景
-- `--cc98-color-border` 分隔线、边框
-
-UnoCSS 映射：`text-cc98-primary` → `var(--cc98-color-primary)`，以此类推。组件里用语义 class，不硬编码颜色值。
 
 ## 间距与字体
 

@@ -101,3 +101,18 @@ export const globalConfigSchema = z.object({
 });
 
 export type GlobalConfig = z.infer<typeof globalConfigSchema>;
+
+export const lockStateSchema = z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]);
+
+export const meUserSchema = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    portraitUrl: z.string().nullable(),
+    photourl: z.string().nullable().optional(),
+    lockState: lockStateSchema,
+    privilege: z.string(),
+  })
+  .passthrough();
+
+export type MeUser = z.infer<typeof meUserSchema>;

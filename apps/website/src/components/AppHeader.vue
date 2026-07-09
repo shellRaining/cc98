@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 import { useThemeStore } from "../stores/theme";
 
 const user = useUserStore();
 const theme = useThemeStore();
+const router = useRouter();
+
+function goLogin() {
+  localStorage.setItem("logOnRedirectUrl", router.currentRoute.value.fullPath);
+  router.push({ name: "logon" });
+}
 </script>
 
 <template>
@@ -33,7 +39,7 @@ const theme = useThemeStore();
           </span>
           <button type="button" class="text-sm cc98-link" @click="user.logout()">退出</button>
         </template>
-        <RouterLink v-else to="/logon" class="cc98-link text-sm">登录</RouterLink>
+        <RouterLink v-else to="/logon" class="cc98-link text-sm" @click="goLogin">登录</RouterLink>
       </div>
     </div>
   </header>
