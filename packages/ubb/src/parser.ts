@@ -52,7 +52,9 @@ export function parseUbb(src: string): UbbNode[] {
     closed: false,
     parent: null,
   };
-  buildSegments(src, root);
+  // 预计算小写版本，避免 findEndTag/checkEndTag 重复 toLowerCase（O(n²) → O(n)）
+  const lowerSrc = src.toLowerCase();
+  buildSegments(src, lowerSrc, root);
   closeTag(root);
   return root.children.map(segToAst);
 }
@@ -61,8 +63,11 @@ export function parseUbb(src: string): UbbNode[] {
  * 主解析循环：构建 segment 树。
  *
  * 移植自 Core.tsx buildSegmentsCore（1178-1303 行）。
+ *
+ * @param content 原始文本。
+ * @param lowerContent content 的小写版本（用于大小写不敏感的结束标签匹配）。
  */
-function buildSegments(content: string, rootParent: TagSeg): void {
+function buildSegments(content: string, lowerContent: string, rootParent: TagSeg): void {
   let parent = rootParent;
   let cursor = 0;
 
@@ -131,7 +136,7 @@ function buildSegments(content: string, rootParent: TagSeg): void {
           break;
         }
         case "text": {
-          const endIdx = findEndTag(content, tag.tagName, cursor);
+          const endIdx = findEndTag(lowerContent, tag.tagName, cursor);
           if (endIdx === -1) {
             // 未找到结束标签，降级为文本
             addText(parent, tag.startTagString);
@@ -161,7 +166,7 @@ function buildSegments(content: string, rootParent: TagSeg): void {
           };
           parent.children.push(newTag);
           // 如果紧跟同名结束标签则跳过
-          const endTagLen = checkEndTag(content, tag.tagName, cursor);
+          const endTagLen = checkEndTag(lowerContent, tag.tagName, cursor);
           if (endTagLen > 0) {
             cursor += endTagLen;
           }
@@ -214,67 +219,73 @@ function closeTag(seg: TagSeg): void {
  * 强制关闭一个 segment，挂接到新的 parent。
  *
  * 移植自 Core.tsx forceClose（349-376 行），新增 autoclose 支持。
- * - 文本/已关闭标签：克隆后挂到 newParent。
- * - 未关闭的 autoclose 标签：保留为标签节点，子段 forceClose 后留在标签下。
- * - 未关闭的其他标签：startTagString 降级为文本，子内容递归 forceClose 提升到 newParent。
+ * 改为迭代实现以避免极端嵌套深度下的栈溢出。
+ *
+ * - 文本/已关闭标签：直接挂到 newParent。
+ * - 未关闭的 autoclose 标签：保留为空标签节点，子段提升到 newParent。
+ * - 未关闭的其他标签：startTagString 降级为文本，子内容提升到 newParent。
  */
-function forceClose(segment: Seg, newParent: TagSeg): void {
-  if (segment.kind === "text") {
-    newParent.children.push(segment);
-    return;
-  }
+function forceClose(rootSegment: Seg, newParent: TagSeg): void {
+  // 用 FIFO 队列替代递归，保持子段顺序
+  const queue: Seg[] = [rootSegment];
 
-  // segment.kind === "tag"
-  if (segment.tag !== null && segment.closed) {
-    // 已关闭的标签正常保留
-    segment.parent = newParent;
-    newParent.children.push(segment);
-    return;
-  }
+  while (queue.length > 0) {
+    const segment = queue.shift()!;
 
-  // 未关闭的 autoclose 标签：保留为空标签节点，子段提升到 newParent 作为兄弟
-  if (segment.tag !== null && segment.mode === "autoclose") {
-    const autocloseTag: TagSeg = {
-      kind: "tag",
-      tag: segment.tag,
-      mode: segment.mode,
-      children: [],
-      closed: true,
-      parent: newParent,
-    };
-    newParent.children.push(autocloseTag);
-    // 子段提升到 newParent（与 autocloseTag 同级）
-    for (const sub of segment.children) {
-      forceClose(sub, newParent);
+    if (segment.kind === "text") {
+      newParent.children.push(segment);
+      continue;
     }
-    return;
-  }
 
-  // 未关闭的其他标签降级：startTagString 变文本，子内容提升
-  if (segment.tag !== null) {
-    newParent.children.push({ kind: "text", value: segment.tag.startTagString });
-  }
-  for (const sub of segment.children) {
-    forceClose(sub, newParent);
+    // segment.kind === "tag"
+    if (segment.tag !== null && segment.closed) {
+      // 已关闭的标签正常保留
+      segment.parent = newParent;
+      newParent.children.push(segment);
+      continue;
+    }
+
+    // 未关闭的 autoclose 标签：保留为空标签节点，子段提升到 newParent
+    if (segment.tag !== null && segment.mode === "autoclose") {
+      const autocloseTag: TagSeg = {
+        kind: "tag",
+        tag: segment.tag,
+        mode: segment.mode,
+        children: [],
+        closed: true,
+        parent: newParent,
+      };
+      newParent.children.push(autocloseTag);
+      // 子段提升到 newParent（入队列继续处理）
+      queue.push(...segment.children);
+      continue;
+    }
+
+    // 未关闭的其他标签降级：startTagString 变文本，子内容提升
+    if (segment.tag !== null) {
+      newParent.children.push({ kind: "text", value: segment.tag.startTagString });
+    }
+    queue.push(...segment.children);
   }
 }
 
 /**
  * 大小写不敏感地查找结束标签 [/tagName] 的位置。
+ *
+ * lowerContent 由调用方预计算（整个 content 的小写版本），避免重复 toLowerCase。
  */
-function findEndTag(content: string, tagName: string, fromIndex: number): number {
-  const lower = content.toLowerCase();
-  const needle = `[/${tagName}]`;
-  return lower.indexOf(needle, fromIndex);
+function findEndTag(lowerContent: string, tagName: string, fromIndex: number): number {
+  return lowerContent.indexOf(`[/${tagName}]`, fromIndex);
 }
 
 /**
  * 检查 cursor 位置是否紧跟 [/tagName]，返回匹配长度（0 表示不匹配）。
+ *
+ * lowerContent 由调用方预计算。
  */
-function checkEndTag(content: string, tagName: string, cursor: number): number {
+function checkEndTag(lowerContent: string, tagName: string, cursor: number): number {
   const needle = `[/${tagName}]`;
-  const lower = content.toLowerCase();
-  if (lower.startsWith(needle, cursor)) {
+  if (lowerContent.startsWith(needle, cursor)) {
     return needle.length;
   }
   return 0;
@@ -287,20 +298,52 @@ function addText(parent: TagSeg, value: string): void {
 
 /**
  * 把 segment 转成 AST 节点。
+ *
+ * 使用显式栈的后序遍历，避免极端嵌套深度下的栈溢出。
  */
 function segToAst(seg: Seg): UbbNode {
+  // 文本节点直接返回
   if (seg.kind === "text") {
     return { type: "text", value: seg.value };
   }
 
-  // seg.kind === "tag"，tag 不为 null（root 哨兵不会出现在 children 里）
-  const tagSeg = seg as TagSeg;
-  const tag = tagSeg.tag!;
+  type Frame = { seg: TagSeg; results: UbbNode[]; nextChild: number };
+  const stack: Frame[] = [{ seg: seg as TagSeg, results: [], nextChild: 0 }];
 
-  return {
-    type: "tag",
-    tag: tag.tagName,
-    attrs: extractAttrs(tag),
-    children: tagSeg.children.map(segToAst),
-  };
+  while (stack.length > 0) {
+    const top = stack[stack.length - 1];
+
+    // 还有子节点未处理
+    if (top.nextChild < top.seg.children.length) {
+      const child = top.seg.children[top.nextChild];
+      top.nextChild++;
+
+      if (child.kind === "text") {
+        top.results.push({ type: "text", value: child.value });
+      } else {
+        // 标签子节点入栈，下一轮处理
+        stack.push({ seg: child as TagSeg, results: [], nextChild: 0 });
+      }
+      continue;
+    }
+
+    // 所有子节点处理完，创建标签 AST 节点
+    stack.pop();
+    const tag = top.seg.tag!;
+    const node: UbbNode = {
+      type: "tag",
+      tag: tag.tagName,
+      attrs: extractAttrs(tag),
+      children: top.results,
+    };
+
+    if (stack.length > 0) {
+      stack[stack.length - 1].results.push(node);
+    } else {
+      return node;
+    }
+  }
+
+  // 不可达
+  throw new Error("segToAst: 意外的执行路径");
 }

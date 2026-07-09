@@ -1,0 +1,8 @@
+{
+  "name": "ubb-bench",
+  "private": true,
+  "description": "UBB benchmark 对比用临时依赖，不属于项目主依赖树",
+  "dependencies": {
+    "@bbob/parser": "4.3.1"
+  }
+}
