@@ -184,9 +184,21 @@ describe("表格", () => {
     );
   });
 
-  test("[td=2,3] 转 colspan 和 rowspan", () => {
+  test("[td=2,3] 按原项目语义转 rowspan 和 colspan", () => {
     expect(ubbToHtml("[table][tr][td=2,3]内容[/td][/tr][/table]")).toBe(
-      `<table><tr><td colspan="2" rowspan="3">内容</td></tr></table>`,
+      `<table><tr><td rowspan="2" colspan="3">内容</td></tr></table>`,
+    );
+  });
+
+  test("[th=1,2] 按原项目语义转 rowspan 和 colspan", () => {
+    expect(ubbToHtml("[table][tr][th=1,2]表头[/th][/tr][/table]")).toBe(
+      `<table><tr><th rowspan="1" colspan="2">表头</th></tr></table>`,
+    );
+  });
+
+  test("[td=2] 单参数在原项目不生效，不输出 rowspan/colspan", () => {
+    expect(ubbToHtml("[table][tr][td=2]内容[/td][/tr][/table]")).toBe(
+      `<table><tr><td>内容</td></tr></table>`,
     );
   });
 
@@ -256,6 +268,10 @@ describe("站内链接", () => {
   test("[user=name] / [user]name[/user] 转 @用户链接", () => {
     expect(ubbToHtml("[user=张三]")).toBe(`<a href="/user/张三">@张三</a>`);
     expect(ubbToHtml("[user]张三[/user]")).toBe(`<a href="/user/张三">@张三</a>`);
+  });
+
+  test("[user=参数]内容[/user] 有内容时按原项目语义优先使用内容", () => {
+    expect(ubbToHtml("[user=张三]李四[/user]")).toBe(`<a href="/user/李四">@李四</a>`);
   });
 
   test("[topic=ID] 转站内帖子链接（无标题用默认，有标题用内容）", () => {

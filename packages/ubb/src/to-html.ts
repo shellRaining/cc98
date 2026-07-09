@@ -94,8 +94,10 @@ function nodeToHtml(node: UbbNode): string {
   if (tag === "tr") return `<tr>${inner}</tr>`;
   if (tag === "td" || tag === "th") {
     const parts: string[] = [];
-    if (attrs.positionals[0]) parts.push(`colspan="${escapeAttr(attrs.positionals[0])}"`);
-    if (attrs.positionals[1]) parts.push(`rowspan="${escapeAttr(attrs.positionals[1])}"`);
+    if (attrs.positionals.length === 2) {
+      parts.push(`rowspan="${escapeAttr(attrs.positionals[0])}"`);
+      parts.push(`colspan="${escapeAttr(attrs.positionals[1])}"`);
+    }
     const attrStr = parts.length > 0 ? " " + parts.join(" ") : "";
     return `<${tag}${attrStr}>${inner}</${tag}>`;
   }
@@ -122,7 +124,8 @@ function nodeToHtml(node: UbbNode): string {
 
   // 站内链接
   if (tag === "user") {
-    const name = attrs.positionals[0] ?? getTextContent(children);
+    const contentName = getTextContent(children);
+    const name = contentName || attrs.positionals[0] || "";
     return `<a href="/user/${escapeAttr(name)}">@${escapeHtml(name)}</a>`;
   }
   if (tag === "topic") {

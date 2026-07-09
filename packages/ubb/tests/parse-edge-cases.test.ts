@@ -8,6 +8,9 @@
  * - 混合大小写标签名
  * - 特殊字符在文本中
  * - 标签属性边界（空命名参数、引号嵌套）
+ *
+ * 注意：混合大小写用例断言的是新解析器的宽松兼容行为。原项目 Core.tsx 中具名 handler
+ * 查找大小写敏感，只有正则标签多数通过 /i 支持大小写不敏感。
  */
 import { describe, expect, test } from "vite-plus/test";
 import { parseUbb } from "../src/index.ts";

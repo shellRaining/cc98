@@ -7,7 +7,9 @@
  *   故 [url]地址[/url] 与 [url=地址]文字[/url] 均合法，内容为链接文字，允许嵌套子标签。
  *
  * 媒体类（均为 TextTagHandler；老代码 getTagMode 未覆盖、默认 Recursive，但其内容是 URL，
- *   本组按语义断言 Text 模式——内部不递归，内容作为单个文本节点，与 [math] 处理一致）：
+ *   本组按语义 AST 有意断言 Text 模式——内部不递归，内容作为单个文本节点，与 [math] 处理一致。
+ *   这不是 Core.tsx segment 行为的逐字复刻，而是把渲染层 getContentText() 的最终文本语义
+ *   提前到解析层表达）：
  * - [img] / [img=数字] / [img=数字,title=标题]：ImageTagHandler。
  *   内容=图片地址；positionals[0]（value('img')）=0 或缺省=默认显示，1=默认不显示；
  *   命名参数 title=图片标题。引号包裹的 title 值在解析时被剥离。
@@ -28,6 +30,7 @@
  *   两者均属文本处理器，纯 URL/域名文本在 parseUbb 阶段保持为 text 节点，不在方括号解析范围。
  *
  * 通用约束：tag 名一律小写；mp3 与 audio 为同一 handler 的两个标签名，均按原样小写保留。
+ * 注意：命名标签大小写不敏感是新解析器的宽松兼容行为；原 Core.tsx 的具名 handler 查找大小写敏感。
  */
 import { describe, expect, test } from "vite-plus/test";
 import { parseUbb } from "../src/index.ts";

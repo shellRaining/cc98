@@ -4,6 +4,8 @@
  * 站内链接类：
  * - [user=用户名]：UserTagHandler，extends TextTagHandler，tagMode=Recursive（基类默认未覆盖）。
  *   handler 实际用 inner content 作显示名，但 [user=xxx] 形式 positionals[0] 携带用户名。
+ *   新解析器有意将 user/topic/board/pm 归为 autoclose，以兼容无结束标签的站内链接简写；
+ *   这比原 Core.tsx 更宽松，原项目遇到未闭合站内链接会在 forceClose 时文本化。
  * - [topic=帖子ID]：TopicTagHandler，extends RecursiveTagHandler，tagMode=Recursive。
  *   1 个参数=topicID；2 个参数(legacy 废弃)=boardID,topicID。positionals[0] 取第一个参数。
  * - [board=板块ID]：BoardTagHandler，extends RecursiveTagHandler，tagMode=Recursive。
@@ -19,7 +21,8 @@
  *
  * 数学类：
  * - [math] / [m]：MathTagHandler，extends TextTagHandler。老代码 getTagMode 未覆盖(=Recursive)，
- *   但本组按任务指示断言 Text 模式（内部不递归），实现需将 math/m 纳入 contextFreeTags 或等效机制。
+ *   但新解析器按语义 AST 有意断言 Text 模式（内部不递归）。这不是 Core.tsx segment 行为的
+ *   逐字复刻，而是把渲染层 getContentText() 的最终文本语义提前到解析层表达。
  *   m=行内模式，math=块级模式。
  * - MathTextHandler：UbbTextHandler，正则 /(\$\$(.+)\$\$|\$(.+)\$)/i。
  *   属文本处理器，不在 parseUbb 方括号解析范围，$...$ 保持纯文本节点。
