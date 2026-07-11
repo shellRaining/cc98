@@ -1,0 +1,51 @@
+{
+  "userId": 713080,
+  "year": 2025,
+  "topicCount": 84,
+  "replyCount": 376,
+  "sendLikeCount": 2127,
+  "receiveLikeCount": 915,
+  "sendRateCount": 4,
+  "receiveRateCount": 0,
+  "postDay": 175,
+  "sofaCount": 69,
+  "postCount06": 58,
+  "postCount612": 94,
+  "postCount1218": 99,
+  "postCount1824": 209,
+  "mostReplyTopicId": 6221374,
+  "mostReplyTopicCount": 19,
+  "mostViewTopicId": 6221374,
+  "mostViewTopicCount": 1218,
+  "mostReceiveLikePostId": 834351543,
+  "mostReceiveLikePostCount": 48,
+  "board1": 758,
+  "board2": 105,
+  "board3": 135,
+  "latestPostTime": "2026-01-01T00:00:00Z",
+  "hotTopicCount": 0,
+  "achievement": "<redacted>",
+  "favoriteTopicCount": 5,
+  "mostReceiveLikeUser": {
+    "likeCount": 15,
+    "userId": 743252,
+    "userName": "<redacted>",
+    "portraitUrl": "https://example.com/redacted"
+  },
+  "mostSendLikeUser": {
+    "likeCount": 16,
+    "userId": 652348,
+    "userName": "<redacted>",
+    "portraitUrl": "https://example.com/redacted"
+  },
+  "cardDraw": {
+    "totalMysteryCount": 0,
+    "totalSSRCount": 25,
+    "totalSRCount": 259,
+    "totalRCount": 505,
+    "totalNCount": 883,
+    "annualPayment": 460000,
+    "annualCount": 1012
+  },
+  "bet": null
+}

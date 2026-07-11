@@ -1,0 +1,600 @@
+[
+  {
+    "operationId": "getBoardBoardIdEvents",
+    "method": "GET",
+    "path": "/board/{boardId}/events",
+    "url": "https://api-v2.cc98.org/board/758/events?from=0&size=2",
+    "status": 401,
+    "durationMs": 186,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getBoardBoardIdStopPostUser",
+    "method": "GET",
+    "path": "/board/{boardId}/stop-post-user",
+    "url": "https://api-v2.cc98.org/board/758/stop-post-user?from=0&size=2",
+    "status": 401,
+    "durationMs": 174,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getBoardBoardIdTopic",
+    "method": "GET",
+    "path": "/board/{boardId}/topic",
+    "url": "https://api-v2.cc98.org/board/758/topic?from=0&size=2",
+    "status": 401,
+    "durationMs": 176,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getConfigGlobalAdvertisementAll",
+    "method": "GET",
+    "path": "/config/global/advertisement/all",
+    "url": "https://api-v2.cc98.org/config/global/advertisement/all",
+    "status": 401,
+    "durationMs": 160,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getConfigGlobalSpecialOfferAll",
+    "method": "GET",
+    "path": "/config/global/special-offer/all",
+    "url": "https://api-v2.cc98.org/config/global/special-offer/all",
+    "status": 401,
+    "durationMs": 190,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getIndexColumnColumnKindAll",
+    "method": "GET",
+    "path": "/index/column/{columnKind}/all",
+    "url": "https://api-v2.cc98.org/index/column/recommandationreading/all",
+    "status": 401,
+    "durationMs": 196,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getManageRewardDailyRecord",
+    "method": "GET",
+    "path": "/manage/reward-daily-record",
+    "url": "https://api-v2.cc98.org/manage/reward-daily-record?boardId=758",
+    "status": 401,
+    "durationMs": 197,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMe",
+    "method": "GET",
+    "path": "/me",
+    "url": "https://api-v2.cc98.org/me",
+    "status": 401,
+    "durationMs": 197,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeAllMessageCount",
+    "method": "GET",
+    "path": "/me/all-message-count",
+    "url": "https://api-v2.cc98.org/me/all-message-count",
+    "status": 401,
+    "durationMs": 187,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeAnnualReview2022",
+    "method": "GET",
+    "path": "/me/annual-review-2022",
+    "url": "https://api-v2.cc98.org/me/annual-review-2022",
+    "status": 401,
+    "durationMs": 182,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeAnnualReviewYear",
+    "method": "GET",
+    "path": "/me/annual-review-{year}",
+    "url": "https://api-v2.cc98.org/me/annual-review-2025",
+    "status": 401,
+    "durationMs": 172,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeBrowsingRecord",
+    "method": "GET",
+    "path": "/me/browsing-record",
+    "url": "https://api-v2.cc98.org/me/browsing-record?from=0&size=2",
+    "status": 401,
+    "durationMs": 188,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeCustomBoardTopic",
+    "method": "GET",
+    "path": "/me/custom-board/topic",
+    "url": "https://api-v2.cc98.org/me/custom-board/topic?from=0&size=2",
+    "status": 401,
+    "durationMs": 178,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeFavoriteTopicGroup",
+    "method": "GET",
+    "path": "/me/favorite-topic-group",
+    "url": "https://api-v2.cc98.org/me/favorite-topic-group",
+    "status": 401,
+    "durationMs": 188,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeFollowee",
+    "method": "GET",
+    "path": "/me/followee",
+    "url": "https://api-v2.cc98.org/me/followee?from=0&size=2",
+    "status": 401,
+    "durationMs": 194,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeFolloweeTopic",
+    "method": "GET",
+    "path": "/me/followee/topic",
+    "url": "https://api-v2.cc98.org/me/followee/topic?from=0&size=2&order=",
+    "status": 401,
+    "durationMs": 190,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeFollower",
+    "method": "GET",
+    "path": "/me/follower",
+    "url": "https://api-v2.cc98.org/me/follower?from=0&size=2",
+    "status": 401,
+    "durationMs": 210,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeHotPost",
+    "method": "GET",
+    "path": "/me/hot-post",
+    "url": "https://api-v2.cc98.org/me/hot-post?from=0&size=2",
+    "status": 401,
+    "durationMs": 176,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeRecentPost",
+    "method": "GET",
+    "path": "/me/recent-post",
+    "url": "https://api-v2.cc98.org/me/recent-post?from=0&size=2",
+    "status": 401,
+    "durationMs": 183,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeRecentTopic",
+    "method": "GET",
+    "path": "/me/recent-topic",
+    "url": "https://api-v2.cc98.org/me/recent-topic?from=0&size=2",
+    "status": 401,
+    "durationMs": 189,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeSignin",
+    "method": "GET",
+    "path": "/me/signin",
+    "url": "https://api-v2.cc98.org/me/signin",
+    "status": 401,
+    "durationMs": 203,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeSigninInMonth",
+    "method": "GET",
+    "path": "/me/signin-in-month",
+    "url": "https://api-v2.cc98.org/me/signin-in-month?year=2025&month=7",
+    "status": 401,
+    "durationMs": 183,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMessageRecentContactUsers",
+    "method": "GET",
+    "path": "/message/recent-contact-users",
+    "url": "https://api-v2.cc98.org/message/recent-contact-users?from=0&size=2",
+    "status": 401,
+    "durationMs": 200,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMessageUserUserId",
+    "method": "GET",
+    "path": "/message/user/{userId}",
+    "url": "https://api-v2.cc98.org/message/user/1?from=0&size=2",
+    "status": 401,
+    "durationMs": 190,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getMeUnreadCount",
+    "method": "GET",
+    "path": "/me/unread-count",
+    "url": "https://api-v2.cc98.org/me/unread-count",
+    "status": 401,
+    "durationMs": 173,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getNotificationAt",
+    "method": "GET",
+    "path": "/notification/at",
+    "url": "https://api-v2.cc98.org/notification/at?from=0&size=2",
+    "status": 401,
+    "durationMs": 174,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getNotificationReply",
+    "method": "GET",
+    "path": "/notification/reply",
+    "url": "https://api-v2.cc98.org/notification/reply?from=0&size=2",
+    "status": 401,
+    "durationMs": 164,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getNotificationSystem",
+    "method": "GET",
+    "path": "/notification/system",
+    "url": "https://api-v2.cc98.org/notification/system?from=0&size=2",
+    "status": 401,
+    "durationMs": 163,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getPostPostIdOriginal",
+    "method": "GET",
+    "path": "/post/{postId}/original",
+    "url": "https://api-v2.cc98.org/post/124447422/original",
+    "status": 401,
+    "durationMs": 174,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicBestBoardBoardId",
+    "method": "GET",
+    "path": "/topic/best/board/{boardId}",
+    "url": "https://api-v2.cc98.org/topic/best/board/758?from=0&size=2",
+    "status": 401,
+    "durationMs": 191,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicMeFavorite",
+    "method": "GET",
+    "path": "/topic/me/favorite",
+    "url": "https://api-v2.cc98.org/topic/me/favorite?from=0&size=2&order=&groupid=",
+    "status": 401,
+    "durationMs": 194,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicMeSearchFavorite",
+    "method": "GET",
+    "path": "/topic/me/search-favorite",
+    "url": "https://api-v2.cc98.org/topic/me/search-favorite?keyword=%E6%B5%8B%E8%AF%95&from=0&size=2",
+    "status": 401,
+    "durationMs": 188,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicNew",
+    "method": "GET",
+    "path": "/topic/new",
+    "url": "https://api-v2.cc98.org/topic/new?from=0&size=2",
+    "status": 401,
+    "durationMs": 170,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicNewMedia",
+    "method": "GET",
+    "path": "/topic/new-media",
+    "url": "https://api-v2.cc98.org/topic/new-media?from=0&size=2",
+    "status": 401,
+    "durationMs": 188,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicRandomRecommendation",
+    "method": "GET",
+    "path": "/topic/random-recommendation",
+    "url": "https://api-v2.cc98.org/topic/random-recommendation?size=2",
+    "status": 401,
+    "durationMs": 180,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicSaveBoardBoardId",
+    "method": "GET",
+    "path": "/topic/save/board/{boardId}",
+    "url": "https://api-v2.cc98.org/topic/save/board/758?from=0&size=2",
+    "status": 401,
+    "durationMs": 170,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicSearch",
+    "method": "GET",
+    "path": "/topic/search",
+    "url": "https://api-v2.cc98.org/topic/search?keyword=%E6%B5%8B%E8%AF%95&from=0&size=2",
+    "status": 401,
+    "durationMs": 180,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicSearchBoardBoardId",
+    "method": "GET",
+    "path": "/topic/search/board/{boardId}",
+    "url": "https://api-v2.cc98.org/topic/search/board/758?keyword=%E6%B5%8B%E8%AF%95&from=0&size=2",
+    "status": 401,
+    "durationMs": 193,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicTopicId",
+    "method": "GET",
+    "path": "/topic/{topicId}",
+    "url": "https://api-v2.cc98.org/topic/6572083",
+    "status": 401,
+    "durationMs": 204,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicTopicIdHotPost",
+    "method": "GET",
+    "path": "/topic/{topicId}/hot-post",
+    "url": "https://api-v2.cc98.org/topic/6572083/hot-post",
+    "status": 401,
+    "durationMs": 182,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicTopicIdLookIp",
+    "method": "GET",
+    "path": "/topic/{topicId}/look-ip",
+    "url": "https://api-v2.cc98.org/topic/6572083/look-ip",
+    "status": 401,
+    "durationMs": 176,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicTopicIdPost",
+    "method": "GET",
+    "path": "/topic/{topicId}/post",
+    "url": "https://api-v2.cc98.org/topic/6572083/post?from=0&size=2",
+    "status": 401,
+    "durationMs": 192,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicTopicIdVote",
+    "method": "GET",
+    "path": "/topic/{topicId}/vote",
+    "url": "https://api-v2.cc98.org/topic/6572083/vote",
+    "status": 401,
+    "durationMs": 189,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getTopicToptopics",
+    "method": "GET",
+    "path": "/topic/toptopics",
+    "url": "https://api-v2.cc98.org/topic/toptopics?boardid=758",
+    "status": 401,
+    "durationMs": 190,
+    "contentType": "application/json; charset=utf-8",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getUserIdPost",
+    "method": "GET",
+    "path": "/user/{id}/post",
+    "url": "https://api-v2.cc98.org/user/1/post?days=1&from=0&size=2",
+    "status": 401,
+    "durationMs": 180,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  },
+  {
+    "operationId": "getUserIdRecentTopic",
+    "method": "GET",
+    "path": "/user/{id}/recent-topic",
+    "url": "https://api-v2.cc98.org/user/758/recent-topic?userid=1&from=0&size=2",
+    "status": 401,
+    "durationMs": 203,
+    "contentType": "",
+    "bodyType": "string",
+    "validation": {
+      "status": "passed"
+    }
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "name": "@cc98/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "CC98 API 的 Zod 契约、OpenAPI 文档与接口验证工具",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "generated"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "generate": "node scripts/generate.mjs && vp fmt generated --write",
+    "probe:anonymous": "node scripts/probe.mjs",
+    "probe:authenticated": "CC98_ACCESS_TOKEN_FILE=../../.cc98-token.local node scripts/probe.mjs --authenticated --auth-blocked",
+    "test": "node scripts/check-generated.mjs && vp test",
+    "check": "vp check"
+  },
+  "dependencies": {
+    "zod": "catalog:",
+    "zod-openapi": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

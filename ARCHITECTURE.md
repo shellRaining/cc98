@@ -2,18 +2,37 @@
 
 本仓库是 Vite+ monorepo（pnpm workspace），复刻浙江大学 CC98 论坛前端
 
+## 公共 API 契约
+
+`packages/api` 是与前端框架无关的公共契约层。`src/schemas/` 中的 Zod schema 和 `src/operations/` 中的 operation registry 是事实源，OpenAPI 与 endpoint catalog 都由它们生成。`apps/website` 只维护请求编排、认证、缓存键和错误映射，不重复定义公共实体 schema。
+
+```mermaid
+flowchart LR
+  Live["CC98 真实 API"] --> Probe["匿名 / 登录 / 写探测"]
+  Schema --> Probe
+  Registry --> Probe
+  Schema --> Generator["生成器"]
+  Registry --> Generator
+  Generator --> OpenAPI["OpenAPI 与 endpoint catalog"]
+  Schema --> Website["apps/website"]
+  OpenAPI --> Community["其他 CC98 项目"]
+```
+
 ## 模块布局
 
 ```mermaid
 graph TD
   website["apps/website<br/>Web 应用（Vue 3.6 SPA）"]
+  api["packages/api<br/>Zod-first API 契约"]
   ubb["packages/ubb<br/>UBB 解析器"]
   utils["packages/utils<br/>占位脚手架"]
+  website --> api
   website --> ubb
   website -.-> utils
 ```
 
 - `apps/website`：面向用户的 Web 应用（Vue 3.6 SPA）。内部分层见 `docs/frontend.md`
+- `packages/api`：CC98 API 的 Zod schema、operation registry、OpenAPI 和验证工具
 - `packages/ubb`：UBB 解析器，核心产出是 AST（`parseUbb`），附带 HTML 和 Markdown 两个导出器。只读不做编辑器
 - `packages/utils`：TypeScript 工具包脚手架，当前仅有占位代码，尚未投入使用
 

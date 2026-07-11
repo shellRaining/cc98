@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
+import { meUserSchema } from "@cc98/api";
 import { computed, ref } from "vue";
 import { loginWithPassword, clearAuth, hasValidAuth, onAuthLost } from "../lib/auth";
 import { typedGet } from "../lib/http";
-import { meUserSchema } from "../api/schemas";
 
 export interface AuthUser {
   id: number;

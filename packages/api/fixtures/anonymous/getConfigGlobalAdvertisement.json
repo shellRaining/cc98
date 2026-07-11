@@ -1,0 +1,26 @@
+[
+  {
+    "id": 3100,
+    "type": 4,
+    "title": "<redacted>",
+    "content": null,
+    "url": "<redacted>",
+    "imageUrl": "https://example.com/redacted",
+    "enable": true,
+    "time": "2026-01-01T00:00:00Z",
+    "orderWeight": 0,
+    "expiredTime": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 3193,
+    "type": 4,
+    "title": "<redacted>",
+    "content": null,
+    "url": "<redacted>",
+    "imageUrl": "https://example.com/redacted",
+    "enable": true,
+    "time": "2026-01-01T00:00:00Z",
+    "orderWeight": 0,
+    "expiredTime": "2026-01-01T00:00:00Z"
+  }
+]

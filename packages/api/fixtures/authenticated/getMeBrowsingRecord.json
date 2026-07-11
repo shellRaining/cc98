@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "lastBrowsingTime": "2026-01-01T00:00:00Z",
+      "id": 6572509,
+      "boardId": 562,
+      "boardName": "<redacted>",
+      "title": "<redacted>",
+      "time": "2026-01-01T00:00:00Z",
+      "userId": 749808,
+      "userName": "<redacted>",
+      "isAnonymous": false,
+      "replyCount": 0,
+      "hitCount": 166,
+      "lastPostUser": "<redacted>",
+      "lastPostTime": "2026-01-01T00:00:00Z",
+      "lastPostContent": "<redacted-content>",
+      "mediaContent": null,
+      "contentType": 4,
+      "state": 0
+    },
+    {
+      "lastBrowsingTime": "2026-01-01T00:00:00Z",
+      "id": 6572517,
+      "boardId": 135,
+      "boardName": "<redacted>",
+      "title": "<redacted>",
+      "time": "2026-01-01T00:00:00Z",
+      "userId": 759674,
+      "userName": "<redacted>",
+      "isAnonymous": false,
+      "replyCount": 2,
+      "hitCount": 384,
+      "lastPostUser": "<redacted>",
+      "lastPostTime": "2026-01-01T00:00:00Z",
+      "lastPostContent": "<redacted-content>",
+      "mediaContent": null,
+      "contentType": 4,
+      "state": 0
+    }
+  ],
+  "count": 960,
+  "from": 0,
+  "size": 2,
+  "extra": null,
+  "errorCode": 0
+}

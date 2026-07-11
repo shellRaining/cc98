@@ -1,12 +1,12 @@
-import { queryOptions } from "@tanstack/vue-query";
-import { typedGet } from "../lib/http";
 import {
   boardGroupSchema,
   globalConfigSchema,
   meUserSchema,
   postSchema,
   topicSchema,
-} from "./schemas";
+} from "@cc98/api";
+import { queryOptions } from "@tanstack/vue-query";
+import { typedGet } from "../lib/http";
 
 export const queryKeys = {
   boards: ["boards"] as const,

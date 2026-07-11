@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "id": 0,
+      "name": "<redacted>",
+      "count": 5,
+      "createTime": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "count": 1,
+  "from": 0,
+  "size": 20,
+  "extra": null,
+  "errorCode": 0
+}

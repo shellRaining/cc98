@@ -1,0 +1,36 @@
+[
+  {
+    "id": 30117866,
+    "type": 2,
+    "topicId": 6240293,
+    "postId": 840028054,
+    "boardId": 0,
+    "time": "2026-01-01T00:00:00Z",
+    "isRead": true,
+    "postBasicInfo": {
+      "id": 840028054,
+      "floor": 19,
+      "userId": 787045,
+      "userName": "<redacted>",
+      "isDeleted": false,
+      "boardId": 758
+    }
+  },
+  {
+    "id": 30115589,
+    "type": 2,
+    "topicId": 6567280,
+    "postId": 840025488,
+    "boardId": 0,
+    "time": "2026-01-01T00:00:00Z",
+    "isRead": true,
+    "postBasicInfo": {
+      "id": 840025488,
+      "floor": 6,
+      "userId": 748839,
+      "userName": "<redacted>",
+      "isDeleted": false,
+      "boardId": 68
+    }
+  }
+]

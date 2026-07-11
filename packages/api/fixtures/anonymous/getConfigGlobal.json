@@ -1,0 +1,30 @@
+{
+  "maxOnlineCount": 10117,
+  "maxOnlineDate": "2026-01-01T00:00:00Z",
+  "topicCount": 3157153,
+  "postCount": 59453674,
+  "userCount": 503504,
+  "lastUserName": "<redacted>",
+  "maxPostCount": 107560,
+  "maxPostDate": "2026-01-01T00:00:00Z",
+  "isMaintaining": false,
+  "announcement": "<redacted>",
+  "signInEnabled": true,
+  "signInRewards": [{}, {}, {}, {}, {}],
+  "signInTopicId": 5541823,
+  "todayCount": 8829,
+  "anonymityAdmin": [
+    "<redacted>",
+    "<redacted>",
+    "<redacted>",
+    "<redacted>",
+    "<redacted>",
+    "<redacted>",
+    "<redacted>",
+    "<redacted>",
+    "<redacted>"
+  ],
+  "lastBirthdayActivityDay": "2026-01-01T00:00:00Z",
+  "birthdayActivitySetting": "<redacted>",
+  "birthdayActivityIsEnabled": true
+}

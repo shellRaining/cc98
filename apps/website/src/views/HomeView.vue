@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import { topicSchema, type Topic } from "@cc98/api";
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { globalConfigQuery, queryKeys, boardsQuery } from "../api/queries";
 import { typedGet } from "../lib/http";
-import { topicSchema } from "../api/schemas";
-import type { Topic } from "../api/schemas";
 
 const { data: config } = useQuery(globalConfigQuery);
 const { data: boardGroups } = useQuery(boardsQuery);

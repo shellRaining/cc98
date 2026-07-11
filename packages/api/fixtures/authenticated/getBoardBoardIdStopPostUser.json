@@ -1,0 +1,16 @@
+[
+  {
+    "userId": 760054,
+    "userName": "<redacted>",
+    "expiredTime": "2026-01-01T00:00:00Z",
+    "days": 7,
+    "operatorUserName": "<redacted>"
+  },
+  {
+    "userId": 761544,
+    "userName": "<redacted>",
+    "expiredTime": "2026-01-01T00:00:00Z",
+    "days": 365,
+    "operatorUserName": "<redacted>"
+  }
+]

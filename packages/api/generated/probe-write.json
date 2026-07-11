@@ -1,0 +1,76 @@
+{
+  "runId": "20260711061854",
+  "boardId": 758,
+  "topicId": 6572563,
+  "firstPostId": 840113106,
+  "cleanedUp": false,
+  "results": [
+    {
+      "operationId": "getBoardBoardId",
+      "method": "GET",
+      "path": "/board/{boardId}",
+      "status": 200,
+      "durationMs": 185,
+      "contentType": "application/json; charset=utf-8",
+      "bodyType": "object",
+      "validation": {
+        "status": "passed"
+      }
+    },
+    {
+      "operationId": "postBoardBoardIdTopic",
+      "method": "POST",
+      "path": "/board/{boardId}/topic",
+      "status": 200,
+      "durationMs": 184,
+      "contentType": "application/json; charset=utf-8",
+      "bodyType": "number",
+      "validation": {
+        "status": "failed",
+        "issues": [
+          {
+            "path": "",
+            "code": "invalid_type",
+            "message": "Invalid input: expected string, received number"
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "getTopicTopicIdPost",
+      "method": "GET",
+      "path": "/topic/{topicId}/post",
+      "status": 200,
+      "durationMs": 401,
+      "contentType": "application/json; charset=utf-8",
+      "bodyType": "array",
+      "validation": {
+        "status": "passed"
+      }
+    },
+    {
+      "operationId": "postTopicTopicIdPost",
+      "method": "POST",
+      "path": "/topic/{topicId}/post",
+      "status": 403,
+      "durationMs": 194,
+      "contentType": "application/json; charset=utf-8",
+      "bodyType": "string",
+      "validation": {
+        "status": "passed"
+      }
+    },
+    {
+      "operationId": "deleteTopicTopicId",
+      "method": "DELETE",
+      "path": "/topic/{topicId}",
+      "status": 403,
+      "durationMs": 203,
+      "contentType": "application/json; charset=utf-8",
+      "bodyType": "string",
+      "validation": {
+        "status": "passed"
+      }
+    }
+  ]
+}

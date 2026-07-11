@@ -38,6 +38,7 @@ catalog:
   nanoid: 5.1.16
   clsx: 2.1.1
   pino: 10.3.1
+  zod-openapi: ^6.0.0
 overrides:
   vite: "catalog:"
   vitest: "catalog:"

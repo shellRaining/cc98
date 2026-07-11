@@ -1,0 +1,38 @@
+[
+  {
+    "id": 6567397,
+    "boardId": 758,
+    "boardName": "<redacted>",
+    "title": "<redacted>",
+    "time": "2026-01-01T00:00:00Z",
+    "userId": 810680,
+    "userName": "<redacted>",
+    "isAnonymous": false,
+    "replyCount": 3,
+    "hitCount": 66,
+    "lastPostUser": "<redacted>",
+    "lastPostTime": "2026-01-01T00:00:00Z",
+    "lastPostContent": "<redacted-content>",
+    "mediaContent": null,
+    "contentType": 0,
+    "state": 1
+  },
+  {
+    "id": 6545789,
+    "boardId": 758,
+    "boardName": "<redacted>",
+    "title": "<redacted>",
+    "time": "2026-01-01T00:00:00Z",
+    "userId": 668923,
+    "userName": "<redacted>",
+    "isAnonymous": false,
+    "replyCount": 9,
+    "hitCount": 368,
+    "lastPostUser": "<redacted>",
+    "lastPostTime": "2026-01-01T00:00:00Z",
+    "lastPostContent": "<redacted-content>",
+    "mediaContent": null,
+    "contentType": 4,
+    "state": 0
+  }
+]

@@ -1,4 +1,9 @@
-import { z } from "zod";
+import {
+  passwordTokenRequestSchema,
+  refreshTokenRequestSchema,
+  tokenResponseSchema,
+  type TokenResponse,
+} from "@cc98/api";
 
 const CONNECT_TOKEN_URL = "https://openid.cc98.org/connect/token";
 const OAUTH_SCOPE = "cc98-api openid offline_access";
@@ -9,33 +14,30 @@ const DEFAULT_CLIENT_SECRET = "8b53f727-08e2-4509-8857-e34bf92b27f2";
 const clientId = import.meta.env.VITE_OAUTH_CLIENT_ID ?? DEFAULT_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_OAUTH_CLIENT_SECRET ?? DEFAULT_CLIENT_SECRET;
 
-const tokenResponseSchema = z.object({
-  access_token: z.string(),
-  expires_in: z.number(),
-  refresh_token: z.string(),
-  token_type: z.string(),
-});
-
-export type TokenResponse = z.infer<typeof tokenResponseSchema>;
+export type { TokenResponse } from "@cc98/api";
 
 function buildPasswordBody(username: string, password: string): URLSearchParams {
-  const params = new URLSearchParams();
-  params.set("client_id", clientId);
-  params.set("client_secret", clientSecret);
-  params.set("grant_type", "password");
-  params.set("username", username);
-  params.set("password", password);
-  params.set("scope", OAUTH_SCOPE);
-  return params;
+  return new URLSearchParams(
+    passwordTokenRequestSchema.parse({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "password",
+      username,
+      password,
+      scope: OAUTH_SCOPE,
+    }),
+  );
 }
 
 function buildRefreshBody(refreshToken: string): URLSearchParams {
-  const params = new URLSearchParams();
-  params.set("client_id", clientId);
-  params.set("client_secret", clientSecret);
-  params.set("grant_type", "refresh_token");
-  params.set("refresh_token", refreshToken);
-  return params;
+  return new URLSearchParams(
+    refreshTokenRequestSchema.parse({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    }),
+  );
 }
 
 async function postToken(body: URLSearchParams): Promise<TokenResponse> {

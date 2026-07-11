@@ -11,6 +11,7 @@
     "check": "vp check"
   },
   "dependencies": {
+    "@cc98/api": "workspace:*",
     "@cc98/ubb": "workspace:*",
     "@microsoft/signalr": "catalog:",
     "@tanstack/vue-query": "catalog:",

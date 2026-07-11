@@ -1,0 +1,40 @@
+[
+  {
+    "id": 758,
+    "name": "<redacted>",
+    "bigPaper": "<redacted>",
+    "logoUri": null,
+    "parentId": 763,
+    "anonymousState": 0,
+    "privacyState": 0,
+    "viewerFilterState": 0,
+    "protectionLevel": 1,
+    "isLocked": false,
+    "rootId": 763,
+    "description": "<redacted>",
+    "boardMasters": [
+      "<redacted>",
+      "<redacted>",
+      "<redacted>",
+      "<redacted>",
+      "<redacted>",
+      "<redacted>",
+      "<redacted>",
+      "<redacted>",
+      "<redacted>"
+    ],
+    "topicCount": 249084,
+    "postCount": 7273777,
+    "todayCount": 4258,
+    "lastPostContent": "<redacted-content>",
+    "allowPostOnly": 2,
+    "forbidRvpn": false,
+    "canEntry": false,
+    "internalState": 0,
+    "canVote": true,
+    "topicAuthorPermissions": [],
+    "isUserCustomBoard": false,
+    "allowNotifyAllReplier": true,
+    "showShareTip": false
+  }
+]

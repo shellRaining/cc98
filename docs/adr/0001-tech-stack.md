@@ -26,7 +26,7 @@ Status: Accepted
 | 媒体播放      | APlayer + DPlayer + hls.js           | file.cc98.org 直链音视频；播放器集成内聚在富内容 `UniverseAudio`、`UniverseVideo` 和 `UniverseBili` |
 | 实时通信      | @microsoft/signalr                   | 消息推送，需要后端现有 hub                                                                          |
 | HTTP          | ofetch                               | 轻量、现代，Nuxt/Vue 生态原生                                                                       |
-| 边界校验      | Zod                                  | API 响应在 `api/schemas.ts` parse 后才进业务                                                        |
+| 边界校验      | Zod                                  | API 响应由 `@cc98/api` 公共 schema parse 后才进入业务                                               |
 | 工具库        | @vueuse/core + dayjs + nanoid + clsx | 不手写工具函数，优先用 VueUse                                                                       |
 | 主题          | CSS 变量 + `data-theme` 属性         | 零成本切换，配合 UnoCSS theme 映射                                                                  |
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
+import { POST_CONTENT_TYPE, type PostContentType } from "@cc98/api";
 import { computed } from "vue";
 import { ZodError } from "zod";
-import { POST_CONTENT_TYPE, type PostContentType } from "../api/schemas";
 import { topicPostsQuery } from "../api/queries";
 import ContentRenderer from "../components/rich-content/ContentRenderer.vue";
 import type { RichContentType } from "../components/rich-content/types";
