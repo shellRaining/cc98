@@ -5,6 +5,7 @@ export const topicSchema = z
   .looseObject({
     id: z.number().optional(),
     boardId: z.number().optional(),
+    boardName: z.string().optional(),
     title: z.string().optional(),
     time: z.string().optional(),
     userId: z.number().nullable().optional(),

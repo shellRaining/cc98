@@ -210,7 +210,7 @@ function retry() {
       />
 
       <div class="cc98-card px-4">
-        <TopicList :topics="mergedTopics" :pinned-ids="pinnedIds" />
+        <TopicList :topics="mergedTopics" :pinned-ids="pinnedIds" :show-board="false" />
       </div>
 
       <Pagination

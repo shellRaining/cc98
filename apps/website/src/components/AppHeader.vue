@@ -25,6 +25,10 @@ function goLogin(event?: Event) {
         <nav class="flex items-center gap-4 text-sm">
           <RouterLink to="/" class="cc98-link">首页</RouterLink>
           <RouterLink to="/boardlist" class="cc98-link">版面</RouterLink>
+          <RouterLink to="/topic/hot-monthly" class="cc98-link">热门</RouterLink>
+          <RouterLink to="/newtopics" class="cc98-link">新帖</RouterLink>
+          <RouterLink to="/recommendedtopics" class="cc98-link">精选</RouterLink>
+          <RouterLink to="/search" class="cc98-link">搜索</RouterLink>
         </nav>
       </div>
       <div class="flex items-center gap-3">
@@ -36,9 +40,14 @@ function goLogin(event?: Event) {
           {{ theme.mode === "light" ? "深色" : "浅色" }}
         </button>
         <template v-if="user.isLoggedIn">
-          <span class="text-sm text-cc98-text-muted">
+          <RouterLink
+            v-if="user.user?.id"
+            :to="`/user/id/${user.user.id}`"
+            class="text-sm cc98-link"
+          >
             {{ user.user?.name }}
-          </span>
+          </RouterLink>
+          <span v-else class="text-sm text-cc98-text-muted">{{ user.user?.name }}</span>
           <button type="button" class="text-sm cc98-link" @click="user.logout()">退出</button>
         </template>
         <RouterLink v-else to="/logon" class="cc98-link text-sm" @click="goLogin">登录</RouterLink>
