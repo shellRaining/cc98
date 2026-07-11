@@ -27,7 +27,10 @@ function statusOf(error: unknown): number | undefined {
   return undefined;
 }
 
-export function normalizeApiError(error: unknown): NormalizedApiError {
+export function normalizeApiError(
+  error: unknown,
+  options?: { forbiddenMessage?: string },
+): NormalizedApiError {
   if (error instanceof ZodError) {
     return {
       kind: "validation",
@@ -42,7 +45,12 @@ export function normalizeApiError(error: unknown): NormalizedApiError {
     return { kind: "unauthorized", status, message: "需要登录后才能查看", cause: error };
   }
   if (status === 403) {
-    return { kind: "forbidden", status, message: "没有权限查看该内容", cause: error };
+    return {
+      kind: "forbidden",
+      status,
+      message: options?.forbiddenMessage ?? "没有权限查看该内容",
+      cause: error,
+    };
   }
   if (status === 404) {
     return { kind: "not-found", status, message: "内容不存在或已删除", cause: error };

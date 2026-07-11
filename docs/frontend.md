@@ -2,17 +2,17 @@
 
 ## 目录布局
 
-| 目录           | 职责                                                                |
-| -------------- | ------------------------------------------------------------------- |
-| `api/`         | vue-query queryOptions（`queries.ts`），schema 直接来自 `@cc98/api` |
-| `lib/`         | 基础设施：http、auth、oauth、token-store、logger、query-client      |
-| `stores/`      | Pinia：user（登录态）、theme（主题）                                |
-| `router/`      | Vue Router 路由表                                                   |
-| `layouts/`     | 页面壳（DefaultLayout）                                             |
-| `components/`  | 通用组件（AppHeader / AppFooter / rich-content/）                   |
-| `views/`       | 路由级页面（HomeView / TopicView / ...）                            |
-| `composables/` | 组合式函数（占位，尚未使用）                                        |
-| `styles/`      | 全局 CSS + CSS 变量（light/dark）                                   |
+| 目录           | 职责                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------- |
+| `api/`         | vue-query queryOptions（`queries.ts`），schema 直接来自 `@cc98/api`                     |
+| `lib/`         | 基础设施：http、auth、oauth、token-store、logger、query-client、discovery、route-params |
+| `stores/`      | Pinia：user（登录态）、theme（主题）                                                    |
+| `router/`      | Vue Router 路由表                                                                       |
+| `layouts/`     | 页面壳（DefaultLayout）                                                                 |
+| `components/`  | 通用组件（AppHeader / TopicList / Pagination / PageState / LoadMore / rich-content/）   |
+| `views/`       | 路由级页面（HomeView / BoardView / 发现类列表页 / TopicView / ...）                     |
+| `composables/` | 组合式函数（占位，尚未使用）                                                            |
+| `styles/`      | 全局 CSS + CSS 变量（light/dark）                                                       |
 
 `lib/` 内部依赖方向（单向无环）：
 

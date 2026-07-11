@@ -7685,6 +7685,9 @@
           "boardId": {
             "type": "number"
           },
+          "boardName": {
+            "type": "string"
+          },
           "title": {
             "type": "string"
           },

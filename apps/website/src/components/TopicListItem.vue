@@ -3,21 +3,42 @@ import { computed } from "vue";
 import { RouterLink } from "vue-router";
 import type { Topic } from "@cc98/api";
 import dayjs from "dayjs";
+import { userIdPath } from "../lib/discovery";
 
-const props = defineProps<{
-  topic: Topic;
-  pinned?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    topic: Topic;
+    pinned?: boolean;
+    showBoard?: boolean;
+  }>(),
+  {
+    showBoard: true,
+  },
+);
 
 const topicId = computed(() => props.topic.id ?? 0);
 const title = computed(() => props.topic.title?.trim() || "(无标题)");
+const isAnonymous = computed(() => props.topic.isAnonymous === true);
 const author = computed(() => {
-  if (props.topic.isAnonymous) return "匿名用户";
+  if (isAnonymous.value) return "匿名用户";
   return props.topic.userName?.trim() || "已注销用户";
+});
+const authorLink = computed(() => {
+  if (isAnonymous.value) return null;
+  const id = props.topic.userId;
+  if (id == null || id <= 0) return null;
+  return userIdPath(id);
+});
+const boardName = computed(() => props.topic.boardName?.trim() || null);
+const boardLink = computed(() => {
+  const id = props.topic.boardId;
+  if (id == null || id <= 0) return null;
+  return `/list/${id}`;
 });
 const lastReplyUser = computed(() => props.topic.lastPostUser?.trim() || "—");
 const replyCount = computed(() => props.topic.replyCount ?? 0);
 const hitCount = computed(() => props.topic.hitCount ?? 0);
+const likeCount = computed(() => props.topic.likeCount);
 const lastPage = computed(() => Math.max(1, Math.ceil((replyCount.value + 1) / 10)));
 
 const timeText = computed(() => formatTime(props.topic.time));
@@ -61,13 +82,25 @@ function formatTime(value: string | undefined): string {
       >
         {{ topLabel }}
       </span>
+      <template v-if="showBoard && boardName && boardLink">
+        <RouterLink :to="boardLink" class="text-xs text-cc98-text-muted hover:text-cc98-primary">
+          [{{ boardName }}]
+        </RouterLink>
+      </template>
       <RouterLink :to="`/topic/${topicId}`" class="cc98-link font-medium" :style="titleStyle">
         {{ title }}
       </RouterLink>
     </div>
     <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-cc98-text-muted">
-      <span>{{ author }} · {{ timeText }}</span>
-      <span>回复 {{ replyCount }} · 浏览 {{ hitCount }}</span>
+      <span>
+        <RouterLink v-if="authorLink" :to="authorLink" class="cc98-link">{{ author }}</RouterLink>
+        <template v-else>{{ author }}</template>
+        · {{ timeText }}
+      </span>
+      <span>
+        回复 {{ replyCount }} · 浏览 {{ hitCount
+        }}<template v-if="likeCount != null"> · 赞 {{ likeCount }}</template>
+      </span>
       <span>最后回复 {{ lastReplyUser }} · {{ lastReplyTime }}</span>
       <span class="flex gap-2">
         <RouterLink :to="`/topic/${topicId}`" class="cc98-link">首页</RouterLink>
@@ -76,5 +109,6 @@ function formatTime(value: string | undefined): string {
         </RouterLink>
       </span>
     </div>
+    <slot />
   </li>
 </template>
