@@ -26,4 +26,6 @@ dist-ssr
 
 # AI agent worktrees
 .claude/worktrees/
+.artifacts/
+auth-state.json
 /.obsidian

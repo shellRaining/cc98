@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 import { AccountLockedError, LoginError } from "../stores/user";
+import { takeLoginRedirect } from "../lib/login-redirect";
 
 const router = useRouter();
 const user = useUserStore();
@@ -11,8 +12,6 @@ const loginName = ref("");
 const loginPassword = ref("");
 const submitting = ref(false);
 const errorMsg = ref("");
-
-const REDIRECT_KEY = "logOnRedirectUrl";
 
 async function handleLogin() {
   if (!loginName.value || !loginPassword.value) {
@@ -23,13 +22,7 @@ async function handleLogin() {
   errorMsg.value = "";
   try {
     await user.login(loginName.value, loginPassword.value);
-    const redirect = localStorage.getItem(REDIRECT_KEY);
-    if (redirect) {
-      localStorage.removeItem(REDIRECT_KEY);
-      router.push(redirect);
-    } else {
-      router.push({ name: "home" });
-    }
+    router.push(takeLoginRedirect("/"));
   } catch (err) {
     if (err instanceof AccountLockedError) {
       errorMsg.value = err.message;

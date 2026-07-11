@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
+import { normalizeFloorHash } from "../lib/route-params";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -40,7 +41,11 @@ export const router = createRouter({
   routes,
   scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) return savedPosition;
-    if (_to.hash) return { el: _to.hash, behavior: "smooth" };
+    if (_to.hash) {
+      const floorHash = normalizeFloorHash(_to.hash);
+      const el = floorHash ? `#${floorHash}` : _to.hash;
+      return { el, behavior: "smooth" };
+    }
     return { top: 0 };
   },
 });

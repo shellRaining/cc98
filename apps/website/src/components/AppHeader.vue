@@ -2,14 +2,16 @@
 import { RouterLink, useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 import { useThemeStore } from "../stores/theme";
+import { saveLoginRedirect } from "../lib/login-redirect";
 
 const user = useUserStore();
 const theme = useThemeStore();
 const router = useRouter();
 
-function goLogin() {
-  localStorage.setItem("logOnRedirectUrl", router.currentRoute.value.fullPath);
-  router.push({ name: "logon" });
+function goLogin(event?: Event) {
+  event?.preventDefault();
+  saveLoginRedirect(router.currentRoute.value.fullPath);
+  void router.push({ name: "logon" });
 }
 </script>
 

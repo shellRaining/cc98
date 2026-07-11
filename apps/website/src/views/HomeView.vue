@@ -3,6 +3,7 @@ import { topicSchema, type Topic } from "@cc98/api";
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { globalConfigQuery, queryKeys, boardsQuery } from "../api/queries";
+import ContentRenderer from "../components/rich-content/ContentRenderer.vue";
 import { typedGet } from "../lib/http";
 
 const { data: config } = useQuery(globalConfigQuery);
@@ -40,7 +41,7 @@ const totalBoards = computed(() =>
       <h2 class="text-lg font-semibold mb-2">站点公告</h2>
       <ul class="text-sm space-y-1">
         <li v-for="(line, idx) in announcementLines" :key="idx" class="text-cc98-text-muted">
-          {{ line.replace(/\[(\/?)(b|color|url[^\]]*|img[^\]]*)\]/g, "") }}
+          <ContentRenderer :content="line" type="ubb" />
         </li>
       </ul>
     </div>
@@ -48,7 +49,7 @@ const totalBoards = computed(() =>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="cc98-card p-4">
         <h2 class="text-lg font-semibold mb-3">本月热门</h2>
-        <ol v-if="monthlyHot?.length" class="space-y-2 text-sm">
+        <ol v-if="monthlyHot?.length" class="list-none space-y-2 text-sm">
           <li v-for="(topic, idx) in monthlyHot" :key="topic.id">
             <span class="text-cc98-text-muted mr-2">{{ idx + 1 }}.</span>
             <RouterLink :to="`/topic/${topic.id}`" class="cc98-link">
