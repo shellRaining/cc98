@@ -8,7 +8,7 @@
 vp run ready # vp check + TypeScript 7 纯 TS 校验 + 全量测试 + 全量构建。任一失败就不能提交。
 ```
 
-`vp check` 继续负责 format、lint 和基于 TypeScript Go 工具链的类型检查。`pnpm run typecheck:ts7` 使用稳定版 TypeScript 7 检查 `packages/ubb` 和 `packages/utils`。Vue 工程仍通过 `tsc6` 构建，原因和升级条件见 `docs/typescript.md`。
+`vp check` 继续负责 format、lint 和基于 TypeScript Go 工具链的类型检查。`pnpm run check:unused` 使用 Knip 检查新增的未使用导出；仓库已有问题记录在 `knip-baseline.json`，清理旧问题时同步删除对应基线。`pnpm run typecheck:ts7` 使用稳定版 TypeScript 7 检查 `packages/ubb` 和 `packages/utils`。Vue 工程仍通过 `tsc6` 构建，原因和升级条件见 `docs/typescript.md`。
 
 ## 动态测试
 

@@ -14,7 +14,7 @@ import { renderDividerTag, renderQuoteTag, renderTableTag } from "./structure";
 import { renderAlignmentTag, renderTextStyleTag } from "./textStyle";
 import type { UbbTagRenderer } from "./types";
 
-export const staticTagRenderers = {
+const staticTagRenderers = {
   b: renderTextStyleTag,
   i: renderTextStyleTag,
   u: renderTextStyleTag,
@@ -56,7 +56,7 @@ export const staticTagRenderers = {
   allowviewer: renderPermissionTag,
 } satisfies Record<UbbStaticTagName, UbbTagRenderer>;
 
-export const regexFamilyRenderers = {
+const regexFamilyRenderers = {
   em: renderEmotionTag,
   ac: renderEmotionTag,
   ms: renderEmotionTag,

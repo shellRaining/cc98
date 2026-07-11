@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    "apps/website": {
+      "entry": ["src/main.ts", "tests/**/*.test.ts"],
+      "project": ["src/**/*.{ts,vue}", "tests/**/*.ts"],
+      "includeEntryExports": true,
+      "vite": false
+    },
+    "packages/api": {
+      "entry": ["src/index.ts", "scripts/*.mjs", "tests/**/*.test.ts"],
+      "project": ["src/**/*.ts", "scripts/*.mjs", "tests/**/*.ts"],
+      "vite": false
+    },
+    "packages/ubb": {
+      "entry": ["src/index.ts", "tests/**/*.test.ts"],
+      "project": ["src/**/*.ts", "tests/**/*.ts"],
+      "vite": false
+    },
+    "packages/utils": {
+      "entry": ["src/index.ts", "tests/**/*.test.ts"],
+      "project": ["src/**/*.ts", "tests/**/*.ts"],
+      "vite": false
+    }
+  }
+}

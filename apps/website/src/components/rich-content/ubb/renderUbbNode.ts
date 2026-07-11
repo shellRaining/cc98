@@ -4,11 +4,11 @@ import { getUbbTextContent } from "../text";
 import type { UbbRenderContext } from "./context";
 import { resolveUbbTagRenderer } from "./registry";
 
-export function renderUbbChildren(node: UbbTagNode, context: UbbRenderContext): VNodeChild[] {
+function renderUbbChildren(node: UbbTagNode, context: UbbRenderContext): VNodeChild[] {
   return renderUbbNodes(node.children, context);
 }
 
-export function renderUbbNode(node: UbbNode, context: UbbRenderContext): VNodeChild {
+function renderUbbNode(node: UbbNode, context: UbbRenderContext): VNodeChild {
   if (node.type === "text") return node.value;
   const renderer = resolveUbbTagRenderer(node.tag);
   if (!renderer) return `[${node.tag}]${getUbbTextContent(node.children)}[/${node.tag}]`;

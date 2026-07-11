@@ -8,7 +8,7 @@ const loggerOptions: LoggerOptions = {
   },
 };
 
-export const logger = pino(loggerOptions);
+const logger = pino(loggerOptions);
 
 export function createLogger(scope: string): Logger {
   return logger.child({ scope });

@@ -1,6 +1,6 @@
 import type { RichContentOptions } from "../types";
 
-export interface UbbRenderState {
+interface UbbRenderState {
   imageCount: number;
 }
 

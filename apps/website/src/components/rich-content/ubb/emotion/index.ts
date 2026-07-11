@@ -11,4 +11,3 @@ export const renderEmotionTag: UbbTagRenderer = (node, context) => {
 };
 
 export { resolveEmotionTag } from "./resolveEmotionTag";
-export type { EmotionDescriptor } from "./resolveEmotionTag";

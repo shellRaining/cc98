@@ -34,7 +34,7 @@ function stripQuoteDescendants(nodes: UbbNode[]): {
   return { nodes: normalizedNodes, layers };
 }
 
-export function flattenQuoteChain(root: UbbTagNode): UbbTagNode[] {
+function flattenQuoteChain(root: UbbTagNode): UbbTagNode[] {
   const normalized = stripQuoteDescendants(root.children);
   return [...normalized.layers, { ...root, children: normalized.nodes }];
 }

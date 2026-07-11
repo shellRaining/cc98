@@ -11,7 +11,7 @@ function describeRequest(request: RequestInfo | URL): string {
   return request.url;
 }
 
-export const apiFetch: $Fetch = ofetch.create({
+const apiFetch: $Fetch = ofetch.create({
   baseURL: BASE_URL,
   retry: 1,
   retryStatusCodes: [408, 429, 500, 502, 503, 504],
@@ -54,5 +54,3 @@ export function typedPut<T>(
 export function typedDelete<T>(url: string, opts?: FetchOptions<"json">): Promise<T> {
   return apiFetch<T>(url, { method: "DELETE", ...opts });
 }
-
-export type ApiFetch = $Fetch;

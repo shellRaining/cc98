@@ -67,7 +67,7 @@ interface BiliDescriptor {
   page: number;
 }
 
-export function resolveBiliSource(source: string, requestedPage?: string): BiliDescriptor | null {
+function resolveBiliSource(source: string, requestedPage?: string): BiliDescriptor | null {
   const value = source.trim();
   const fallbackPage = Math.max(1, Number.parseInt(requestedPage ?? "1", 10) || 1);
   if (/^\d+$/.test(value)) return { aid: value, page: fallbackPage };

@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && vp run -r test && vp run -r build",
+    "ready": "vp check && pnpm run check:unused && vp run -r test && vp run -r build",
+    "check:unused": "node scripts/check-unused.mjs",
     "dev": "vp run website#dev",
     "prepare": "vp config"
   },
   "devDependencies": {
+    "knip": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {
