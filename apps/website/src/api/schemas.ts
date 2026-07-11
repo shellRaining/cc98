@@ -12,7 +12,7 @@ export const postSchema = z.object({
   id: z.number(),
   topicId: z.number(),
   boardId: z.number(),
-  title: z.string(),
+  title: z.string().nullable(),
   content: z.string(),
   contentType: contentTypeSchema,
   floor: z.number(),

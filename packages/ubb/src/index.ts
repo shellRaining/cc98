@@ -3,6 +3,13 @@ export const UBB_VERSION = "0.0.0";
 export type { UbbNode, UbbTextNode, UbbTagNode, UbbAttrs } from "./types.ts";
 
 export { parseUbb } from "./parser.ts";
+export {
+  UBB_REGEX_TAG_FAMILIES,
+  UBB_STATIC_TAG_MODES,
+  UBB_STATIC_TAG_NAMES,
+  matchUbbRegexTagFamily,
+} from "./tags.ts";
+export type { TagMode, UbbRegexTagFamily, UbbStaticTagName } from "./tags.ts";
 export { ubbToMarkdown } from "./to-markdown.ts";
 export { ubbToHtml } from "./to-html.ts";
 

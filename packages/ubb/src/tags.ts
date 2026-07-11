@@ -14,7 +14,7 @@
 export type TagMode = "recursive" | "text" | "empty" | "autoclose";
 
 /** 静态标签名 → 模式。 */
-const staticTags: Record<string, TagMode> = {
+export const UBB_STATIC_TAG_MODES = {
   // 文字样式（Recursive）
   b: "recursive",
   i: "recursive",
@@ -67,17 +67,41 @@ const staticTags: Record<string, TagMode> = {
   needreply: "empty",
   posteronly: "empty",
   allowviewer: "empty",
-};
+} as const satisfies Record<string, TagMode>;
+
+export type UbbStaticTagName = keyof typeof UBB_STATIC_TAG_MODES;
+
+export const UBB_STATIC_TAG_NAMES = Object.freeze(
+  Object.keys(UBB_STATIC_TAG_MODES) as UbbStaticTagName[],
+);
+
+export type UbbRegexTagFamily = "em" | "ac" | "ms" | "mahjong" | "cc98" | "tb";
 
 /** 正则标签名 → 模式。按优先级排序，先匹配先返回。 */
-const regexTags: ReadonlyArray<{ pattern: RegExp; mode: TagMode }> = [
-  { pattern: /^em\d{2}$/, mode: "empty" },
-  { pattern: /^ac(?:\d{2}|\d{4})$/, mode: "empty" },
-  { pattern: /^ms\d{2}$/, mode: "empty" },
-  { pattern: /^[acf]:\d{3}$/, mode: "empty" },
-  { pattern: /^cc98\d{2}$/, mode: "empty" },
-  { pattern: /^tb\d{2}$/, mode: "empty" },
+const regexTags: ReadonlyArray<{
+  family: UbbRegexTagFamily;
+  pattern: RegExp;
+  mode: TagMode;
+}> = [
+  { family: "em", pattern: /^em\d{2}$/, mode: "empty" },
+  { family: "ac", pattern: /^ac(?:\d{2}|\d{4})$/, mode: "empty" },
+  { family: "ms", pattern: /^ms\d{2}$/, mode: "empty" },
+  { family: "mahjong", pattern: /^[acf]:\d{3}$/, mode: "empty" },
+  { family: "cc98", pattern: /^cc98\d{2}$/, mode: "empty" },
+  { family: "tb", pattern: /^tb\d{2}$/, mode: "empty" },
 ];
+
+export const UBB_REGEX_TAG_FAMILIES = Object.freeze(
+  regexTags.map(({ family }) => family),
+) as readonly UbbRegexTagFamily[];
+
+export function matchUbbRegexTagFamily(tagName: string): UbbRegexTagFamily | null {
+  for (const { family, pattern } of regexTags) {
+    if (pattern.test(tagName)) return family;
+  }
+
+  return null;
+}
 
 /**
  * 查询标签的模式。
@@ -86,7 +110,7 @@ const regexTags: ReadonlyArray<{ pattern: RegExp; mode: TagMode }> = [
  * @returns 标签模式；未知标签返回 null（主解析器将其降级为文本）。
  */
 export function getTagMode(tagName: string): TagMode | null {
-  const staticMode = staticTags[tagName];
+  const staticMode = UBB_STATIC_TAG_MODES[tagName as UbbStaticTagName];
   if (staticMode) return staticMode;
 
   for (const { pattern, mode } of regexTags) {

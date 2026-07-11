@@ -20,15 +20,13 @@ export default defineConfig({
   transformers: [transformerDirectives(), transformerVariantGroup()],
   theme: {
     colors: {
-      cc98: {
-        primary: "var(--cc98-color-primary)",
-        accent: "var(--cc98-color-accent)",
-        text: "var(--cc98-color-text)",
-        "text-muted": "var(--cc98-color-text-muted)",
-        bg: "var(--cc98-color-bg)",
-        "bg-elevated": "var(--cc98-color-bg-elevated)",
-        border: "var(--cc98-color-border)",
-      },
+      "cc98-primary": "var(--cc98-color-primary)",
+      "cc98-accent": "var(--cc98-color-accent)",
+      "cc98-text": "var(--cc98-color-text)",
+      "cc98-text-muted": "var(--cc98-color-text-muted)",
+      "cc98-bg": "var(--cc98-color-bg)",
+      "cc98-bg-elevated": "var(--cc98-color-bg-elevated)",
+      "cc98-border": "var(--cc98-color-border)",
     },
   },
   shortcuts: {

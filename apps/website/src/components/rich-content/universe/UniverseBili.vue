@@ -2,8 +2,8 @@
 import { computed } from "vue";
 
 const props = defineProps<{
-  bvid?: string;
   aid?: string;
+  bvid?: string;
   page?: number;
 }>();
 
@@ -21,12 +21,6 @@ const src = computed(() => {
 
 <template>
   <div v-if="src" class="w-full max-w-2xl">
-    <iframe
-      :src="src"
-      class="w-full"
-      style="aspect-ratio: 16 / 9; border: 0"
-      scrolling="no"
-      allowfullscreen
-    />
+    <iframe :src="src" class="aspect-video w-full border-0" scrolling="no" allowfullscreen />
   </div>
 </template>

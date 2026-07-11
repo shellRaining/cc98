@@ -17,6 +17,20 @@ graph TD
 - `packages/ubb`：UBB 解析器，核心产出是 AST（`parseUbb`），附带 HTML 和 Markdown 两个导出器。只读不做编辑器
 - `packages/utils`：TypeScript 工具包脚手架，当前仅有占位代码，尚未投入使用
 
+网站的富内容渲染分为语法适配层和共享 UI 层：
+
+```mermaid
+flowchart LR
+  page["TopicView 等页面"] --> content["ContentRenderer"]
+  content --> ubb["UBB 适配层"]
+  content --> markdown["Markdown 适配层"]
+  ubb --> parser["@cc98/ubb AST"]
+  ubb --> universe["Universe 共享 UI"]
+  markdown --> universe
+```
+
+`packages/ubb` 只负责解析和标签契约，不依赖 Vue。`apps/website` 解释 AST 和 Markdown token，并集中处理 URL 安全、图片计数、媒体开关等渲染策略。
+
 ## 依赖方向
 
 ```mermaid

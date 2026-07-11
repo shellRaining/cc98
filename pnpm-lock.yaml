@@ -310,6 +310,9 @@ importers:
 
   apps/website:
     dependencies:
+      '@cc98/ubb':
+        specifier: workspace:*
+        version: link:../../packages/ubb
       '@microsoft/signalr':
         specifier: 'catalog:'
         version: 10.0.0

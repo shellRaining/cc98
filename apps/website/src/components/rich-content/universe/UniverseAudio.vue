@@ -4,12 +4,10 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 const props = defineProps<{
   url: string;
   title?: string;
-  author?: string;
-  cover?: string;
 }>();
 
 const container = ref<HTMLDivElement>();
-let player: any = null;
+let player: { destroy: () => void } | null = null;
 
 onMounted(async () => {
   const APlayer = (await import("aplayer")).default;
@@ -22,8 +20,8 @@ onMounted(async () => {
     music: {
       url: encodeURI(props.url),
       title: props.title ?? props.url,
-      author: props.author ?? "",
-      pic: props.cover ?? "",
+      author: "",
+      pic: "",
     },
   });
 });
@@ -35,5 +33,5 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="container" class="aplayer" style="width: 100%; max-width: 30rem" />
+  <div ref="container" class="aplayer w-full max-w-[30rem]" />
 </template>

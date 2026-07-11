@@ -11,7 +11,7 @@ UBB 的 `[img]` 和 Markdown 的 `![]()` 最终都显示图片，不应该各自
 ```txt
 UbbImageRenderer        读取 UBB AST，解释 [img] 的历史语义
 MarkdownImageRenderer   读取 Markdown token，解释 ![]() 的语义
-UniverseImage           真正渲染图片，负责样式、交互和通用安全边界
+UniverseImage           接收已验证 URL，负责图片样式和交互
 ```
 
 `UbbImageRenderer` 和 `MarkdownImageRenderer` 是语法适配层，允许不同。`UniverseImage` 是通用组件，应该共享。
@@ -93,19 +93,20 @@ showCaption = false;
 UBB 适配层把 AST 转成 `UniverseImageProps`。
 
 ```ts
-function renderUbbImage(node: UbbTagNode, ctx: RichContentContext) {
+function renderUbbImage(node: UbbTagNode, ctx: UbbRenderContext) {
   const src = getTextContent(node.children);
   const mode = node.attrs.positionals[0];
   const title = node.attrs.named.title;
+  const safeSrc = sanitizeImageUrl(src, ctx.options);
 
   if (!ctx.options.allowImage) return src;
-  if (!ctx.services.canLoadImage(src)) return src;
-  if (ctx.state.imageCount.value >= ctx.options.maxImageCount) return src;
+  if (!safeSrc) return src;
+  if (ctx.state.imageCount >= ctx.options.maxImageCount) return src;
 
-  ctx.state.imageCount.value += 1;
+  ctx.state.imageCount += 1;
 
   return h(UniverseImage, {
-    src,
+    src: safeSrc,
     title,
     alt: title ?? "",
     defaultVisible: mode !== "1",
@@ -122,11 +123,12 @@ function renderUbbImage(node: UbbTagNode, ctx: RichContentContext) {
 Markdown 适配层只处理 Markdown 图片 token。
 
 ```ts
-function renderMarkdownImage(token: MarkdownImageToken, ctx: RichContentContext) {
-  if (!ctx.services.canLoadImage(token.src)) return token.alt ?? token.src;
+function renderMarkdownImage(token: MarkdownImageToken, options: Readonly<RichContentOptions>) {
+  const safeSrc = sanitizeImageUrl(token.src, options);
+  if (!safeSrc) return token.alt ?? token.src;
 
   return h(UniverseImage, {
-    src: token.src,
+    src: safeSrc,
     alt: token.alt ?? "",
     title: token.title,
     defaultVisible: true,
@@ -170,13 +172,10 @@ shortcuts: {
 
 ## 安全边界
 
-图片 URL 必须经过同一个服务函数处理，不能 UBB 一套、Markdown 一套。
+图片 URL 必须经过 `security.ts` 导出的同一组纯函数处理，不能 UBB 一套、Markdown 一套。
 
 ```ts
-interface RichContentServices {
-  canLoadImage(src: string): boolean;
-  sanitizeImageUrl(src: string): string | null;
-}
+function sanitizeImageUrl(src: string, options: Readonly<RichContentOptions>): string | null;
 ```
 
 默认策略：
@@ -187,7 +186,7 @@ interface RichContentServices {
 - 禁止 `javascript:`、`data:`、`file:`。
 - 外链图片受 `allowExternalImage` 控制。
 
-`UniverseImage` 可以再次兜底调用 `sanitizeImageUrl`，但主要判断应在适配层完成。这样适配层能决定降级成纯文本、链接或提示文案。
+UBB 和 Markdown 适配层负责调用 `sanitizeImageUrl`，并决定失败时降级成纯文本、链接还是提示文案。`UniverseImage` 只接收已经验证的 `safeSrc`，不再持有安全策略或渲染服务。
 
 ## 目录落点
 
@@ -201,7 +200,8 @@ rich-content/
     renderers/image.ts
   markdown/
     renderers/image.ts
-  context.ts
+  options.ts
+  ubb/context.ts
   security.ts
 ```
 
