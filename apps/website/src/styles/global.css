@@ -48,6 +48,13 @@ a:hover {
   color: var(--cc98-color-accent);
 }
 
+button.cc98-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+}
+
 *,
 *::before,
 *::after {
