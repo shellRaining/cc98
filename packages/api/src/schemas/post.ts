@@ -17,6 +17,7 @@ export const postSchema = z
     content: z.string().optional(),
     contentType: postContentTypeSchema.optional(),
     floor: z.number().optional(),
+    count: z.number().optional(),
     userId: z.number().nullable().optional(),
     userName: z.string().nullable().optional(),
     ip: z.string().optional(),
@@ -33,14 +34,22 @@ export const postSchema = z
     state: z.number().optional(),
     time: z.string().optional(),
     awards: z.array(z.looseObject({})).optional(),
+    allowedViewers: z.array(z.number()).nullable().optional(),
+    lastUpdateTime: z.string().nullable().optional(),
+    lastUpdateAuthor: z.string().nullable().optional(),
+    isMe: z.boolean().optional(),
   })
   .meta({ id: "Post" });
 export type Post = z.infer<typeof postSchema>;
 
 export const pagedPostResultSchema = z
-  .object({
-    data: z.array(postSchema).optional(),
-    count: z.number().optional(),
+  .looseObject({
+    data: z.array(postSchema),
+    count: z.number(),
+    from: z.number(),
+    size: z.number(),
+    extra: z.unknown().nullable().optional(),
+    errorCode: z.number(),
   })
   .meta({ id: "PagedPostResult" });
 export type PagedPostResult = z.infer<typeof pagedPostResultSchema>;

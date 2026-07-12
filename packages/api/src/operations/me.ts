@@ -166,7 +166,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -186,7 +186,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -290,7 +290,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -312,7 +312,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -362,7 +362,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -384,7 +384,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -433,7 +433,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -458,7 +458,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -480,7 +480,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -610,7 +610,7 @@ export const meOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {

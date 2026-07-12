@@ -233,13 +233,18 @@ export const userOperations = defineOperations([
         contentType: "application/json",
         schema: errorCodeSchema,
       },
+      default: {
+        description: "Permission or API error",
+        contentType: "application/json",
+        schema: errorCodeSchema,
+      },
     },
     auth: "required",
     risk: "destructive",
     verificationStatus: "authentication-rejected",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "旧管理页面读取 postInfos 和 count；2026-07-11 使用普通注册用户 token 实测返回空响应体的 401，成功响应结构尚未验证。",
+      "旧管理页面读取 postInfos 和 count；普通用户实测返回 401 或 403，成功响应结构尚未验证。",
   },
   {
     method: "DELETE",

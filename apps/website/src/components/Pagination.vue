@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, type RouteLocationRaw } from "vue-router";
 import { paginationWindow } from "../lib/route-params";
 
 const props = withDefaults(
@@ -8,7 +8,7 @@ const props = withDefaults(
     currentPage: number;
     totalPages?: number | null;
     /** 生成目标页路由，返回 string 或 RouteLocationRaw 兼容对象 */
-    toPage: (page: number) => string | { name?: string; params?: Record<string, string> };
+    toPage: (page: number) => RouteLocationRaw;
     /** 总页数未知时，是否仍有下一页 */
     hasNextPage?: boolean;
   }>(),

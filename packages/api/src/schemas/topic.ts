@@ -33,6 +33,7 @@ export const topicSchema = z
     isInternalOnly: z.boolean().optional(),
     favoriteCount: z.number().optional(),
     canNotifyAllReplier: z.boolean().optional(),
+    lastBrowsingTime: z.string().optional(),
   })
   .meta({ id: "Topic" });
 export type Topic = z.infer<typeof topicSchema>;
@@ -54,9 +55,13 @@ export const topicPagedResultSchema = z
 export type TopicPagedResult = z.infer<typeof topicPagedResultSchema>;
 
 export const pagedTopicResultDataSchema = z
-  .object({
-    data: z.array(topicSchema).optional(),
-    count: z.number().optional(),
+  .looseObject({
+    data: z.array(topicSchema),
+    count: z.number(),
+    from: z.number(),
+    size: z.number(),
+    extra: z.unknown().nullable().optional(),
+    errorCode: z.number(),
   })
   .meta({ id: "PagedTopicResultData" });
 export type PagedTopicResultData = z.infer<typeof pagedTopicResultDataSchema>;

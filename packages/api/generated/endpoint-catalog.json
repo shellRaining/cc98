@@ -346,7 +346,7 @@
     "summary": "Enable or disable browsing history",
     "tags": ["Me"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -366,7 +366,7 @@
     "summary": "Unfollow board",
     "tags": ["Me", "Board"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -376,7 +376,7 @@
     "summary": "Follow board",
     "tags": ["Me", "Board"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -396,7 +396,7 @@
     "summary": "Delete favorite topic group",
     "tags": ["Me", "Topic"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -416,7 +416,7 @@
     "summary": "Create favorite topic group",
     "tags": ["Me", "Topic"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -426,7 +426,7 @@
     "summary": "Update favorite topic group",
     "tags": ["Me", "Topic"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -436,7 +436,7 @@
     "summary": "Unfavorite topic",
     "tags": ["Me", "Topic"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -446,7 +446,7 @@
     "summary": "Favorite topic",
     "tags": ["Me", "Topic"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -466,7 +466,7 @@
     "summary": "Unfollow user",
     "tags": ["Me", "User"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {
@@ -476,7 +476,7 @@
     "summary": "Follow user",
     "tags": ["Me", "User"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {

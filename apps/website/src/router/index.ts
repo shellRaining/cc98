@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import { normalizeFloorHash } from "../lib/route-params";
+import { saveLoginRedirect } from "../lib/login-redirect";
+import { useUserStore } from "../stores/user";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -82,6 +84,55 @@ const routes: RouteRecordRaw[] = [
     props: true,
   },
   {
+    path: "/usercenter",
+    component: () => import("../layouts/UserCenterLayout.vue"),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "user-center",
+        component: () => import("../views/user-center/UserCenterHomeView.vue"),
+      },
+      {
+        path: "topics",
+        name: "user-center-topics",
+        component: () => import("../views/user-center/MyTopicsView.vue"),
+      },
+      {
+        path: "posts",
+        name: "user-center-posts",
+        component: () => import("../views/user-center/MyPostsView.vue"),
+      },
+      {
+        path: "favorites",
+        name: "user-center-favorites",
+        component: () => import("../views/user-center/MyFavoritesView.vue"),
+      },
+      {
+        path: "history",
+        name: "user-center-history",
+        component: () => import("../views/user-center/MyHistoryView.vue"),
+      },
+      {
+        path: "following",
+        name: "user-center-following",
+        component: () => import("../views/user-center/UserRelationsView.vue"),
+        meta: { relationKind: "following" },
+      },
+      {
+        path: "followers",
+        name: "user-center-followers",
+        component: () => import("../views/user-center/UserRelationsView.vue"),
+        meta: { relationKind: "followers" },
+      },
+      {
+        path: "boards",
+        name: "user-center-boards",
+        component: () => import("../views/user-center/MyBoardsView.vue"),
+      },
+    ],
+  },
+  {
     path: "/logon",
     name: "logon",
     component: () => import("../views/LogOnView.vue"),
@@ -105,4 +156,12 @@ export const router = createRouter({
     }
     return { top: 0 };
   },
+});
+
+router.beforeEach((to) => {
+  if (!to.meta.requiresAuth) return true;
+  const user = useUserStore();
+  if (user.isLoggedIn) return true;
+  saveLoginRedirect(to.fullPath);
+  return { name: "logon" };
 });

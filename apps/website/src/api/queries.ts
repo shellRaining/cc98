@@ -1,8 +1,12 @@
 import {
+  basicUserSchema,
   boardSchema,
   boardGroupSchema,
   globalConfigSchema,
   meUserSchema,
+  pagedFavoriteTopicGroupSchema,
+  pagedPostResultSchema,
+  pagedTopicResultDataSchema,
   postSchema,
   recommendedTopicSchema,
   topicSchema,
@@ -40,6 +44,29 @@ export const queryKeys = {
   userByName: (name: string, authScope: AuthScope) => ["user", "name", name, authScope] as const,
   userRecentTopics: (id: number, size: number, authScope: AuthScope) =>
     ["user", id, "recent-topics", size, authScope] as const,
+  usersByIds: (ids: number[]) => ["users", "batch", ...ids] as const,
+  boardsByIds: (ids: number[]) => ["boards", "batch", ...ids] as const,
+  meRecentTopics: (from: number, size: number, authScope: AuthScope) =>
+    ["me", "recent-topics", from, size, authScope] as const,
+  mePosts: (kind: "recent" | "hot", from: number, size: number, authScope: AuthScope) =>
+    ["me", "posts", kind, from, size, authScope] as const,
+  meFavorites: (
+    groupId: number,
+    order: number,
+    keyword: string,
+    from: number,
+    size: number,
+    authScope: AuthScope,
+  ) => ["me", "favorites", groupId, order, keyword, from, size, authScope] as const,
+  meFavoriteGroups: (authScope: AuthScope) => ["me", "favorite-groups", authScope] as const,
+  meBrowsingRecords: (from: number, size: number, authScope: AuthScope) =>
+    ["me", "browsing-records", from, size, authScope] as const,
+  meRelationIds: (
+    kind: "following" | "followers",
+    from: number,
+    size: number,
+    authScope: AuthScope,
+  ) => ["me", "relations", kind, from, size, authScope] as const,
   globalConfig: ["global-config"] as const,
   currentUser: ["current-user"] as const,
 };
@@ -262,4 +289,123 @@ export const userRecentTopicsInfiniteQuery = (
       return lastPageParam + size;
     },
     enabled: enabled && userId > 0 && authScope !== "anonymous",
+  });
+
+export const usersByIdsQuery = (ids: number[], enabled = true) => {
+  const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
+  return queryOptions({
+    queryKey: queryKeys.usersByIds(normalizedIds),
+    queryFn: async () => {
+      const data = await typedGet<unknown[]>("/user/basic", { query: { id: normalizedIds } });
+      return basicUserSchema.array().parse(data);
+    },
+    enabled: enabled && normalizedIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const boardsByIdsQuery = (ids: number[], enabled = true) => {
+  const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
+  return queryOptions({
+    queryKey: queryKeys.boardsByIds(normalizedIds),
+    queryFn: async () => {
+      const data = await typedGet<unknown[]>("/board/", { query: { id: normalizedIds } });
+      return boardSchema.array().parse(data);
+    },
+    enabled: enabled && normalizedIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const meRecentTopicsQuery = (
+  authScope: AuthScope,
+  from: number,
+  size: number,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.meRecentTopics(from, size, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown[]>("/me/recent-topic", { query: { from, size } });
+      return topicSchema.array().parse(data);
+    },
+    enabled: enabled && authScope !== "anonymous",
+  });
+
+export const mePostsQuery = (
+  kind: "recent" | "hot",
+  authScope: AuthScope,
+  from: number,
+  size: number,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.mePosts(kind, from, size, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>(`/me/${kind}-post`, { query: { from, size } });
+      return pagedPostResultSchema.parse(data);
+    },
+    enabled: enabled && authScope !== "anonymous",
+  });
+
+export const meFavoritesQuery = (
+  authScope: AuthScope,
+  groupId: number,
+  order: number,
+  keyword: string,
+  from: number,
+  size: number,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.meFavorites(groupId, order, keyword, from, size, authScope),
+    queryFn: async () => {
+      const path = keyword ? "/topic/me/search-favorite" : "/topic/me/favorite";
+      const query = keyword ? { keyword, from, size } : { from, size, order, groupid: groupId };
+      const data = await typedGet<unknown[]>(path, { query });
+      return topicSchema.array().parse(data);
+    },
+    enabled: enabled && authScope !== "anonymous",
+  });
+
+export const meFavoriteGroupsQuery = (authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.meFavoriteGroups(authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>("/me/favorite-topic-group");
+      return pagedFavoriteTopicGroupSchema.parse(data);
+    },
+    enabled: enabled && authScope !== "anonymous",
+  });
+
+export const meBrowsingRecordsQuery = (
+  authScope: AuthScope,
+  from: number,
+  size: number,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.meBrowsingRecords(from, size, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>("/me/browsing-record", { query: { from, size } });
+      return pagedTopicResultDataSchema.parse(data);
+    },
+    enabled: enabled && authScope !== "anonymous",
+  });
+
+export const meRelationIdsQuery = (
+  kind: "following" | "followers",
+  authScope: AuthScope,
+  from: number,
+  size: number,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.meRelationIds(kind, from, size, authScope),
+    queryFn: async () => {
+      const path = kind === "following" ? "/me/followee" : "/me/follower";
+      const data = await typedGet<unknown[]>(path, { query: { from, size } });
+      return basicUserSchema.shape.id.array().parse(data);
+    },
+    enabled: enabled && authScope !== "anonymous",
   });

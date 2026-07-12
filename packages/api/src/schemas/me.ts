@@ -4,6 +4,8 @@ export const favoriteTopicGroupSchema = z
   .looseObject({
     id: z.number().optional(),
     name: z.string().optional(),
+    count: z.number().optional(),
+    createTime: z.string().optional(),
   })
   .meta({ id: "FavoriteTopicGroup" });
 export type FavoriteTopicGroup = z.infer<typeof favoriteTopicGroupSchema>;

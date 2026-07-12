@@ -1,5 +1,16 @@
 [
   {
+    "id": 30203915,
+    "type": 1,
+    "title": "<redacted>",
+    "content": "<redacted-content>",
+    "topicId": null,
+    "postId": null,
+    "time": "2026-01-01T00:00:00Z",
+    "isRead": true,
+    "postBasicInfo": null
+  },
+  {
     "id": 30154949,
     "type": 1,
     "title": "<redacted>",
@@ -16,16 +27,5 @@
       "isDeleted": false,
       "boardId": 758
     }
-  },
-  {
-    "id": 29780503,
-    "type": 1,
-    "title": "<redacted>",
-    "content": "<redacted-content>",
-    "topicId": null,
-    "postId": null,
-    "time": "2026-01-01T00:00:00Z",
-    "isRead": true,
-    "postBasicInfo": null
   }
 ]

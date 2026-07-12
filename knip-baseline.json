@@ -1,6 +1,1 @@
-[
-  "exports:apps/website/src/api/queries.ts:currentUserQuery",
-  "exports:apps/website/src/lib/http.ts:typedDelete",
-  "exports:apps/website/src/lib/http.ts:typedPost",
-  "exports:apps/website/src/lib/http.ts:typedPut"
-]
+[]

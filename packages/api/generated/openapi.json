@@ -4607,7 +4607,7 @@
       "get": {
         "operationId": "getUserIdPost",
         "summary": "Get a user's recent posts for moderation",
-        "description": "旧管理页面读取 postInfos 和 count；2026-07-11 使用普通注册用户 token 实测返回空响应体的 401，成功响应结构尚未验证。",
+        "description": "旧管理页面读取 postInfos 和 count；普通用户实测返回 401 或 403，成功响应结构尚未验证。",
         "tags": ["User", "Post", "Moderation"],
         "security": [
           {
@@ -4657,6 +4657,16 @@
           },
           "401": {
             "description": "Authentication rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCode"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Permission or API error",
             "content": {
               "application/json": {
                 "schema": {
@@ -4952,7 +4962,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -4990,7 +5000,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -5211,7 +5221,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -5249,7 +5259,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -5347,7 +5357,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -5392,7 +5402,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -5467,7 +5477,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,
@@ -5511,7 +5521,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,
@@ -5558,7 +5568,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -5821,7 +5831,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -7671,7 +7681,14 @@
             "type": "boolean"
           },
           "bigPaper": {
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "additionalProperties": {}
@@ -7805,6 +7822,9 @@
           },
           "canNotifyAllReplier": {
             "type": "boolean"
+          },
+          "lastBrowsingTime": {
+            "type": "string"
           }
         },
         "additionalProperties": {}
@@ -7955,6 +7975,9 @@
           "floor": {
             "type": "number"
           },
+          "count": {
+            "type": "number"
+          },
           "userId": {
             "anyOf": [
               {
@@ -8041,6 +8064,42 @@
               "properties": {},
               "additionalProperties": {}
             }
+          },
+          "allowedViewers": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastUpdateTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastUpdateAuthor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "isMe": {
+            "type": "boolean"
           }
         },
         "additionalProperties": {}
@@ -8481,6 +8540,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "count": {
+            "type": "number"
+          },
+          "createTime": {
+            "type": "string"
           }
         },
         "additionalProperties": {}
@@ -8496,9 +8561,27 @@
           },
           "count": {
             "type": "number"
+          },
+          "from": {
+            "type": "number"
+          },
+          "size": {
+            "type": "number"
+          },
+          "extra": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "errorCode": {
+            "type": "number"
           }
         },
-        "additionalProperties": false
+        "required": ["data", "count", "from", "size", "errorCode"],
+        "additionalProperties": {}
       },
       "PagedTopicResultData": {
         "type": "object",
@@ -8511,9 +8594,27 @@
           },
           "count": {
             "type": "number"
+          },
+          "from": {
+            "type": "number"
+          },
+          "size": {
+            "type": "number"
+          },
+          "extra": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "errorCode": {
+            "type": "number"
           }
         },
-        "additionalProperties": false
+        "required": ["data", "count", "from", "size", "errorCode"],
+        "additionalProperties": {}
       },
       "MessageCounts": {
         "type": "object",

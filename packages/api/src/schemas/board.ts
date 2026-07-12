@@ -16,7 +16,7 @@ export const boardSchema = z
     anonymousState: z.number().optional(),
     canEntry: z.boolean().optional(),
     canVote: z.boolean().optional(),
-    bigPaper: z.string().optional(),
+    bigPaper: z.string().nullable().optional(),
   })
   .meta({ id: "Board" });
 export type Board = z.infer<typeof boardSchema>;

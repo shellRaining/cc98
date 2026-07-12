@@ -6,8 +6,12 @@ import authenticatedProbe from "../generated/probe-authenticated.json" with { ty
 import openapi from "../generated/openapi.json" with { type: "json" };
 import {
   endpointCatalog,
+  boardSchema,
+  favoriteTopicGroupSchema,
   globalConfigSchema,
   operationRegistry,
+  pagedPostResultSchema,
+  pagedTopicResultDataSchema,
   tagGroupSchema,
   tokenRequestSchema,
   userOperationRequestSchema,
@@ -37,6 +41,37 @@ describe("API 契约基线", () => {
         futureField: true,
       }),
     ).toThrow();
+  });
+
+  it("用户中心分页响应保留页码元数据", () => {
+    const page = {
+      data: [],
+      count: 0,
+      from: 0,
+      size: 10,
+      extra: null,
+      errorCode: 0,
+    };
+    expect(pagedPostResultSchema.parse(page)).toMatchObject(page);
+    expect(pagedTopicResultDataSchema.parse(page)).toMatchObject(page);
+  });
+
+  it("收藏分组包含计数和创建时间", () => {
+    expect(
+      favoriteTopicGroupSchema.parse({
+        id: 1,
+        name: "测试分组",
+        count: 2,
+        createTime: "2026-01-01T00:00:00Z",
+      }),
+    ).toMatchObject({ count: 2, createTime: "2026-01-01T00:00:00Z" });
+  });
+
+  it("版面海报允许为空", () => {
+    expect(boardSchema.parse({ id: 763, bigPaper: null })).toMatchObject({
+      id: 763,
+      bigPaper: null,
+    });
   });
 
   it("Token operation 使用真实表单契约和 OpenID server", () => {

@@ -1,12 +1,12 @@
 {
   "boardId": 758,
-  "count": 128308,
+  "count": 128374,
   "from": 0,
   "size": 2,
   "boardEvents": [
     {
-      "id": 4384688,
-      "topicId": 6567329,
+      "id": 4384945,
+      "topicId": 6572964,
       "boardId": 758,
       "targetUserName": "<redacted>",
       "operatorUserName": "<redacted>",
@@ -17,8 +17,8 @@
       "isAnonymous": false
     },
     {
-      "id": 4384687,
-      "topicId": 6567329,
+      "id": 4384938,
+      "topicId": 6570740,
       "boardId": 758,
       "targetUserName": "<redacted>",
       "operatorUserName": "<redacted>",

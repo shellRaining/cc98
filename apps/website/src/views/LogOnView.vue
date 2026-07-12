@@ -22,7 +22,7 @@ async function handleLogin() {
   errorMsg.value = "";
   try {
     await user.login(loginName.value, loginPassword.value);
-    router.push(takeLoginRedirect("/"));
+    await router.replace(takeLoginRedirect("/"));
   } catch (err) {
     if (err instanceof AccountLockedError) {
       errorMsg.value = err.message;
