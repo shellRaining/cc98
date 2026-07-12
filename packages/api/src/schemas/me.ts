@@ -33,21 +33,21 @@ export type TransferWealthRequest = z.infer<typeof transferWealthRequestSchema>;
 
 export const signinInfoSchema = z
   .looseObject({
-    hasSignedInToday: z.boolean().optional(),
-    lastSignInCount: z.number().optional(),
-    lastSignInTime: z.string().optional(),
-    lastReward: z.number().optional(),
+    hasSignedInToday: z.boolean(),
+    lastSignInCount: z.number().int().nonnegative(),
+    lastSignInTime: z.string(),
+    lastReward: z.number().int().nonnegative(),
   })
   .meta({ id: "SigninInfo" });
 export type SigninInfo = z.infer<typeof signinInfoSchema>;
 
 export const signinRecordSchema = z
   .looseObject({
-    year: z.number().optional(),
-    month: z.number().optional(),
-    day: z.number().optional(),
-    useCard: z.boolean().optional(),
-    reward: z.number().optional(),
+    year: z.number().int(),
+    month: z.number().int().min(1).max(12),
+    day: z.number().int().min(1).max(31),
+    useCard: z.boolean(),
+    reward: z.number().int().nonnegative(),
   })
   .meta({ id: "SigninRecord" });
 export type SigninRecord = z.infer<typeof signinRecordSchema>;

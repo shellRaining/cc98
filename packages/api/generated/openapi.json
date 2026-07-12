@@ -6349,7 +6349,7 @@
       "post": {
         "operationId": "postMessage",
         "summary": "Send private message",
-        "description": "The frontend passes a pre-serialized JSON string; exact fields are not fully visible from the wrapper.",
+        "description": "The legacy frontend sends { receiverId, content } as JSON. The success response still needs live verification.",
         "tags": ["Message"],
         "security": [
           {
@@ -7347,16 +7347,17 @@
         "type": "object",
         "properties": {
           "receiverId": {
-            "type": "number"
-          },
-          "userId": {
-            "type": "number"
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         },
-        "additionalProperties": {}
+        "required": ["receiverId", "content"],
+        "additionalProperties": false
       },
       "TokenResponse": {
         "type": "object",
@@ -8501,6 +8502,9 @@
               "followCount": {
                 "type": "number"
               },
+              "isFollowing": {
+                "type": "boolean"
+              },
               "theme": {
                 "type": "number"
               },
@@ -8687,18 +8691,27 @@
         "type": "object",
         "properties": {
           "systemCount": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           },
           "atCount": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           },
           "replyCount": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           },
           "messageCount": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           }
         },
+        "required": ["systemCount", "atCount", "replyCount", "messageCount"],
         "additionalProperties": {}
       },
       "SigninInfo": {
@@ -8708,36 +8721,50 @@
             "type": "boolean"
           },
           "lastSignInCount": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           },
           "lastSignInTime": {
             "type": "string"
           },
           "lastReward": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           }
         },
+        "required": ["hasSignedInToday", "lastSignInCount", "lastSignInTime", "lastReward"],
         "additionalProperties": {}
       },
       "SigninRecord": {
         "type": "object",
         "properties": {
           "year": {
-            "type": "number"
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
           },
           "month": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
           },
           "day": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 31
           },
           "useCard": {
             "type": "boolean"
           },
           "reward": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
           }
         },
+        "required": ["year", "month", "day", "useCard", "reward"],
         "additionalProperties": {}
       },
       "MakeUpSigninResult": {
@@ -8968,13 +8995,20 @@
           "userId": {
             "type": "number"
           },
+          "senderId": {
+            "type": "number"
+          },
           "lastContent": {
             "type": "string"
           },
           "isRead": {
             "type": "boolean"
+          },
+          "time": {
+            "type": "string"
           }
         },
+        "required": ["userId", "senderId", "lastContent", "isRead", "time"],
         "additionalProperties": {}
       },
       "PrivateMessage": {
@@ -9014,12 +9048,10 @@
               },
               "content": {
                 "type": "string"
-              },
-              "floor": {
-                "type": "number"
               }
             },
-            "additionalProperties": false
+            "required": ["title", "content"],
+            "additionalProperties": {}
           }
         ]
       },
@@ -9057,8 +9089,46 @@
           },
           "isRead": {
             "type": "boolean"
+          },
+          "postBasicInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NotificationPostBasicInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
+        "required": ["id", "type", "topicId", "postId", "time", "isRead", "postBasicInfo"],
+        "additionalProperties": {}
+      },
+      "NotificationPostBasicInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "floor": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "userId": {
+            "type": "number"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "boardId": {
+            "type": "number"
+          }
+        },
+        "required": ["id", "floor", "userId", "userName", "isDeleted", "boardId"],
         "additionalProperties": {}
       },
       "ReplyOrAtNotification": {
@@ -9069,26 +9139,11 @@
           {
             "type": "object",
             "properties": {
-              "topicTitle": {
-                "type": "string"
-              },
-              "floor": {
-                "type": "number"
-              },
-              "userId": {
-                "type": "number"
-              },
-              "userName": {
-                "type": "string"
-              },
               "boardId": {
                 "type": "number"
-              },
-              "boardName": {
-                "type": "string"
               }
             },
-            "additionalProperties": false
+            "additionalProperties": {}
           }
         ]
       },

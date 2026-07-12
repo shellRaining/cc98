@@ -70,6 +70,27 @@ export const queryKeys = {
   usersByIdRoot: (id: number) => ["user", "id", id] as const,
   boardsByIdsRoot: ["boards", "batch"] as const,
   boardRoot: (id: number) => ["board", id] as const,
+  unreadCounts: (authScope: AuthScope) => ["messages", "unread", authScope] as const,
+  unreadCountsRoot: ["messages", "unread"] as const,
+  notifications: (
+    kind: "replies" | "mentions" | "system",
+    from: number,
+    size: number,
+    authScope: AuthScope,
+  ) => ["messages", "notifications", kind, from, size, authScope] as const,
+  notificationsRoot: ["messages", "notifications"] as const,
+  privateContacts: (size: number, authScope: AuthScope) =>
+    ["messages", "private", "contacts", size, authScope] as const,
+  privateContactsRoot: ["messages", "private", "contacts"] as const,
+  privateConversation: (userId: number, size: number, authScope: AuthScope) =>
+    ["messages", "private", "conversation", userId, size, authScope] as const,
+  privateConversationRoot: ["messages", "private", "conversation"] as const,
+  signinInfo: (authScope: AuthScope) => ["signin", "info", authScope] as const,
+  signinInfoRoot: ["signin", "info"] as const,
+  signinMonth: (year: number, month: number, authScope: AuthScope) =>
+    ["signin", "month", year, month, authScope] as const,
+  signinMonthRoot: ["signin", "month"] as const,
+  serverNow: ["config", "now"] as const,
   globalConfig: ["global-config"] as const,
   currentUser: ["current-user"] as const,
 };

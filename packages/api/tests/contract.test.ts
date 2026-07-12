@@ -16,6 +16,9 @@ import {
   tagGroupSchema,
   tokenRequestSchema,
   userOperationRequestSchema,
+  messageCountsSchema,
+  notificationPostBasicInfoSchema,
+  sendMessageRequestSchema,
 } from "../src/index.ts";
 import type { ApiOperation } from "../src/operations/types.ts";
 
@@ -86,6 +89,37 @@ describe("API 契约基线", () => {
     };
     expect(createPostRequestSchema.safeParse(request).success).toBe(true);
     expect(createPostRequestSchema.safeParse({ ...request, parentId: null }).success).toBe(false);
+  });
+
+  it("消息计数和私信发送使用收紧后的真实契约", () => {
+    expect(
+      messageCountsSchema.safeParse({
+        systemCount: 0,
+        atCount: 1,
+        replyCount: 2,
+        messageCount: 3,
+      }).success,
+    ).toBe(true);
+    expect(messageCountsSchema.safeParse({ replyCount: 1 }).success).toBe(false);
+    expect(sendMessageRequestSchema.safeParse({ receiverId: 2, content: "你好" }).success).toBe(
+      true,
+    );
+    expect(
+      sendMessageRequestSchema.safeParse({ receiverId: 2, userId: 2, content: "你好" }).success,
+    ).toBe(false);
+  });
+
+  it("通知原始楼层信息保持为公共契约", () => {
+    expect(
+      notificationPostBasicInfoSchema.parse({
+        id: 100,
+        floor: 20,
+        userId: 2,
+        userName: "测试用户",
+        isDeleted: false,
+        boardId: 10,
+      }),
+    ).toMatchObject({ floor: 20, boardId: 10 });
   });
 
   it("Token operation 使用真实表单契约和 OpenID server", () => {

@@ -12,6 +12,7 @@ import { dedupeTopicsById, userIdPath } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
+import { useFollowUserMutation, useUnfollowUserMutation } from "../api/mutations";
 
 const props = defineProps<{
   userId?: string;
@@ -22,6 +23,8 @@ const PAGE_SIZE = 20;
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const followUser = useFollowUserMutation();
+const unfollowUser = useUnfollowUserMutation();
 
 const numericUserId = computed(() => parsePositiveInt(props.userId));
 const lookupName = computed(() => decodeURIComponent(props.userName ?? "").trim());
@@ -55,6 +58,8 @@ const {
 } = useQuery(byNameOptions);
 
 const profile = computed(() => userById.value ?? userByName.value ?? null);
+const isSelf = computed(() => profile.value?.id === userStore.user?.id);
+const relationPending = computed(() => followUser.isPending.value || unfollowUser.isPending.value);
 
 watch(
   () => profile.value?.id,
@@ -154,6 +159,17 @@ function loadMore() {
   if (!hasNextPage.value || isFetchingNextPage.value) return;
   void fetchNextPage();
 }
+
+function toggleFollow() {
+  const id = profile.value?.id;
+  if (!id || isSelf.value || relationPending.value) return;
+  if (!userStore.isLoggedIn) {
+    goLogin();
+    return;
+  }
+  if (profile.value?.isFollowing) unfollowUser.mutate(id);
+  else followUser.mutate(id);
+}
 </script>
 
 <template>
@@ -193,7 +209,38 @@ function loadMore() {
               {{ formatTime(profile.lastLogOnTime) }}
             </p>
           </div>
+          <div v-if="!isSelf" class="ml-auto flex flex-wrap gap-2">
+            <button
+              type="button"
+              class="rounded border border-cc98-border px-3 py-1.5 text-sm disabled:opacity-50"
+              :disabled="relationPending"
+              @click="toggleFollow"
+            >
+              {{ profile.isFollowing ? "取消关注" : "关注" }}
+            </button>
+            <RouterLink
+              v-if="profile.id && userStore.isLoggedIn"
+              :to="`/messages/private/${profile.id}`"
+              class="rounded bg-cc98-primary px-3 py-1.5 text-sm text-white"
+            >
+              发私信
+            </RouterLink>
+            <button
+              v-else-if="profile.id"
+              type="button"
+              class="rounded bg-cc98-primary px-3 py-1.5 text-sm text-white"
+              @click="goLogin"
+            >
+              发私信
+            </button>
+          </div>
         </div>
+        <p
+          v-if="followUser.error.value || unfollowUser.error.value"
+          class="text-sm text-cc98-accent"
+        >
+          {{ normalizeApiError(followUser.error.value ?? unfollowUser.error.value).message }}
+        </p>
         <p
           v-if="profile.introduction?.trim()"
           class="text-sm text-cc98-text-muted whitespace-pre-wrap"

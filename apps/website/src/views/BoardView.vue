@@ -17,6 +17,7 @@ import {
   resolveBoardPage,
 } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
+import { useFollowBoardMutation, useUnfollowBoardMutation } from "../api/mutations";
 
 const props = defineProps<{
   boardId: string;
@@ -27,6 +28,11 @@ const props = defineProps<{
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
+const followBoard = useFollowBoardMutation();
+const unfollowBoard = useUnfollowBoardMutation();
+const relationPending = computed(
+  () => followBoard.isPending.value || unfollowBoard.isPending.value,
+);
 
 const PAGE_SIZE = 20;
 const numericBoardId = computed(() => parsePositiveInt(props.boardId));
@@ -172,6 +178,17 @@ function retry() {
     if (currentPage.value === 1) void refetchTop();
   }
 }
+
+function toggleBoardFollow() {
+  const id = numericBoardId.value;
+  if (!id || relationPending.value) return;
+  if (!user.isLoggedIn) {
+    goLogin();
+    return;
+  }
+  if (board.value?.isUserCustomBoard) unfollowBoard.mutate(id);
+  else followBoard.mutate(id);
+}
 </script>
 
 <template>
@@ -194,13 +211,29 @@ function retry() {
       <header class="space-y-2">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h1 class="text-2xl font-bold">{{ board.name ?? `版面 ${boardId}` }}</h1>
-          <RouterLink
-            :to="{ name: 'create-topic', params: { boardId } }"
-            class="rounded bg-cc98-primary px-4 py-2 text-sm text-white"
-          >
-            发主题
-          </RouterLink>
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="button"
+              class="rounded border border-cc98-border px-4 py-2 text-sm disabled:opacity-50"
+              :disabled="relationPending"
+              @click="toggleBoardFollow"
+            >
+              {{ board.isUserCustomBoard ? "取消关注" : "关注版面" }}
+            </button>
+            <RouterLink
+              :to="{ name: 'create-topic', params: { boardId } }"
+              class="rounded bg-cc98-primary px-4 py-2 text-sm text-white"
+            >
+              发主题
+            </RouterLink>
+          </div>
         </div>
+        <p
+          v-if="followBoard.error.value || unfollowBoard.error.value"
+          class="text-sm text-cc98-accent"
+        >
+          {{ normalizeApiError(followBoard.error.value ?? unfollowBoard.error.value).message }}
+        </p>
         <p v-if="board.description" class="text-sm text-cc98-text-muted whitespace-pre-wrap">
           {{ board.description }}
         </p>

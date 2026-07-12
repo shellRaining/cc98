@@ -66,6 +66,7 @@ export const userSchema = basicUserSchema
       wealth: z.number().optional(),
       customBoards: z.array(z.number()).optional(),
       followCount: z.number().optional(),
+      isFollowing: z.boolean().optional(),
       theme: z.number().optional(),
       levelTitle: z.string().optional(),
       deleteCount: z.number().optional(),

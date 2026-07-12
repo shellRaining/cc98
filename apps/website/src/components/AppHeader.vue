@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useQuery } from "@tanstack/vue-query";
 import { RouterLink, useRouter } from "vue-router";
+import { unreadCountsQuery } from "../api/queries";
+import { totalUnreadCount } from "../lib/messages";
 import { useUserStore } from "../stores/user";
 import { useThemeStore } from "../stores/theme";
 import { saveLoginRedirect } from "../lib/login-redirect";
@@ -7,6 +11,11 @@ import { saveLoginRedirect } from "../lib/login-redirect";
 const user = useUserStore();
 const theme = useThemeStore();
 const router = useRouter();
+const authScope = computed(() => user.user?.id ?? "anonymous");
+const { data: unreadCounts } = useQuery(
+  computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
+);
+const unreadTotal = computed(() => totalUnreadCount(unreadCounts.value));
 
 function goLogin(event?: Event) {
   event?.preventDefault();
@@ -40,6 +49,16 @@ function goLogin(event?: Event) {
           {{ theme.mode === "light" ? "深色" : "浅色" }}
         </button>
         <template v-if="user.isLoggedIn">
+          <RouterLink to="/messages" class="relative text-sm cc98-link">
+            消息
+            <span
+              v-if="unreadTotal > 0"
+              class="absolute -right-3 -top-2 min-w-5 rounded-full bg-cc98-accent px-1 text-center text-xs leading-5 text-white"
+            >
+              {{ unreadTotal > 99 ? "99+" : unreadTotal }}
+            </span>
+          </RouterLink>
+          <RouterLink to="/signin" class="text-sm cc98-link">签到</RouterLink>
           <RouterLink v-if="user.user?.id" to="/usercenter" class="text-sm cc98-link">
             {{ user.user?.name }}
           </RouterLink>

@@ -147,6 +147,43 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: "/messages",
+    component: () => import("../layouts/MessagesLayout.vue"),
+    meta: { requiresAuth: true },
+    children: [
+      { path: "", redirect: "/messages/replies" },
+      {
+        path: "replies",
+        name: "messages-replies",
+        component: () => import("../views/messages/NotificationListView.vue"),
+        meta: { notificationKind: "replies" },
+      },
+      {
+        path: "mentions",
+        name: "messages-mentions",
+        component: () => import("../views/messages/NotificationListView.vue"),
+        meta: { notificationKind: "mentions" },
+      },
+      {
+        path: "system",
+        name: "messages-system",
+        component: () => import("../views/messages/NotificationListView.vue"),
+        meta: { notificationKind: "system" },
+      },
+      {
+        path: "private/:userId?",
+        name: "messages-private",
+        component: () => import("../views/messages/PrivateMessagesView.vue"),
+      },
+    ],
+  },
+  {
+    path: "/signin",
+    name: "signin",
+    component: () => import("../views/SigninView.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/logon",
     name: "logon",
     component: () => import("../views/LogOnView.vue"),

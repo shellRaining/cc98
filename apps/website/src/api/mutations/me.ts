@@ -1,4 +1,4 @@
-import type { MeUser, Topic } from "@cc98/api";
+import type { Board, MeUser, Topic, User } from "@cc98/api";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedDelete, typedPost, typedPut } from "../../lib/http";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
@@ -112,8 +112,36 @@ export function useUnfollowUserMutation() {
   return useMutation({
     mutationFn: (userId: number) => typedDelete<void>(`/me/followee/${userId}`),
     onSuccess: async (_data, userId) => {
+      queryClient.setQueriesData<User>({ queryKey: queryKeys.usersByIdRoot(userId) }, (profile) =>
+        profile
+          ? {
+              ...profile,
+              isFollowing: false,
+              fanCount: Math.max(0, (profile.fanCount ?? 1) - 1),
+            }
+          : profile,
+      );
       queryClient.setQueriesData<number[]>({ queryKey: queryKeys.meFollowingRoot }, (ids) =>
         withoutId(ids, userId),
+      );
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.meFollowingRoot }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.currentUser }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.usersByIdRoot(userId) }),
+      ]);
+    },
+  });
+}
+
+export function useFollowUserMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: number) => typedPut<void>(`/me/followee/${userId}`),
+    onSuccess: async (_data, userId) => {
+      queryClient.setQueriesData<User>({ queryKey: queryKeys.usersByIdRoot(userId) }, (profile) =>
+        profile
+          ? { ...profile, isFollowing: true, fanCount: (profile.fanCount ?? 0) + 1 }
+          : profile,
       );
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.meFollowingRoot }),
@@ -129,8 +157,45 @@ export function useUnfollowBoardMutation() {
   return useMutation({
     mutationFn: (boardId: number) => typedDelete<void>(`/me/custom-board/${boardId}`),
     onSuccess: async (_data, boardId) => {
+      queryClient.setQueriesData<Board>(
+        {
+          predicate: (query) =>
+            query.queryKey[0] === "board" &&
+            query.queryKey[1] === boardId &&
+            query.queryKey.length === 3,
+        },
+        (board) => (board ? { ...board, isUserCustomBoard: false } : board),
+      );
       queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
         withoutCustomBoard(me, boardId),
+      );
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.currentUser }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.boardsByIdsRoot }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.boardRoot(boardId) }),
+      ]);
+    },
+  });
+}
+
+export function useFollowBoardMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (boardId: number) => typedPut<void>(`/me/custom-board/${boardId}`),
+    onSuccess: async (_data, boardId) => {
+      queryClient.setQueriesData<Board>(
+        {
+          predicate: (query) =>
+            query.queryKey[0] === "board" &&
+            query.queryKey[1] === boardId &&
+            query.queryKey.length === 3,
+        },
+        (board) => (board ? { ...board, isUserCustomBoard: true } : board),
+      );
+      queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
+        me
+          ? { ...me, customBoards: [...new Set([...(me.customBoards ?? []), boardId])] }
+          : undefined,
       );
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.currentUser }),

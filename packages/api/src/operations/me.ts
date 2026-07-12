@@ -922,6 +922,6 @@ export const meOperations = defineOperations([
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "The frontend passes a pre-serialized JSON string; exact fields are not fully visible from the wrapper.",
+      "The legacy frontend sends { receiverId, content } as JSON. The success response still needs live verification.",
   },
 ]);
