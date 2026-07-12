@@ -4,7 +4,7 @@
 
 | 目录           | 职责                                                                                    |
 | -------------- | --------------------------------------------------------------------------------------- |
-| `api/`         | vue-query queryOptions（`queries.ts`），schema 直接来自 `@cc98/api`                     |
+| `api/`         | 按领域组织 vue-query queryOptions 与 mutation，schema 直接来自 `@cc98/api`              |
 | `lib/`         | 基础设施：http、auth、oauth、token-store、logger、query-client、discovery、route-params |
 | `stores/`      | Pinia：user（登录态）、theme（主题）                                                    |
 | `router/`      | Vue Router 路由表                                                                       |
@@ -22,13 +22,16 @@ graph TD
   oauth["oauth.ts"]
   auth["auth.ts"]
   http["http.ts"]
-  queries["api/queries.ts"]
+  queries["api/queries/"]
+  mutations["api/mutations/"]
   stores_user["stores/user.ts"]
 
   auth --> oauth
   auth --> token_store
   http --> auth
   queries --> http
+  mutations --> http
+  mutations --> queries
   stores_user --> auth
   stores_user --> http
 ```
@@ -37,7 +40,8 @@ graph TD
 - `oauth.ts`：OAuth 协议（password/refresh grant），仅依赖 zod
 - `auth.ts`：认证编排（登录、懒刷新、登出），依赖 oauth + token-store
 - `http.ts`：业务请求客户端（ofetch），依赖 auth 注入 token
-- `api/queries.ts`：vue-query queryOptions，依赖 http
+- `api/queries/`：vue-query queryOptions。`core.ts` 负责站点配置与阅读，`discovery.ts` 负责发现入口，`user.ts` 负责公开用户，`me.ts` 负责当前用户，统一从 `index.ts` 导出
+- `api/mutations/`：用户中心等写操作与缓存同步，依赖 http 和 query key
 
 ## 组件（Reka UI 与 components/ui）
 

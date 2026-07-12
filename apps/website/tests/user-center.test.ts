@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vite-plus/test";
-import { withoutCustomBoard, withoutId, withoutTopic } from "../src/api/mutations.ts";
-import { queryKeys } from "../src/api/queries.ts";
+import { withoutCustomBoard, withoutId, withoutTopic } from "../src/api/mutations/index.ts";
+import { queryKeys } from "../src/api/queries/index.ts";
 import {
   normalizeFavoriteGroup,
   normalizeFavoriteKeyword,

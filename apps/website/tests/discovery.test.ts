@@ -11,7 +11,7 @@ import {
   userNamePath,
 } from "../src/lib/discovery.ts";
 import { normalizeApiError } from "../src/lib/api-error.ts";
-import { queryKeys } from "../src/api/queries.ts";
+import { queryKeys } from "../src/api/queries/index.ts";
 
 describe("discovery helpers", () => {
   test("规范化搜索关键词与版面 ID", () => {

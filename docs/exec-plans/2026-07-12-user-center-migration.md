@@ -210,11 +210,11 @@ flowchart TD
 
 ### 7. 查询层收尾清理
 
-- [ ] 在功能提交之后，把 `api/queries.ts` 按领域拆到 `api/queries/`。
-- [ ] 把用户中心 mutation 移入 `api/mutations/me.ts`，集中维护缓存失效规则。
-- [ ] 保持现有导出名称、query key 和运行行为不变。
-- [ ] 更新 `docs/frontend.md` 中的查询层结构。
-- [ ] 再次运行 `vp run ready`，使用独立的 `refactor(website): 按领域拆分查询层` 提交收尾。
+- [x] 在功能提交之后，把 `api/queries.ts` 按领域拆到 `api/queries/`。
+- [x] 把用户中心 mutation 移入 `api/mutations/me.ts`，集中维护缓存失效规则。
+- [x] 保持现有导出名称、query key 和运行行为不变。
+- [x] 更新 `docs/frontend.md` 中的查询层结构。
+- [x] 再次运行 `vp run ready`，使用独立的 `refactor(website): 按领域拆分查询层` 提交收尾。
 
 ## 验证
 
@@ -267,6 +267,7 @@ flowchart TD
 - 2026-07-12：完成用户中心受限路由、概览、主题、回复、收藏、历史、关注用户、粉丝和关注版面页面。
 - 2026-07-12：浏览器回归发现并修复登录来源页未稳定跳转、删除当前收藏分组后 URL 未复位、空高页码缺少返回入口和可空版面海报导致批量校验失败的问题。
 - 2026-07-12：API 契约测试、网站测试、明暗主题视觉检查和真实 mutation 回归通过；测试收藏、关注用户、关注版面、收藏分组和浏览历史设置均已恢复。
+- 2026-07-12：功能提交后将 411 行的 `api/queries.ts` 拆为 keys、core、discovery、user 和 me 五个领域模块，mutation 移入独立目录；重启开发服务器后浏览器冒烟通过。
 
 ## 决策记录
 

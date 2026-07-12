@@ -17,7 +17,7 @@ import {
   takeLoginRedirect,
 } from "../src/lib/login-redirect.ts";
 import { normalizeApiError } from "../src/lib/api-error.ts";
-import { queryKeys } from "../src/api/queries.ts";
+import { queryKeys } from "../src/api/queries/index.ts";
 import { FetchError } from "ofetch";
 import { ZodError, z } from "zod";
 

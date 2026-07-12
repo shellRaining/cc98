@@ -1,7 +1,7 @@
 import type { MeUser, Topic } from "@cc98/api";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { typedDelete, typedPost, typedPut } from "../lib/http";
-import { queryKeys } from "./queries";
+import { typedDelete, typedPost, typedPut } from "../../lib/http";
+import { queryKeys } from "../queries/index.ts";
 
 export function withoutTopic<T extends { id?: number }>(topics: T[] | undefined, topicId: number) {
   return topics?.filter((topic) => topic.id !== topicId);
