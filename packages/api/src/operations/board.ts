@@ -8,6 +8,7 @@ import {
   boardTagDataSchema,
   createTopicRequestSchema,
   errorCodeSchema,
+  numericIdResponseSchema,
   tagGroupSchema,
   topicSchema,
 } from "../schemas/index.ts";
@@ -154,7 +155,11 @@ export const boardOperations = defineOperations([
       schema: createTopicRequestSchema,
     },
     responses: {
-      "200": { description: "新主题 ID", contentType: "application/json", schema: z.number() },
+      "200": {
+        description: "新主题 ID",
+        contentType: "application/json",
+        schema: numericIdResponseSchema,
+      },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -163,7 +168,7 @@ export const boardOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "conflicted",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
   },
   {

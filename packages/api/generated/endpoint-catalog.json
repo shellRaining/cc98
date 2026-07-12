@@ -96,7 +96,7 @@
     "summary": "Create topic in a board",
     "tags": ["Board", "Topic"],
     "risk": "write",
-    "verificationStatus": "conflicted",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -736,7 +736,7 @@
     "summary": "Delete post",
     "tags": ["Post", "Moderation"],
     "risk": "destructive",
-    "verificationStatus": "unknown",
+    "verificationStatus": "permission-denied",
     "requiresAuthentication": true
   },
   {
@@ -1036,7 +1036,7 @@
     "summary": "Reply to a topic",
     "tags": ["Topic", "Post"],
     "risk": "write",
-    "verificationStatus": "permission-denied",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {

@@ -44,7 +44,14 @@ agent-browser skills get dogfood # 系统性 QA、问题复现和证据采集时
 - 登录、路由、权限、真实接口、富内容渲染和用户交互发生变化时，需要补浏览器验证。
 - 验证通过后，UI 状态使用截图记录；多步骤交互、时序问题和 bug 复现使用录屏记录。
 - 演示录屏按用户行为设置有范围的停留时间，不把每一步写成相同的固定延迟；页面扫视、提示阅读和最终状态应比普通点击反馈停留更久。
-- 截图、录屏和临时报告写入 `.artifacts/browser/`，不提交到仓库。需要放进 PR 时再上传为 PR 附件。
+- 截图、录屏和临时报告按任务分子目录写入 `.artifacts/browser/`，不提交到仓库。需要放进 PR 时再上传为 PR 附件。结构如下：
+  ```
+  .artifacts/browser/{YYYY-MM-DD-任务名}/
+  ├── screenshots/   # PNG 截图
+  ├── videos/        # WebM 录屏
+  └── report.md      # 临时报告（如 dogfood 报告）
+  ```
+  任务名与 `docs/exec-plans/` 下的执行计划文件名对齐；无对应执行计划时用简短的任务描述。跑 dogfood 时把 `OUTPUT_DIR` 指向对应任务目录，不要用默认的 `./dogfood-output/`。
 - 认证信息使用 `agent-browser` 的会话或认证存储，不把密码、Cookie、token 和 auth state 写进脚本或仓库。
 
 ### 回归测试

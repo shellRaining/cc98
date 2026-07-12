@@ -5,8 +5,11 @@ import {
   editPostRequestSchema,
   errorCodeSchema,
   likeSchema,
+  postLikeActionSchema,
   postSchema,
   postOperationRequestSchema,
+  postRatingRequestSchema,
+  postRatingTypeSchema,
   ratingReasonSchema,
   reasonRequestSchema,
 } from "../schemas/index.ts";
@@ -55,7 +58,7 @@ export const postOperations = defineOperations([
     },
     auth: "required",
     risk: "destructive",
-    verificationStatus: "unknown",
+    verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -118,7 +121,7 @@ export const postOperations = defineOperations([
     requestBody: {
       required: true,
       contentType: "application/json",
-      schema: z.union([z.literal("1"), z.literal("2")]),
+      schema: postLikeActionSchema,
     },
     responses: {
       "200": { description: "Success" },
@@ -275,7 +278,7 @@ export const postOperations = defineOperations([
     requestBody: {
       required: true,
       contentType: "application/json",
-      schema: z.object({ reasonId: z.number(), type: z.union([z.literal(1), z.literal(2)]) }),
+      schema: postRatingRequestSchema,
     },
     responses: {
       "200": { description: "Success" },
@@ -382,7 +385,7 @@ export const postOperations = defineOperations([
         name: "type",
         in: "query",
         required: true,
-        schema: z.union([z.literal(1), z.literal(2)]),
+        schema: postRatingTypeSchema,
         probeValue: 1,
       },
     ],

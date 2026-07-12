@@ -7,6 +7,7 @@ import openapi from "../generated/openapi.json" with { type: "json" };
 import {
   endpointCatalog,
   boardSchema,
+  createPostRequestSchema,
   favoriteTopicGroupSchema,
   globalConfigSchema,
   operationRegistry,
@@ -72,6 +73,19 @@ describe("API 契约基线", () => {
       id: 763,
       bigPaper: null,
     });
+  });
+
+  it("回帖仅在引用楼层时发送 parentId", () => {
+    const request = {
+      content: "测试回复",
+      contentType: 1,
+      title: "",
+      isAnonymous: false,
+      notifyAllReplier: false,
+      clientType: 1,
+    };
+    expect(createPostRequestSchema.safeParse(request).success).toBe(true);
+    expect(createPostRequestSchema.safeParse({ ...request, parentId: null }).success).toBe(false);
   });
 
   it("Token operation 使用真实表单契约和 OpenID server", () => {

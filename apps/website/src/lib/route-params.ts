@@ -35,6 +35,13 @@ export function pageToFrom(page: number, pageSize: number): number {
   return (safePage - 1) * safeSize;
 }
 
+/** 楼层（从 1 开始）转页码（从 1 开始）。 */
+export function floorToPage(floor: number, pageSize = 10): number {
+  const safeFloor = Math.max(1, Math.floor(floor));
+  const safeSize = Math.max(1, Math.floor(pageSize));
+  return Math.floor((safeFloor - 1) / safeSize) + 1;
+}
+
 /** 主题总页数：楼主计入第一页，replyCount 为回复数。 */
 export function topicTotalPages(replyCount: number | undefined | null, pageSize = 10): number {
   const floors = Math.max(0, replyCount ?? 0) + 1;

@@ -4,9 +4,11 @@ import {
   createPostRequestSchema,
   errorCodeSchema,
   errorEnvelopeSchema,
+  numericIdResponseSchema,
   postSchema,
   reasonRequestSchema,
   recommendedTopicSchema,
+  submitVoteRequestSchema,
   topicSchema,
   topicHighlightRequestSchema,
   topicIpGroupSchema,
@@ -104,7 +106,11 @@ export const topicOperations = defineOperations([
       schema: createPostRequestSchema,
     },
     responses: {
-      "200": { description: "新回复 ID", contentType: "application/json", schema: z.number() },
+      "200": {
+        description: "新回复 ID",
+        contentType: "application/json",
+        schema: numericIdResponseSchema,
+      },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -113,7 +119,7 @@ export const topicOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "permission-denied",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
@@ -176,7 +182,7 @@ export const topicOperations = defineOperations([
     requestBody: {
       required: true,
       contentType: "application/json",
-      schema: z.object({ items: z.array(z.number()) }),
+      schema: submitVoteRequestSchema,
     },
     responses: {
       "200": { description: "Success" },

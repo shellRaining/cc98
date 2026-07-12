@@ -2,12 +2,16 @@
 import { computed } from "vue";
 import { POST_CONTENT_TYPE, type Post, type PostContentType } from "@cc98/api";
 import dayjs from "dayjs";
+import PostActions from "./PostActions.vue";
 import ContentRenderer from "./rich-content/ContentRenderer.vue";
 import type { RichContentType } from "./rich-content/types";
 import { floorAnchorId } from "../lib/route-params";
 
 const props = defineProps<{
   post: Post;
+}>();
+const emit = defineEmits<{
+  reply: [post: Post];
 }>();
 
 const floor = computed(() => props.post.floor ?? 0);
@@ -51,5 +55,21 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
         <ContentRenderer :content="post.content ?? ''" :type="getContentType(post.contentType)" />
       </template>
     </div>
+    <footer
+      v-if="!deleted && post.id != null"
+      class="flex flex-wrap items-center justify-between gap-3 border-t border-cc98-border px-4 py-2 text-sm"
+    >
+      <PostActions :post="post" />
+      <div class="flex gap-3">
+        <button type="button" class="cc98-link" @click="emit('reply', post)">引用回复</button>
+        <RouterLink
+          v-if="post.isMe"
+          :to="{ name: 'edit-post', params: { postId: String(post.id) } }"
+          class="cc98-link"
+        >
+          编辑
+        </RouterLink>
+      </div>
+    </footer>
   </article>
 </template>

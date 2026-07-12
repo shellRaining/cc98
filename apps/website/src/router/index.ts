@@ -28,6 +28,20 @@ const routes: RouteRecordRaw[] = [
     meta: { hotPeriod: "history" },
   },
   {
+    path: "/boards/:boardId/topics/new",
+    name: "create-topic",
+    component: () => import("../views/CreateTopicView.vue"),
+    props: true,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/posts/:postId/edit",
+    name: "edit-post",
+    component: () => import("../views/EditPostView.vue"),
+    props: true,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/topic/:topicId/:page?",
     name: "topic",
     component: () => import("../views/TopicView.vue"),

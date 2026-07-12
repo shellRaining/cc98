@@ -192,7 +192,15 @@ function retry() {
 
     <template v-else-if="board">
       <header class="space-y-2">
-        <h1 class="text-2xl font-bold">{{ board.name ?? `版面 ${boardId}` }}</h1>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h1 class="text-2xl font-bold">{{ board.name ?? `版面 ${boardId}` }}</h1>
+          <RouterLink
+            :to="{ name: 'create-topic', params: { boardId } }"
+            class="rounded bg-cc98-primary px-4 py-2 text-sm text-white"
+          >
+            发主题
+          </RouterLink>
+        </div>
         <p v-if="board.description" class="text-sm text-cc98-text-muted whitespace-pre-wrap">
           {{ board.description }}
         </p>

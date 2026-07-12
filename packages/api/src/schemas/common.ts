@@ -14,3 +14,10 @@ export type ErrorEnvelope = z.infer<typeof errorEnvelopeSchema>;
 
 export const errorCodeSchema = z.string().meta({ id: "ErrorCode" });
 export type ErrorCode = z.infer<typeof errorCodeSchema>;
+
+export const numericIdResponseSchema = z
+  .number()
+  .int()
+  .positive()
+  .meta({ id: "NumericIdResponse" });
+export type NumericIdResponse = z.infer<typeof numericIdResponseSchema>;

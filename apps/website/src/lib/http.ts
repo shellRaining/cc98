@@ -37,20 +37,28 @@ export function typedGet<T>(url: string, opts?: FetchOptions<"json">): Promise<T
 
 export function typedPost<T>(
   url: string,
-  body?: Record<string, unknown>,
+  body?: FetchOptions<"json">["body"],
   opts?: FetchOptions<"json">,
 ): Promise<T> {
-  return apiFetch<T>(url, { method: "POST", body, ...opts });
+  return apiFetch<T>(url, { method: "POST", body, retry: 0, ...opts });
 }
 
 export function typedPut<T>(
   url: string,
-  body?: Record<string, unknown>,
+  body?: FetchOptions<"json">["body"],
   opts?: FetchOptions<"json">,
 ): Promise<T> {
-  return apiFetch<T>(url, { method: "PUT", body, ...opts });
+  return apiFetch<T>(url, { method: "PUT", body, retry: 0, ...opts });
 }
 
 export function typedDelete<T>(url: string, opts?: FetchOptions<"json">): Promise<T> {
-  return apiFetch<T>(url, { method: "DELETE", ...opts });
+  return apiFetch<T>(url, { method: "DELETE", retry: 0, ...opts });
+}
+
+export function typedPostForm<T>(
+  url: string,
+  body: FormData,
+  opts?: FetchOptions<"json">,
+): Promise<T> {
+  return apiFetch<T>(url, { method: "POST", body, retry: 0, ...opts });
 }

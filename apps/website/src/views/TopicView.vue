@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { computed, nextTick, watch } from "vue";
+import { computed, nextTick, reactive, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
+import type { CreatePostRequest, Post } from "@cc98/api";
 import dayjs from "dayjs";
+import { useCreatePostMutation, useUploadFilesMutation } from "../api/mutations";
 import { boardQuery, topicPostsQuery, topicQuery } from "../api/queries";
+import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
 import Pagination from "../components/Pagination.vue";
 import PostItem from "../components/PostItem.vue";
+import TopicFavoriteAction from "../components/TopicFavoriteAction.vue";
+import TopicVotePanel from "../components/TopicVotePanel.vue";
 import { normalizeApiError } from "../lib/api-error";
+import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import {
   clampPage,
+  floorAnchorId,
   normalizeFloorHash,
   pageToFrom,
   parsePageNumber,
@@ -33,6 +40,34 @@ const numericTopicId = computed(() => parsePositiveInt(props.topicId));
 const requestedPage = computed(() => parsePageNumber(props.page));
 const invalidId = computed(() => numericTopicId.value == null);
 const authScope = computed(() => user.user?.id ?? "anonymous");
+
+interface ReplyDraft {
+  content: string;
+  isAnonymous: boolean;
+  notifyAllReplier: boolean;
+  parentId: number | null;
+}
+
+const initialReplyDraft: ReplyDraft = {
+  content: "",
+  isAnonymous: false,
+  notifyAllReplier: false,
+  parentId: null,
+};
+const draftKey = createDraftKey("reply", numericTopicId.value ?? 0);
+const replyDraft = reactive(readDraft(draftKey, initialReplyDraft));
+const persistDraft = ref(true);
+watch(
+  replyDraft,
+  (value) => {
+    if (persistDraft.value) writeDraft(draftKey, value);
+  },
+  { deep: true },
+);
+const createPost = useCreatePostMutation();
+const upload = useUploadFilesMutation();
+const replyError = ref("");
+const pendingPostId = ref<number | null>(null);
 
 const canLoad = computed(() => !invalidId.value && user.isLoggedIn);
 
@@ -103,6 +138,21 @@ watch(
   { flush: "post" },
 );
 
+watch(posts, (items) => {
+  if (pendingPostId.value == null) return;
+  const created = items?.find((post) => post.id === pendingPostId.value);
+  if (created?.floor == null) return;
+  pendingPostId.value = null;
+  void router.replace({
+    name: "topic",
+    params: {
+      topicId: props.topicId,
+      ...(currentPage.value > 1 ? { page: String(currentPage.value) } : {}),
+    },
+    hash: `#${floorAnchorId(created.floor)}`,
+  });
+});
+
 const pageError = computed(() => {
   if (invalidId.value) return normalizeApiError({ status: 404 });
   if (!user.isLoggedIn) return normalizeApiError({ status: 401 });
@@ -130,6 +180,10 @@ const author = computed(() => {
   return topic.value?.userName?.trim() || "已注销用户";
 });
 const timeText = computed(() => formatTime(topic.value?.time));
+const replyTarget = computed(() => {
+  if (replyDraft.parentId == null) return null;
+  return posts.value?.find((post) => post.id === replyDraft.parentId) ?? null;
+});
 
 function formatTime(value: string | undefined): string {
   if (!value) return "—";
@@ -155,6 +209,74 @@ function goLogin() {
 function retry() {
   void refetchTopic();
   void refetchPosts();
+}
+
+function quotePost(post: Post) {
+  if (post.id == null) return;
+  replyDraft.parentId = post.id;
+  void nextTick(() =>
+    document.getElementById("reply-editor")?.scrollIntoView({ behavior: "smooth" }),
+  );
+}
+
+async function uploadImages(files: File[]) {
+  return upload.mutateAsync({ files });
+}
+
+async function uploadAttachments(files: File[]) {
+  return upload.mutateAsync({ files, compressImage: false });
+}
+
+async function submitReply() {
+  if (createPost.isPending.value || numericTopicId.value == null) return;
+  replyError.value = "";
+  if (!replyDraft.content.trim()) {
+    replyError.value = "请填写回复内容";
+    return;
+  }
+  if (replyDraft.content.length > 20_000) {
+    replyError.value = "回复内容不能超过 20000 字";
+    return;
+  }
+
+  const payload: CreatePostRequest = {
+    content: replyDraft.content,
+    contentType: 1,
+    title: "",
+    parentId: replyDraft.parentId ?? undefined,
+    isAnonymous: replyDraft.isAnonymous,
+    notifyAllReplier: replyDraft.notifyAllReplier,
+    clientType: 1,
+  };
+  try {
+    const postId = await createPost.mutateAsync({
+      topicId: numericTopicId.value,
+      authScope: authScope.value,
+      payload,
+    });
+    pendingPostId.value = postId;
+    persistDraft.value = false;
+    clearDraft(draftKey);
+    Object.assign(replyDraft, initialReplyDraft);
+    await nextTick();
+    persistDraft.value = true;
+
+    const refreshed = await refetchTopic();
+    const lastPage = topicTotalPages(refreshed.data?.replyCount, PAGE_SIZE);
+    await router.push({
+      name: "topic",
+      params: {
+        topicId: props.topicId,
+        ...(lastPage > 1 ? { page: String(lastPage) } : {}),
+      },
+    });
+    await nextTick();
+    await refetchPosts();
+  } catch (error) {
+    replyError.value = normalizeApiError(error, {
+      forbiddenMessage: "你没有回复该主题的权限",
+    }).message;
+  }
 }
 </script>
 
@@ -183,7 +305,10 @@ function retry() {
 
     <template v-else-if="topic">
       <header class="space-y-2">
-        <h1 class="text-2xl font-bold">{{ topicTitle }}</h1>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h1 class="text-2xl font-bold">{{ topicTitle }}</h1>
+          <TopicFavoriteAction :topic-id="numericTopicId ?? 0" />
+        </div>
         <p class="text-sm text-cc98-text-muted">
           {{ author }} · {{ timeText }} · 回复 {{ topic.replyCount ?? 0 }} · 浏览
           {{ topic.hitCount ?? 0 }}
@@ -191,15 +316,77 @@ function retry() {
         </p>
       </header>
 
+      <TopicVotePanel
+        v-if="topic.isVote"
+        :topic-id="numericTopicId ?? 0"
+        :auth-scope="authScope"
+        :enabled="user.isLoggedIn"
+      />
+
       <Pagination :current-page="currentPage" :total-pages="totalPages" :to-page="toPage" />
 
       <ol class="space-y-4">
         <li v-for="post in posts" :key="post.id ?? post.floor">
-          <PostItem :post="post" />
+          <PostItem :post="post" @reply="quotePost" />
         </li>
       </ol>
 
       <Pagination :current-page="currentPage" :total-pages="totalPages" :to-page="toPage" />
+
+      <form
+        v-if="(topic.state ?? 0) === 0"
+        id="reply-editor"
+        class="cc98-card p-4 space-y-4"
+        @submit.prevent="submitReply"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-lg font-semibold">回复主题</h2>
+          <p v-if="replyDraft.parentId != null" class="text-sm text-cc98-text-muted">
+            正在引用
+            <span v-if="replyTarget">
+              #{{ replyTarget.floor ?? "?" }} {{ replyTarget.userName ?? "匿名用户" }}
+            </span>
+            <span v-else>帖子 {{ replyDraft.parentId }}</span>
+            <button type="button" class="cc98-link ml-2" @click="replyDraft.parentId = null">
+              取消引用
+            </button>
+          </p>
+        </div>
+        <MarkdownEditor
+          v-model="replyDraft.content"
+          :disabled="createPost.isPending.value"
+          :upload-images="uploadImages"
+          :upload-attachments="uploadAttachments"
+          placeholder="写下你的回复"
+        />
+        <div class="flex flex-wrap gap-4 text-sm">
+          <label class="flex items-center gap-2">
+            <input
+              v-model="replyDraft.isAnonymous"
+              type="checkbox"
+              :disabled="createPost.isPending.value"
+            />
+            匿名回复
+          </label>
+          <label class="flex items-center gap-2">
+            <input
+              v-model="replyDraft.notifyAllReplier"
+              type="checkbox"
+              :disabled="createPost.isPending.value"
+            />
+            通知参与者
+          </label>
+        </div>
+        <p v-if="replyError" class="text-sm text-cc98-accent">{{ replyError }}</p>
+        <button
+          type="submit"
+          :disabled="createPost.isPending.value"
+          class="rounded bg-cc98-primary px-4 py-2 text-white disabled:opacity-50"
+        >
+          {{ createPost.isPending.value ? "提交中…" : "提交回复" }}
+        </button>
+      </form>
+      <p v-else class="cc98-card p-4 text-sm text-cc98-text-muted">该主题当前不可回复。</p>
     </template>
   </section>
 </template>

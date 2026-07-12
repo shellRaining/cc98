@@ -71,7 +71,7 @@ export const createPostRequestSchema = z
     content: z.string(),
     contentType: postContentTypeSchema,
     title: z.string(),
-    parentId: z.number().nullable().optional(),
+    parentId: z.number().optional(),
     isAnonymous: z.boolean(),
     notifyAllReplier: z.boolean().optional(),
     clientType: z.number(),
@@ -80,29 +80,57 @@ export const createPostRequestSchema = z
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
 
 export const createVoteInfoSchema = z
-  .looseObject({
-    voteItems: z.array(z.string()).optional(),
-    expiredDays: z.number().optional(),
-    maxVoteCount: z.number().optional(),
-    needVote: z.boolean().optional(),
+  .object({
+    voteItems: z.array(z.string()),
+    expiredDays: z.number().int(),
+    maxVoteCount: z.number().int(),
+    needVote: z.boolean(),
   })
   .meta({ id: "CreateVoteInfo" });
 export type CreateVoteInfo = z.infer<typeof createVoteInfoSchema>;
 
+export const voteItemSchema = z
+  .looseObject({
+    id: z.number(),
+    description: z.string(),
+    count: z.number(),
+  })
+  .meta({ id: "VoteItem" });
+export type VoteItem = z.infer<typeof voteItemSchema>;
+
+export const voteRecordSchema = z
+  .looseObject({
+    userId: z.number(),
+    userName: z.string(),
+    items: z.array(z.number()),
+    ip: z.string(),
+    time: z.string(),
+  })
+  .meta({ id: "VoteRecord" });
+export type VoteRecord = z.infer<typeof voteRecordSchema>;
+
 export const voteInfoSchema = z
   .looseObject({
     topicId: z.number().optional(),
-    voteItems: z.array(z.looseObject({})).optional(),
-    voteRecords: z.array(z.looseObject({})).optional(),
+    voteItems: z.array(voteItemSchema).optional(),
+    voteRecords: z.array(voteRecordSchema).optional(),
     expiredTime: z.string().optional(),
     isAvailable: z.boolean().optional(),
     maxVoteCount: z.number().optional(),
     canVote: z.boolean().optional(),
+    myRecord: voteRecordSchema.nullable().optional(),
     needVote: z.boolean().optional(),
     voteUserCount: z.number().optional(),
   })
   .meta({ id: "VoteInfo" });
 export type VoteInfo = z.infer<typeof voteInfoSchema>;
+
+export const submitVoteRequestSchema = z
+  .object({
+    items: z.array(z.number().int().positive()),
+  })
+  .meta({ id: "SubmitVoteRequest" });
+export type SubmitVoteRequest = z.infer<typeof submitVoteRequestSchema>;
 
 export const reasonRequestSchema = z
   .object({

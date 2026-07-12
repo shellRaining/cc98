@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { defineOperations } from "./types.ts";
-import { errorCodeSchema } from "../schemas/index.ts";
+import { errorCodeSchema, fileUploadResponseSchema } from "../schemas/index.ts";
 
 export const fileOperations = defineOperations([
   {
@@ -22,7 +22,7 @@ export const fileOperations = defineOperations([
       "200": {
         description: "Uploaded URLs",
         contentType: "application/json",
-        schema: z.array(z.string()),
+        schema: fileUploadResponseSchema,
       },
       default: {
         description: "API 错误码",
@@ -51,7 +51,7 @@ export const fileOperations = defineOperations([
       "200": {
         description: "Uploaded portrait URLs",
         contentType: "application/json",
-        schema: z.array(z.string()),
+        schema: fileUploadResponseSchema,
       },
       default: {
         description: "API 错误码",

@@ -834,7 +834,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "conflicted",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -862,7 +862,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "number"
+                  "$ref": "#/components/schemas/NumericIdResponse"
                 }
               }
             }
@@ -1395,7 +1395,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "permission-denied",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -1423,7 +1423,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "number"
+                  "$ref": "#/components/schemas/NumericIdResponse"
                 }
               }
             }
@@ -1564,16 +1564,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    }
-                  }
-                },
-                "required": ["items"]
+                "$ref": "#/components/schemas/SubmitVoteRequest"
               }
             }
           }
@@ -3337,7 +3328,7 @@
           }
         ],
         "x-cc98-risk": "destructive",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "permission-denied",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -3896,25 +3887,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "reasonId": {
-                    "type": "number"
-                  },
-                  "type": {
-                    "anyOf": [
-                      {
-                        "type": "number",
-                        "const": 1
-                      },
-                      {
-                        "type": "number",
-                        "const": 2
-                      }
-                    ]
-                  }
-                },
-                "required": ["reasonId", "type"]
+                "$ref": "#/components/schemas/PostRatingRequest"
               }
             }
           }
@@ -6785,10 +6758,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/FileUploadResponse"
                 }
               }
             }
@@ -6843,10 +6813,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/FileUploadResponse"
                 }
               }
             }
@@ -7055,16 +7022,20 @@
             }
           },
           "expiredDays": {
-            "type": "number"
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
           },
           "maxVoteCount": {
-            "type": "number"
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
           },
           "needVote": {
             "type": "boolean"
           }
         },
-        "additionalProperties": {}
+        "required": ["voteItems", "expiredDays", "maxVoteCount", "needVote"]
       },
       "ReasonRequest": {
         "type": "object",
@@ -7096,14 +7067,7 @@
             "type": "string"
           },
           "parentId": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "number"
           },
           "isAnonymous": {
             "type": "boolean"
@@ -7116,6 +7080,20 @@
           }
         },
         "required": ["content", "contentType", "title", "isAnonymous", "clientType"]
+      },
+      "SubmitVoteRequest": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "required": ["items"]
       },
       "TopicTopRequest": {
         "type": "object",
@@ -7186,6 +7164,29 @@
           }
         },
         "required": ["content", "contentType", "title"]
+      },
+      "PostRatingRequest": {
+        "type": "object",
+        "properties": {
+          "reasonId": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 1
+              },
+              {
+                "type": "number",
+                "const": 2
+              }
+            ]
+          }
+        },
+        "required": ["reasonId", "type"]
       },
       "PostOperationRequest": {
         "type": "object",
@@ -7843,6 +7844,11 @@
         },
         "additionalProperties": {}
       },
+      "NumericIdResponse": {
+        "type": "integer",
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991
+      },
       "TagGroup": {
         "type": "object",
         "properties": {
@@ -8127,17 +8133,13 @@
           "voteItems": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {},
-              "additionalProperties": {}
+              "$ref": "#/components/schemas/VoteItem"
             }
           },
           "voteRecords": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {},
-              "additionalProperties": {}
+              "$ref": "#/components/schemas/VoteRecord"
             }
           },
           "expiredTime": {
@@ -8152,6 +8154,16 @@
           "canVote": {
             "type": "boolean"
           },
+          "myRecord": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VoteRecord"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "needVote": {
             "type": "boolean"
           },
@@ -8159,6 +8171,47 @@
             "type": "number"
           }
         },
+        "additionalProperties": {}
+      },
+      "VoteItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": ["id", "description", "count"],
+        "additionalProperties": {}
+      },
+      "VoteRecord": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "ip": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          }
+        },
+        "required": ["userId", "userName", "items", "ip", "time"],
         "additionalProperties": {}
       },
       "ErrorEnvelope": {
@@ -9038,6 +9091,13 @@
             "additionalProperties": false
           }
         ]
+      },
+      "FileUploadResponse": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "securitySchemes": {

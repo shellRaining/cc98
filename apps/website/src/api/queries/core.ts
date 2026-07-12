@@ -3,7 +3,11 @@ import {
   boardSchema,
   globalConfigSchema,
   postSchema,
+  ratingReasonSchema,
+  tagGroupSchema,
   topicSchema,
+  voteInfoSchema,
+  type PostRatingType,
 } from "@cc98/api";
 import { queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
@@ -68,6 +72,17 @@ export const boardTopTopicsQuery = (boardId: number, authScope: AuthScope, enabl
     enabled: enabled && boardId > 0,
   });
 
+export const boardTagsQuery = (boardId: number, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.boardTags(boardId),
+    queryFn: async () => {
+      const data = await typedGet<unknown[]>(`/board/${boardId}/tag`);
+      return tagGroupSchema.array().parse(data);
+    },
+    enabled: enabled && boardId > 0,
+    staleTime: 30 * 60 * 1000,
+  });
+
 export const topicQuery = (topicId: number, authScope: AuthScope, enabled = true) =>
   queryOptions({
     queryKey: queryKeys.topic(topicId, authScope),
@@ -92,6 +107,47 @@ export const topicPostsQuery = (
         query: { from, size },
       });
       return postSchema.array().parse(data);
+    },
+    enabled: enabled && topicId > 0,
+  });
+
+export const postOriginalQuery = (postId: number, authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.postOriginal(postId, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>(`/post/${postId}/original`);
+      return postSchema.parse(data);
+    },
+    enabled: enabled && postId > 0,
+  });
+
+export const ratingReasonsQuery = (type: PostRatingType, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.ratingReasons(type),
+    queryFn: async () => {
+      const data = await typedGet<unknown[]>("/post/rating-reason", { query: { type } });
+      return ratingReasonSchema.array().parse(data);
+    },
+    enabled,
+    staleTime: 30 * 60 * 1000,
+  });
+
+export const topicFavoriteQuery = (topicId: number, authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.topicFavorite(topicId, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>(`/topic/${topicId}/isfavorite`);
+      return typeof data === "boolean" ? data : false;
+    },
+    enabled: enabled && topicId > 0,
+  });
+
+export const topicVoteQuery = (topicId: number, authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.topicVote(topicId, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>(`/topic/${topicId}/vote`);
+      return voteInfoSchema.parse(data);
     },
     enabled: enabled && topicId > 0,
   });

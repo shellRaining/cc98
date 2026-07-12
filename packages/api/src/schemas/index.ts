@@ -7,3 +7,4 @@ export * from "./post.ts";
 export * from "./user.ts";
 export * from "./me.ts";
 export * from "./message.ts";
+export * from "./file.ts";

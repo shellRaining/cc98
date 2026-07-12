@@ -3,6 +3,7 @@ import {
   boardPagePath,
   boardTotalPages,
   clampPage,
+  floorToPage,
   normalizeFloorHash,
   pageToFrom,
   paginationWindow,
@@ -52,6 +53,14 @@ describe("route-params", () => {
     expect(pageToFrom(1, 20)).toBe(0);
     expect(pageToFrom(2, 20)).toBe(20);
     expect(pageToFrom(3, 10)).toBe(20);
+  });
+
+  test("楼层与页码换算覆盖每页边界", () => {
+    expect(floorToPage(1)).toBe(1);
+    expect(floorToPage(10)).toBe(1);
+    expect(floorToPage(11)).toBe(2);
+    expect(floorToPage(20)).toBe(2);
+    expect(floorToPage(21)).toBe(3);
   });
 
   test("主题总页数包含楼主", () => {

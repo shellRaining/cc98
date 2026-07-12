@@ -63,6 +63,20 @@ export const likeSchema = z
   .meta({ id: "Like" });
 export type Like = z.infer<typeof likeSchema>;
 
+export const postLikeActionSchema = z.union([z.literal("1"), z.literal("2")]);
+export type PostLikeAction = z.infer<typeof postLikeActionSchema>;
+
+export const postRatingTypeSchema = z.union([z.literal(1), z.literal(2)]);
+export type PostRatingType = z.infer<typeof postRatingTypeSchema>;
+
+export const postRatingRequestSchema = z
+  .object({
+    reasonId: z.number().int().positive(),
+    type: postRatingTypeSchema,
+  })
+  .meta({ id: "PostRatingRequest" });
+export type PostRatingRequest = z.infer<typeof postRatingRequestSchema>;
+
 export const editPostRequestSchema = z
   .object({
     content: z.string(),
@@ -91,7 +105,7 @@ export const ratingReasonSchema = z
   .looseObject({
     id: z.number(),
     reason: z.string(),
-    type: z.union([z.literal(1), z.literal(2)]),
+    type: postRatingTypeSchema,
     enabled: z.boolean(),
   })
   .meta({ id: "RatingReason" });
