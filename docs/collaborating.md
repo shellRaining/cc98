@@ -2,9 +2,7 @@
 
 ## 分支模型
 
-`main` 是可发布主线。feature 分支命名 `feature/<short-desc>`，修复 `fix/<issue-or-desc>`。
-
-不直接推 main，走 PR。
+`main` 是可发布主线。feature 分支命名 `feature/<short-desc>`，修复 `fix/<issue-or-desc>`
 
 ## 提交
 

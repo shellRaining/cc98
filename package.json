@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && pnpm run check:unused && vp run -r test && vp run -r build",
+    "build:packages": "pnpm --filter @cc98/api run build && pnpm --filter @cc98/ubb run build",
+    "ready": "vp run -r build && vp check && pnpm run check:unused && vp run -r test",
     "check:unused": "node scripts/check-unused.mjs",
+    "predev": "pnpm run build:packages",
     "dev": "vp run website#dev",
     "prepare": "vp config"
   },

@@ -60,3 +60,12 @@ graph TD
 - `security.ts` 是链接、图片和媒体 URL 的统一安全入口，语法适配层负责决定校验失败后的降级形式。
 
 静态标签和正则标签族由 `packages/ubb` 导出稳定契约。网站不能复制解析器正则，新增解析标签时必须同步注册 renderer，并由完整性测试兜底。
+
+## TypeScript 工具链
+
+仓库暂时分层使用 TypeScript：
+
+- `apps/website` 固定使用 TypeScript 6。Vue SFC 编译器解析 `defineProps` 等宏引用的外部类型时，仍依赖 TypeScript 7 已移除的编程接口。
+- `packages/api`、`packages/ubb` 和 `packages/utils` 通过 workspace catalog 使用 TypeScript 7。生成声明文件时，构建配置显式调用 `typescript/bin/tsc`，绕过 Vite+ 0.2.4 对 `@typescript/native-preview` 的旧依赖。
+
+等 Vite+ 发布包含 `tsdown >= 0.22.5` 的版本，且 Vue SFC 工具链支持 TypeScript 7 后，再统一升级网站。升级时应删除 DTS 兼容配置，并确认 `vp run ready` 全量通过。
