@@ -14,7 +14,7 @@
 const { parse: bbobParse } = require("@bbob/parser");
 const { parseUbb } = require("../dist/index.cjs");
 
-// ---- 生成 UBB 文本片段（与 self.mjs 相同）----
+// ---- 生成 UBB 文本片段（与 samples.ts 的混合样本相同）----
 
 const paragraph = [
   "[b]标题文字[/b]这里是正文内容，包含一些[i]斜体[/i]和[u]下划线[/u]以及[del]删除线[/del]。",

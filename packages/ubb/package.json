@@ -14,6 +14,8 @@
   },
   "scripts": {
     "build": "vp pack",
+    "bench": "vp test bench",
+    "bench:large": "vp pack && node bench/large-runner.mjs",
     "dev": "vp pack --watch",
     "test": "vp test",
     "check": "vp check"
@@ -22,6 +24,7 @@
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
+    "vitest": "catalog:",
     "vue": "catalog:"
   },
   "peerDependencies": {
