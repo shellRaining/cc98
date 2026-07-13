@@ -48,7 +48,6 @@ const days = computed(() => {
     ...Array.from({ length: first.daysInMonth() }, (_, index) => index + 1),
   ];
 });
-const pageError = computed(() => infoQuery.error.value ?? recordsQuery.error.value);
 
 function changeMonth(offset: number) {
   const next = dayjs(`${year.value}-${String(month.value).padStart(2, "0")}-01`).add(
@@ -73,11 +72,11 @@ function signInToday() {
       <RouterLink to="/messages" class="cc98-link text-sm">返回消息中心</RouterLink>
     </header>
 
-    <PageState v-if="infoQuery.isPending.value || recordsQuery.isPending.value" kind="loading" />
+    <PageState v-if="infoQuery.isPending.value" kind="loading" />
     <PageState
-      v-else-if="pageError"
+      v-else-if="infoQuery.error.value"
       kind="error"
-      :message="normalizeApiError(pageError).message"
+      :message="normalizeApiError(infoQuery.error.value).message"
       @retry="infoQuery.refetch()"
     />
     <template v-else-if="infoQuery.data.value">
@@ -125,28 +124,40 @@ function signInToday() {
           <h2 class="text-lg font-semibold">{{ year }} 年 {{ month }} 月</h2>
           <button type="button" class="cc98-link" @click="changeMonth(1)">下个月</button>
         </header>
-        <div class="grid grid-cols-7 text-center text-xs text-cc98-text-muted">
-          <span v-for="label in ['日', '一', '二', '三', '四', '五', '六']" :key="label"
-            >周{{ label }}</span
-          >
-        </div>
-        <div class="grid grid-cols-7 gap-2">
-          <div v-for="(day, index) in days" :key="`${day}-${index}`" class="min-h-16">
-            <div
-              v-if="day"
-              class="h-full rounded border border-cc98-border p-2 text-sm"
-              :class="recordMap.has(day) ? 'bg-cc98-bg' : ''"
+        <PageState v-if="recordsQuery.isPending.value" kind="loading" class="min-h-96" />
+        <PageState
+          v-else-if="recordsQuery.error.value"
+          kind="error"
+          class="min-h-96"
+          :message="normalizeApiError(recordsQuery.error.value).message"
+          @retry="recordsQuery.refetch()"
+        />
+        <template v-else>
+          <div class="grid grid-cols-7 text-center text-xs text-cc98-text-muted">
+            <span v-for="label in ['日', '一', '二', '三', '四', '五', '六']" :key="label"
+              >周{{ label }}</span
             >
-              <div class="flex items-center justify-between gap-1">
-                <span>{{ day }}</span>
-                <span v-if="recordMap.get(day)?.useCard" class="text-xs text-cc98-accent">补</span>
+          </div>
+          <div class="grid min-h-96 grid-cols-7 gap-2">
+            <div v-for="(day, index) in days" :key="`${day}-${index}`" class="min-h-16">
+              <div
+                v-if="day"
+                class="h-full rounded border border-cc98-border p-2 text-sm"
+                :class="recordMap.has(day) ? 'bg-cc98-bg' : ''"
+              >
+                <div class="flex items-center justify-between gap-1">
+                  <span>{{ day }}</span>
+                  <span v-if="recordMap.get(day)?.useCard" class="text-xs text-cc98-accent"
+                    >补</span
+                  >
+                </div>
+                <p v-if="recordMap.has(day)" class="mt-2 text-xs text-cc98-primary">
+                  +{{ recordMap.get(day)?.reward }}
+                </p>
               </div>
-              <p v-if="recordMap.has(day)" class="mt-2 text-xs text-cc98-primary">
-                +{{ recordMap.get(day)?.reward }}
-              </p>
             </div>
           </div>
-        </div>
+        </template>
       </section>
     </template>
   </section>

@@ -739,7 +739,7 @@ export const meOperations = defineOperations([
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "The frontend sends raw editor content with application/json; exact backend body shape is unclear.",
+      "The endpoint accepts an optional JSON request body; the current sign-in flow sends no body.",
   },
   {
     method: "GET",
