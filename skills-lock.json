@@ -5,19 +5,19 @@
       "source": "vercel-labs/agent-browser",
       "sourceType": "github",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "computedHash": "b93b77d9a63143fcefa7d371c1fceba58f1f310ef76a5f2ad3d4d2077efa8c25"
+      "computedHash": "ecc7641aea05f85ca3b11e7759d32aaf52fe05946ab4b63739c7bf78a41237a2"
     },
     "read": {
       "source": "tw93/Waza",
       "sourceType": "github",
       "skillPath": "skills/read/SKILL.md",
-      "computedHash": "94851b6aab87875881b5e710de2b85fbdae36de16a51d62d94a0feaef05c803b"
+      "computedHash": "ce350872d358b2f1a2966a4712274aa7143ec354e85ba4c5a3fcec157765a525"
     },
     "write": {
       "source": "tw93/Waza",
       "sourceType": "github",
       "skillPath": "skills/write/SKILL.md",
-      "computedHash": "6b53c660dd27698f1eea22b1e14eee9e2623acfb66b1f91f184bf32d0c70b1c4"
+      "computedHash": "a538c13b96ad16894514356618e7248c9f9df061f069e2c2149516146ca066ae"
     }
   }
 }
