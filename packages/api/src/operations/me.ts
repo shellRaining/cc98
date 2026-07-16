@@ -739,8 +739,7 @@ export const meOperations = defineOperations([
     risk: "write",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
-    description:
-      "The endpoint accepts an optional JSON request body; the current sign-in flow sends no body.",
+    description: "接口接受可选的签到留言；当前页面按旧站约定提交字符串，未填写时提交空字符串。",
   },
   {
     method: "GET",

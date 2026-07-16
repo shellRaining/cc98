@@ -7,13 +7,13 @@ vi.mock("../src/lib/http.ts", () => ({
 }));
 
 describe("签到请求", () => {
-  test("空请求体仍声明为 JSON，避免被浏览器识别为 text/plain", async () => {
+  test("签到留言以字符串请求体提交", async () => {
     const request = vi.mocked(typedPost);
     request.mockResolvedValue(undefined);
 
-    await expect(postSignin()).resolves.toBeUndefined();
+    await expect(postSignin("今日签到")).resolves.toBeUndefined();
 
-    expect(request).toHaveBeenCalledWith("/me/signin", undefined, {
+    expect(request).toHaveBeenCalledWith("/me/signin", "今日签到", {
       headers: { "Content-Type": "application/json" },
     });
   });
