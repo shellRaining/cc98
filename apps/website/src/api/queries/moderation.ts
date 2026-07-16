@@ -1,4 +1,4 @@
-import { topicEventPageSchema, topicIpGroupSchema } from "@cc98/api";
+import { postRewardDailyRecordSchema, topicEventPageSchema, topicIpGroupSchema } from "@cc98/api";
 import { queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
 import { queryKeys, type AuthScope } from "./keys.ts";
@@ -29,4 +29,16 @@ export const topicIpGroupsQuery = (topicId: number, authScope: AuthScope, enable
       return topicIpGroupSchema.array().parse(data);
     },
     enabled: enabled && topicId > 0,
+  });
+
+export const postRewardDailyRecordQuery = (boardId: number, authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.postRewardDailyRecord(boardId, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>("/manage/reward-daily-record", {
+        query: { boardId },
+      });
+      return postRewardDailyRecordSchema.parse(data);
+    },
+    enabled: enabled && boardId > 0,
   });

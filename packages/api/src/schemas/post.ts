@@ -101,6 +101,15 @@ export const postOperationRequestSchema = z
   .meta({ id: "PostOperationRequest" });
 export type PostOperationRequest = z.infer<typeof postOperationRequestSchema>;
 
+export const postRewardDailyRecordSchema = z
+  .looseObject({
+    rewardMaxValue: z.number().optional(),
+    rewardTotalValue: z.number().optional(),
+    boardName: z.string().optional(),
+  })
+  .meta({ id: "PostRewardDailyRecord" });
+export type PostRewardDailyRecord = z.infer<typeof postRewardDailyRecordSchema>;
+
 export const ratingReasonSchema = z
   .looseObject({
     id: z.number(),

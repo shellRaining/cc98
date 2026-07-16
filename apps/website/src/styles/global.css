@@ -2243,6 +2243,7 @@ a:hover {
 }
 
 .topic-moderation-form input[type="text"],
+.topic-moderation-form input[type="number"],
 .topic-moderation-form select {
   width: 100%;
   min-width: 0;
@@ -2252,6 +2253,19 @@ a:hover {
   border-radius: 0.2rem;
   background: var(--cc98-color-surface);
   color: var(--cc98-color-text);
+}
+
+.post-moderation-tabs {
+  justify-content: flex-start;
+}
+
+.post-moderation-summary {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--cc98-color-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--cc98-color-primary) 8%, transparent);
+  color: var(--cc98-color-text-muted);
+  font-size: 0.8rem;
 }
 
 .topic-moderation-highlight {

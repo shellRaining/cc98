@@ -8,6 +8,7 @@ import {
   postLikeActionSchema,
   postSchema,
   postOperationRequestSchema,
+  postRewardDailyRecordSchema,
   postRatingRequestSchema,
   postRatingTypeSchema,
   ratingReasonSchema,
@@ -361,7 +362,7 @@ export const postOperations = defineOperations([
       "200": {
         description: "Reward daily records",
         contentType: "application/json",
-        schema: z.looseObject({}),
+        schema: postRewardDailyRecordSchema,
       },
       default: {
         description: "API 错误码",
@@ -370,7 +371,7 @@ export const postOperations = defineOperations([
       },
     },
     auth: "required",
-    risk: "destructive",
+    risk: "read-only",
     verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
   },

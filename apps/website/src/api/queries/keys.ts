@@ -48,6 +48,9 @@ export const queryKeys = {
   topicHotPosts: (topicId: number, authScope: AuthScope) =>
     ["topic", topicId, "hot-posts", authScope] as const,
   topicPostsRoot: (topicId: number) => ["topic", topicId, "posts"] as const,
+  postRewardDailyRecord: (boardId: number, authScope: AuthScope) =>
+    ["post", "reward-daily-record", boardId, authScope] as const,
+  postRewardDailyRecordRoot: (boardId: number) => ["post", "reward-daily-record", boardId] as const,
   topicFavorite: (topicId: number, authScope: AuthScope) =>
     ["topic", topicId, "favorite", authScope] as const,
   topicFavoriteRoot: (topicId: number) => ["topic", topicId, "favorite"] as const,

@@ -12,11 +12,13 @@ const props = defineProps<{
   post: Post;
   user?: User;
   hot?: boolean;
+  canManage?: boolean;
 }>();
 const emit = defineEmits<{
   reply: [post: Post];
   filterUser: [post: Post];
   trace: [post: Post];
+  manage: [post: Post];
 }>();
 
 const floor = computed(() => props.post.floor ?? 0);
@@ -135,6 +137,9 @@ function replaceBrokenAvatar(event: Event) {
           >
             编辑
           </RouterLink>
+          <UiButton v-if="canManage" variant="text" type="button" @click="emit('manage', post)">
+            管理
+          </UiButton>
         </div>
       </footer>
 

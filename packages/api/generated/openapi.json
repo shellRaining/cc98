@@ -3984,7 +3984,7 @@
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "permission-denied",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -4003,9 +4003,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {},
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/PostRewardDailyRecord"
                 }
               }
             }
@@ -8467,6 +8465,21 @@
           }
         },
         "additionalProperties": false
+      },
+      "PostRewardDailyRecord": {
+        "type": "object",
+        "properties": {
+          "rewardMaxValue": {
+            "type": "number"
+          },
+          "rewardTotalValue": {
+            "type": "number"
+          },
+          "boardName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {}
       },
       "RatingReason": {
         "type": "object",

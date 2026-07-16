@@ -1,18 +1,21 @@
 import { beforeEach, describe, expect, test, vi } from "vite-plus/test";
 import { topicEventPageSchema } from "@cc98/api";
-import { moderateTopic } from "../src/api/mutations/moderation.ts";
-import { typedDelete, typedPut } from "../src/lib/http.ts";
+import { moderatePost, moderateTopic } from "../src/api/mutations/moderation.ts";
+import { typedDelete, typedPost, typedPut } from "../src/lib/http.ts";
 import {
+  canManagePost,
   flattenModerationBoards,
   hasTopicAuthorManagement,
   isBoardManager,
   resolveTopicModerationAccess,
   type TopicModerationRequest,
+  validatePostModerationRequest,
   validateTopicModerationRequest,
 } from "../src/lib/moderation.ts";
 
 vi.mock("../src/lib/http.ts", () => ({
   typedDelete: vi.fn(),
+  typedPost: vi.fn(),
   typedPut: vi.fn(),
 }));
 
@@ -59,6 +62,14 @@ describe("主题版务权限", () => {
       }),
     ).toEqual({ canManage: true, canViewHistory: true, canViewIp: false });
   });
+
+  test("楼层管理保留完整权限和 144 版面作者特例", () => {
+    expect(canManagePost(moderator, board, { id: 100, userName: "楼主" })).toBe(true);
+    expect(canManagePost(normalUser, { id: 144 }, { id: 100, userName: normalUser.name })).toBe(
+      true,
+    );
+    expect(canManagePost(normalUser, board, { id: 100, userName: normalUser.name })).toBe(false);
+  });
 });
 
 describe("主题版务表单", () => {
@@ -93,6 +104,37 @@ describe("主题版务表单", () => {
         color: "red",
       }),
     ).toBe("请选择合法的高亮颜色");
+  });
+});
+
+describe("楼层版务表单", () => {
+  test("奖励、TP 和解除 TP 校验各自必填字段", () => {
+    expect(
+      validatePostModerationRequest({
+        action: "reward-wealth",
+        postId: 1,
+        boardId: 81,
+        reason: "好文章",
+        value: 0,
+      }),
+    ).toBe("请输入大于 0 的整数");
+    expect(
+      validatePostModerationRequest({
+        action: "mute",
+        postId: 1,
+        boardId: 81,
+        reason: "违反版规",
+        days: 0,
+      }),
+    ).toBe("请输入有效天数");
+    expect(
+      validatePostModerationRequest({
+        action: "unmute",
+        postId: 1,
+        boardId: 81,
+        reason: "",
+      }),
+    ).toBe("该楼层缺少用户信息，无法解除 TP");
   });
 });
 
@@ -229,6 +271,64 @@ describe("主题版务请求", () => {
       }
     });
   }
+});
+
+describe("楼层版务请求", () => {
+  beforeEach(() => {
+    vi.mocked(typedDelete).mockReset().mockResolvedValue(undefined);
+    vi.mocked(typedPost).mockReset().mockResolvedValue(undefined);
+  });
+
+  test.each([
+    ["奖励财富", "reward-wealth", { operationType: 0, reason: "好文章", wealth: 1000 }],
+    ["奖励威望", "reward-prestige", { operationType: 0, reason: "好文章", prestige: 2 }],
+    ["扣除财富", "deduct-wealth", { operationType: 1, reason: "违反版规", wealth: 100 }],
+    ["扣除威望", "deduct-prestige", { operationType: 1, reason: "违反版规", prestige: 1 }],
+  ] as const)("%s使用楼层 operation 接口", async (_name, action, payload) => {
+    await moderatePost({
+      action,
+      postId: 7598001,
+      boardId: 81,
+      reason: payload.reason,
+      value: "wealth" in payload ? payload.wealth : payload.prestige,
+    });
+    expect(typedPost).toHaveBeenCalledWith("/post/7598001/operation", payload);
+  });
+
+  test("TP、删除和解除 TP 使用旧站接口", async () => {
+    await moderatePost({
+      action: "mute",
+      postId: 7598001,
+      boardId: 81,
+      userId: 2002,
+      reason: "违反版规",
+      days: 7,
+    });
+    expect(typedPost).toHaveBeenCalledWith("/post/7598001/operation", {
+      operationType: 1,
+      reason: "违反版规",
+      stopPostDays: 7,
+    });
+
+    await moderatePost({
+      action: "delete",
+      postId: 7598001,
+      boardId: 81,
+      reason: "重复内容",
+    });
+    expect(typedDelete).toHaveBeenCalledWith("/post/7598001", {
+      body: { reason: "重复内容" },
+    });
+
+    await moderatePost({
+      action: "unmute",
+      postId: 7598001,
+      boardId: 81,
+      userId: 2002,
+      reason: "",
+    });
+    expect(typedDelete).toHaveBeenCalledWith("/board/81/stop-post-user/2002");
+  });
 });
 
 describe("主题管理记录契约", () => {

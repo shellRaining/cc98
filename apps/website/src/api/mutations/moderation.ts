@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { typedDelete, typedPut } from "../../lib/http";
-import type { TopicModerationRequest } from "../../lib/moderation";
+import { typedDelete, typedPost, typedPut } from "../../lib/http";
+import type { PostModerationRequest, TopicModerationRequest } from "../../lib/moderation";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
 
 export function moderateTopic(request: TopicModerationRequest): Promise<void> {
@@ -71,6 +71,42 @@ export function useModerateTopicMutation() {
         ...affectedBoardIds.map((id) =>
           queryClient.invalidateQueries({ queryKey: queryKeys.boardRoot(id) }),
         ),
+      ]);
+    },
+  });
+}
+
+export function moderatePost(request: PostModerationRequest): Promise<void> {
+  const reason = request.reason.trim();
+  if (request.action === "delete") {
+    return typedDelete<void>(`/post/${request.postId}`, { body: { reason } });
+  }
+  if (request.action === "unmute") {
+    return typedDelete<void>(`/board/${request.boardId}/stop-post-user/${request.userId}`);
+  }
+
+  const operationType = request.action.startsWith("reward-") ? 0 : 1;
+  return typedPost<void>(`/post/${request.postId}/operation`, {
+    operationType,
+    reason,
+    ...(request.action.endsWith("wealth") ? { wealth: request.value } : {}),
+    ...(request.action.endsWith("prestige") ? { prestige: request.value } : {}),
+    ...(request.action === "mute" ? { stopPostDays: request.days } : {}),
+  });
+}
+
+export function useModeratePostMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    retry: 0,
+    mutationFn: ({ request }: { request: PostModerationRequest; topicId: number }) =>
+      moderatePost(request),
+    onSuccess: async (_data, { request, topicId }) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.topicRoot(topicId) }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.postRewardDailyRecordRoot(request.boardId),
+        }),
       ]);
     },
   });

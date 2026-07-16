@@ -24,6 +24,7 @@ import PostItem from "../components/PostItem.vue";
 import TopicFavoriteAction from "../components/TopicFavoriteAction.vue";
 import TopicVotePanel from "../components/TopicVotePanel.vue";
 import TopicHeader from "../components/topic/TopicHeader.vue";
+import PostModerationDialog from "../components/topic/PostModerationDialog.vue";
 import TopicHistoryDialog from "../components/topic/TopicHistoryDialog.vue";
 import TopicIpDialog from "../components/topic/TopicIpDialog.vue";
 import TopicModerationDialog from "../components/topic/TopicModerationDialog.vue";
@@ -33,7 +34,12 @@ import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts
 import { visibleHomepageColumns } from "../lib/home.ts";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { shouldJumpToLatestReply } from "../lib/message-settings";
-import { resolveTopicModerationAccess, type TopicModerationAction } from "../lib/moderation";
+import {
+  canManagePost,
+  resolveTopicModerationAccess,
+  type PostModerationAction,
+  type TopicModerationAction,
+} from "../lib/moderation";
 import {
   clampPage,
   floorAnchorId,
@@ -93,6 +99,8 @@ const shareStatus = ref("");
 const moderationOpen = ref(false);
 const historyOpen = ref(false);
 const ipOpen = ref(false);
+const postModerationOpen = ref(false);
+const selectedPost = ref<Post | null>(null);
 let shareStatusTimer: ReturnType<typeof setTimeout> | undefined;
 
 watch(
@@ -131,6 +139,7 @@ const {
 const moderationAccess = computed(() =>
   resolveTopicModerationAccess(user.user, board.value, topic.value),
 );
+const canModeratePosts = computed(() => canManagePost(user.user, board.value, topic.value));
 const moderationBoardsOptions = computed(() => ({
   ...boardsQuery,
   enabled: moderationAccess.value.canManage,
@@ -505,6 +514,21 @@ async function handleModerationCompleted(action: TopicModerationAction) {
   ]);
 }
 
+function openPostModeration(post: Post) {
+  selectedPost.value = post;
+  postModerationOpen.value = true;
+}
+
+async function handlePostModerationCompleted(_action: PostModerationAction) {
+  await Promise.all([
+    refetchTopic(),
+    filter.value.mode === "all"
+      ? regularPostsQuery.refetch()
+      : Promise.all([filteredPostsQuery.refetch(), filteredCountQuery.refetch()]),
+    hotPostsQuery.refetch(),
+  ]);
+}
+
 onBeforeUnmount(() => {
   if (shareStatusTimer) clearTimeout(shareStatusTimer);
 });
@@ -573,9 +597,11 @@ onBeforeUnmount(() => {
           <PostItem
             :post="post"
             :user="post.userId ? postUserMap.get(post.userId) : undefined"
+            :can-manage="canModeratePosts"
             @reply="quotePost"
             @filter-user="showOnlyUser"
             @trace="tracePost"
+            @manage="openPostModeration"
           >
             <template v-if="topic.isVote && post.floor === 1" #before-content>
               <TopicVotePanel
@@ -592,10 +618,12 @@ onBeforeUnmount(() => {
               :key="`hot-${hotPost.id ?? hotPost.floor}`"
               :post="hotPost"
               :user="hotPost.userId ? postUserMap.get(hotPost.userId) : undefined"
+              :can-manage="canModeratePosts"
               hot
               @reply="quotePost"
               @filter-user="showOnlyUser"
               @trace="tracePost"
+              @manage="openPostModeration"
             />
           </div>
         </li>
@@ -640,6 +668,17 @@ onBeforeUnmount(() => {
         v-model:open="ipOpen"
         :topic-id="numericTopicId ?? 0"
         :auth-scope="authScope"
+      />
+      <PostModerationDialog
+        v-if="selectedPost"
+        v-model:open="postModerationOpen"
+        :post="selectedPost"
+        :topic-id="numericTopicId ?? 0"
+        :board-id="board.id ?? 0"
+        :board-name="board.name"
+        :auth-scope="authScope"
+        :full-manager="moderationAccess.canViewIp"
+        @completed="handlePostModerationCompleted"
       />
 
       <form

@@ -285,7 +285,7 @@
     "operationId": "getManageRewardDailyRecord",
     "summary": "Query daily reward records for a board",
     "tags": ["Moderation"],
-    "risk": "destructive",
+    "risk": "read-only",
     "verificationStatus": "permission-denied",
     "requiresAuthentication": true
   },
