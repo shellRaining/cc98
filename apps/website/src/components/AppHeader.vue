@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useQuery } from "@tanstack/vue-query";
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import { unreadCountsQuery } from "../api/queries";
+import { searchBoardsPath, searchTopicsPath, userNamePath } from "../lib/discovery";
+import { saveLoginRedirect } from "../lib/login-redirect";
 import { totalUnreadCount } from "../lib/messages";
 import { useUserStore } from "../stores/user";
-import { useThemeStore } from "../stores/theme";
-import { saveLoginRedirect } from "../lib/login-redirect";
 import UiBadge from "./ui/Badge.vue";
 
+type SearchKind = "topic" | "user" | "board";
+
 const user = useUserStore();
-const theme = useThemeStore();
+const route = useRoute();
 const router = useRouter();
+const keyword = ref("");
+const searchKind = ref<SearchKind>("topic");
+const isHome = computed(() => route.name === "home");
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const { data: unreadCounts } = useQuery(
   computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
@@ -20,44 +25,76 @@ const unreadTotal = computed(() => totalUnreadCount(unreadCounts.value));
 
 function goLogin(event?: Event) {
   event?.preventDefault();
-  saveLoginRedirect(router.currentRoute.value.fullPath);
+  saveLoginRedirect(route.fullPath);
   void router.push({ name: "logon" });
+}
+
+function submitSearch() {
+  const value = keyword.value.trim();
+  if (!value) return;
+  if (searchKind.value === "board") void router.push(searchBoardsPath(value));
+  else if (searchKind.value === "user") void router.push(userNamePath(value));
+  else void router.push(searchTopicsPath(value));
 }
 </script>
 
 <template>
-  <header class="border-b border-cc98-border bg-cc98-surface">
-    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <RouterLink to="/" class="text-lg font-bold text-cc98-text hover:text-cc98-primary">
-          CC98
-        </RouterLink>
-        <nav class="flex items-center gap-4 text-sm">
-          <RouterLink to="/" class="cc98-link">首页</RouterLink>
-          <RouterLink to="/boardlist" class="cc98-link">版面</RouterLink>
-          <RouterLink to="/topic/hot-monthly" class="cc98-link">热门</RouterLink>
-          <RouterLink to="/newtopics" class="cc98-link">新帖</RouterLink>
-          <RouterLink to="/recommendedtopics" class="cc98-link">精选</RouterLink>
-          <RouterLink to="/search" class="cc98-link">搜索</RouterLink>
-        </nav>
-      </div>
-      <div class="flex items-center gap-3">
-        <UiButton variant="text" size="sm" class="text-cc98-text-muted" @click="theme.toggleMode()">
-          {{ theme.mode === "light" ? "深色" : "浅色" }}
-        </UiButton>
-        <template v-if="user.isLoggedIn">
-          <RouterLink to="/messages" class="relative text-sm cc98-link">
-            消息
-            <UiBadge v-if="unreadTotal > 0" :count="unreadTotal" class="absolute -right-3 -top-2" />
+  <header class="site-header" :class="{ 'site-header--home': isHome }">
+    <div class="site-header__topbar">
+      <div class="cc98-content site-header__row">
+        <div class="site-header__left">
+          <RouterLink to="/" class="site-header__brand" aria-label="CC98 论坛首页">
+            <img src="/static/images/98LOGO.ico" alt="" />
+            <span>CC98论坛</span>
           </RouterLink>
-          <RouterLink to="/signin" class="text-sm cc98-link">签到</RouterLink>
-          <RouterLink v-if="user.user?.id" to="/usercenter" class="text-sm cc98-link">
-            {{ user.user?.name }}
-          </RouterLink>
-          <span v-else class="text-sm text-cc98-text-muted">{{ user.user?.name }}</span>
-          <UiButton variant="text" size="sm" @click="user.logout()"> 退出 </UiButton>
-        </template>
-        <RouterLink v-else to="/logon" class="cc98-link text-sm" @click="goLogin">登录</RouterLink>
+          <span class="site-header__separator" aria-hidden="true">|</span>
+          <nav class="site-header__nav" aria-label="主导航">
+            <RouterLink to="/boardlist">版面列表</RouterLink>
+            <RouterLink to="/newtopics">新帖</RouterLink>
+            <RouterLink to="/usercenter/boards">关注</RouterLink>
+            <RouterLink to="/recommendedtopics">精选</RouterLink>
+          </nav>
+          <form class="header-search" role="search" @submit.prevent="submitSearch">
+            <label class="sr-only" for="header-search-kind">搜索类型</label>
+            <select id="header-search-kind" v-model="searchKind">
+              <option value="topic">主题</option>
+              <option value="user">用户</option>
+              <option value="board">版面</option>
+            </select>
+            <input
+              v-model="keyword"
+              type="search"
+              placeholder="请输入搜索内容"
+              aria-label="搜索内容"
+            />
+            <button type="submit" aria-label="搜索">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path
+                  d="m21 20-4.4-4.4a7.5 7.5 0 1 0-1.4 1.4l4.4 4.4L21 20ZM5 11.5a6.5 6.5 0 1 1 13 0 6.5 6.5 0 0 1-13 0Z"
+                />
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="site-header__account">
+          <template v-if="user.isLoggedIn">
+            <RouterLink to="/messages" class="site-header__message">
+              消息
+              <UiBadge v-if="unreadTotal > 0" :count="unreadTotal" />
+            </RouterLink>
+            <RouterLink to="/signin">签到</RouterLink>
+            <RouterLink to="/usercenter" class="site-header__user">
+              <img v-if="user.user?.avatarUrl" :src="user.user.avatarUrl" alt="" />
+              <span>{{ user.user?.name }}</span>
+            </RouterLink>
+            <button type="button" @click="user.logout()">退出</button>
+          </template>
+          <template v-else>
+            <RouterLink to="/logon" @click="goLogin">登录</RouterLink>
+            <a href="https://account.cc98.org/" target="_blank" rel="noopener noreferrer">注册</a>
+          </template>
+        </div>
       </div>
     </div>
   </header>

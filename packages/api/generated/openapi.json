@@ -7424,6 +7424,12 @@
               "$ref": "#/components/schemas/HotTopic"
             }
           },
+          "manualHotTopic": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotTopic"
+            }
+          },
           "recommendationReading": {
             "type": "array",
             "items": {
@@ -7431,6 +7437,12 @@
             }
           },
           "recommendationFunction": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IndexColumn"
+            }
+          },
+          "specialOffer": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IndexColumn"
@@ -7485,6 +7497,9 @@
             }
           },
           "todayCount": {
+            "type": "number"
+          },
+          "todayTopicCount": {
             "type": "number"
           },
           "topicCount": {
@@ -7542,14 +7557,23 @@
               }
             ]
           },
+          "authorUserId": {
+            "type": "number"
+          },
           "createTime": {
             "type": "string"
           },
           "type": {
             "type": "number"
+          },
+          "isAnonymous": {
+            "type": "boolean"
+          },
+          "hotTopicType": {
+            "type": "number"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": {}
       },
       "MainpageAutoContent": {
         "type": "object",

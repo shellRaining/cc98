@@ -3,6 +3,8 @@ import type { HotPeriod } from "../../lib/discovery";
 export type AuthScope = number | "anonymous";
 
 export const queryKeys = {
+  homepageIndex: ["homepage", "index"] as const,
+  homepageAdvertisements: ["homepage", "advertisements"] as const,
   boards: ["boards"] as const,
   board: (id: number, authScope: AuthScope) => ["board", id, authScope] as const,
   boardTopics: (boardId: number, from: number, size: number, authScope: AuthScope) =>
@@ -91,6 +93,5 @@ export const queryKeys = {
     ["signin", "month", year, month, authScope] as const,
   signinMonthRoot: ["signin", "month"] as const,
   serverNow: ["config", "now"] as const,
-  globalConfig: ["global-config"] as const,
   currentUser: ["current-user"] as const,
 };

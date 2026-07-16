@@ -13,7 +13,7 @@
 
 本路线图记录 CC98 新前端的阶段目标、依赖关系和完成状态。具体实现方案在阶段启动时写入 `docs/exec-plans/`；已经确认并长期生效的技术取舍写入 `docs/adr/`。
 
-最后更新：2026-07-13。
+最后更新：2026-07-16。
 
 ## 目标与边界
 
@@ -44,6 +44,7 @@
 - `docs/exec-plans/2026-07-12-writing-flow-migration.md`
 - `docs/exec-plans/2026-07-12-realtime-message-migration.md`
 - `docs/exec-plans/2026-07-13-style-system.md`
+- `docs/exec-plans/2026-07-16-full-fidelity-migration.md`
 
 ## 阶段依赖
 
@@ -164,6 +165,8 @@ flowchart LR
 ### 阶段 8：主题、活动与收尾
 
 建立 CC98 设计规范和主题系统，迁移节日主题、年度总结、版主管理、首页后续版本、错误页和 IP 查询等边缘功能，并完成全站回归、无障碍检查和体验收尾。
+
+设计 token、主题状态和基础 UI 组件只构成阶段 8 的地基。全站高保真迁移继续按 `docs/exec-plans/2026-07-16-full-fidelity-migration.md` 推进，范围包含首页信息架构、页面壳、版面与主题布局、用户中心、管理入口、活动页和完整皮肤回归。
 
 完成定义：计划范围内的旧前端入口均已迁移或明确废弃；主要阅读和写入路径通过浏览器回归；剩余差异有文档记录。
 

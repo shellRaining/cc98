@@ -1,75 +1,135 @@
 <script setup lang="ts">
+import type { HomepageTopicItem } from "../lib/home";
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
-import { boardsQuery, globalConfigQuery, hotTopicsQuery } from "../api/queries";
-import ContentRenderer from "../components/rich-content/ContentRenderer.vue";
-import { hotTopicsPath } from "../lib/discovery";
+import { homepageAdvertisementsQuery, homepageIndexQuery } from "../api/queries";
+import HomeAdvertisement from "../components/home/HomeAdvertisement.vue";
+import HomeAnnouncement from "../components/home/HomeAnnouncement.vue";
+import HomeForumStats from "../components/home/HomeForumStats.vue";
+import HomeQrCard from "../components/home/HomeQrCard.vue";
+import HomeRecommendedFunctions from "../components/home/HomeRecommendedFunctions.vue";
+import HomeRecommendedReading from "../components/home/HomeRecommendedReading.vue";
+import HomeSpecialOffers from "../components/home/HomeSpecialOffers.vue";
+import HomeTopicPanel from "../components/home/HomeTopicPanel.vue";
+import PageState from "../components/PageState.vue";
+import { normalizeApiError } from "../lib/api-error";
+import { normalizeHomepageTopic, visibleHomepageColumns } from "../lib/home";
+import { useUserStore } from "../stores/user";
 
-const { data: config } = useQuery(globalConfigQuery);
-const { data: boardGroups } = useQuery(boardsQuery);
+const user = useUserStore();
+const { data: index, error, isPending, refetch } = useQuery(homepageIndexQuery);
+const { data: advertisements } = useQuery(homepageAdvertisementsQuery);
 
-const announcementLines = computed(() =>
-  (config.value?.announcement ?? "").split("\n").filter(Boolean),
+function normalizeTopics(
+  topics:
+    | readonly { id?: number; title?: string; boardId?: number; boardName?: string }[]
+    | null
+    | undefined,
+): HomepageTopicItem[] {
+  return (topics ?? [])
+    .map(normalizeHomepageTopic)
+    .filter((topic): topic is HomepageTopicItem => topic != null)
+    .slice(0, 10);
+}
+
+const recommendedReading = computed(() =>
+  visibleHomepageColumns(index.value?.recommendationReading),
 );
-
-const { data: monthlyHot } = useQuery({
-  ...hotTopicsQuery("monthly"),
-  select: (topics) => topics.slice(0, 10),
-});
-
-const totalBoards = computed(() =>
-  (boardGroups.value ?? []).reduce((acc, group) => acc + group.boards.length, 0),
+const recommendedFunctions = computed(() =>
+  visibleHomepageColumns(index.value?.recommendationFunction),
 );
+const specialOffers = computed(() => visibleHomepageColumns(index.value?.specialOffer));
+const visibleAdvertisements = computed(() => visibleHomepageColumns(advertisements.value));
+const hotTopics = computed(() => normalizeTopics(index.value?.hotTopic));
+const schoolEvents = computed(() => normalizeTopics(index.value?.schoolEvent));
+const academics = computed(() => normalizeTopics(index.value?.academics));
+const study = computed(() => normalizeTopics(index.value?.study));
+const emotion = computed(() => normalizeTopics(index.value?.emotion));
+const fleaMarket = computed(() => normalizeTopics(index.value?.fleaMarket));
+const fullTimeJobs = computed(() => normalizeTopics(index.value?.fullTimeJob));
+const partTimeJobs = computed(() => normalizeTopics(index.value?.partTimeJob));
+const pageError = computed(() => (error.value ? normalizeApiError(error.value) : null));
 </script>
 
 <template>
-  <section class="space-y-8">
-    <div>
-      <h1 class="text-3xl font-bold mb-2">CC98 论坛</h1>
-      <p class="text-cc98-text-muted">浙江大学学生论坛 · 复刻版（Vue 3.6 + vite-plus）</p>
-    </div>
+  <PageState v-if="isPending" kind="loading" />
+  <PageState
+    v-else-if="pageError"
+    kind="error"
+    :message="pageError.message"
+    show-retry
+    @retry="refetch()"
+  />
+  <div v-else-if="index" class="home-page">
+    <div class="home-main-column">
+      <HomeAnnouncement :content="index.announcement || ''" />
+      <HomeRecommendedReading :items="recommendedReading" />
 
-    <div v-if="config" class="cc98-card p-4">
-      <h2 class="text-lg font-semibold mb-2">站点公告</h2>
-      <ul class="text-sm space-y-1">
-        <li v-for="(line, idx) in announcementLines" :key="idx" class="text-cc98-text-muted">
-          <ContentRenderer :content="line" type="ubb" />
-        </li>
-      </ul>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="cc98-card p-4">
-        <div class="mb-3 flex items-baseline justify-between gap-3">
-          <h2 class="text-lg font-semibold">本月热门</h2>
-          <RouterLink :to="hotTopicsPath('monthly')" class="cc98-link text-sm">查看全部</RouterLink>
-        </div>
-        <ol v-if="monthlyHot?.length" class="list-none space-y-2 text-sm">
-          <li v-for="(topic, idx) in monthlyHot" :key="topic.id">
-            <span class="text-cc98-text-muted mr-2">{{ idx + 1 }}.</span>
-            <RouterLink :to="`/topic/${topic.id}`" class="cc98-link">
-              {{ topic.title }}
-            </RouterLink>
-          </li>
-        </ol>
-        <p v-else class="text-sm text-cc98-text-muted">加载中…</p>
+      <div class="home-topic-grid">
+        <HomeTopicPanel title="热门话题" :items="hotTopics" show-board>
+          <template #actions>
+            <RouterLink to="/topic/hot-weekly">本周</RouterLink>
+            <RouterLink to="/topic/hot-monthly">本月</RouterLink>
+            <RouterLink to="/topic/hot-history">历史上的今天</RouterLink>
+          </template>
+        </HomeTopicPanel>
+        <HomeTopicPanel title="校园活动" :items="schoolEvents" />
+        <HomeTopicPanel title="学术通知" :items="academics" tone="secondary" />
+        <HomeTopicPanel title="学习园地" :items="study" tone="secondary">
+          <template #actions>
+            <RouterLink to="/list/68">学习</RouterLink>
+            <RouterLink to="/list/304">外语</RouterLink>
+            <RouterLink to="/list/263">考研</RouterLink>
+            <RouterLink to="/list/102">出国</RouterLink>
+          </template>
+        </HomeTopicPanel>
+        <HomeTopicPanel title="感性·情感" :items="emotion">
+          <template #actions>
+            <RouterLink to="/list/152">缘分</RouterLink>
+            <RouterLink to="/list/114">小屋</RouterLink>
+            <RouterLink to="/list/81">感性</RouterLink>
+          </template>
+        </HomeTopicPanel>
+        <HomeTopicPanel title="跳蚤市场" :items="fleaMarket">
+          <template #actions>
+            <RouterLink to="/list/562">数码</RouterLink>
+            <RouterLink to="/list/80">日用</RouterLink>
+            <RouterLink to="/list/563">服饰</RouterLink>
+          </template>
+        </HomeTopicPanel>
+        <HomeTopicPanel title="求职广场" :items="fullTimeJobs" tone="secondary">
+          <template #actions><RouterLink to="/list/235">更多</RouterLink></template>
+        </HomeTopicPanel>
+        <HomeTopicPanel title="实习兼职" :items="partTimeJobs" tone="secondary">
+          <template #actions><RouterLink to="/list/459">更多</RouterLink></template>
+        </HomeTopicPanel>
       </div>
-
-      <div class="cc98-card p-4">
-        <h2 class="text-lg font-semibold mb-3">版面导航</h2>
-        <p v-if="boardGroups" class="text-sm text-cc98-text-muted mb-2">
-          共 {{ boardGroups.length }} 个分组 · {{ totalBoards }} 个版面
-        </p>
-        <ul v-if="boardGroups" class="text-sm space-y-1">
-          <li v-for="group in boardGroups.slice(0, 6)" :key="group.id">
-            <RouterLink to="/boardlist" class="cc98-link">
-              {{ group.name }}
-            </RouterLink>
-            <span class="text-cc98-text-muted ml-1">({{ group.boards.length }})</span>
-          </li>
-        </ul>
-        <p v-else class="text-sm text-cc98-text-muted">加载中…</p>
-      </div>
     </div>
-  </section>
+
+    <aside class="home-sidebar">
+      <HomeRecommendedFunctions :items="recommendedFunctions" />
+      <HomeAdvertisement :items="visibleAdvertisements" />
+      <a
+        class="home-suggestion"
+        href="https://zju.aliwork.com/s/mailto?corpid=ding2c6bcab1e41b0242&ddtab=true"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="/home/suggestion.jpg" alt="校园意见箱" />
+      </a>
+      <HomeSpecialOffers v-if="user.isLoggedIn" :items="specialOffers" />
+      <HomeForumStats
+        :today-posts="index.todayCount"
+        :today-topics="index.todayTopicCount"
+        :topics="index.topicCount"
+        :posts="index.postCount"
+        :online="index.onlineUserCount"
+        :users="index.userCount"
+        :latest-user="index.lastUserName"
+      />
+      <HomeQrCard title="CC98小程序" src="/home/xiaochengxu.png" />
+      <HomeQrCard title="98淘书小程序" src="/home/taoshu.jpg" />
+      <HomeQrCard title="CC98公众号" src="/home/gongzhonghao.jpg" />
+    </aside>
+  </div>
 </template>

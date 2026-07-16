@@ -1,7 +1,8 @@
 import {
   boardGroupSchema,
   boardSchema,
-  globalConfigSchema,
+  indexColumnSchema,
+  indexSchema,
   postSchema,
   ratingReasonSchema,
   tagGroupSchema,
@@ -13,6 +14,24 @@ import { queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
+export const homepageIndexQuery = queryOptions({
+  queryKey: queryKeys.homepageIndex,
+  queryFn: async () => {
+    const data = await typedGet<unknown>("/config/index");
+    return indexSchema.parse(data);
+  },
+  staleTime: 60 * 1000,
+});
+
+export const homepageAdvertisementsQuery = queryOptions({
+  queryKey: queryKeys.homepageAdvertisements,
+  queryFn: async () => {
+    const data = await typedGet<unknown[]>("/config/global/advertisement");
+    return indexColumnSchema.array().parse(data);
+  },
+  staleTime: 5 * 60 * 1000,
+});
+
 export const boardsQuery = queryOptions({
   queryKey: queryKeys.boards,
   queryFn: async () => {
@@ -20,15 +39,6 @@ export const boardsQuery = queryOptions({
     return boardGroupSchema.array().parse(data);
   },
   staleTime: 30 * 60 * 1000,
-});
-
-export const globalConfigQuery = queryOptions({
-  queryKey: queryKeys.globalConfig,
-  queryFn: async () => {
-    const data = await typedGet<unknown>("/config/global");
-    return globalConfigSchema.parse(data);
-  },
-  staleTime: 5 * 60 * 1000,
 });
 
 export const boardQuery = (boardId: number, authScope: AuthScope, enabled = true) =>

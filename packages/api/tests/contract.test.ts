@@ -10,6 +10,7 @@ import {
   createPostRequestSchema,
   favoriteTopicGroupSchema,
   globalConfigSchema,
+  indexSchema,
   operationRegistry,
   pagedPostResultSchema,
   pagedTopicResultDataSchema,
@@ -45,6 +46,19 @@ describe("API 契约基线", () => {
         futureField: true,
       }),
     ).toThrow();
+  });
+
+  it("首页聚合契约保留线上使用的栏目和统计字段", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getConfigIndex.json"),
+        "utf8",
+      ),
+    );
+    const index = indexSchema.parse(fixture);
+    expect(index.todayTopicCount).toBeTypeOf("number");
+    expect(index.manualHotTopic?.length).toBeGreaterThan(0);
+    expect(index.specialOffer?.length).toBeGreaterThan(0);
   });
 
   it("用户中心分页响应保留页码元数据", () => {

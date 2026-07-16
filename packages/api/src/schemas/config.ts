@@ -9,7 +9,7 @@ export const globalConfigSchema = z
 export type GlobalConfig = z.infer<typeof globalConfigSchema>;
 
 export const hotTopicSchema = z
-  .object({
+  .looseObject({
     id: z.number().optional(),
     title: z.string().optional(),
     boardId: z.number().optional(),
@@ -18,8 +18,11 @@ export const hotTopicSchema = z
     replyCount: z.number().optional(),
     hitCount: z.number().optional(),
     authorName: z.string().nullable().optional(),
+    authorUserId: z.number().optional(),
     createTime: z.string().optional(),
     type: z.number().optional(),
+    isAnonymous: z.boolean().optional(),
+    hotTopicType: z.number().optional(),
   })
   .meta({ id: "HotTopic" });
 export type HotTopic = z.infer<typeof hotTopicSchema>;
@@ -69,8 +72,10 @@ export const indexSchema = z
   .object({
     announcement: z.string().optional(),
     hotTopic: z.array(hotTopicSchema).optional(),
+    manualHotTopic: z.array(hotTopicSchema).optional(),
     recommendationReading: z.array(indexColumnSchema).optional(),
     recommendationFunction: z.array(indexColumnSchema).optional(),
+    specialOffer: z.array(indexColumnSchema).optional(),
     schoolNews: z.array(indexColumnSchema).optional(),
     schoolEvent: z.array(mainpageAutoContentSchema).optional(),
     academics: z.array(mainpageAutoContentSchema).optional(),
@@ -80,6 +85,7 @@ export const indexSchema = z
     partTimeJob: z.array(mainpageAutoContentSchema).optional(),
     fullTimeJob: z.array(mainpageAutoContentSchema).optional(),
     todayCount: z.number().optional(),
+    todayTopicCount: z.number().optional(),
     topicCount: z.number().optional(),
     postCount: z.number().optional(),
     userCount: z.number().optional(),

@@ -98,6 +98,7 @@ export const ALL_SKINS: readonly { id: SkinId; name: string }[] = SKINS.map((s) 
  */
 export const IMPLEMENTED_SKINS: ReadonlySet<SkinId> = new Set<SkinId>([
   "default",
+  "summer",
   "spring-festival",
 ]);
 

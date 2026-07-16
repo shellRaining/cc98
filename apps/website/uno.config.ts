@@ -23,6 +23,7 @@ export default defineConfig({
       "cc98-brand": "var(--cc98-color-brand)",
       "cc98-primary": "var(--cc98-color-primary)",
       "cc98-primary-hover": "var(--cc98-color-primary-hover)",
+      "cc98-secondary": "var(--cc98-color-secondary)",
       "cc98-accent": "var(--cc98-color-accent)",
       "cc98-on-primary": "var(--cc98-color-on-primary)",
       "cc98-background": "var(--cc98-color-background)",
