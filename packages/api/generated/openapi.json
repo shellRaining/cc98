@@ -9134,9 +9134,7 @@
               "bet": {
                 "anyOf": [
                   {
-                    "type": "object",
-                    "properties": {},
-                    "additionalProperties": {}
+                    "$ref": "#/components/schemas/AnnualBet"
                   },
                   {
                     "type": "null"
@@ -9195,6 +9193,30 @@
             "type": "number"
           },
           "annualCount": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": {}
+      },
+      "AnnualBet": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "number"
+          },
+          "winCount": {
+            "type": "number"
+          },
+          "loseCount": {
+            "type": "number"
+          },
+          "drawCount": {
+            "type": "number"
+          },
+          "payment": {
+            "type": "number"
+          },
+          "profit": {
             "type": "number"
           }
         },

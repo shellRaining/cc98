@@ -117,6 +117,18 @@ export const annualCardDrawSchema = z
   .meta({ id: "AnnualCardDraw" });
 export type AnnualCardDraw = z.infer<typeof annualCardDrawSchema>;
 
+export const annualBetSchema = z
+  .looseObject({
+    totalCount: z.number().optional(),
+    winCount: z.number().optional(),
+    loseCount: z.number().optional(),
+    drawCount: z.number().optional(),
+    payment: z.number().optional(),
+    profit: z.number().optional(),
+  })
+  .meta({ id: "AnnualBet" });
+export type AnnualBet = z.infer<typeof annualBetSchema>;
+
 export const annualReviewV2Schema = annualReviewSchema
   .and(
     z.looseObject({
@@ -124,7 +136,7 @@ export const annualReviewV2Schema = annualReviewSchema
       mostSendLikeUser: annualReviewUserSchema.optional(),
       mostReceiveLikeUser: annualReviewUserSchema.optional(),
       cardDraw: annualCardDrawSchema.optional(),
-      bet: z.looseObject({}).nullable().optional(),
+      bet: annualBetSchema.nullable().optional(),
     }),
   )
   .meta({ id: "AnnualReviewV2" });

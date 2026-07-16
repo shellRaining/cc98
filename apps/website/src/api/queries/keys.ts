@@ -140,6 +140,8 @@ export const queryKeys = {
   signinMonth: (year: number, month: number, authScope: AuthScope) =>
     ["signin", "month", year, month, authScope] as const,
   signinMonthRoot: ["signin", "month"] as const,
+  annualReview: (year: number, authScope: AuthScope) =>
+    ["me", "annual-review", year, authScope] as const,
   serverNow: ["config", "now"] as const,
   currentUser: ["current-user"] as const,
 };

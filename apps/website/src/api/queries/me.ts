@@ -1,4 +1,5 @@
 import {
+  annualReviewV2Schema,
   basicUserSchema,
   meUserSchema,
   pagedFavoriteTopicGroupSchema,
@@ -19,6 +20,17 @@ export const currentUserQuery = queryOptions({
   },
   staleTime: 5 * 60 * 1000,
 });
+
+export const annualReviewQuery = (year: number, authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.annualReview(year, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>(`/me/annual-review-${year}`);
+      return annualReviewV2Schema.parse(data);
+    },
+    staleTime: 30 * 60 * 1000,
+    enabled: enabled && authScope !== "anonymous",
+  });
 
 export const focusTopicsInfiniteQuery = (
   mode: FocusMode,

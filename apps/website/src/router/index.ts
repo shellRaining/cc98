@@ -234,6 +234,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/annual-review-2025",
+    name: "annual-review-2025",
+    component: () => import("../views/AnnualReviewView.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/sitemanage",
     name: "site-manage",
     component: () => import("../views/SiteManageView.vue"),
