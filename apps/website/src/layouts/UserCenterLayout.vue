@@ -1,45 +1,70 @@
 <script setup lang="ts">
+import { useTitle, useWindowScroll } from "@vueuse/core";
 import { RouterLink, RouterView } from "vue-router";
-import { useUserStore } from "../stores/user";
 
-const user = useUserStore();
+useTitle("个人中心 - CC98 论坛");
+
+const { y } = useWindowScroll({ behavior: "smooth" });
 
 const links = [
-  ["/usercenter", "概览"],
-  ["/usercenter/topics", "我的主题"],
-  ["/usercenter/posts", "我的回复"],
-  ["/usercenter/favorites", "我的收藏"],
-  ["/usercenter/history", "浏览历史"],
-  ["/usercenter/following", "关注用户"],
-  ["/usercenter/followers", "我的粉丝"],
-  ["/usercenter/boards", "关注版面"],
+  ["/usercenter", "个人主页", "M12 3h8v12h6V14h4v9h6V11z"],
+  [
+    "/usercenter/topics",
+    "我的主题",
+    "M4 19.5V22h2.5L19.8 8.7l-2.5-2.5zm15.7-15.3-2.5-2.5-2.1 2.1 2.5 2.5z",
+  ],
+  [
+    "/usercenter/posts",
+    "我的回复",
+    "M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z",
+  ],
+  ["/usercenter/history", "我的足迹", "M12 7v5l3 2M3.1 12a9 9 0 1 0 2.6-6.4L3 8.3M3 3v5h5"],
+  [
+    "/usercenter/favorites",
+    "我的收藏",
+    "m12 3 2.8 5.7 6.3.9-4.6 4.4 1.1 6.3-5.6-3-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z",
+  ],
+  ["/usercenter/boards", "关注版面", "M4 5h16v14H4zm3 3h4v4H7zm6 0h4m-4 4h4M7 15h10"],
+  [
+    "/usercenter/following",
+    "关注用户",
+    "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m10 0v6m3-3h-6",
+  ],
+  [
+    "/usercenter/followers",
+    "我的粉丝",
+    "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m7-7a4 4 0 0 1 0 7.7",
+  ],
 ] as const;
 </script>
 
 <template>
-  <section class="grid gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
-    <aside class="space-y-4">
-      <div class="cc98-card p-4">
-        <p class="text-xs text-cc98-text-muted">当前账号</p>
-        <p class="mt-1 font-semibold">{{ user.user?.name }}</p>
-      </div>
-      <nav class="cc98-card p-2 flex gap-2 overflow-x-auto md:flex-col" aria-label="用户中心">
-        <RouterLink
-          v-for="[to, label] in links"
-          :key="to"
-          :to="to"
-          class="rounded px-3 py-2 text-sm whitespace-nowrap text-cc98-text-muted hover:bg-cc98-surface-subtle hover:text-cc98-primary"
-          active-class="bg-cc98-surface-subtle text-cc98-primary font-medium"
-          :exact-active-class="
-            to === '/usercenter' ? 'bg-cc98-surface-subtle text-cc98-primary font-medium' : ''
-          "
-        >
-          {{ label }}
-        </RouterLink>
+  <section class="user-center-page">
+    <h1 class="user-center-page__title">个人中心</h1>
+
+    <div class="user-center-shell">
+      <nav class="user-center-nav" aria-label="个人中心">
+        <ul>
+          <li v-for="[to, label, icon] in links" :key="to">
+            <RouterLink
+              :to="to"
+              :active-class="to === '/usercenter' ? '' : 'is-active'"
+              :exact-active-class="to === '/usercenter' ? 'is-active' : ''"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path :d="icon" />
+              </svg>
+              <span>{{ label }}</span>
+            </RouterLink>
+          </li>
+        </ul>
       </nav>
-    </aside>
-    <div class="min-w-0">
-      <RouterView />
+
+      <main class="user-center-main">
+        <RouterView />
+      </main>
     </div>
+
+    <button v-if="y > 234" type="button" class="new-topics-to-top" @click="y = 0">回到顶部</button>
   </section>
 </template>

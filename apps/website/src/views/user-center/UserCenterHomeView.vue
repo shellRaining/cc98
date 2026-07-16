@@ -1,67 +1,169 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
+import dayjs from "dayjs";
+import { computed } from "vue";
 import { RouterLink } from "vue-router";
-import { currentUserQuery } from "../../api/queries";
+import { boardsByIdsQuery, currentUserQuery, meRecentTopicsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
+import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
+import { useUserStore } from "../../stores/user";
 
-const { data: me, error, isPending, refetch } = useQuery(currentUserQuery);
+const PAGE_SIZE = 10;
+const user = useUserStore();
+const authScope = computed(() => user.user?.id ?? "anonymous");
 
-const entries = [
-  ["/usercenter/topics", "我的主题", "查看最近创建的主题"],
-  ["/usercenter/posts", "我的回复", "查看最近回复与热门回复"],
-  ["/usercenter/favorites", "我的收藏", "筛选收藏并管理分组"],
-  ["/usercenter/history", "浏览历史", "查看最近访问的主题"],
-  ["/usercenter/following", "关注用户", "管理已经关注的用户"],
-  ["/usercenter/followers", "我的粉丝", "查看关注你的用户"],
-  ["/usercenter/boards", "关注版面", "管理自定义版面"],
-] as const;
+const meQuery = useQuery(currentUserQuery);
+const recentQuery = useQuery(
+  computed(() => meRecentTopicsQuery(authScope.value, 0, PAGE_SIZE + 1, user.isLoggedIn)),
+);
+
+const recentTopics = computed(() => recentQuery.data.value?.slice(0, PAGE_SIZE) ?? []);
+const boardIds = computed(() => recentTopics.value.map((topic) => topic.boardId ?? 0));
+const boardQuery = useQuery(computed(() => boardsByIdsQuery(boardIds.value)));
+const boardMap = computed(
+  () => new Map(boardQuery.data.value?.map((board) => [board.id, board]) ?? []),
+);
+const avatar = computed(
+  () =>
+    meQuery.data.value?.portraitUrl ||
+    meQuery.data.value?.photourl ||
+    "/static/images/default_avatar_boy.png",
+);
+
+const profileFields = computed(() => {
+  const me = meQuery.data.value;
+  if (!me) return [];
+  return [
+    ["性别", formatGender(me.gender)],
+    ["发帖数", me.postCount ?? "—"],
+    ["财富值", me.wealth ?? "—"],
+    ["粉丝数", me.fanCount ?? "—"],
+    ["威望", me.prestige ?? "—"],
+    ["风评", me.popularity ?? "—"],
+    ["注册时间", formatTime(me.registerTime)],
+    ["最后登录", formatTime(me.lastLogOnTime)],
+    ...(me.birthday ? ([["生日", me.birthday.replace("9999-", "")]] as const) : []),
+    ...(me.displayTitle || me.levelTitle
+      ? ([["用户组", me.displayTitle || me.levelTitle || "—"]] as const)
+      : []),
+    ...(me.emailAddress ? ([["邮箱", me.emailAddress]] as const) : []),
+    ...(me.qq ? ([["QQ", me.qq]] as const) : []),
+    ["被删帖数", Math.max(0, -(me.deleteCount ?? 0))],
+  ] as const;
+});
+
+const errorMessage = computed(() => {
+  const error = meQuery.error.value ?? recentQuery.error.value ?? boardQuery.error.value;
+  return error ? normalizeApiError(error).message : undefined;
+});
+
+function formatGender(gender: number | undefined): string {
+  if (gender === 1) return "男";
+  if (gender === 2) return "女";
+  return "未设置";
+}
+
+function formatTime(value: string | undefined): string {
+  if (!value) return "—";
+  const parsed = dayjs(value);
+  return parsed.isValid() ? parsed.format("YYYY-MM-DD HH:mm") : value;
+}
+
+function replaceBrokenAvatar(event: Event) {
+  const image = event.currentTarget as HTMLImageElement;
+  image.src = "/static/images/default_avatar_boy.png";
+}
+
+function retry() {
+  void meQuery.refetch();
+  void recentQuery.refetch();
+  void boardQuery.refetch();
+}
 </script>
 
 <template>
-  <div class="space-y-5">
-    <header>
-      <h1 class="text-2xl font-bold">用户中心</h1>
-      <p class="mt-1 text-sm text-cc98-text-muted">管理个人内容、收藏和关注关系。</p>
-    </header>
+  <PageState v-if="meQuery.isPending.value" kind="loading" />
+  <PageState
+    v-else-if="meQuery.error.value"
+    kind="error"
+    :message="errorMessage"
+    show-retry
+    @retry="retry"
+  />
 
-    <PageState v-if="isPending" kind="loading" />
-    <PageState
-      v-else-if="error"
-      kind="error"
-      :message="normalizeApiError(error).message"
-      show-retry
-      @retry="refetch()"
-    />
+  <div v-else-if="meQuery.data.value" class="user-center-profile">
+    <aside class="user-center-profile__avatar">
+      <img :src="avatar" :alt="`${meQuery.data.value.name} 的头像`" @error="replaceBrokenAvatar" />
+    </aside>
 
-    <template v-else>
-      <div class="cc98-card p-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section class="user-center-profile__details">
+      <header class="user-center-profile__identity">
         <div>
-          <p class="text-xs text-cc98-text-muted">发帖数</p>
-          <p class="mt-1 text-xl font-semibold">{{ me?.postCount ?? 0 }}</p>
+          <strong>{{ meQuery.data.value.name }}</strong>
+          <span>{{ meQuery.data.value.privilege }}</span>
         </div>
-        <div>
-          <p class="text-xs text-cc98-text-muted">关注</p>
-          <p class="mt-1 text-xl font-semibold">{{ me?.followCount ?? 0 }}</p>
-        </div>
-        <div>
-          <p class="text-xs text-cc98-text-muted">粉丝</p>
-          <p class="mt-1 text-xl font-semibold">{{ me?.fanCount ?? 0 }}</p>
-        </div>
-        <div>
-          <p class="text-xs text-cc98-text-muted">关注版面</p>
-          <p class="mt-1 text-xl font-semibold">{{ me?.customBoards?.length ?? 0 }}</p>
-        </div>
-      </div>
+        <dl class="user-center-like-count">
+          <dt>收到的赞</dt>
+          <dd>{{ meQuery.data.value.receivedLikeCount ?? 0 }}</dd>
+        </dl>
+      </header>
 
-      <ul class="m-0 grid list-none gap-3 p-0 sm:grid-cols-2">
-        <li v-for="[to, title, description] in entries" :key="to">
-          <RouterLink :to="to" class="cc98-card block p-4 hover:border-cc98-primary">
-            <strong>{{ title }}</strong>
-            <p class="mt-1 text-sm text-cc98-text-muted">{{ description }}</p>
+      <p v-if="meQuery.data.value.introduction" class="user-center-profile__introduction">
+        {{ meQuery.data.value.introduction }}
+      </p>
+
+      <dl class="user-center-profile__fields">
+        <div v-for="[label, value] in profileFields" :key="label">
+          <dt>{{ label }}</dt>
+          <dd>{{ value }}</dd>
+        </div>
+      </dl>
+
+      <section v-if="meQuery.data.value.signatureCode" class="user-center-signature">
+        <h2>个性签名</h2>
+        <div class="user-center-signature__content">
+          <ContentRenderer type="ubb" :content="meQuery.data.value.signatureCode" />
+        </div>
+      </section>
+    </section>
+
+    <section class="user-center-activities">
+      <header>
+        <h2>发表的主题</h2>
+        <RouterLink to="/usercenter/topics">查看全部</RouterLink>
+      </header>
+
+      <PageState v-if="recentQuery.isPending.value" kind="loading" />
+      <PageState
+        v-else-if="recentQuery.error.value"
+        kind="error"
+        :message="errorMessage"
+        show-retry
+        @retry="retry"
+      />
+      <p v-else-if="recentTopics.length === 0" class="user-center-activities__empty">没有主题</p>
+      <ul v-else class="user-center-topic-list">
+        <li v-for="topic in recentTopics" :key="topic.id">
+          <div class="user-center-topic-list__meta">
+            <RouterLink :to="`/list/${topic.boardId}`">
+              {{ boardMap.get(topic.boardId ?? 0)?.name ?? `版面 ${topic.boardId}` }}
+            </RouterLink>
+            <time>{{ formatTime(topic.time) }}</time>
+          </div>
+          <RouterLink :to="`/topic/${topic.id}`" class="user-center-topic-list__title">
+            {{ topic.title?.trim() || "(无标题)" }}
           </RouterLink>
         </li>
       </ul>
-    </template>
+
+      <RouterLink
+        v-if="(recentQuery.data.value?.length ?? 0) > PAGE_SIZE"
+        to="/usercenter/topics"
+        class="user-center-activities__more"
+      >
+        查看更多主题
+      </RouterLink>
+    </section>
   </div>
 </template>
