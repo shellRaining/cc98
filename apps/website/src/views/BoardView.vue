@@ -1,24 +1,35 @@
 <script setup lang="ts">
 import { computed, watch } from "vue";
+import { useTitle } from "@vueuse/core";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
-import { boardQuery, boardTopicsQuery, boardTopTopicsQuery } from "../api/queries";
+import {
+  boardEventsQuery,
+  boardFilteredTopicsQuery,
+  boardQuery,
+  boardTagsQuery,
+  boardTopicsQuery,
+  boardTopTopicsQuery,
+  homepageAdvertisementsQuery,
+} from "../api/queries";
+import { useFollowBoardMutation, useUnfollowBoardMutation } from "../api/mutations";
+import BoardEventList from "../components/board/BoardEventList.vue";
+import BoardHeader from "../components/board/BoardHeader.vue";
+import HomeAdvertisement from "../components/home/HomeAdvertisement.vue";
 import PageState from "../components/PageState.vue";
 import Pagination from "../components/Pagination.vue";
 import TopicList from "../components/TopicList.vue";
 import { normalizeApiError } from "../lib/api-error";
-import { saveLoginRedirect } from "../lib/login-redirect";
 import {
-  boardPagePath,
-  boardTotalPages,
-  clampPage,
-  pageToFrom,
-  parsePositiveInt,
-  resolveBoardPage,
-} from "../lib/route-params";
+  boardViewPath,
+  resolveBoardTag,
+  resolveBoardViewMode,
+  resolveBoardViewPage,
+} from "../lib/board-view.ts";
+import { visibleHomepageColumns } from "../lib/home.ts";
+import { saveLoginRedirect } from "../lib/login-redirect";
+import { boardTotalPages, clampPage, pageToFrom, parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
-import { useFollowBoardMutation, useUnfollowBoardMutation } from "../api/mutations";
-import UiButton from "../components/ui/Button.vue";
 
 const props = defineProps<{
   boardId: string;
@@ -26,19 +37,19 @@ const props = defineProps<{
   page?: string;
 }>();
 
+const PAGE_SIZE = 20;
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
 const followBoard = useFollowBoardMutation();
 const unfollowBoard = useUnfollowBoardMutation();
-const relationPending = computed(
-  () => followBoard.isPending.value || unfollowBoard.isPending.value,
-);
 
-const PAGE_SIZE = 20;
 const numericBoardId = computed(() => parsePositiveInt(props.boardId));
-const requestedPage = computed(() => resolveBoardPage(props.type, props.page));
 const invalidId = computed(() => numericBoardId.value == null);
+const mode = computed(() => resolveBoardViewMode(props.type));
+const requestedPage = computed(() => resolveBoardViewPage(props.type, props.page));
+const tag1 = computed(() => resolveBoardTag(route.query.tag1));
+const tag2 = computed(() => resolveBoardTag(route.query.tag2));
 const authScope = computed(() => user.user?.id ?? "anonymous");
 
 const boardOptions = computed(() =>
@@ -51,29 +62,33 @@ const {
   refetch: refetchBoard,
 } = useQuery(boardOptions);
 
+useTitle(
+  computed(() => (board.value?.name ? `${board.value.name} - CC98 论坛` : "版面 - CC98 论坛")),
+);
+
 const needLoginForEntry = computed(() => board.value?.canEntry === false && !user.isLoggedIn);
 const forbiddenEntry = computed(() => board.value?.canEntry === false && user.isLoggedIn);
-
-const canLoadTopics = computed(
+const canLoadContent = computed(
   () =>
     !invalidId.value && user.isLoggedIn && board.value != null && board.value.canEntry !== false,
 );
 
-const totalPages = computed(() => boardTotalPages(board.value?.topicCount, PAGE_SIZE));
-const currentPage = computed(() => clampPage(requestedPage.value, totalPages.value));
-const from = computed(() => pageToFrom(currentPage.value, PAGE_SIZE));
-
-watch(
-  [requestedPage, totalPages, numericBoardId],
-  ([page, total, id]) => {
-    if (id == null || total == null) return;
-    const clamped = clampPage(page, total);
-    if (page !== clamped) {
-      void router.replace(boardPagePath(id, clamped));
-    }
-  },
-  { flush: "post" },
+const tagsOptions = computed(() =>
+  boardTagsQuery(numericBoardId.value ?? 0, !invalidId.value && board.value != null),
 );
+const { data: tagGroups } = useQuery(tagsOptions);
+const tagNames = computed(() => {
+  const result = new Map<number, string>();
+  for (const group of tagGroups.value ?? []) {
+    for (const tag of group.tags ?? []) {
+      if (tag.id != null && tag.name) result.set(tag.id, tag.name);
+    }
+  }
+  return result;
+});
+
+const preliminaryPage = computed(() => Math.max(1, requestedPage.value));
+const from = computed(() => pageToFrom(preliminaryPage.value, PAGE_SIZE));
 
 const topicsOptions = computed(() =>
   boardTopicsQuery(
@@ -81,73 +96,110 @@ const topicsOptions = computed(() =>
     authScope.value,
     from.value,
     PAGE_SIZE,
-    canLoadTopics.value,
+    canLoadContent.value && mode.value === "all",
   ),
 );
 const topOptions = computed(() =>
   boardTopTopicsQuery(
     numericBoardId.value ?? 0,
     authScope.value,
-    canLoadTopics.value && currentPage.value === 1,
+    canLoadContent.value && mode.value === "all" && preliminaryPage.value === 1,
+  ),
+);
+const filteredOptions = computed(() =>
+  boardFilteredTopicsQuery(
+    numericBoardId.value ?? 0,
+    mode.value === "best" || mode.value === "save" || mode.value === "tag" ? mode.value : "best",
+    authScope.value,
+    from.value,
+    PAGE_SIZE,
+    tag1.value,
+    tag2.value,
+    canLoadContent.value && ["best", "save", "tag"].includes(mode.value),
+  ),
+);
+const eventsOptions = computed(() =>
+  boardEventsQuery(
+    numericBoardId.value ?? 0,
+    authScope.value,
+    from.value,
+    PAGE_SIZE,
+    canLoadContent.value && mode.value === "record",
   ),
 );
 
-const {
-  data: topics,
-  error: topicsError,
-  isPending: topicsPending,
-  refetch: refetchTopics,
-} = useQuery(topicsOptions);
-
-const {
-  data: topTopics,
-  error: topError,
-  isPending: topPending,
-  refetch: refetchTop,
-} = useQuery(topOptions);
+const normalQuery = useQuery(topicsOptions);
+const topQuery = useQuery(topOptions);
+const filteredQuery = useQuery(filteredOptions);
+const eventsQuery = useQuery(eventsOptions);
+const advertisementsQuery = useQuery(homepageAdvertisementsQuery);
+const advertisements = computed(() => visibleHomepageColumns(advertisementsQuery.data.value ?? []));
 
 const pinnedIds = computed(() => {
   const ids = new Set<number>();
-  for (const topic of topTopics.value ?? []) {
+  for (const topic of topQuery.data.value ?? []) {
     if (topic.id != null) ids.add(topic.id);
   }
   return ids;
 });
 
-const mergedTopics = computed(() => {
-  const normals = topics.value ?? [];
-  if (currentPage.value !== 1) return normals;
-  const tops = topTopics.value ?? [];
-  const seen = new Set<number>();
+const displayedTopics = computed(() => {
+  if (mode.value !== "all") return filteredQuery.data.value?.topics ?? [];
+  const normals = normalQuery.data.value ?? [];
+  if (preliminaryPage.value !== 1) return normals;
   const result = [];
-  for (const topic of [...tops, ...normals]) {
-    if (topic.id == null) {
-      result.push(topic);
-      continue;
-    }
-    if (seen.has(topic.id)) continue;
-    seen.add(topic.id);
-    result.push(topic);
+  const seen = new Set<number>();
+  for (const topic of [...(topQuery.data.value ?? []), ...normals]) {
+    if (topic.id == null || !seen.has(topic.id)) result.push(topic);
+    if (topic.id != null) seen.add(topic.id);
   }
   return result;
 });
 
-const listPending = computed(
-  () =>
-    canLoadTopics.value && (topicsPending.value || (currentPage.value === 1 && topPending.value)),
+const totalPages = computed(() => {
+  if (mode.value === "all") return boardTotalPages(board.value?.topicCount, PAGE_SIZE);
+  if (mode.value === "record") return boardTotalPages(eventsQuery.data.value?.count, PAGE_SIZE);
+  return boardTotalPages(filteredQuery.data.value?.count, PAGE_SIZE);
+});
+const currentPage = computed(() => clampPage(preliminaryPage.value, totalPages.value));
+
+watch(
+  [requestedPage, totalPages, numericBoardId, mode, tag1, tag2],
+  ([page, total, id, currentMode, currentTag1, currentTag2]) => {
+    if (id == null || total == null) return;
+    const clamped = clampPage(page, total);
+    if (page !== clamped) {
+      void router.replace(
+        boardViewPath(id, currentMode, clamped, { tag1: currentTag1, tag2: currentTag2 }),
+      );
+    }
+  },
+  { flush: "post" },
 );
+
+const contentPending = computed(() => {
+  if (!canLoadContent.value) return false;
+  if (mode.value === "all") {
+    return normalQuery.isPending.value || (currentPage.value === 1 && topQuery.isPending.value);
+  }
+  if (mode.value === "record") return eventsQuery.isPending.value;
+  return filteredQuery.isPending.value;
+});
+
+const contentError = computed(() => {
+  if (mode.value === "all") return normalQuery.error.value ?? topQuery.error.value;
+  if (mode.value === "record") return eventsQuery.error.value;
+  return filteredQuery.error.value;
+});
 
 const pageError = computed(() => {
   if (invalidId.value) return normalizeApiError({ status: 404 });
   if (boardError.value) return normalizeApiError(boardError.value);
   if (needLoginForEntry.value) return normalizeApiError({ status: 401 });
   if (forbiddenEntry.value) return normalizeApiError({ status: 403 });
-  if (!user.isLoggedIn && !boardPending.value && board.value) {
-    // 版面信息可匿名，但主题列表需要登录
+  if (!user.isLoggedIn && !boardPending.value && board.value)
     return normalizeApiError({ status: 401 });
-  }
-  if (topicsError.value) return normalizeApiError(topicsError.value);
-  if (topError.value && currentPage.value === 1) return normalizeApiError(topError.value);
+  if (contentError.value) return normalizeApiError(contentError.value);
   return null;
 });
 
@@ -158,13 +210,36 @@ const stateKind = computed(() => {
   if (pageError.value?.kind === "forbidden") return "forbidden" as const;
   if (pageError.value?.kind === "not-found") return "not-found" as const;
   if (pageError.value) return "error" as const;
-  if (listPending.value) return "loading" as const;
-  if (canLoadTopics.value && mergedTopics.value.length === 0) return "empty" as const;
+  if (contentPending.value) return "loading" as const;
+  if (mode.value === "record" && (eventsQuery.data.value?.boardEvents.length ?? 0) === 0)
+    return "empty" as const;
+  if (mode.value !== "record" && displayedTopics.value.length === 0) return "empty" as const;
   return null;
 });
 
+const blockingState = computed(() => {
+  if (!board.value) return stateKind.value;
+  if (stateKind.value === "unauthorized" || stateKind.value === "forbidden") return stateKind.value;
+  return null;
+});
+
+const relationPending = computed(
+  () => followBoard.isPending.value || unfollowBoard.isPending.value,
+);
+
 function toPage(page: number) {
-  return boardPagePath(props.boardId, page);
+  return boardViewPath(props.boardId, mode.value, page, { tag1: tag1.value, tag2: tag2.value });
+}
+
+function modePath(nextMode: "all" | "best" | "save" | "record") {
+  return boardViewPath(props.boardId, nextMode);
+}
+
+function tagPath(layer: number, id?: number) {
+  return boardViewPath(props.boardId, "tag", 1, {
+    tag1: layer === 1 ? id : tag1.value,
+    tag2: layer === 2 ? id : tag2.value,
+  });
 }
 
 function goLogin() {
@@ -174,34 +249,33 @@ function goLogin() {
 
 function retry() {
   void refetchBoard();
-  if (canLoadTopics.value) {
-    void refetchTopics();
-    if (currentPage.value === 1) void refetchTop();
-  }
+  if (mode.value === "all") {
+    void normalQuery.refetch();
+    if (currentPage.value === 1) void topQuery.refetch();
+  } else if (mode.value === "record") void eventsQuery.refetch();
+  else void filteredQuery.refetch();
 }
 
 function toggleBoardFollow() {
   const id = numericBoardId.value;
   if (!id || relationPending.value) return;
-  if (!user.isLoggedIn) {
-    goLogin();
-    return;
-  }
+  if (!user.isLoggedIn) return goLogin();
   if (board.value?.isUserCustomBoard) unfollowBoard.mutate(id);
   else followBoard.mutate(id);
 }
 </script>
 
 <template>
-  <section class="space-y-4">
-    <nav class="text-sm text-cc98-text-muted">
-      <RouterLink to="/boardlist" class="cc98-link">全部版面</RouterLink>
-      <span v-if="board?.name"> / {{ board.name }}</span>
+  <section class="board-page">
+    <nav v-if="!blockingState" class="board-breadcrumb" aria-label="面包屑">
+      <RouterLink to="/">首页</RouterLink><span>›</span>
+      <RouterLink to="/boardlist">版面列表</RouterLink><span>›</span>
+      <RouterLink v-if="board?.name" :to="modePath('all')">{{ board.name }}</RouterLink>
     </nav>
 
     <PageState
-      v-if="stateKind"
-      :kind="stateKind"
+      v-if="blockingState"
+      :kind="blockingState"
       :message="pageError?.message"
       :show-retry="stateKind === 'error'"
       @login="goLogin"
@@ -209,56 +283,110 @@ function toggleBoardFollow() {
     />
 
     <template v-else-if="board">
-      <header class="space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <h1 class="text-2xl font-bold">{{ board.name ?? `版面 ${boardId}` }}</h1>
-          <div class="flex flex-wrap gap-2">
-            <UiButton
-              variant="ghost"
-              type="button"
-              size="sm"
-              :disabled="relationPending"
-              @click="toggleBoardFollow"
-            >
-              {{ board.isUserCustomBoard ? "取消关注" : "关注版面" }}
-            </UiButton>
-            <UiButton as-child size="sm">
-              <RouterLink :to="{ name: 'create-topic', params: { boardId } }"> 发主题 </RouterLink>
-            </UiButton>
-          </div>
-        </div>
-        <p
-          v-if="followBoard.error.value || unfollowBoard.error.value"
-          class="text-sm text-cc98-accent"
-        >
-          {{ normalizeApiError(followBoard.error.value ?? unfollowBoard.error.value).message }}
-        </p>
-        <p v-if="board.description" class="text-sm text-cc98-text-muted whitespace-pre-wrap">
-          {{ board.description }}
-        </p>
-        <p class="text-xs text-cc98-text-muted">
-          主题 {{ board.topicCount ?? "—" }} · 帖数 {{ board.postCount ?? "—" }} · 今日
-          {{ board.todayCount ?? "—" }}
-        </p>
-      </header>
-
-      <Pagination
-        :current-page="currentPage"
-        :total-pages="totalPages"
-        :has-next-page="(topics?.length ?? 0) >= PAGE_SIZE"
-        :to-page="toPage"
+      <BoardHeader
+        :board="board"
+        :follow-pending="relationPending"
+        @toggle-follow="toggleBoardFollow"
       />
 
-      <div class="cc98-card px-4">
-        <TopicList :topics="mergedTopics" :pinned-ids="pinnedIds" :show-board="false" />
+      <p v-if="followBoard.error.value || unfollowBoard.error.value" class="board-page__error">
+        {{ normalizeApiError(followBoard.error.value ?? unfollowBoard.error.value).message }}
+      </p>
+
+      <div class="board-action-row">
+        <div class="board-action-row__buttons">
+          <RouterLink :to="{ name: 'create-topic', params: { boardId } }">发主题</RouterLink>
+          <RouterLink
+            v-if="board.canVote"
+            :to="{ name: 'create-topic', params: { boardId }, query: { vote: '1' } }"
+          >
+            发投票
+          </RouterLink>
+        </div>
+        <HomeAdvertisement v-if="advertisements.length" :items="advertisements" />
       </div>
 
-      <Pagination
-        :current-page="currentPage"
-        :total-pages="totalPages"
-        :has-next-page="(topics?.length ?? 0) >= PAGE_SIZE"
-        :to-page="toPage"
-      />
+      <div class="board-filter-row">
+        <div class="board-tag-layers">
+          <div v-for="group in tagGroups ?? []" :key="group.layer" class="board-tag-layer">
+            <RouterLink
+              :to="tagPath(group.layer ?? 1)"
+              :class="{ 'is-active': !(group.layer === 1 ? tag1 : tag2) }"
+            >
+              全部
+            </RouterLink>
+            <RouterLink
+              v-for="tag in group.tags ?? []"
+              :key="tag.id ?? tag.name"
+              :to="tagPath(group.layer ?? 1, tag.id)"
+              :class="{ 'is-active': (group.layer === 1 ? tag1 : tag2) === tag.id }"
+            >
+              {{ tag.name }}
+            </RouterLink>
+          </div>
+        </div>
+        <Pagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :has-next-page="displayedTopics.length >= PAGE_SIZE"
+          :to-page="toPage"
+        />
+      </div>
+
+      <div class="board-list-panel">
+        <div class="board-list-panel__head">
+          <nav aria-label="主题筛选">
+            <RouterLink
+              :to="modePath('all')"
+              :class="{ 'is-active': mode === 'all' || mode === 'tag' }"
+              >全部</RouterLink
+            >
+            <RouterLink :to="modePath('best')" :class="{ 'is-active': mode === 'best' }"
+              >精华</RouterLink
+            >
+            <RouterLink :to="modePath('save')" :class="{ 'is-active': mode === 'save' }"
+              >保存</RouterLink
+            >
+          </nav>
+          <div v-if="mode !== 'record'" class="board-list-panel__columns">
+            <span>作者</span><span>最后回复</span>
+          </div>
+        </div>
+
+        <PageState
+          v-if="stateKind"
+          :kind="stateKind"
+          :message="pageError?.message"
+          :show-retry="stateKind === 'error'"
+          @login="goLogin"
+          @retry="retry"
+        />
+        <BoardEventList
+          v-else-if="mode === 'record'"
+          :events="eventsQuery.data.value?.boardEvents ?? []"
+        />
+        <TopicList
+          v-else
+          :topics="displayedTopics"
+          :pinned-ids="pinnedIds"
+          :show-board="false"
+          variant="board"
+          :tag-names="tagNames"
+        />
+      </div>
+
+      <div class="board-page__bottom">
+        <Pagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :has-next-page="displayedTopics.length >= PAGE_SIZE"
+          :to-page="toPage"
+        />
+        <div>
+          <RouterLink :to="{ path: '/search', query: { boardId } }">版内搜索</RouterLink>
+          <RouterLink :to="modePath('record')">查看版面事件</RouterLink>
+        </div>
+      </div>
     </template>
   </section>
 </template>

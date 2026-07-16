@@ -7,9 +7,12 @@ withDefaults(
     topics: Topic[];
     pinnedIds?: Set<number>;
     showBoard?: boolean;
+    variant?: "default" | "board";
+    tagNames?: Map<number, string>;
   }>(),
   {
     showBoard: true,
+    variant: "default",
   },
 );
 </script>
@@ -22,6 +25,8 @@ withDefaults(
       :topic="topic"
       :pinned="topic.id != null && pinnedIds?.has(topic.id)"
       :show-board="showBoard"
+      :variant="variant"
+      :tag-names="tagNames"
     >
       <slot name="item" :topic="topic" />
     </TopicListItem>

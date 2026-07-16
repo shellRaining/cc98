@@ -5,6 +5,7 @@ export const boardSchema = z
     id: z.number().optional(),
     name: z.string().optional(),
     description: z.string().nullable().optional(),
+    logoUri: z.string().nullable().optional(),
     topicCount: z.number().optional(),
     postCount: z.number().optional(),
     todayCount: z.number().optional(),
@@ -12,6 +13,7 @@ export const boardSchema = z
     isUserCustomBoard: z.boolean().optional(),
     internalState: z.number().optional(),
     isLock: z.boolean().optional(),
+    isLocked: z.boolean().optional(),
     parentId: z.number().optional(),
     anonymousState: z.number().optional(),
     canEntry: z.boolean().optional(),
@@ -44,6 +46,17 @@ export const boardEventSchema = z
   })
   .meta({ id: "BoardEvent" });
 export type BoardEvent = z.infer<typeof boardEventSchema>;
+
+export const boardEventPageSchema = z
+  .looseObject({
+    boardId: z.number(),
+    count: z.number(),
+    from: z.number(),
+    size: z.number(),
+    boardEvents: z.array(boardEventSchema),
+  })
+  .meta({ id: "BoardEventPage" });
+export type BoardEventPage = z.infer<typeof boardEventPageSchema>;
 
 export const boardGroupSchema = z
   .looseObject({

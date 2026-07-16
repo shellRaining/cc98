@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { defineOperations } from "./types.ts";
 import {
-  boardEventSchema,
+  boardEventPageSchema,
   boardGroupSchema,
   boardMutedUserSchema,
   boardSchema,
@@ -239,13 +239,7 @@ export const boardOperations = defineOperations([
       "200": {
         description: "Board events",
         contentType: "application/json",
-        schema: z.looseObject({
-          boardId: z.number(),
-          count: z.number(),
-          from: z.number(),
-          size: z.number(),
-          boardEvents: z.array(boardEventSchema),
-        }),
+        schema: boardEventPageSchema,
       },
       default: {
         description: "API 错误码",

@@ -1015,29 +1015,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "boardId": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "from": {
-                      "type": "number"
-                    },
-                    "size": {
-                      "type": "number"
-                    },
-                    "boardEvents": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/BoardEvent"
-                      }
-                    }
-                  },
-                  "required": ["boardId", "count", "from", "size", "boardEvents"],
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/BoardEventPage"
                 }
               }
             }
@@ -7670,6 +7648,16 @@
               }
             ]
           },
+          "logoUri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "topicCount": {
             "type": "number"
           },
@@ -7692,6 +7680,9 @@
             "type": "number"
           },
           "isLock": {
+            "type": "boolean"
+          },
+          "isLocked": {
             "type": "boolean"
           },
           "parentId": {
@@ -7901,6 +7892,31 @@
           }
         },
         "required": ["layers", "tags"],
+        "additionalProperties": {}
+      },
+      "BoardEventPage": {
+        "type": "object",
+        "properties": {
+          "boardId": {
+            "type": "number"
+          },
+          "count": {
+            "type": "number"
+          },
+          "from": {
+            "type": "number"
+          },
+          "size": {
+            "type": "number"
+          },
+          "boardEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoardEvent"
+            }
+          }
+        },
+        "required": ["boardId", "count", "from", "size", "boardEvents"],
         "additionalProperties": {}
       },
       "BoardEvent": {

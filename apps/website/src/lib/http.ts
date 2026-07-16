@@ -2,7 +2,7 @@ import { ofetch, type FetchOptions, type $Fetch } from "ofetch";
 import { createLogger } from "./logger";
 import { ensureValidAccessToken, clearAuth } from "./auth";
 
-const BASE_URL = "https://api-v2.cc98.org";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://api-v2.cc98.org";
 const httpLogger = createLogger("http");
 
 function describeRequest(request: RequestInfo | URL): string {

@@ -7,7 +7,7 @@ import BoardListGroup from "../components/board/BoardListGroup.vue";
 import PageState from "../components/PageState.vue";
 import { boardGroupAnchor } from "../lib/board-list";
 
-useTitle("版面列表 - CC98 论坛", { restoreOnUnmount: true });
+useTitle("版面列表 - CC98 论坛");
 
 const { data, error, isPending, refetch } = useQuery(boardsQuery);
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import type { CreateTopicRequest, CreateVoteInfo } from "@cc98/api";
 import { boardQuery, boardTagsQuery } from "../api/queries";
 import { useCreateTopicMutation, useUploadFilesMutation } from "../api/mutations";
@@ -15,6 +15,7 @@ import { parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
 
 const props = defineProps<{ boardId: string }>();
+const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
 const numericBoardId = computed(() => parsePositiveInt(props.boardId));
@@ -47,6 +48,7 @@ const initialDraft: TopicDraft = {
 };
 const draftKey = createDraftKey("create-topic", numericBoardId.value ?? 0);
 const draft = reactive(readDraft(draftKey, initialDraft));
+if (route.query.vote === "1") draft.isVote = true;
 watch(draft, (value) => writeDraft(draftKey, value), { deep: true });
 
 const boardOptions = computed(() =>

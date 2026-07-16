@@ -1,11 +1,13 @@
 import {
   boardGroupSchema,
+  boardEventPageSchema,
   boardSchema,
   indexColumnSchema,
   indexSchema,
   postSchema,
   ratingReasonSchema,
   tagGroupSchema,
+  topicPagedResultSchema,
   topicSchema,
   voteInfoSchema,
   type PostRatingType,
@@ -91,6 +93,51 @@ export const boardTagsQuery = (boardId: number, enabled = true) =>
     },
     enabled: enabled && boardId > 0,
     staleTime: 30 * 60 * 1000,
+  });
+
+export const boardFilteredTopicsQuery = (
+  boardId: number,
+  mode: "best" | "save" | "tag",
+  authScope: AuthScope,
+  from = 0,
+  size = 20,
+  tag1?: number,
+  tag2?: number,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.boardFilteredTopics(boardId, mode, from, authScope, tag1, tag2),
+    queryFn: async () => {
+      const url =
+        mode === "best"
+          ? `/topic/best/board/${boardId}`
+          : mode === "save"
+            ? `/topic/save/board/${boardId}`
+            : `/topic/search/board/${boardId}/tag`;
+      const data = await typedGet<unknown>(url, {
+        query: { from, size, ...(tag1 ? { tag1 } : {}), ...(tag2 ? { tag2 } : {}) },
+      });
+      return topicPagedResultSchema.parse(data);
+    },
+    enabled: enabled && boardId > 0,
+  });
+
+export const boardEventsQuery = (
+  boardId: number,
+  authScope: AuthScope,
+  from = 0,
+  size = 20,
+  enabled = true,
+) =>
+  queryOptions({
+    queryKey: queryKeys.boardEvents(boardId, from, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown>(`/board/${boardId}/events`, {
+        query: { from, size },
+      });
+      return boardEventPageSchema.parse(data);
+    },
+    enabled: enabled && boardId > 0,
   });
 
 export const topicQuery = (topicId: number, authScope: AuthScope, enabled = true) =>

@@ -6,6 +6,7 @@ import authenticatedProbe from "../generated/probe-authenticated.json" with { ty
 import openapi from "../generated/openapi.json" with { type: "json" };
 import {
   endpointCatalog,
+  boardEventPageSchema,
   boardSchema,
   createPostRequestSchema,
   favoriteTopicGroupSchema,
@@ -90,6 +91,18 @@ describe("API 契约基线", () => {
       id: 763,
       bigPaper: null,
     });
+  });
+
+  it("版务记录分页契约保留总数与事件列表", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/authenticated/getBoardBoardIdEvents.json"),
+        "utf8",
+      ),
+    );
+    const page = boardEventPageSchema.parse(fixture);
+    expect(page.count).toBeGreaterThan(0);
+    expect(page.boardEvents).toHaveLength(2);
   });
 
   it("回帖仅在引用楼层时发送 parentId", () => {

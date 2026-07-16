@@ -4,7 +4,7 @@
 
 ## 公共 API 基础设施
 
-- 已建立 `packages/api`，覆盖 136 个 operation、116 个 path；OpenAPI 当前包含 60 个从 operation 可达的组件 schema。
+- 已建立 `packages/api`，覆盖 136 个 operation、116 个 path；OpenAPI 当前包含 68 个从 operation 可达的组件 schema。
 - 已完成 Zod-first 重构，领域 Zod schema 和 operation registry 成为唯一事实源，旧 OpenAPI 已删除。
 - 匿名成功响应与登录态响应均已通过 Zod 回归校验。
 - 已验证创建主题、创建回复、编辑回复和读取原文；普通用户在似水流年删除主题/回复会返回真实 `403`，测试主题 `6572563` 已改为“测试已结束”并保留作权限记录。
