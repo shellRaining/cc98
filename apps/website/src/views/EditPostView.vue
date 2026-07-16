@@ -8,6 +8,7 @@ import { useEditPostMutation, useUploadFilesMutation } from "../api/mutations";
 import { postOriginalQuery } from "../api/queries";
 import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
+import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts";
 import { floorAnchorId, floorToPage, parsePositiveInt } from "../lib/route-params";
@@ -166,10 +167,10 @@ async function submit() {
       />
       <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
       <div class="flex gap-3">
-        <button type="submit" :disabled="editPost.isPending.value" class="cc98-btn">
+        <UiButton type="submit" :loading="editPost.isPending.value">
           {{ editPost.isPending.value ? "保存中…" : "保存修改" }}
-        </button>
-        <button type="button" class="cc98-link" @click="router.back()">取消</button>
+        </UiButton>
+        <UiButton variant="ghost" @click="router.back()">取消</UiButton>
       </div>
     </form>
   </section>

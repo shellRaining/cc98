@@ -18,6 +18,7 @@ import {
 } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
 import { useFollowBoardMutation, useUnfollowBoardMutation } from "../api/mutations";
+import UiButton from "../components/ui/Button.vue";
 
 const props = defineProps<{
   boardId: string;
@@ -220,12 +221,9 @@ function toggleBoardFollow() {
             >
               {{ board.isUserCustomBoard ? "取消关注" : "关注版面" }}
             </button>
-            <RouterLink
-              :to="{ name: 'create-topic', params: { boardId } }"
-              class="cc98-btn text-sm"
-            >
-              发主题
-            </RouterLink>
+            <UiButton as-child size="sm">
+              <RouterLink :to="{ name: 'create-topic', params: { boardId } }"> 发主题 </RouterLink>
+            </UiButton>
           </div>
         </div>
         <p

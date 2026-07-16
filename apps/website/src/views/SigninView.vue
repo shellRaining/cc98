@@ -11,6 +11,7 @@ import {
   signinMonthQuery,
 } from "../api/queries";
 import PageState from "../components/PageState.vue";
+import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { useUserStore } from "../stores/user";
 
@@ -105,14 +106,15 @@ function signInToday() {
         <p class="text-sm text-cc98-text-muted">
           {{ infoQuery.data.value.hasSignedInToday ? "今天已经签到。" : "今天还没有签到。" }}
         </p>
-        <button
+        <UiButton
           type="button"
-          class="cc98-btn text-sm"
-          :disabled="infoQuery.data.value.hasSignedInToday || signin.isPending.value"
+          size="sm"
+          :disabled="infoQuery.data.value.hasSignedInToday"
+          :loading="signin.isPending.value"
           @click="signInToday"
         >
           {{ signin.isPending.value ? "签到中…" : "立即签到" }}
-        </button>
+        </UiButton>
         <p v-if="signin.error.value" class="w-full text-sm text-cc98-accent">
           {{ normalizeApiError(signin.error.value).message }}
         </p>

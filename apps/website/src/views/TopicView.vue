@@ -8,6 +8,7 @@ import { useCreatePostMutation, useUploadFilesMutation } from "../api/mutations"
 import { boardQuery, topicPostsQuery, topicQuery } from "../api/queries";
 import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
+import UiButton from "../components/ui/Button.vue";
 import Pagination from "../components/Pagination.vue";
 import PostItem from "../components/PostItem.vue";
 import TopicFavoriteAction from "../components/TopicFavoriteAction.vue";
@@ -378,9 +379,9 @@ async function submitReply() {
           </label>
         </div>
         <p v-if="replyError" class="text-sm text-cc98-accent">{{ replyError }}</p>
-        <button type="submit" :disabled="createPost.isPending.value" class="cc98-btn">
+        <UiButton type="submit" :loading="createPost.isPending.value">
           {{ createPost.isPending.value ? "提交中…" : "提交回复" }}
-        </button>
+        </UiButton>
       </form>
       <p v-else class="cc98-card p-4 text-sm text-cc98-text-muted">该主题当前不可回复。</p>
     </template>

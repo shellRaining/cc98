@@ -3,16 +3,8 @@ import { computed, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import type { PostRatingType } from "@cc98/api";
-import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogOverlay,
-  DialogPortal,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from "reka-ui";
+import UiDialog from "./ui/Dialog.vue";
+import UiButton from "./ui/Button.vue";
 import { useRatePostMutation } from "../api/mutations";
 import { ratingReasonsQuery } from "../api/queries";
 import { normalizeApiError } from "../lib/api-error";
@@ -91,83 +83,72 @@ async function submit() {
 </script>
 
 <template>
-  <DialogRoot v-model:open="open">
-    <DialogTrigger as-child>
-      <button
-        type="button"
-        class="cc98-link disabled:opacity-50"
-        :disabled="ratePost.isPending.value"
+  <UiDialog
+    v-model:open="open"
+    title="楼层评分"
+    description="选择正面或负面评分，并说明理由。"
+    width-class="w-[min(30rem,calc(100vw-2rem))]"
+  >
+    <template #trigger>
+      <UiButton variant="ghost" :loading="ratePost.isPending.value">评分</UiButton>
+    </template>
+
+    <div v-if="!user.isLoggedIn" class="mt-4 space-y-3">
+      <p class="text-sm">登录后才能评分。</p>
+      <UiButton variant="ghost" size="sm" @click="goLogin">前往登录</UiButton>
+    </div>
+    <p v-else-if="isOwn" class="mt-4 text-sm text-cc98-accent">不能给自己的楼层评分。</p>
+    <template v-else>
+      <div class="mt-4 flex gap-4 text-sm">
+        <label class="flex items-center gap-2">
+          <input v-model="type" type="radio" :value="1" :disabled="ratePost.isPending.value" />
+          正面评分
+        </label>
+        <label class="flex items-center gap-2">
+          <input v-model="type" type="radio" :value="2" :disabled="ratePost.isPending.value" />
+          负面评分
+        </label>
+      </div>
+      <label class="mt-4 block space-y-1 text-sm">
+        <span>评分理由</span>
+        <select
+          v-model="reasonId"
+          class="w-full cc98-input"
+          :disabled="ratePost.isPending.value || reasonsPending"
+        >
+          <option :value="null">请选择</option>
+          <option v-for="reason in visibleReasons" :key="reason.id" :value="reason.id">
+            {{ reason.reason }}
+          </option>
+        </select>
+      </label>
+      <p
+        v-if="!reasonsPending && visibleReasons.length === 0"
+        class="mt-2 text-sm text-cc98-text-muted"
       >
-        评分
-      </button>
-    </DialogTrigger>
-    <DialogPortal>
-      <DialogOverlay class="cc98-overlay" />
-      <DialogContent class="cc98-modal w-[min(30rem,calc(100vw-2rem))]">
-        <DialogTitle class="text-lg font-semibold">楼层评分</DialogTitle>
-        <DialogDescription class="mt-1 text-sm text-cc98-text-muted">
-          选择正面或负面评分，并说明理由。
-        </DialogDescription>
+        暂无可用评分理由。
+      </p>
+    </template>
 
-        <div v-if="!user.isLoggedIn" class="mt-4 space-y-3">
-          <p class="text-sm">登录后才能评分。</p>
-          <button type="button" class="cc98-link" @click="goLogin">前往登录</button>
-        </div>
-        <p v-else-if="isOwn" class="mt-4 text-sm text-cc98-accent">不能给自己的楼层评分。</p>
-        <template v-else>
-          <div class="mt-4 flex gap-4 text-sm">
-            <label class="flex items-center gap-2">
-              <input v-model="type" type="radio" :value="1" :disabled="ratePost.isPending.value" />
-              正面评分
-            </label>
-            <label class="flex items-center gap-2">
-              <input v-model="type" type="radio" :value="2" :disabled="ratePost.isPending.value" />
-              负面评分
-            </label>
-          </div>
-          <label class="mt-4 block space-y-1 text-sm">
-            <span>评分理由</span>
-            <select
-              v-model="reasonId"
-              class="w-full cc98-input"
-              :disabled="ratePost.isPending.value || reasonsPending"
-            >
-              <option :value="null">请选择</option>
-              <option v-for="reason in visibleReasons" :key="reason.id" :value="reason.id">
-                {{ reason.reason }}
-              </option>
-            </select>
-          </label>
-          <p
-            v-if="!reasonsPending && visibleReasons.length === 0"
-            class="mt-2 text-sm text-cc98-text-muted"
-          >
-            暂无可用评分理由。
-          </p>
-        </template>
+    <p v-if="errorMessage" class="mt-3 text-sm text-cc98-accent">{{ errorMessage }}</p>
 
-        <p v-if="errorMessage" class="mt-3 text-sm text-cc98-accent">{{ errorMessage }}</p>
-        <div class="mt-5 flex justify-end gap-3">
-          <DialogClose as-child>
-            <button
-              type="button"
-              class="rounded border border-cc98-border px-3 py-1.5 text-sm"
-              :disabled="ratePost.isPending.value"
-            >
-              取消
-            </button>
-          </DialogClose>
-          <button
-            v-if="user.isLoggedIn && !isOwn"
-            type="button"
-            class="cc98-btn px-3 py-1.5 text-sm disabled:opacity-50"
-            :disabled="ratePost.isPending.value || reasonsPending || visibleReasons.length === 0"
-            @click="submit"
-          >
-            {{ ratePost.isPending.value ? "提交中…" : "提交评分" }}
-          </button>
-        </div>
-      </DialogContent>
-    </DialogPortal>
-  </DialogRoot>
+    <template v-if="user.isLoggedIn && !isOwn" #footer>
+      <UiButton
+        variant="ghost"
+        size="sm"
+        :disabled="ratePost.isPending.value"
+        @click="open = false"
+      >
+        取消
+      </UiButton>
+      <UiButton
+        size="sm"
+        :disabled="reasonsPending || visibleReasons.length === 0"
+        :loading="ratePost.isPending.value"
+        @click="submit"
+      >
+        {{ ratePost.isPending.value ? "提交中…" : "提交评分" }}
+      </UiButton>
+    </template>
+  </UiDialog>
 </template>

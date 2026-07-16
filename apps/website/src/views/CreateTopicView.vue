@@ -7,6 +7,7 @@ import { boardQuery, boardTagsQuery } from "../api/queries";
 import { useCreateTopicMutation, useUploadFilesMutation } from "../api/mutations";
 import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
+import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts";
 import { validateCreateVote } from "../lib/interactions";
@@ -289,9 +290,9 @@ async function submit() {
 
       <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
       <div class="flex gap-3">
-        <button type="submit" :disabled="createTopic.isPending.value" class="cc98-btn">
+        <UiButton type="submit" :loading="createTopic.isPending.value">
           {{ createTopic.isPending.value ? "发布中…" : "发布主题" }}
-        </button>
+        </UiButton>
         <RouterLink :to="{ name: 'board', params: { boardId } }" class="cc98-link py-2">
           取消
         </RouterLink>

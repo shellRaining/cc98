@@ -76,7 +76,7 @@ flowchart TD
 - [x] 把 `styles/global.css` 扩成原始层加语义层两级 token，补齐 light/dark 取值。
 - [x] UnoCSS theme 和 shortcuts 改为消费语义 token，收敛现有 `cc98-*` 命名到 `DESIGN.md` 的语义名。
 - [x] 主题 Store 从 `mode + season` 升级为 `mode + skin + style`，接入 `PUT /me/theme` 和 `/me/theme-setting` 与日夜切换。
-- [ ] 建立 `components/ui`：Button、Input、Textarea、Card、Badge、Dialog、AlertDialog、Tabs。
+- [ ] 建立 `components/ui`：Button、Dialog 已落地，Input/Textarea/Card/Badge/Tabs 按需补齐。
 - [ ] 迁移 Header、DefaultLayout、PageState、TopicList、PostItem 到语义 token 和基础组件。
 - [ ] 实现默认亮、默认暗、一套节日皮肤，完成首页、版面页、主题页回归。
 - [ ] 按首发 `solid` 风格迁移其余页面，再逐步补齐老论坛皮肤和 `elegant`、`fluent` 方向。
@@ -97,6 +97,7 @@ flowchart TD
 - 2026-07-16：产出根目录 `DESIGN.md` 并通过官方 linter，主题模型定为 `mode + skin + style` 三维。
 - 2026-07-16：完成主题 Store 三维升级。新增 `stores/skins.ts` 作为老论坛皮肤编号与 skin 名的类型安全注册表，把 30 个编号归约到 21 个 skin（9 对亮暗配对皮肤合并，明暗交给 mode 维度），内置双向互转与日夜规则推断（`resolveAutoMode` 复刻老论坛的浏览器优先、时间段回退、跨夜区间处理）。`stores/theme.ts` 重写为三维状态，pinia persist 只存 `mode/skin/style`；`effectiveMode` 在日夜规则开启时覆盖手动 mode，根节点 data 属性由 watch 自动同步。`App.vue` 接入 `currentUserQuery`，登录后从服务端 `theme`/`themeSetting` 回填。配对皮肤的 setMode 会连带写回 `/me/theme`。`skins.ts` 由子 agent 补了 99 个单元测试（编号互转对称性、日夜判定的跨夜边界、非法时间回退）。顺手修复了 `renovate.json` 一处 `]` 应为 `}` 的预存 JSON 语法错误（阻断 dprint）。
 - 2026-07-16：完成 token 分层和 UnoCSS shortcut 收敛。全仓扫描后清除了全部旧兼容命名（`cc98-bg` 42 处按语义分流到 `cc98-background`/`cc98-surface-subtle`、`cc98-bg-elevated` 11 处归并到 `cc98-surface`），删除了 `global.css` 和 `uno.config.ts` 的旧兼容层。重写 `cc98-btn`（padding 对齐实际使用、`text-white` 改 `text-cc98-on-primary`、补 `disabled:opacity-50`），新增 `cc98-input`（输入框 26 处）、`cc98-overlay`+`--cc98-color-overlay` token（遮罩层 3 处）、`cc98-modal`（模态面板 3 处）。Tailwind 原始调色板直写全部收敛：`text-red-500`→`text-cc98-error`、`bg-red-600`→`bg-cc98-error`、`amber-*` 整族→`cc98-warning` 语义 token + 透明度修饰符（去掉手写 dark 变体）。保留代码块和图片工具条的 `bg-black/text-white`（组件自有深色浮层，独立于主题）。
+- 2026-07-16：建立 `components/ui` 基础组件层。`Button`（variant primary/ghost/danger、size md/sm、loading 自动 disabled、block、asChild 支持 RouterLink），迁移全部 15 处 `cc98-btn` 按钮消费方，loading 态文字切换不再手写。`Dialog` 统一封装 Reka UI Dialog 与 AlertDialog 两族原语（alert prop 切换），吸收 Portal/Overlay/Content/Title/Description/Close 的固定模板，提供 trigger/default/footer 插槽和 pending/cancelLabel/confirmLabel 快捷 prop；重构 ConfirmDialog（71→28 行）、PostRatingDialog、TopicFavoriteAction，每个消减约 24 行 import + 18 行模板样板。Card/Badge/Tabs 按"按需建立"策略暂缓（Card 41 处但纯样式 shortcut 已够、Badge 仅 4 处、Tabs 是路由驱动不适合 Reka Tabs 原语）。
 
 ## 决策记录
 

@@ -13,6 +13,7 @@ import { saveLoginRedirect } from "../lib/login-redirect";
 import { parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
 import { useFollowUserMutation, useUnfollowUserMutation } from "../api/mutations";
+import UiButton from "../components/ui/Button.vue";
 
 const props = defineProps<{
   userId?: string;
@@ -218,21 +219,10 @@ function toggleFollow() {
             >
               {{ profile.isFollowing ? "取消关注" : "关注" }}
             </button>
-            <RouterLink
-              v-if="profile.id && userStore.isLoggedIn"
-              :to="`/messages/private/${profile.id}`"
-              class="cc98-btn px-3 py-1.5 text-sm"
-            >
-              发私信
-            </RouterLink>
-            <button
-              v-else-if="profile.id"
-              type="button"
-              class="cc98-btn px-3 py-1.5 text-sm"
-              @click="goLogin"
-            >
-              发私信
-            </button>
+            <UiButton v-if="profile.id && userStore.isLoggedIn" as-child size="sm">
+              <RouterLink :to="`/messages/private/${profile.id}`"> 发私信 </RouterLink>
+            </UiButton>
+            <UiButton v-else-if="profile.id" size="sm" @click="goLogin"> 发私信 </UiButton>
           </div>
         </div>
         <p

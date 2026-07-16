@@ -14,6 +14,7 @@ import ConfirmDialog from "../../components/ConfirmDialog.vue";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
 import TopicList from "../../components/TopicList.vue";
+import UiButton from "../../components/ui/Button.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageToFrom } from "../../lib/route-params";
 import {
@@ -197,7 +198,7 @@ async function removeTopic(topicId: number) {
             placeholder="新分组名称"
             class="min-w-0 flex-1 cc98-input text-sm"
           />
-          <button class="cc98-btn px-3 py-2 text-sm" :disabled="mutationPending">新增</button>
+          <UiButton class="px-3 py-2" size="sm" :loading="mutationPending">新增</UiButton>
         </form>
         <form class="flex gap-2" @submit.prevent="renameFavoriteGroup">
           <select v-model.number="renameId" class="min-w-0 cc98-input px-2 text-sm">
@@ -283,7 +284,7 @@ async function removeTopic(topicId: number) {
           placeholder="输入关键词"
         />
       </label>
-      <button class="cc98-btn px-4 py-1.5 text-sm">搜索</button>
+      <UiButton class="px-4 py-1.5" size="sm">搜索</UiButton>
       <button
         v-if="keyword"
         type="button"

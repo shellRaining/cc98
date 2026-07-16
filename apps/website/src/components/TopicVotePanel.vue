@@ -3,6 +3,7 @@ import { computed, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import dayjs from "dayjs";
 import { useSubmitVoteMutation } from "../api/mutations";
+import UiButton from "./ui/Button.vue";
 import { topicVoteQuery } from "../api/queries";
 import { normalizeApiError } from "../lib/api-error";
 import { createVotePayload } from "../lib/interactions";
@@ -114,14 +115,15 @@ async function submit() {
       </div>
       <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
       <div v-if="vote?.canVote" class="flex gap-3">
-        <button
+        <UiButton
           type="button"
-          class="cc98-btn text-sm"
-          :disabled="submitVote.isPending.value || selected.length === 0"
+          size="sm"
+          :disabled="selected.length === 0"
+          :loading="submitVote.isPending.value"
           @click="submit"
         >
           {{ submitVote.isPending.value ? "提交中…" : "提交投票" }}
-        </button>
+        </UiButton>
         <button
           type="button"
           class="cc98-link"

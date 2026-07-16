@@ -12,6 +12,7 @@ import {
 } from "../../api/queries";
 import LoadMore from "../../components/LoadMore.vue";
 import PageState from "../../components/PageState.vue";
+import UiButton from "../../components/ui/Button.vue";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { createConversationReadSynchronizer, mergeConversationPages } from "../../lib/messages";
@@ -244,13 +245,14 @@ function submit() {
             />
             <div class="flex items-center justify-between gap-3">
               <p class="text-xs text-cc98-text-muted">发送失败时内容会保留。</p>
-              <button
+              <UiButton
                 type="submit"
-                class="cc98-btn text-sm"
-                :disabled="!content.trim() || sendMessage.isPending.value"
+                size="sm"
+                :disabled="!content.trim()"
+                :loading="sendMessage.isPending.value"
               >
                 {{ sendMessage.isPending.value ? "发送中…" : "发送" }}
-              </button>
+              </UiButton>
             </div>
             <p v-if="sendMessage.error.value" class="text-sm text-cc98-accent">
               {{ normalizeApiError(sendMessage.error.value).message }}

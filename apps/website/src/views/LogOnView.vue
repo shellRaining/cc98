@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 import { AccountLockedError, LoginError } from "../stores/user";
+import UiButton from "../components/ui/Button.vue";
 import { takeLoginRedirect } from "../lib/login-redirect";
 
 const router = useRouter();
@@ -64,9 +65,9 @@ async function handleLogin() {
         />
       </div>
       <p v-if="errorMsg" class="text-sm text-cc98-error">{{ errorMsg }}</p>
-      <button type="submit" class="w-full cc98-btn text-sm hover:opacity-90" :disabled="submitting">
+      <UiButton type="submit" block size="sm" class="hover:opacity-90" :loading="submitting">
         {{ submitting ? "登录中…" : "登录" }}
-      </button>
+      </UiButton>
     </form>
   </section>
 </template>
