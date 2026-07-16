@@ -6,6 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import { recommendedTopicsQuery } from "../api/queries";
 import PageState from "../components/PageState.vue";
 import TopicListItem from "../components/TopicListItem.vue";
+import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { useUserStore } from "../stores/user";
@@ -65,14 +66,9 @@ function refreshBatch() {
         <h1 class="text-2xl font-bold">随机精选</h1>
         <p class="mt-1 text-sm text-cc98-text-muted">每次随机一批推荐主题。</p>
       </div>
-      <button
-        type="button"
-        class="cc98-link text-sm disabled:opacity-50"
-        :disabled="!canLoad || isFetching"
-        @click="refreshBatch"
-      >
+      <UiButton variant="text" size="sm" :disabled="!canLoad || isFetching" @click="refreshBatch">
         {{ isFetching ? "加载中…" : "换一批" }}
-      </button>
+      </UiButton>
     </header>
 
     <PageState

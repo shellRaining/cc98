@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import { searchTopicsQuery } from "../api/queries";
 import PageState from "../components/PageState.vue";
+import UiButton from "../components/ui/Button.vue";
 import Pagination from "../components/Pagination.vue";
 import TopicList from "../components/TopicList.vue";
 import { normalizeApiError } from "../lib/api-error";
@@ -119,7 +120,7 @@ function goLogin() {
             autocomplete="off"
           />
         </label>
-        <button type="submit" class="cc98-link text-sm px-2 py-1.5">搜索</button>
+        <UiButton variant="text" type="submit" size="sm" class="px-2 py-1.5">搜索</UiButton>
         <RouterLink to="/search/boards" class="cc98-link text-sm px-2 py-1.5">搜版面</RouterLink>
       </form>
     </header>

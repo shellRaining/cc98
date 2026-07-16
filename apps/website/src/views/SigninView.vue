@@ -122,9 +122,9 @@ function signInToday() {
 
       <section class="cc98-card p-4 space-y-4">
         <header class="flex items-center justify-between gap-3">
-          <button type="button" class="cc98-link" @click="changeMonth(-1)">上个月</button>
+          <UiButton variant="text" type="button" @click="changeMonth(-1)">上个月</UiButton>
           <h2 class="text-lg font-semibold">{{ year }} 年 {{ month }} 月</h2>
-          <button type="button" class="cc98-link" @click="changeMonth(1)">下个月</button>
+          <UiButton variant="text" type="button" @click="changeMonth(1)">下个月</UiButton>
         </header>
         <PageState v-if="recordsQuery.isPending.value" kind="loading" class="min-h-96" />
         <PageState

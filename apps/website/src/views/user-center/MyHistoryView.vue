@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 import { useSetBrowsingHistoryMutation } from "../../api/mutations";
 import { currentUserQuery, meBrowsingRecordsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
+import UiButton from "../../components/ui/Button.vue";
 import Pagination from "../../components/Pagination.vue";
 import TopicList from "../../components/TopicList.vue";
 import { normalizeApiError } from "../../lib/api-error";
@@ -68,7 +69,7 @@ function formatBrowsingTime(value: string | undefined): string {
       </label>
       <p v-if="meError" class="w-full text-sm text-cc98-error">
         {{ normalizeApiError(meError).message }}
-        <button class="cc98-link ml-2" @click="refetchMe()">重试</button>
+        <UiButton variant="text" class="ml-2" @click="refetchMe()">重试</UiButton>
       </p>
       <p v-if="notice" class="w-full text-sm text-cc98-text-muted" role="status">{{ notice }}</p>
     </div>

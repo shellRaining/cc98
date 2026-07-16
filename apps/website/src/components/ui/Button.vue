@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { Primitive } from "reka-ui";
 
-type ButtonVariant = "primary" | "ghost" | "danger";
+type ButtonVariant = "primary" | "ghost" | "danger" | "text";
 type ButtonSize = "md" | "sm";
 
 const props = withDefaults(
@@ -33,6 +33,7 @@ const variantClass: Record<ButtonVariant, string> = {
   primary: "bg-cc98-primary text-cc98-on-primary hover:bg-cc98-primary-hover",
   ghost: "border border-cc98-border bg-cc98-surface text-cc98-text hover:bg-cc98-surface-subtle",
   danger: "bg-cc98-error text-cc98-on-primary hover:opacity-90",
+  text: "text-cc98-link hover:text-cc98-primary-hover",
 };
 
 const sizeClass: Record<ButtonSize, string> = {

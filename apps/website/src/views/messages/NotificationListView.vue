@@ -8,6 +8,7 @@ import { notificationsQuery, unreadCountsQuery, type NotificationKind } from "..
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
 import UiBadge from "../../components/ui/Badge.vue";
+import UiButton from "../../components/ui/Button.vue";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import {
@@ -72,14 +73,15 @@ function markAllRead() {
         <h1 class="text-2xl font-bold">{{ title }}</h1>
         <p class="text-sm text-cc98-text-muted">未读 {{ notificationCount(counts, kind) }}</p>
       </div>
-      <button
+      <UiButton
+        variant="ghost"
         type="button"
-        class="rounded border border-cc98-border px-3 py-1.5 text-sm disabled:opacity-50"
+        size="sm"
         :disabled="notificationCount(counts, kind) === 0 || readAll.isPending.value"
         @click="markAllRead"
       >
         {{ readAll.isPending.value ? "处理中…" : "全部标为已读" }}
-      </button>
+      </UiButton>
     </header>
 
     <p v-if="readAll.error.value" class="text-sm text-cc98-accent">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
+import UiButton from "./ui/Button.vue";
 
 type PageStateKind = "loading" | "empty" | "unauthorized" | "forbidden" | "not-found" | "error";
 
@@ -39,17 +40,17 @@ const resolvedMessage = computed(() => props.message ?? defaults[props.kind].mes
     <h2 class="text-base font-semibold text-cc98-text">{{ resolvedTitle }}</h2>
     <p class="text-cc98-text-muted">{{ resolvedMessage }}</p>
     <div class="flex flex-wrap gap-3">
-      <button v-if="kind === 'unauthorized'" type="button" class="cc98-link" @click="emit('login')">
+      <UiButton v-if="kind === 'unauthorized'" variant="text" type="button" @click="emit('login')">
         去登录
-      </button>
-      <button
+      </UiButton>
+      <UiButton
         v-if="showRetry || kind === 'error'"
+        variant="text"
         type="button"
-        class="cc98-link"
         @click="emit('retry')"
       >
         重试
-      </button>
+      </UiButton>
       <RouterLink v-if="kind === 'not-found' || kind === 'forbidden'" to="/" class="cc98-link">
         返回首页
       </RouterLink>

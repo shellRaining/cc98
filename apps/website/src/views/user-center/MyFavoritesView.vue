@@ -213,12 +213,9 @@ async function removeTopic(topicId: number) {
             placeholder="新名称"
             class="min-w-0 flex-1 cc98-input text-sm"
           />
-          <button
-            class="rounded border border-cc98-border px-3 py-2 text-sm"
-            :disabled="mutationPending"
-          >
+          <UiButton variant="ghost" size="sm" class="py-2" :disabled="mutationPending">
             重命名
-          </button>
+          </UiButton>
         </form>
         <div class="flex items-center gap-2">
           <select v-model.number="deleteId" class="min-w-0 flex-1 cc98-input px-2 py-2 text-sm">
@@ -240,7 +237,7 @@ async function removeTopic(topicId: number) {
       </div>
       <p v-if="groupError" class="text-sm text-cc98-error">
         {{ normalizeApiError(groupError).message }}
-        <button class="cc98-link ml-2" @click="refetchGroups()">重试</button>
+        <UiButton variant="text" class="ml-2" @click="refetchGroups()">重试</UiButton>
       </p>
       <p v-if="notice" class="text-sm text-cc98-text-muted" role="status">{{ notice }}</p>
     </section>
@@ -285,17 +282,17 @@ async function removeTopic(topicId: number) {
         />
       </label>
       <UiButton class="px-4 py-1.5" size="sm">搜索</UiButton>
-      <button
+      <UiButton
         v-if="keyword"
-        type="button"
-        class="cc98-link text-sm"
+        variant="text"
+        size="sm"
         @click="
           draftKeyword = '';
           updateFilter({ group: 0, order: 0, keyword: '' });
         "
       >
         清除搜索
-      </button>
+      </UiButton>
     </form>
 
     <PageState v-if="isPending" kind="loading" />

@@ -78,9 +78,9 @@ async function submit() {
   <section class="cc98-card p-4 space-y-3" aria-labelledby="topic-vote-title">
     <div class="flex items-center justify-between gap-3">
       <h2 id="topic-vote-title" class="text-lg font-semibold">主题投票</h2>
-      <button v-if="voteError" type="button" class="cc98-link text-sm" @click="refetch()">
+      <UiButton v-if="voteError" variant="text" type="button" size="sm" @click="refetch()">
         重新加载
-      </button>
+      </UiButton>
     </div>
     <p v-if="isPending" class="text-sm text-cc98-text-muted">正在加载投票…</p>
     <p v-else-if="voteError" class="text-sm text-cc98-accent">
@@ -124,14 +124,14 @@ async function submit() {
         >
           {{ submitVote.isPending.value ? "提交中…" : "提交投票" }}
         </UiButton>
-        <button
-          type="button"
-          class="cc98-link"
+        <UiButton
+          variant="text"
+          size="sm"
           :disabled="submitVote.isPending.value"
           @click="selected = []"
         >
           重置
-        </button>
+        </UiButton>
       </div>
     </template>
   </section>

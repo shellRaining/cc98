@@ -42,13 +42,9 @@ function goLogin(event?: Event) {
         </nav>
       </div>
       <div class="flex items-center gap-3">
-        <button
-          type="button"
-          class="border-0 bg-transparent p-0 text-sm text-cc98-text-muted hover:text-cc98-text"
-          @click="theme.toggleMode()"
-        >
+        <UiButton variant="text" size="sm" class="text-cc98-text-muted" @click="theme.toggleMode()">
           {{ theme.mode === "light" ? "深色" : "浅色" }}
-        </button>
+        </UiButton>
         <template v-if="user.isLoggedIn">
           <RouterLink to="/messages" class="relative text-sm cc98-link">
             消息
@@ -59,13 +55,7 @@ function goLogin(event?: Event) {
             {{ user.user?.name }}
           </RouterLink>
           <span v-else class="text-sm text-cc98-text-muted">{{ user.user?.name }}</span>
-          <button
-            type="button"
-            class="cc98-link border-0 bg-transparent p-0 text-sm"
-            @click="user.logout()"
-          >
-            退出
-          </button>
+          <UiButton variant="text" size="sm" @click="user.logout()"> 退出 </UiButton>
         </template>
         <RouterLink v-else to="/logon" class="cc98-link text-sm" @click="goLogin">登录</RouterLink>
       </div>

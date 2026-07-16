@@ -267,24 +267,24 @@ async function submit() {
               class="min-w-0 flex-1 cc98-input"
               :disabled="createTopic.isPending.value"
             />
-            <button
+            <UiButton
               v-if="draft.voteItems.length > 2"
-              type="button"
-              class="cc98-link text-sm"
+              variant="text"
+              size="sm"
               :disabled="createTopic.isPending.value"
               @click="removeVoteItem(index)"
             >
               删除
-            </button>
+            </UiButton>
           </div>
-          <button
-            type="button"
-            class="cc98-link text-sm"
+          <UiButton
+            variant="text"
+            size="sm"
             :disabled="createTopic.isPending.value || draft.voteItems.length >= 20"
             @click="addVoteItem"
           >
             添加选项
-          </button>
+          </UiButton>
         </template>
       </fieldset>
 

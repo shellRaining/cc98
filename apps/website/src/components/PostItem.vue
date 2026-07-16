@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { POST_CONTENT_TYPE, type Post, type PostContentType } from "@cc98/api";
 import dayjs from "dayjs";
 import PostActions from "./PostActions.vue";
+import UiButton from "./ui/Button.vue";
 import ContentRenderer from "./rich-content/ContentRenderer.vue";
 import type { RichContentType } from "./rich-content/types";
 import { floorAnchorId } from "../lib/route-params";
@@ -61,7 +62,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
     >
       <PostActions :post="post" />
       <div class="flex gap-3">
-        <button type="button" class="cc98-link" @click="emit('reply', post)">引用回复</button>
+        <UiButton variant="text" type="button" @click="emit('reply', post)">引用回复</UiButton>
         <RouterLink
           v-if="post.isMe"
           :to="{ name: 'edit-post', params: { postId: String(post.id) } }"

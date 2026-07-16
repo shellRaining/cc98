@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import { searchBoardsQuery } from "../api/queries";
 import PageState from "../components/PageState.vue";
+import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { normalizeSearchKeyword, searchBoardsPath } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
@@ -69,7 +70,7 @@ function goLogin() {
             autocomplete="off"
           />
         </label>
-        <button type="submit" class="cc98-link text-sm px-2 py-1.5">搜索</button>
+        <UiButton variant="text" type="submit" size="sm" class="px-2 py-1.5">搜索</UiButton>
         <RouterLink to="/search" class="cc98-link text-sm px-2 py-1.5">搜主题</RouterLink>
       </form>
     </header>

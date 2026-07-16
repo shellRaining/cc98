@@ -6,6 +6,7 @@ import { useLikePostMutation } from "../api/mutations";
 import { normalizeApiError } from "../lib/api-error";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { useUserStore } from "../stores/user";
+import UiButton from "./ui/Button.vue";
 import PostRatingDialog from "./PostRatingDialog.vue";
 
 const props = defineProps<{
@@ -62,26 +63,26 @@ async function react(action: PostLikeAction) {
 
 <template>
   <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-    <button
-      type="button"
-      class="cc98-link disabled:opacity-50"
+    <UiButton
+      variant="text"
+      size="sm"
       :class="{ 'font-semibold text-cc98-primary': state === 1 }"
       :disabled="likePost.isPending.value"
       :aria-pressed="state === 1"
       @click="react('1')"
     >
       赞 {{ likeCount }}
-    </button>
-    <button
-      type="button"
-      class="cc98-link disabled:opacity-50"
+    </UiButton>
+    <UiButton
+      variant="text"
+      size="sm"
       :class="{ 'font-semibold text-cc98-primary': state === 2 }"
       :disabled="likePost.isPending.value"
       :aria-pressed="state === 2"
       @click="react('2')"
     >
       踩 {{ dislikeCount }}
-    </button>
+    </UiButton>
     <PostRatingDialog v-if="topicId > 0" :post-id="postId" :topic-id="topicId" :is-own="isOwn" />
     <span v-if="errorMessage" role="status" class="text-cc98-accent">{{ errorMessage }}</span>
   </div>

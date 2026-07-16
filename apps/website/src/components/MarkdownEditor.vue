@@ -5,6 +5,7 @@ import "md-editor-v3/lib/style.css";
 import { normalizeApiError } from "../lib/api-error";
 import { appendMarkdownBlock, createAttachmentMarkdown } from "../lib/interactions";
 import { useThemeStore } from "../stores/theme";
+import UiButton from "./ui/Button.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -90,14 +91,14 @@ async function handleAttachmentChange(event: Event) {
       language="zh-CN"
     />
     <div class="flex flex-wrap items-center gap-3 text-sm">
-      <button
-        type="button"
-        class="cc98-link disabled:opacity-50"
+      <UiButton
+        variant="text"
+        size="sm"
         :disabled="disabled || attachmentUploading"
         @click="attachmentInput?.click()"
       >
         {{ attachmentUploading ? "附件上传中…" : "上传附件" }}
-      </button>
+      </UiButton>
       <span class="text-cc98-text-muted">可一次选择多个文件，上传后插入 Markdown 链接。</span>
       <input
         ref="attachmentInput"

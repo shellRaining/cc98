@@ -211,14 +211,15 @@ function toggleFollow() {
             </p>
           </div>
           <div v-if="!isSelf" class="ml-auto flex flex-wrap gap-2">
-            <button
+            <UiButton
+              variant="ghost"
               type="button"
-              class="rounded border border-cc98-border px-3 py-1.5 text-sm disabled:opacity-50"
+              size="sm"
               :disabled="relationPending"
               @click="toggleFollow"
             >
               {{ profile.isFollowing ? "取消关注" : "关注" }}
-            </button>
+            </UiButton>
             <UiButton v-if="profile.id && userStore.isLoggedIn" as-child size="sm">
               <RouterLink :to="`/messages/private/${profile.id}`"> 发私信 </RouterLink>
             </UiButton>

@@ -348,9 +348,9 @@ async function submitReply() {
               #{{ replyTarget.floor ?? "?" }} {{ replyTarget.userName ?? "匿名用户" }}
             </span>
             <span v-else>帖子 {{ replyDraft.parentId }}</span>
-            <button type="button" class="cc98-link ml-2" @click="replyDraft.parentId = null">
+            <UiButton variant="text" type="button" class="ml-2" @click="replyDraft.parentId = null">
               取消引用
-            </button>
+            </UiButton>
           </p>
         </div>
         <MarkdownEditor

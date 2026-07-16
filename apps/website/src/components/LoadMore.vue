@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UiButton from "./ui/Button.vue";
+
 withDefaults(
   defineProps<{
     loading?: boolean;
@@ -19,15 +21,9 @@ const emit = defineEmits<{
 
 <template>
   <div class="py-3 text-sm text-center">
-    <button
-      v-if="hasMore"
-      type="button"
-      class="cc98-link disabled:opacity-50 disabled:cursor-not-allowed"
-      :disabled="loading"
-      @click="emit('loadMore')"
-    >
+    <UiButton v-if="hasMore" variant="text" :loading="loading" @click="emit('loadMore')">
       {{ loading ? "加载中…" : "加载更多" }}
-    </button>
+    </UiButton>
     <p v-else class="text-cc98-text-muted">{{ exhaustedMessage }}</p>
   </div>
 </template>

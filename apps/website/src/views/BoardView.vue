@@ -213,14 +213,15 @@ function toggleBoardFollow() {
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h1 class="text-2xl font-bold">{{ board.name ?? `版面 ${boardId}` }}</h1>
           <div class="flex flex-wrap gap-2">
-            <button
+            <UiButton
+              variant="ghost"
               type="button"
-              class="rounded border border-cc98-border px-4 py-2 text-sm disabled:opacity-50"
+              size="sm"
               :disabled="relationPending"
               @click="toggleBoardFollow"
             >
               {{ board.isUserCustomBoard ? "取消关注" : "关注版面" }}
-            </button>
+            </UiButton>
             <UiButton as-child size="sm">
               <RouterLink :to="{ name: 'create-topic', params: { boardId } }"> 发主题 </RouterLink>
             </UiButton>
