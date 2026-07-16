@@ -164,8 +164,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "following",
         name: "user-center-following",
-        component: () => import("../views/user-center/UserRelationsView.vue"),
-        meta: { relationKind: "following" },
+        component: () => import("../views/user-center/FollowingUsersView.vue"),
       },
       {
         path: "followers",
