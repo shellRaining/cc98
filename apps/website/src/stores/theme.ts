@@ -100,10 +100,7 @@ export const useThemeStore = defineStore(
       apply();
     }
 
-    /**
-     * 把当前 skin + 生效 mode 写回服务端 PUT /me/theme。
-     * 仅登录用户执行；失败只记日志，不回滚本地状态。
-     */
+    /** 把当前 skin + 生效 mode 写回服务端 PUT /me/theme。 */
     async function persistSkinToServer() {
       const userStore = useUserStore();
       if (!userStore.isLoggedIn) return;
@@ -112,21 +109,36 @@ export const useThemeStore = defineStore(
         await typedPut("/me/theme", undefined, { query: { id } });
       } catch (err) {
         themeLogger.warn({ err, id }, "写回皮肤编号失败");
+        throw err;
       }
     }
 
     async function setSkin(next: SkinId) {
+      const previous = skin.value;
       skin.value = next;
       apply();
-      await persistSkinToServer();
+      try {
+        await persistSkinToServer();
+      } catch (error) {
+        skin.value = previous;
+        apply();
+        throw error;
+      }
     }
 
     async function setMode(next: ThemeMode) {
+      const previous = mode.value;
       mode.value = next;
       apply();
       // 配对皮肤的编号随 mode 变化，需要同步服务端；非配对皮肤编号不变
       if (skinToLegacyTheme(skin.value, "light") !== skinToLegacyTheme(skin.value, "dark")) {
-        await persistSkinToServer();
+        try {
+          await persistSkinToServer();
+        } catch (error) {
+          mode.value = previous;
+          apply();
+          throw error;
+        }
       }
     }
 
@@ -138,6 +150,7 @@ export const useThemeStore = defineStore(
      * 更新日夜切换规则并写回 PUT /me/theme-setting。
      */
     async function setDayNightSetting(next: ThemeSetting) {
+      const previous = dayNight.value;
       dayNight.value = next;
       apply();
       const userStore = useUserStore();
@@ -146,6 +159,9 @@ export const useThemeStore = defineStore(
         await typedPut("/me/theme-setting", next);
       } catch (err) {
         themeLogger.warn({ err }, "写回日夜规则失败");
+        dayNight.value = previous;
+        apply();
+        throw err;
       }
     }
 

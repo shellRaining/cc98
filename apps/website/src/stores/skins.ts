@@ -41,6 +41,10 @@ interface SkinMeta {
   id: SkinId;
   /** 中文展示名 */
   name: string;
+  /** 旧站亮色主题的主色，用于尚未迁移图片资源时生成可靠预览 */
+  previewColor: string;
+  /** 已迁移的卡片横幅资源 */
+  previewImage?: string;
   /** 老论坛亮色版编号（单色皮肤即唯一编号） */
   legacyLight: number;
   /** 老论坛暗色版编号，仅配对皮肤有 */
@@ -52,27 +56,94 @@ interface SkinMeta {
  * （= UserInfo.theme = themeNames 下标）。配对关系取自老论坛 themeDayNightGroups。
  */
 const SKINS: readonly SkinMeta[] = [
-  { id: "default", name: "系统默认", legacyLight: 0 },
-  { id: "winter", name: "冬季", legacyLight: 1 },
-  { id: "spring", name: "春季（浅）", legacyLight: 2 },
-  { id: "spring-deep", name: "春季（深）", legacyLight: 3 },
-  { id: "summer", name: "夏季", legacyLight: 4 },
-  { id: "autumn-orange", name: "秋季（橙）", legacyLight: 5 },
-  { id: "autumn-red", name: "秋季（红）", legacyLight: 6 },
-  { id: "singles-day", name: "双十一交友", legacyLight: 7 },
-  { id: "mid-autumn", name: "中秋", legacyLight: 9, legacyDark: 8 },
-  { id: "light-snow", name: "小雪", legacyLight: 11, legacyDark: 10 },
-  { id: "spring-festival", name: "春节", legacyLight: 13, legacyDark: 12 },
-  { id: "mid-spring", name: "仲春", legacyLight: 14 },
-  { id: "dragon-boat", name: "端午", legacyLight: 15 },
-  { id: "qingming", name: "清明", legacyLight: 16 },
-  { id: "autumn-sky", name: "秋色之空", legacyLight: 18, legacyDark: 17 },
-  { id: "warm-snow", name: "冬日暖雪", legacyLight: 20, legacyDark: 19 },
-  { id: "spring-blossom", name: "春樱日和", legacyLight: 22, legacyDark: 21 },
-  { id: "chongyang", name: "重阳", legacyLight: 24, legacyDark: 23 },
-  { id: "golden-spring", name: "金舞迎春", legacyLight: 26, legacyDark: 25 },
-  { id: "new-year-flower", name: "新岁花朝", legacyLight: 28, legacyDark: 27 },
-  { id: "vast-sea", name: "沧海启明", legacyLight: 29 },
+  {
+    id: "default",
+    name: "系统默认",
+    previewColor: "#ffffff",
+    previewImage: "/skins/summer/banner-card.jpg",
+    legacyLight: 0,
+  },
+  { id: "winter", name: "冬季", previewColor: "#79b8ca", legacyLight: 1 },
+  { id: "spring", name: "春季（浅）", previewColor: "#b1d396", legacyLight: 2 },
+  { id: "spring-deep", name: "春季（深）", previewColor: "#95b675", legacyLight: 3 },
+  {
+    id: "summer",
+    name: "夏季",
+    previewColor: "#5198d8",
+    previewImage: "/skins/summer/banner-card.jpg",
+    legacyLight: 4,
+  },
+  { id: "autumn-orange", name: "秋季（橙）", previewColor: "#f4a460", legacyLight: 5 },
+  { id: "autumn-red", name: "秋季（红）", previewColor: "#b22222", legacyLight: 6 },
+  { id: "singles-day", name: "双十一交友", previewColor: "#f07d91", legacyLight: 7 },
+  {
+    id: "mid-autumn",
+    name: "中秋",
+    previewColor: "#34969f",
+    legacyLight: 9,
+    legacyDark: 8,
+  },
+  {
+    id: "light-snow",
+    name: "小雪",
+    previewColor: "#7a92c2",
+    legacyLight: 11,
+    legacyDark: 10,
+  },
+  {
+    id: "spring-festival",
+    name: "春节",
+    previewColor: "#d60e24",
+    previewImage: "/skins/spring-festival/banner-card.jpg",
+    legacyLight: 13,
+    legacyDark: 12,
+  },
+  { id: "mid-spring", name: "仲春", previewColor: "#468d39", legacyLight: 14 },
+  { id: "dragon-boat", name: "端午", previewColor: "#3578bc", legacyLight: 15 },
+  { id: "qingming", name: "清明", previewColor: "#6a8471", legacyLight: 16 },
+  {
+    id: "autumn-sky",
+    name: "秋色之空",
+    previewColor: "#eb8e55",
+    legacyLight: 18,
+    legacyDark: 17,
+  },
+  {
+    id: "warm-snow",
+    name: "冬日暖雪",
+    previewColor: "#b57fa3",
+    legacyLight: 20,
+    legacyDark: 19,
+  },
+  {
+    id: "spring-blossom",
+    name: "春樱日和",
+    previewColor: "#abc349",
+    legacyLight: 22,
+    legacyDark: 21,
+  },
+  {
+    id: "chongyang",
+    name: "重阳",
+    previewColor: "#7a6d99",
+    legacyLight: 24,
+    legacyDark: 23,
+  },
+  {
+    id: "golden-spring",
+    name: "金舞迎春",
+    previewColor: "#ff6754",
+    legacyLight: 26,
+    legacyDark: 25,
+  },
+  {
+    id: "new-year-flower",
+    name: "新岁花朝",
+    previewColor: "#df6c5d",
+    legacyLight: 28,
+    legacyDark: 27,
+  },
+  { id: "vast-sea", name: "沧海启明", previewColor: "#394676", legacyLight: 29 },
 ];
 
 const SKIN_BY_ID = new Map<SkinId, SkinMeta>(SKINS.map((s) => [s.id, s]));
@@ -87,9 +158,16 @@ for (const s of SKINS) {
 }
 
 /** 全部 skin，按注册顺序 */
-export const ALL_SKINS: readonly { id: SkinId; name: string }[] = SKINS.map((s) => ({
+export const ALL_SKINS: readonly {
+  id: SkinId;
+  name: string;
+  previewColor: string;
+  previewImage?: string;
+}[] = SKINS.map((s) => ({
   id: s.id,
   name: s.name,
+  previewColor: s.previewColor,
+  previewImage: s.previewImage,
 }));
 
 /**

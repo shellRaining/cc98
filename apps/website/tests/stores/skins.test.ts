@@ -265,6 +265,23 @@ describe("皮肤注册表", () => {
 
   it("IMPLEMENTED_SKINS 至少包含 default 与 spring-festival", () => {
     expect(IMPLEMENTED_SKINS.has("default")).toBe(true);
+    expect(IMPLEMENTED_SKINS.has("summer")).toBe(true);
     expect(IMPLEMENTED_SKINS.has("spring-festival")).toBe(true);
+  });
+
+  it("全部皮肤都有旧站主色，已迁移皮肤提供真实缩略图", () => {
+    expect(ALL_SKINS.every((skin) => /^#[0-9a-f]{6}$/i.test(skin.previewColor))).toBe(true);
+    expect(ALL_SKINS.find((skin) => skin.id === "default")?.previewImage).toBe(
+      "/skins/summer/banner-card.jpg",
+    );
+    expect(ALL_SKINS.find((skin) => skin.id === "summer")?.previewImage).toBe(
+      "/skins/summer/banner-card.jpg",
+    );
+    expect(ALL_SKINS.find((skin) => skin.id === "spring-festival")?.previewImage).toBe(
+      "/skins/spring-festival/banner-card.jpg",
+    );
+    expect(
+      ALL_SKINS.filter((skin) => IMPLEMENTED_SKINS.has(skin.id)).every((skin) => skin.previewImage),
+    ).toBe(true);
   });
 });
