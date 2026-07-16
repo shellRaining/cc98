@@ -28,6 +28,7 @@ import { normalizeApiError } from "../lib/api-error";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts";
 import { visibleHomepageColumns } from "../lib/home.ts";
 import { saveLoginRedirect } from "../lib/login-redirect";
+import { shouldJumpToLatestReply } from "../lib/message-settings";
 import {
   clampPage,
   floorAnchorId,
@@ -438,12 +439,13 @@ async function submitReply() {
     clientType: 1,
   };
   try {
+    const jumpToLatestReply = shouldJumpToLatestReply();
     const postId = await createPost.mutateAsync({
       topicId: numericTopicId.value,
       authScope: authScope.value,
       payload,
     });
-    pendingPostId.value = postId;
+    pendingPostId.value = jumpToLatestReply ? postId : null;
     persistDraft.value = false;
     clearDraft(draftKey);
     Object.assign(replyDraft, initialReplyDraft);
@@ -451,14 +453,16 @@ async function submitReply() {
     persistDraft.value = true;
 
     const refreshed = await refetchTopic();
-    const lastPage = topicTotalPages(refreshed.data?.replyCount, PAGE_SIZE);
-    await router.push({
-      name: "topic",
-      params: {
-        topicId: props.topicId,
-        ...(lastPage > 1 ? { page: String(lastPage) } : {}),
-      },
-    });
+    if (jumpToLatestReply) {
+      const lastPage = topicTotalPages(refreshed.data?.replyCount, PAGE_SIZE);
+      await router.push({
+        name: "topic",
+        params: {
+          topicId: props.topicId,
+          ...(lastPage > 1 ? { page: String(lastPage) } : {}),
+        },
+      });
+    }
     await nextTick();
     await regularPostsQuery.refetch();
   } catch (error) {

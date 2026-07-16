@@ -212,6 +212,11 @@ const routes: RouteRecordRaw[] = [
         name: "messages-private",
         component: () => import("../views/messages/PrivateMessagesView.vue"),
       },
+      {
+        path: "settings",
+        name: "messages-settings",
+        component: () => import("../views/messages/MessageSettingsView.vue"),
+      },
     ],
   },
   {

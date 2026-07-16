@@ -26,6 +26,7 @@ const links = computed(
       ["/messages/mentions", "@ 我的", counts.value?.atCount ?? 0],
       ["/messages/system", "系统通知", counts.value?.systemCount ?? 0],
       ["/messages/private", "我的私信", counts.value?.messageCount ?? 0],
+      ["/messages/settings", "消息设置", 0],
     ] as const,
 );
 
