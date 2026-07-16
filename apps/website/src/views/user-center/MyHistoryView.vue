@@ -4,11 +4,10 @@ import { computed, ref } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute } from "vue-router";
 import { useSetBrowsingHistoryMutation } from "../../api/mutations";
-import { currentUserQuery, meBrowsingRecordsQuery } from "../../api/queries";
+import { boardsByIdsQuery, currentUserQuery, meBrowsingRecordsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
-import UiButton from "../../components/ui/Button.vue";
 import Pagination from "../../components/Pagination.vue";
-import TopicList from "../../components/TopicList.vue";
+import UiDialog from "../../components/ui/Dialog.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageToFrom } from "../../lib/route-params";
 import { pageCount, parseUserCenterPage, userCenterPagePath } from "../../lib/user-center";
@@ -21,16 +20,27 @@ const page = computed(() => parseUserCenterPage(route.query.page));
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const { data: me, error: meError, refetch: refetchMe } = useQuery(currentUserQuery);
 const options = computed(() =>
-  meBrowsingRecordsQuery(authScope.value, pageToFrom(page.value, PAGE_SIZE), PAGE_SIZE),
+  meBrowsingRecordsQuery(
+    authScope.value,
+    pageToFrom(page.value, PAGE_SIZE),
+    PAGE_SIZE,
+    me.value?.browsingHistoryEnabled !== false,
+  ),
 );
 const { data, error, isPending, refetch } = useQuery(options);
 const topics = computed(() => data.value?.data ?? []);
 const totalPages = computed(() => pageCount(data.value?.count, PAGE_SIZE));
+const boardIds = computed(() => topics.value.flatMap((topic) => topic.boardId ?? []));
+const boardOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
+const boardQuery = useQuery(boardOptions);
+const boardNames = computed(
+  () => new Map(boardQuery.data.value?.map((board) => [board.id, board.name]) ?? []),
+);
 const notice = ref("");
 const setHistory = useSetBrowsingHistoryMutation();
 
-async function toggleHistory(event: Event) {
-  const enabled = (event.target as HTMLInputElement).checked;
+async function toggleHistory() {
+  const enabled = me.value?.browsingHistoryEnabled !== true;
   try {
     await setHistory.mutateAsync(enabled);
     notice.value = enabled ? "浏览历史已开启" : "浏览历史已关闭";
@@ -39,40 +49,50 @@ async function toggleHistory(event: Event) {
   }
 }
 
-function formatBrowsingTime(value: string | undefined): string {
-  if (!value) return "时间未知";
+function formatTime(value: string | undefined): string {
+  if (!value) return "—";
   const parsed = dayjs(value);
-  return parsed.isValid() ? `最近浏览于 ${parsed.format("YYYY-MM-DD HH:mm")}` : value;
+  return parsed.isValid() ? parsed.format("YYYY-MM-DD HH:mm:ss") : value;
 }
 </script>
 
 <template>
-  <div class="space-y-4">
-    <header>
-      <h1 class="text-2xl font-bold">浏览历史</h1>
-      <p class="mt-1 text-sm text-cc98-text-muted">查看最近 30 天访问过的主题。</p>
-    </header>
-
-    <div class="cc98-card p-4 flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <strong>记录浏览历史</strong>
-        <p class="text-sm text-cc98-text-muted">该设置会与其他 CC98 客户端同步。</p>
-      </div>
-      <label class="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          :checked="me?.browsingHistoryEnabled === true"
+  <div class="user-content-page user-history">
+    <UiDialog
+      alert
+      :title="me?.browsingHistoryEnabled ? '确定要关闭浏览历史吗？' : '确定要开启浏览历史吗？'"
+      :description="
+        me?.browsingHistoryEnabled
+          ? '该设置将在网页版和小程序中同步。关闭期间不记录主题帖浏览历史。'
+          : '该设置将在网页版和小程序中同步。开启后，将保存最近 30 天的主题帖浏览历史。'
+      "
+      confirm-label="确认"
+      confirm-variant="primary"
+      width-class="w-[min(50rem,calc(100vw-2rem))]"
+      :pending="setHistory.isPending.value"
+      @confirm="toggleHistory"
+    >
+      <template #trigger>
+        <button
+          type="button"
+          class="user-history-toggle"
+          role="checkbox"
+          :aria-checked="me?.browsingHistoryEnabled === true"
           :disabled="setHistory.isPending.value || Boolean(meError)"
-          @change="toggleHistory"
-        />
-        {{ me?.browsingHistoryEnabled ? "已开启" : "已关闭" }}
-      </label>
-      <p v-if="meError" class="w-full text-sm text-cc98-error">
-        {{ normalizeApiError(meError).message }}
-        <UiButton variant="text" class="ml-2" @click="refetchMe()">重试</UiButton>
-      </p>
-      <p v-if="notice" class="w-full text-sm text-cc98-text-muted" role="status">{{ notice }}</p>
-    </div>
+        >
+          <span aria-hidden="true">{{ me?.browsingHistoryEnabled ? "✓" : "" }}</span>
+          开启历史记录功能
+        </button>
+      </template>
+    </UiDialog>
+
+    <p v-if="meError" class="user-history__message">
+      {{ normalizeApiError(meError).message }}
+      <button type="button" @click="refetchMe()">重试</button>
+    </p>
+    <p v-if="notice" class="user-history__message" role="status">{{ notice }}</p>
+
+    <hr />
 
     <PageState v-if="isPending" kind="loading" />
     <PageState
@@ -82,23 +102,27 @@ function formatBrowsingTime(value: string | undefined): string {
       show-retry
       @retry="refetch()"
     />
-    <PageState v-else-if="topics.length === 0" kind="empty" message="还没有浏览记录。" />
-    <template v-else-if="topics.length > 0">
-      <div class="cc98-card px-4">
-        <TopicList :topics="topics">
-          <template #item="{ topic }">
-            <p class="mt-1 text-xs text-cc98-text-muted">
-              {{ formatBrowsingTime(topic.lastBrowsingTime) }}
-            </p>
-          </template>
-        </TopicList>
-      </div>
-    </template>
+    <p v-else-if="topics.length === 0" class="user-content-empty">没有主题</p>
+    <ul v-else class="user-content-list">
+      <li v-for="topic in topics" :key="topic.id">
+        <div class="user-content-list__meta">
+          <RouterLink v-if="topic.boardId" :to="`/list/${topic.boardId}`">
+            {{ boardNames.get(topic.boardId) ?? topic.boardName ?? `版面 ${topic.boardId}` }}
+          </RouterLink>
+          <span v-else>未知版面</span>
+          <time :datetime="topic.time">{{ formatTime(topic.time) }}</time>
+        </div>
+        <RouterLink :to="`/topic/${topic.id}`" class="user-content-list__title">
+          {{ topic.title?.trim() || "(无标题)" }}
+        </RouterLink>
+      </li>
+    </ul>
     <Pagination
       v-if="!isPending && !error && (topics.length > 0 || page > 1)"
       :current-page="page"
       :total-pages="totalPages"
       :to-page="(target) => userCenterPagePath('/usercenter/history', target)"
+      variant="user-center"
     />
   </div>
 </template>

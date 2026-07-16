@@ -3259,6 +3259,12 @@ a:hover {
   color: var(--cc98-color-primary);
 }
 
+.user-content-empty {
+  margin: 2rem 0;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
 .user-center-pagination {
   display: flex;
   flex-wrap: wrap;
@@ -3320,6 +3326,64 @@ a:hover {
 .user-content-list__meta--post a,
 .user-content-list__meta--post a:visited {
   min-width: 0;
+}
+
+.user-history-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-history-toggle > span {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cc98-color-border);
+  border-radius: 0.15rem;
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.user-history-toggle[aria-checked="true"] > span {
+  border-color: var(--cc98-color-primary);
+  background: var(--cc98-color-primary);
+}
+
+.user-history-toggle:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.user-history > hr {
+  height: 0;
+  margin: 1.5rem 0 1.875rem;
+  border: 0;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-history__message {
+  margin: 0.75rem 0 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-history__message button {
+  padding: 0;
+  border: 0;
+  margin-left: 0.5rem;
+  background: transparent;
+  color: var(--cc98-color-primary);
+  font: inherit;
+  cursor: pointer;
 }
 
 @media (max-width: 1180px) {

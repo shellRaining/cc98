@@ -88,6 +88,7 @@ export const queryKeys = {
   meFavoriteGroupsRoot: ["me", "favorite-groups"] as const,
   meBrowsingRecords: (from: number, size: number, authScope: AuthScope) =>
     ["me", "browsing-records", from, size, authScope] as const,
+  meBrowsingRecordsRoot: ["me", "browsing-records"] as const,
   meRelationIds: (
     kind: "following" | "followers",
     from: number,

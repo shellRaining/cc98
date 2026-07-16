@@ -3,6 +3,7 @@ import {
   type Board,
   type ChangeUserRequest,
   type MeUser,
+  type PagedTopicResultData,
   type Topic,
   type User,
 } from "@cc98/api";
@@ -260,6 +261,22 @@ export function useSetBrowsingHistoryMutation() {
       queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
         me ? { ...me, browsingHistoryEnabled: enabled } : undefined,
       );
+      if (enabled) {
+        await queryClient.invalidateQueries({ queryKey: queryKeys.meBrowsingRecordsRoot });
+      } else {
+        queryClient.setQueriesData<PagedTopicResultData>(
+          { queryKey: queryKeys.meBrowsingRecordsRoot },
+          (history) =>
+            history
+              ? {
+                  ...history,
+                  data: [],
+                  count: 0,
+                  from: 0,
+                }
+              : undefined,
+        );
+      }
       await queryClient.invalidateQueries({ queryKey: queryKeys.currentUser });
     },
   });
