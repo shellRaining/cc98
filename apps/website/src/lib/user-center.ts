@@ -3,7 +3,6 @@ import { ubbToMarkdown } from "@cc98/ubb";
 import { parsePageNumber } from "./route-params";
 
 export type MePostKind = "recent" | "hot";
-export type MeRelationKind = "following" | "followers";
 
 export interface BirthdayParts {
   year: number;
