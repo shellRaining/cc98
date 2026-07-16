@@ -62,7 +62,7 @@ const fields = computed(() => {
 
 function formatGender(gender: number | undefined): string {
   if (gender === 1) return "男";
-  if (gender === 2) return "女";
+  if (gender === 0 || gender === 2) return "女";
   return "未设置";
 }
 

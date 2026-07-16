@@ -10,7 +10,10 @@ import {
   pageCount,
   parseUserCenterPage,
   postExcerpt,
+  joinBirthday,
+  splitBirthday,
   userCenterPagePath,
+  validateProfileSettings,
 } from "../src/lib/user-center.ts";
 
 describe("用户中心 URL 状态", () => {
@@ -78,5 +81,32 @@ describe("用户中心列表工具", () => {
     expect(queryKeys.meFavorites(0, 0, "a", 0, 10, 1)).not.toEqual(
       queryKeys.meFavorites(0, 0, "b", 0, 10, 1),
     );
+  });
+
+  test("资料设置解析生日并拒绝无效输入", () => {
+    expect(splitBirthday("9999-6-18")).toEqual({ year: 9999, month: 6, day: 18 });
+    expect(joinBirthday({ year: 0, month: 0, day: 0 })).toBeNull();
+    expect(joinBirthday({ year: 2020, month: 6, day: 18 })).toBe("2020-6-18");
+    expect(
+      validateProfileSettings({
+        email: "invalid",
+        qq: "12345",
+        birthday: { year: 0, month: 0, day: 0 },
+      }),
+    ).toBe("请检查邮箱地址");
+    expect(
+      validateProfileSettings({
+        email: "test@example.com",
+        qq: "abc",
+        birthday: { year: 0, month: 0, day: 0 },
+      }),
+    ).toBe("请检查 QQ 是否正确");
+    expect(
+      validateProfileSettings({
+        email: "test@example.com",
+        qq: "12345",
+        birthday: { year: 2023, month: 2, day: 29 },
+      }),
+    ).toBe("请检查生日是否正确");
   });
 });

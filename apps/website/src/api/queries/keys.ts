@@ -6,6 +6,7 @@ export const queryKeys = {
   homepageIndex: ["homepage", "index"] as const,
   homepageAdvertisements: ["homepage", "advertisements"] as const,
   globalTags: ["config", "global-tags"] as const,
+  displayTitles: ["config", "display-titles"] as const,
   boards: ["boards"] as const,
   board: (id: number, authScope: AuthScope) => ["board", id, authScope] as const,
   boardTopics: (boardId: number, from: number, size: number, authScope: AuthScope) =>

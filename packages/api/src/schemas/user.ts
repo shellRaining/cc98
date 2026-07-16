@@ -17,6 +17,7 @@ export const changeUserRequestSchema = z
     QQ: z.string().nullable().optional(),
     SignatureCode: z.string().nullable().optional(),
     Birthday: z.string().nullable().optional(),
+    DisplayTitleId: z.number().optional(),
   })
   .meta({ id: "ChangeUserRequest" });
 export type ChangeUserRequest = z.infer<typeof changeUserRequestSchema>;

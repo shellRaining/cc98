@@ -137,6 +137,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../views/user-center/MyTopicsView.vue"),
       },
       {
+        path: "settings",
+        name: "user-center-settings",
+        component: () => import("../views/user-center/UserSettingsView.vue"),
+      },
+      {
         path: "posts",
         name: "user-center-posts",
         component: () => import("../views/user-center/MyPostsView.vue"),

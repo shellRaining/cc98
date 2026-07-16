@@ -2,6 +2,7 @@ import {
   boardGroupSchema,
   boardEventPageSchema,
   boardSchema,
+  displayTitleSchema,
   indexColumnSchema,
   indexSchema,
   postSchema,
@@ -32,6 +33,15 @@ export const homepageAdvertisementsQuery = queryOptions({
     return indexColumnSchema.array().parse(data);
   },
   staleTime: 5 * 60 * 1000,
+});
+
+export const displayTitlesQuery = queryOptions({
+  queryKey: queryKeys.displayTitles,
+  queryFn: async () => {
+    const data = await typedGet<unknown[]>("/config/global/all-user-title");
+    return displayTitleSchema.array().parse(data);
+  },
+  staleTime: 30 * 60 * 1000,
 });
 
 export const boardsQuery = queryOptions({

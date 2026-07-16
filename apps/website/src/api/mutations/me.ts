@@ -1,6 +1,13 @@
-import type { Board, MeUser, Topic, User } from "@cc98/api";
+import {
+  fileUploadResponseSchema,
+  type Board,
+  type ChangeUserRequest,
+  type MeUser,
+  type Topic,
+  type User,
+} from "@cc98/api";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { typedDelete, typedPost, typedPut } from "../../lib/http";
+import { typedDelete, typedPost, typedPostForm, typedPut } from "../../lib/http";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
 
 export function withoutTopic<T extends { id?: number }>(topics: T[] | undefined, topicId: number) {
@@ -22,6 +29,44 @@ export function favoriteCacheQueryKeys(topicId: number) {
     queryKeys.meFavoriteGroupsRoot,
     queryKeys.currentUser,
   ] as const;
+}
+
+export function useUpdateProfileMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    retry: 0,
+    mutationFn: (profile: ChangeUserRequest) => typedPut<void>("/me", profile),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.currentUser });
+    },
+  });
+}
+
+export function useUpdatePortraitMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    retry: 0,
+    mutationFn: async ({ file, url }: { file?: File; url?: string }) => {
+      let nextUrl = url;
+      if (file) {
+        const form = new FormData();
+        form.append("contentType", "multipart/form-data");
+        form.append("files", file, file.name);
+        const data = await typedPostForm<unknown>("/file/portrait", form);
+        nextUrl = fileUploadResponseSchema.parse(data)[0];
+      }
+      if (!nextUrl) throw new Error("没有可用的头像地址");
+      await typedPut<void>("/me/portrait", JSON.stringify(nextUrl), {
+        headers: { "content-type": "application/json" },
+      });
+      return nextUrl;
+    },
+    onSuccess: (url) => {
+      queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
+        me ? { ...me, portraitUrl: url, photourl: url } : undefined,
+      );
+    },
+  });
 }
 
 function favoriteInvalidation(queryClient: ReturnType<typeof useQueryClient>, topicId?: number) {

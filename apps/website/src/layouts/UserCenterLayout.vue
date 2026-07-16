@@ -9,6 +9,11 @@ const { y } = useWindowScroll({ behavior: "smooth" });
 const links = [
   ["/usercenter", "个人主页", "M12 3h8v12h6V14h4v9h6V11z"],
   [
+    "/usercenter/settings",
+    "修改资料",
+    "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8m0-5v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4",
+  ],
+  [
     "/usercenter/topics",
     "我的主题",
     "M4 19.5V22h2.5L19.8 8.7l-2.5-2.5zm15.7-15.3-2.5-2.5-2.1 2.1 2.5 2.5z",
