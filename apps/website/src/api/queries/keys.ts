@@ -1,10 +1,13 @@
 import type { HotPeriod } from "../../lib/discovery";
+import type { SiteManageColumnKind } from "../../lib/site-manage";
 
 export type AuthScope = number | "anonymous";
 
 export const queryKeys = {
   homepageIndex: ["homepage", "index"] as const,
   homepageAdvertisements: ["homepage", "advertisements"] as const,
+  siteManageGlobal: ["site-manage", "global"] as const,
+  siteManageColumns: (kind: SiteManageColumnKind) => ["site-manage", "columns", kind] as const,
   globalTags: ["config", "global-tags"] as const,
   displayTitles: ["config", "display-titles"] as const,
   boards: ["boards"] as const,

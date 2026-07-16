@@ -11,6 +11,7 @@ import {
 } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { totalUnreadCount } from "../lib/messages";
+import { isSiteAdministrator } from "../lib/site-manage";
 import { useUserStore } from "../stores/user";
 
 type SearchKind = "topic" | "within" | "user" | "board";
@@ -44,6 +45,7 @@ const { data: unreadCounts } = useQuery(
   computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
 );
 const unreadTotal = computed(() => totalUnreadCount(unreadCounts.value));
+const isAdministrator = computed(() => isSiteAdministrator(user.user?.privilege));
 
 watch(
   hasBoardContext,
@@ -155,12 +157,18 @@ function submitSearch() {
                 </RouterLink>
               </nav>
             </div>
-            <RouterLink to="/signin">签到</RouterLink>
-            <RouterLink to="/usercenter" class="site-header__user">
-              <img v-if="user.user?.avatarUrl" :src="user.user.avatarUrl" alt="" />
-              <span>{{ user.user?.name }}</span>
-            </RouterLink>
-            <button type="button" @click="user.logout()">退出</button>
+            <div class="site-header__user-menu">
+              <RouterLink to="/usercenter" class="site-header__user">
+                <img v-if="user.user?.avatarUrl" :src="user.user.avatarUrl" alt="" />
+                <span>{{ user.user?.name }}</span>
+              </RouterLink>
+              <nav class="site-header__user-dropdown" aria-label="用户菜单">
+                <RouterLink to="/usercenter">个人中心</RouterLink>
+                <RouterLink v-if="isAdministrator" to="/sitemanage">全站管理</RouterLink>
+                <RouterLink to="/signin">签到</RouterLink>
+                <button type="button" @click="user.logout()">退出登录</button>
+              </nav>
+            </div>
           </template>
           <template v-else>
             <RouterLink to="/logon" @click="goLogin">登录</RouterLink>

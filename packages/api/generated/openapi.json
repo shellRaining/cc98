@@ -188,7 +188,7 @@
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "permission-denied",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
@@ -228,7 +228,7 @@
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "permission-denied",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
@@ -406,7 +406,7 @@
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -6913,6 +6913,9 @@
             "type": "string"
           },
           "orderWeight": {
+            "type": "number"
+          },
+          "days": {
             "type": "number"
           },
           "expiredTime": {

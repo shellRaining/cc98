@@ -5,3 +5,4 @@ export * from "./user.ts";
 export * from "./me.ts";
 export * from "./message.ts";
 export * from "./signin.ts";
+export * from "./site-manage.ts";

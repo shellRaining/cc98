@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import { normalizeFloorHash } from "../lib/route-params";
 import { saveLoginRedirect } from "../lib/login-redirect";
+import { isSiteAdministrator } from "../lib/site-manage";
 import { useUserStore } from "../stores/user";
 
 const routes: RouteRecordRaw[] = [
@@ -226,6 +227,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/sitemanage",
+    name: "site-manage",
+    component: () => import("../views/SiteManageView.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
     path: "/logon",
     name: "logon",
     component: () => import("../views/LogOnView.vue"),
@@ -288,9 +295,13 @@ export const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  if (!to.meta.requiresAuth) return true;
   const user = useUserStore();
-  if (user.isLoggedIn) return true;
-  saveLoginRedirect(to.fullPath);
-  return { name: "logon" };
+  if (to.meta.requiresAuth && !user.isLoggedIn) {
+    saveLoginRedirect(to.fullPath);
+    return { name: "logon" };
+  }
+  if (to.meta.requiresAdmin && !isSiteAdministrator(user.user?.privilege)) {
+    return { name: "error-403" };
+  }
+  return true;
 });

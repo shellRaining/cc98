@@ -38,6 +38,7 @@ export const indexColumnSchema = z
     enable: z.boolean().optional(),
     time: z.string().optional(),
     orderWeight: z.number().optional(),
+    days: z.number().optional(),
     expiredTime: z.string().nullable().optional(),
     visibility: z.number().optional(),
   })

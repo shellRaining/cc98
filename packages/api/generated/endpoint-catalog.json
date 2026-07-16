@@ -145,7 +145,7 @@
     "operationId": "getConfigGlobalAdvertisementAll",
     "summary": "Get all advertisement config items",
     "tags": ["Config", "Index", "Moderation"],
-    "risk": "destructive",
+    "risk": "read-only",
     "verificationStatus": "permission-denied",
     "requiresAuthentication": true
   },
@@ -185,7 +185,7 @@
     "operationId": "getConfigGlobalSpecialOfferAll",
     "summary": "Get all special-offer config items",
     "tags": ["Config", "Index", "Moderation"],
-    "risk": "destructive",
+    "risk": "read-only",
     "verificationStatus": "permission-denied",
     "requiresAuthentication": true
   },
@@ -265,7 +265,7 @@
     "operationId": "getIndexColumnColumnKindAll",
     "summary": "Get all items in a homepage column",
     "tags": ["Index", "Moderation"],
-    "risk": "destructive",
+    "risk": "read-only",
     "verificationStatus": "unknown",
     "requiresAuthentication": true
   },
