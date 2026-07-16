@@ -1,66 +1,61 @@
 <script setup lang="ts">
-import { computed, watch } from "vue";
 import { useInfiniteQuery, useQuery } from "@tanstack/vue-query";
+import { useIntersectionObserver, useTitle } from "@vueuse/core";
 import dayjs from "dayjs";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { userByIdQuery, userByNameQuery, userRecentTopicsInfiniteQuery } from "../api/queries";
-import LoadMore from "../components/LoadMore.vue";
+import { useFollowUserMutation, useUnfollowUserMutation } from "../api/mutations";
+import {
+  boardsByIdsQuery,
+  userByIdQuery,
+  userByNameQuery,
+  userRecentTopicsInfiniteQuery,
+} from "../api/queries";
 import PageState from "../components/PageState.vue";
-import TopicList from "../components/TopicList.vue";
+import UserProfileOverview from "../components/user/UserProfileOverview.vue";
 import { normalizeApiError } from "../lib/api-error";
-import { dedupeTopicsById, userIdPath } from "../lib/discovery";
+import { userIdPath } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
-import { useFollowUserMutation, useUnfollowUserMutation } from "../api/mutations";
-import UiButton from "../components/ui/Button.vue";
 
 const props = defineProps<{
   userId?: string;
   userName?: string;
 }>();
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore();
+const user = useUserStore();
 const followUser = useFollowUserMutation();
 const unfollowUser = useUnfollowUserMutation();
+const loadTarget = ref<HTMLElement | null>(null);
 
 const numericUserId = computed(() => parsePositiveInt(props.userId));
 const lookupName = computed(() => decodeURIComponent(props.userName ?? "").trim());
 const lookingUpByName = computed(() => Boolean(lookupName.value) && numericUserId.value == null);
-const invalidId = computed(
-  () => !lookingUpByName.value && numericUserId.value == null && !props.userName,
+const invalidId = computed(() => !lookingUpByName.value && numericUserId.value == null);
+const authScope = computed(() => user.user?.id ?? "anonymous");
+
+const byIdQuery = useQuery(
+  computed(() =>
+    userByIdQuery(numericUserId.value ?? 0, authScope.value, numericUserId.value != null),
+  ),
 );
-
-const authScope = computed(() => userStore.user?.id ?? "anonymous");
-
-const byIdOptions = computed(() =>
-  userByIdQuery(numericUserId.value ?? 0, authScope.value, numericUserId.value != null),
+const byNameQuery = useQuery(
+  computed(() => userByNameQuery(lookupName.value, authScope.value, lookingUpByName.value)),
 );
-
-const byNameOptions = computed(() =>
-  userByNameQuery(lookupName.value, authScope.value, lookingUpByName.value),
-);
-
-const {
-  data: userById,
-  error: idError,
-  isPending: idPending,
-  refetch: refetchById,
-} = useQuery(byIdOptions);
-
-const {
-  data: userByName,
-  error: nameError,
-  isPending: namePending,
-  refetch: refetchByName,
-} = useQuery(byNameOptions);
-
-const profile = computed(() => userById.value ?? userByName.value ?? null);
-const isSelf = computed(() => profile.value?.id === userStore.user?.id);
+const profile = computed(() => byIdQuery.data.value ?? byNameQuery.data.value ?? null);
+const profileId = computed(() => profile.value?.id ?? numericUserId.value ?? 0);
+const isSelf = computed(() => profileId.value === user.user?.id);
 const relationPending = computed(() => followUser.isPending.value || unfollowUser.isPending.value);
+
+useTitle(
+  computed(() =>
+    profile.value ? `${profile.value.name} - 用户详情 - CC98 论坛` : "用户详情 - CC98 论坛",
+  ),
+);
 
 watch(
   () => profile.value?.id,
@@ -70,75 +65,60 @@ watch(
   },
 );
 
-const resolvedUserId = computed(() => profile.value?.id ?? numericUserId.value ?? 0);
-const canLoadRecent = computed(
-  () => userStore.isLoggedIn && resolvedUserId.value > 0 && profile.value != null,
-);
-
-const recentOptions = computed(() =>
-  userRecentTopicsInfiniteQuery(
-    resolvedUserId.value,
-    authScope.value,
-    PAGE_SIZE,
-    canLoadRecent.value,
+const recentQuery = useInfiniteQuery(
+  computed(() =>
+    userRecentTopicsInfiniteQuery(
+      profileId.value,
+      authScope.value,
+      PAGE_SIZE,
+      user.isLoggedIn && profileId.value > 0,
+    ),
   ),
 );
-
-const {
-  data: recentData,
-  error: recentError,
-  isPending: recentPending,
-  isFetchingNextPage,
-  hasNextPage,
-  fetchNextPage,
-  refetch: refetchRecent,
-} = useInfiniteQuery(recentOptions);
-
-const recentTopics = computed(() =>
-  dedupeTopicsById(recentData.value?.pages.flatMap((page) => page) ?? []),
+const recentTopics = computed(() => recentQuery.data.value?.pages.flatMap((page) => page) ?? []);
+const boardIds = computed(() => recentTopics.value.map((topic) => topic.boardId ?? 0));
+const boardQuery = useQuery(computed(() => boardsByIdsQuery(boardIds.value)));
+const boardMap = computed(
+  () => new Map(boardQuery.data.value?.map((board) => [board.id, board]) ?? []),
 );
-
-const profileError = computed(() => {
-  if (invalidId.value) return normalizeApiError({ status: 404 });
-  if (idError.value) return normalizeApiError(idError.value);
-  if (nameError.value) return normalizeApiError(nameError.value);
-  return null;
-});
 
 const profileState = computed(() => {
   if (invalidId.value) return "not-found" as const;
   if (
-    (lookingUpByName.value && namePending.value) ||
-    (numericUserId.value != null && idPending.value)
+    (lookingUpByName.value && byNameQuery.isPending.value) ||
+    (numericUserId.value != null && byIdQuery.isPending.value)
   ) {
     return "loading" as const;
   }
-  if (profileError.value?.kind === "unauthorized") return "unauthorized" as const;
-  if (profileError.value?.kind === "forbidden") return "forbidden" as const;
-  if (profileError.value?.kind === "not-found") return "not-found" as const;
-  if (profileError.value) return "error" as const;
+  const error = byIdQuery.error.value ?? byNameQuery.error.value;
+  if (error) return normalizeApiError(error).kind;
   if (!profile.value) return "not-found" as const;
   return null;
 });
 
+const profileError = computed(() => {
+  const error = byIdQuery.error.value ?? byNameQuery.error.value;
+  return error ? normalizeApiError(error).message : undefined;
+});
+
 const recentState = computed(() => {
-  if (profileState.value) return null;
-  if (!userStore.isLoggedIn) return "unauthorized" as const;
-  if (recentPending.value) return "loading" as const;
-  if (recentError.value) {
-    const err = normalizeApiError(recentError.value);
-    if (err.kind === "unauthorized") return "unauthorized" as const;
-    if (err.kind === "forbidden") return "forbidden" as const;
-    if (err.kind === "not-found") return "not-found" as const;
-    return "error" as const;
-  }
+  if (!user.isLoggedIn) return "unauthorized" as const;
+  if (recentQuery.isPending.value) return "loading" as const;
+  if (recentQuery.error.value) return normalizeApiError(recentQuery.error.value).kind;
   if (recentTopics.value.length === 0) return "empty" as const;
   return null;
 });
 
-const recentErrorMessage = computed(() =>
-  recentError.value ? normalizeApiError(recentError.value).message : undefined,
-);
+useIntersectionObserver(loadTarget, ([entry]) => {
+  if (
+    !entry?.isIntersecting ||
+    !recentQuery.hasNextPage.value ||
+    recentQuery.isFetchingNextPage.value
+  ) {
+    return;
+  }
+  void recentQuery.fetchNextPage();
+});
 
 function formatTime(value: string | undefined): string {
   if (!value) return "—";
@@ -152,123 +132,122 @@ function goLogin() {
 }
 
 function retryProfile() {
-  if (lookingUpByName.value) void refetchByName();
-  else void refetchById();
-}
-
-function loadMore() {
-  if (!hasNextPage.value || isFetchingNextPage.value) return;
-  void fetchNextPage();
+  if (lookingUpByName.value) void byNameQuery.refetch();
+  else void byIdQuery.refetch();
 }
 
 function toggleFollow() {
   const id = profile.value?.id;
   if (!id || isSelf.value || relationPending.value) return;
-  if (!userStore.isLoggedIn) {
-    goLogin();
-    return;
-  }
+  if (!user.isLoggedIn) return goLogin();
   if (profile.value?.isFollowing) unfollowUser.mutate(id);
   else followUser.mutate(id);
 }
 </script>
 
 <template>
-  <section class="space-y-6">
+  <section class="user-center-page user-detail-page">
+    <h1 class="user-center-page__title">用户详情</h1>
+
     <PageState
       v-if="profileState"
       :kind="profileState"
-      :message="profileError?.message"
+      :message="profileError"
       :show-retry="profileState === 'error'"
       @login="goLogin"
       @retry="retryProfile"
     />
 
-    <template v-else-if="profile">
-      <header class="space-y-3">
-        <div class="flex flex-wrap items-start gap-4">
-          <img
-            v-if="profile.portraitUrl"
-            :src="profile.portraitUrl"
-            :alt="`${profile.name} 的头像`"
-            class="h-16 w-16 rounded object-cover border border-cc98-border"
-          />
-          <div class="space-y-1 min-w-0">
-            <h1 class="text-2xl font-bold break-all">{{ profile.name }}</h1>
-            <p
-              v-if="profile.displayTitle || profile.levelTitle"
-              class="text-sm text-cc98-text-muted"
-            >
-              {{ profile.displayTitle || profile.levelTitle }}
-            </p>
-            <p class="text-xs text-cc98-text-muted">
-              帖数 {{ profile.postCount ?? "—" }} · 威望 {{ profile.prestige ?? "—" }} · 粉丝
-              {{ profile.fanCount ?? "—" }} · 关注 {{ profile.followCount ?? "—" }}
-            </p>
-            <p class="text-xs text-cc98-text-muted">
-              注册 {{ formatTime(profile.registerTime) }} · 上次登录
-              {{ formatTime(profile.lastLogOnTime) }}
-            </p>
-          </div>
-          <div v-if="!isSelf" class="ml-auto flex flex-wrap gap-2">
-            <UiButton
-              variant="ghost"
-              type="button"
-              size="sm"
-              :disabled="relationPending"
-              @click="toggleFollow"
-            >
-              {{ profile.isFollowing ? "取消关注" : "关注" }}
-            </UiButton>
-            <UiButton v-if="profile.id && userStore.isLoggedIn" as-child size="sm">
-              <RouterLink :to="`/messages/private/${profile.id}`"> 发私信 </RouterLink>
-            </UiButton>
-            <UiButton v-else-if="profile.id" size="sm" @click="goLogin"> 发私信 </UiButton>
-          </div>
+    <div v-else-if="profile" class="user-center-shell">
+      <nav class="user-center-nav user-detail-nav" aria-label="用户详情">
+        <ul>
+          <li>
+            <RouterLink :to="`/user/id/${profile.id}`" class="is-active">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 3 11v12h6v-9h6v9h6V11z" />
+              </svg>
+              <span>主页</span>
+            </RouterLink>
+          </li>
+          <li v-if="isSelf">
+            <RouterLink to="/usercenter">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8"
+                />
+              </svg>
+              <span>个人中心</span>
+            </RouterLink>
+          </li>
+        </ul>
+      </nav>
+
+      <main class="user-center-main">
+        <div class="user-center-profile">
+          <UserProfileOverview :profile="profile">
+            <template v-if="!isSelf" #actions>
+              <div class="user-detail-actions">
+                <RouterLink v-if="user.isLoggedIn" :to="`/messages/private/${profile.id}`">
+                  私信
+                </RouterLink>
+                <button v-else type="button" @click="goLogin">私信</button>
+                <button
+                  type="button"
+                  :class="{ 'is-following': profile.isFollowing }"
+                  :disabled="relationPending"
+                  @click="toggleFollow"
+                >
+                  {{ profile.isFollowing ? "取消关注" : "关注" }}
+                </button>
+              </div>
+            </template>
+          </UserProfileOverview>
+
+          <p
+            v-if="followUser.error.value || unfollowUser.error.value"
+            class="user-detail-relation-error"
+          >
+            {{ normalizeApiError(followUser.error.value ?? unfollowUser.error.value).message }}
+          </p>
+
+          <section class="user-center-activities">
+            <header>
+              <h2>发表的主题</h2>
+            </header>
+
+            <PageState
+              v-if="recentState"
+              :kind="recentState"
+              :message="
+                recentState === 'unauthorized' ? '登录后可查看该用户发表的主题。' : undefined
+              "
+              :show-retry="recentState === 'error'"
+              @login="goLogin"
+              @retry="recentQuery.refetch()"
+            />
+            <ul v-else class="user-center-topic-list">
+              <li v-for="topic in recentTopics" :key="topic.id">
+                <div class="user-center-topic-list__meta">
+                  <RouterLink :to="`/list/${topic.boardId}`">
+                    {{ boardMap.get(topic.boardId ?? 0)?.name ?? `版面 ${topic.boardId}` }}
+                  </RouterLink>
+                  <time>{{ formatTime(topic.time) }}</time>
+                </div>
+                <RouterLink :to="`/topic/${topic.id}`" class="user-center-topic-list__title">
+                  {{ topic.title?.trim() || "(无标题)" }}
+                </RouterLink>
+              </li>
+            </ul>
+
+            <div ref="loadTarget" class="user-detail-load-target">
+              <span v-if="recentQuery.isFetchingNextPage.value">正在加载</span>
+              <span v-else-if="!recentQuery.hasNextPage.value && recentTopics.length">
+                没有更多主题了
+              </span>
+            </div>
+          </section>
         </div>
-        <p
-          v-if="followUser.error.value || unfollowUser.error.value"
-          class="text-sm text-cc98-accent"
-        >
-          {{ normalizeApiError(followUser.error.value ?? unfollowUser.error.value).message }}
-        </p>
-        <p
-          v-if="profile.introduction?.trim()"
-          class="text-sm text-cc98-text-muted whitespace-pre-wrap"
-        >
-          {{ profile.introduction.trim() }}
-        </p>
-      </header>
-
-      <section class="space-y-3">
-        <h2 class="text-lg font-semibold">近期主题</h2>
-
-        <PageState
-          v-if="recentState"
-          :kind="recentState"
-          :message="
-            recentState === 'unauthorized'
-              ? '登录后可查看该用户的近期主题。'
-              : recentState === 'empty'
-                ? '暂无近期主题。'
-                : recentErrorMessage
-          "
-          :show-retry="recentState === 'error'"
-          @login="goLogin"
-          @retry="refetchRecent()"
-        />
-
-        <template v-else>
-          <div class="cc98-card px-4">
-            <TopicList :topics="recentTopics" />
-          </div>
-          <LoadMore
-            :has-more="Boolean(hasNextPage)"
-            :loading="isFetchingNextPage"
-            @load-more="loadMore"
-          />
-        </template>
-      </section>
-    </template>
+      </main>
+    </div>
   </section>
 </template>

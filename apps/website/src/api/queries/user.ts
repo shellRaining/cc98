@@ -41,7 +41,7 @@ export const userRecentTopicsInfiniteQuery = (
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, _pages, lastPageParam) => {
-      if (lastPage.length < size) return undefined;
+      if (lastPage.length < size || lastPageParam + size >= 200) return undefined;
       return lastPageParam + size;
     },
     enabled: enabled && userId > 0 && authScope !== "anonymous",

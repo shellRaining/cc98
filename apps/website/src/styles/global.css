@@ -2563,6 +2563,10 @@ a:hover {
   gap: 0 2rem;
 }
 
+.user-profile-overview {
+  display: contents;
+}
+
 .user-center-profile__avatar {
   position: relative;
 }
@@ -2586,7 +2590,7 @@ a:hover {
   gap: 1rem;
 }
 
-.user-center-profile__identity > div {
+.user-center-profile__name {
   display: flex;
   align-items: baseline;
   gap: 2rem;
@@ -2599,6 +2603,20 @@ a:hover {
 
 .user-center-profile__identity span {
   color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-center-profile__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.user-center-profile__status {
+  margin: 0.75rem 0 0;
+  color: var(--cc98-color-accent);
   font-size: 0.75rem;
 }
 
@@ -2755,6 +2773,53 @@ a:hover {
 .user-center-activities__more {
   display: block;
   margin-top: 1rem;
+  text-align: center;
+}
+
+.user-detail-actions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.user-detail-actions a,
+.user-detail-actions a:visited,
+.user-detail-actions button {
+  display: inline-flex;
+  min-width: 5rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 0.2rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-detail-actions button.is-following {
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text-muted);
+}
+
+.user-detail-actions button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.user-detail-relation-error {
+  grid-column: 1 / -1;
+  margin: 1rem 0 0;
+  color: var(--cc98-color-accent);
+}
+
+.user-detail-load-target {
+  min-height: 3rem;
+  padding-top: 1rem;
+  color: var(--cc98-color-text-muted);
   text-align: center;
 }
 
