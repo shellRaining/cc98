@@ -1,47 +1,80 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useQuery } from "@tanstack/vue-query";
 import type { RecommendedTopic } from "@cc98/api";
+import { computed, ref, watch } from "vue";
+import { useStorage, useTitle } from "@vueuse/core";
+import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
-import { recommendedTopicsQuery } from "../api/queries";
+import { boardsByIdsQuery, recommendedTopicsQuery, usersByIdsQuery } from "../api/queries";
+import RecommendedTopicItem from "../components/discovery/RecommendedTopicItem.vue";
 import PageState from "../components/PageState.vue";
-import TopicListItem from "../components/TopicListItem.vue";
-import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
+import { uniqueTopicBoardIds, uniqueTopicUserIds } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { useUserStore } from "../stores/user";
 
 const PAGE_SIZE = 10;
+
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
-
 const refreshToken = ref(0);
+const storageScope = user.user?.id ?? "anonymous";
+const currentItems = useStorage<RecommendedTopic[]>(`cc98:recommended:${storageScope}:current`, []);
+const previousItems = useStorage<RecommendedTopic[]>(
+  `cc98:recommended:${storageScope}:previous`,
+  [],
+);
+const shouldFetch = ref(currentItems.value.length === 0);
+
+useTitle("随机精选 - CC98 论坛");
+
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const canLoad = computed(() => user.isLoggedIn);
-
 const options = computed(() =>
-  recommendedTopicsQuery(authScope.value, refreshToken.value, PAGE_SIZE, canLoad.value),
+  recommendedTopicsQuery(
+    authScope.value,
+    refreshToken.value,
+    PAGE_SIZE,
+    canLoad.value && shouldFetch.value,
+  ),
+);
+const query = useQuery(options);
+
+watch(
+  () => query.data.value,
+  (data) => {
+    if (!shouldFetch.value || !data) return;
+    currentItems.value = data;
+    shouldFetch.value = false;
+  },
+  { immediate: true },
 );
 
-const { data, error, isPending, isFetching, refetch } = useQuery(options);
-
 const items = computed(() =>
-  (data.value ?? []).filter(
+  currentItems.value.filter(
     (item): item is RecommendedTopic & { topic: NonNullable<RecommendedTopic["topic"]> } =>
-      item.topic != null,
+      item.topic?.id != null,
   ),
+);
+const topics = computed(() => items.value.map((item) => item.topic));
+const boardIds = computed(() => uniqueTopicBoardIds(topics.value));
+const authorIds = computed(() => uniqueTopicUserIds(topics.value));
+const boardsOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
+const authorsOptions = computed(() => usersByIdsQuery(authorIds.value, authorIds.value.length > 0));
+const { data: boards } = useQuery(boardsOptions);
+const { data: authors } = useQuery(authorsOptions);
+const boardMap = computed(() => new Map((boards.value ?? []).map((board) => [board.id, board])));
+const authorMap = computed(
+  () => new Map((authors.value ?? []).map((author) => [author.id, author])),
 );
 
 const pageError = computed(() => {
   if (!user.isLoggedIn) return normalizeApiError({ status: 401 });
-  if (error.value) return normalizeApiError(error.value);
-  return null;
+  return query.error.value ? normalizeApiError(query.error.value) : null;
 });
-
 const stateKind = computed(() => {
   if (pageError.value?.kind === "unauthorized") return "unauthorized" as const;
-  if (isPending.value) return "loading" as const;
+  if (shouldFetch.value && query.isPending.value) return "loading" as const;
   if (pageError.value?.kind === "forbidden") return "forbidden" as const;
   if (pageError.value?.kind === "not-found") return "not-found" as const;
   if (pageError.value) return "error" as const;
@@ -55,21 +88,36 @@ function goLogin() {
 }
 
 function refreshBatch() {
+  if (query.isFetching.value) return;
+  previousItems.value = [...currentItems.value];
   refreshToken.value += 1;
+  shouldFetch.value = true;
+}
+
+function restorePreviousBatch() {
+  if (previousItems.value.length === 0) return;
+  currentItems.value = [...previousItems.value];
+  previousItems.value = [];
+  shouldFetch.value = false;
 }
 </script>
 
 <template>
-  <section class="space-y-4">
-    <header class="flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 class="text-2xl font-bold">随机精选</h1>
-        <p class="mt-1 text-sm text-cc98-text-muted">每次随机一批推荐主题。</p>
-      </div>
-      <UiButton variant="text" size="sm" :disabled="!canLoad || isFetching" @click="refreshBatch">
-        {{ isFetching ? "加载中…" : "换一批" }}
-      </UiButton>
-    </header>
+  <section class="recommended-page">
+    <nav class="new-topics-breadcrumb" aria-label="当前位置">
+      <RouterLink to="/">首页</RouterLink>
+      <span>›</span>
+      <span>随机精选</span>
+    </nav>
+
+    <div class="recommended-actions">
+      <button type="button" :disabled="!canLoad || query.isFetching.value" @click="refreshBatch">
+        ↻ {{ query.isFetching.value ? "加载中" : "换一换" }}
+      </button>
+      <button v-if="previousItems.length" type="button" @click="restorePreviousBatch">
+        ← 上一批
+      </button>
+    </div>
 
     <PageState
       v-if="stateKind"
@@ -77,20 +125,17 @@ function refreshBatch() {
       :message="pageError?.message"
       :show-retry="stateKind === 'error'"
       @login="goLogin"
-      @retry="refetch()"
+      @retry="query.refetch()"
     />
 
-    <div v-else class="cc98-card px-4">
-      <ul>
-        <TopicListItem v-for="item in items" :key="item.topic.id" :topic="item.topic">
-          <p
-            v-if="item.content?.trim()"
-            class="mt-2 text-sm text-cc98-text-muted whitespace-pre-wrap"
-          >
-            {{ item.content.trim() }}
-          </p>
-        </TopicListItem>
-      </ul>
+    <div v-else class="recommended-topic-list">
+      <RecommendedTopicItem
+        v-for="item in items"
+        :key="item.topic.id"
+        :item="item"
+        :board="item.topic.boardId ? boardMap.get(item.topic.boardId) : undefined"
+        :author="item.topic.userId ? authorMap.get(item.topic.userId) : undefined"
+      />
     </div>
   </section>
 </template>
