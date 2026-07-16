@@ -1,14 +1,15 @@
 /*
- * 主题 token 分两层：
- * - 原始调色板（--cc98-blue / --cc98-ink 等）：具体颜色值，深色模式和后续皮肤在这一层覆盖。
- * - 语义 token（--cc98-color-*）：业务和 UnoCSS 只消费这一层，取值全部引用原始调色板。
- * 取值规范见根目录 DESIGN.md，改公共颜色先改那里再落到这里。
+ * 主题 token 分三层：
+ * - 原始调色板（--cc98-blue / --cc98-ink 等）：具体颜色值，按 mode 和 skin 覆盖。
+ * - 语义 token（--cc98-color-*）：业务和 UnoCSS 只消费这一层，取值引用原始调色板。
+ * - 尺度 token（--cc98-radius-* / --cc98-space-*）：不随主题变化，统一圆角和间距。
+ * 取值规范见根目录 DESIGN.md，改公共值先改那里再落到这里。
  */
 
 :root {
   color-scheme: light;
 
-  /* 原始调色板（浅色） */
+  /* 原始调色板（浅色默认皮肤） */
   --cc98-blue: #3399ff;
   --cc98-blue-strong: #1668dc;
   --cc98-blue-strong-hover: #0f56bd;
@@ -25,6 +26,10 @@
   --cc98-paper-subtle: #f6f8fa;
   --cc98-line: #e3e7ec;
   --cc98-on-accent: #ffffff;
+
+  /* banner 背景图（默认皮肤无图） */
+  --cc98-banner-image: none;
+  --cc98-banner-height: 0px;
 
   /* 语义 token */
   --cc98-color-brand: var(--cc98-blue);
@@ -49,18 +54,35 @@
   --cc98-color-warning: var(--cc98-amber);
   --cc98-color-error: var(--cc98-red);
 
-  /* 遮罩层：浮层下方的半透明覆盖，深色模式透明度更高保证可读 */
+  /* 遮罩层 */
   --cc98-color-overlay: rgb(0 0 0 / 0.5);
+
+  /* 尺度 token（不随主题变化） */
+  --cc98-radius-sm: 4px;
+  --cc98-radius-md: 8px;
+  --cc98-radius-lg: 12px;
+  --cc98-radius-xl: 16px;
+  --cc98-radius-full: 9999px;
+
+  --cc98-space-xs: 4px;
+  --cc98-space-sm: 8px;
+  --cc98-space-md: 12px;
+  --cc98-space-lg: 16px;
+  --cc98-space-xl: 24px;
+  --cc98-space-2xl: 32px;
+  --cc98-space-3xl: 48px;
+
+  --cc98-content-width: 1140px;
 }
 
+/* 深色模式：覆盖原始调色板，语义层自动跟随 */
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  /* 原始调色板（深色）：只覆盖原始层，语义层自动跟随 */
   --cc98-blue: #5aa9ff;
   --cc98-blue-strong: #3b82f6;
   --cc98-blue-strong-hover: #5a95f7;
-  --cc98-red: #ff6b6f;
+  --cc98-red: #e04248;
   --cc98-green: #4ec08a;
   --cc98-amber: #d99a3a;
   --cc98-purple: #c9a0bd;
@@ -75,6 +97,31 @@
   --cc98-on-accent: #ffffff;
 
   --cc98-color-overlay: rgb(0 0 0 / 0.65);
+}
+
+/*
+ * 皮肤：只覆盖原始层的主色和背景图变量，语义层自动跟随。
+ * 亮暗由 [data-theme] 控制，皮肤与 mode 正交叠加。
+ */
+
+/* 金舞迎春（亮） */
+:root[data-skin="spring-festival"] {
+  --cc98-blue: #3399ff;
+  --cc98-blue-strong: #d4452f;
+  --cc98-blue-strong-hover: #bf3a26;
+  --cc98-page: #e6e7ec;
+  --cc98-banner-image: url("/skins/spring-festival/banner.jpg");
+  --cc98-banner-height: 12rem;
+}
+
+/* 金舞迎春（暗）：深底色版本 */
+:root[data-skin="spring-festival"][data-theme="dark"] {
+  --cc98-blue-strong: #c53d37;
+  --cc98-blue-strong-hover: #a8302a;
+  --cc98-page: #1e1e1e;
+  --cc98-paper: #241a1a;
+  --cc98-paper-subtle: #2d2020;
+  --cc98-line: #3a2828;
 }
 
 html,
@@ -109,13 +156,6 @@ a:visited {
 
 a:hover {
   color: var(--cc98-color-primary-hover);
-}
-
-button.cc98-link {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  font: inherit;
 }
 
 *,
