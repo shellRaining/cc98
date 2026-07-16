@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
+import dayjs from "dayjs";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { meRecentTopicsQuery } from "../../api/queries";
+import { boardsByIdsQuery, meRecentTopicsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
-import TopicList from "../../components/TopicList.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageToFrom } from "../../lib/route-params";
 import { parseUserCenterPage, userCenterPagePath } from "../../lib/user-center";
@@ -22,14 +22,22 @@ const options = computed(() =>
 const { data, error, isPending, refetch } = useQuery(options);
 const topics = computed(() => data.value?.slice(0, PAGE_SIZE) ?? []);
 const hasNextPage = computed(() => (data.value?.length ?? 0) > PAGE_SIZE);
+const boardIds = computed(() => topics.value.flatMap((topic) => topic.boardId ?? []));
+const boardOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
+const boardQuery = useQuery(boardOptions);
+const boardNames = computed(
+  () => new Map(boardQuery.data.value?.map((board) => [board.id, board.name]) ?? []),
+);
+
+function formatTime(value: string | undefined): string {
+  if (!value) return "—";
+  const parsed = dayjs(value);
+  return parsed.isValid() ? parsed.format("YYYY-MM-DD HH:mm:ss") : value;
+}
 </script>
 
 <template>
-  <div class="space-y-4">
-    <header>
-      <h1 class="text-2xl font-bold">我的主题</h1>
-      <p class="mt-1 text-sm text-cc98-text-muted">最近创建的主题。</p>
-    </header>
+  <div class="user-content-page">
     <PageState v-if="isPending" kind="loading" />
     <PageState
       v-else-if="error"
@@ -39,14 +47,26 @@ const hasNextPage = computed(() => (data.value?.length ?? 0) > PAGE_SIZE);
       @retry="refetch()"
     />
     <PageState v-else-if="topics.length === 0" kind="empty" />
-    <template v-else-if="topics.length > 0">
-      <div class="cc98-card px-4"><TopicList :topics="topics" /></div>
-    </template>
+    <ul v-else-if="topics.length > 0" class="user-content-list">
+      <li v-for="topic in topics" :key="topic.id">
+        <div class="user-content-list__meta">
+          <RouterLink v-if="topic.boardId" :to="`/list/${topic.boardId}`">
+            {{ boardNames.get(topic.boardId) ?? topic.boardName ?? `版面 ${topic.boardId}` }}
+          </RouterLink>
+          <span v-else>未知版面</span>
+          <time :datetime="topic.time">{{ formatTime(topic.time) }}</time>
+        </div>
+        <RouterLink :to="`/topic/${topic.id}`" class="user-content-list__title">
+          {{ topic.title?.trim() || "(无标题)" }}
+        </RouterLink>
+      </li>
+    </ul>
     <Pagination
       v-if="!isPending && !error && (topics.length > 0 || page > 1)"
       :current-page="page"
       :has-next-page="hasNextPage"
       :to-page="(target) => userCenterPagePath('/usercenter/topics', target)"
+      variant="user-center"
     />
   </div>
 </template>
