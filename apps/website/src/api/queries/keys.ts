@@ -5,6 +5,7 @@ export type AuthScope = number | "anonymous";
 export const queryKeys = {
   homepageIndex: ["homepage", "index"] as const,
   homepageAdvertisements: ["homepage", "advertisements"] as const,
+  globalTags: ["config", "global-tags"] as const,
   boards: ["boards"] as const,
   board: (id: number, authScope: AuthScope) => ["board", id, authScope] as const,
   boardTopics: (boardId: number, from: number, size: number, authScope: AuthScope) =>
@@ -46,7 +47,8 @@ export const queryKeys = {
   postOriginal: (postId: number, authScope: AuthScope) =>
     ["post", postId, "original", authScope] as const,
   hotTopics: (period: HotPeriod) => ["topic", "hot", period] as const,
-  newTopics: (size: number, authScope: AuthScope) => ["topic", "new", size, authScope] as const,
+  newTopics: (mode: "all" | "media", size: number, authScope: AuthScope) =>
+    ["topic", "new", mode, size, authScope] as const,
   recommendedTopics: (size: number, refreshToken: number, authScope: AuthScope) =>
     ["topic", "recommended", size, refreshToken, authScope] as const,
   searchTopics: (

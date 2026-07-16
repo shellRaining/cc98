@@ -1,5 +1,6 @@
 /** 热门周期，对应 `/topic/hot-{period}`。 */
 export type HotPeriod = "weekly" | "monthly" | "history";
+export type NewTopicViewMode = "classic" | "card" | "media";
 
 export const HOT_PERIOD_LABELS: Record<HotPeriod, string> = {
   weekly: "7日热门",
@@ -9,6 +10,63 @@ export const HOT_PERIOD_LABELS: Record<HotPeriod, string> = {
 
 export function isHotPeriod(value: unknown): value is HotPeriod {
   return value === "weekly" || value === "monthly" || value === "history";
+}
+
+export function resolveNewTopicViewMode(value: unknown, preference = 0): NewTopicViewMode {
+  if (value === "classic" || value === "card" || value === "media") return value;
+  if (preference === 1) return "card";
+  if (preference === 2) return "media";
+  return "classic";
+}
+
+export function newTopicViewPreference(mode: NewTopicViewMode) {
+  if (mode === "card") return 1;
+  if (mode === "media") return 2;
+  return 0;
+}
+
+export function newTopicsPath(mode: NewTopicViewMode) {
+  return mode === "classic" ? "/newtopics" : `/newtopics?view=${mode}`;
+}
+
+export function uniqueTopicBoardIds(topics: Array<{ boardId?: number }>) {
+  return [...new Set(topics.flatMap((topic) => (topic.boardId ? [topic.boardId] : [])))];
+}
+
+export function uniqueTopicUserIds(
+  topics: Array<{ userId?: number | null; isAnonymous?: boolean }>,
+) {
+  return [
+    ...new Set(
+      topics.flatMap((topic) =>
+        !topic.isAnonymous && topic.userId != null && topic.userId > 0 ? [topic.userId] : [],
+      ),
+    ),
+  ];
+}
+
+export function formatDiscoveryTime(value: string | undefined, now = new Date()) {
+  if (!value) return "—";
+  const time = new Date(value);
+  if (Number.isNaN(time.getTime())) return value;
+  const diff = now.getTime() - time.getTime();
+  const minutes = Math.max(0, Math.floor(diff / 60_000));
+  if (minutes < 60) return `${minutes}分钟前`;
+  const hours = Math.floor(diff / 3_600_000);
+  const clock = time.toLocaleTimeString("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  if (hours < 24 && time.getDate() === now.getDate()) return `今天 ${clock}`;
+  const dayDiff = Math.floor(
+    (new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() -
+      new Date(time.getFullYear(), time.getMonth(), time.getDate()).getTime()) /
+      86_400_000,
+  );
+  if (dayDiff === 1) return `昨天 ${clock}`;
+  if (dayDiff === 2) return `前天 ${clock}`;
+  return `${time.getFullYear()}-${String(time.getMonth() + 1).padStart(2, "0")}-${String(time.getDate()).padStart(2, "0")} ${clock}`;
 }
 
 /** 去掉首尾空白；空串视为无关键词。 */

@@ -219,3 +219,16 @@ export function useSetBrowsingHistoryMutation() {
     },
   });
 }
+
+export function useSetTopicViewModeMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (mode: number) =>
+      typedPut<void>("/me/topic-view-mode", undefined, { query: { mode } }),
+    onSuccess: (_data, mode) => {
+      queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
+        me ? { ...me, topicViewMode: mode } : undefined,
+      );
+    },
+  });
+}

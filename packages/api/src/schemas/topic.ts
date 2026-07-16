@@ -1,6 +1,24 @@
 import { z } from "zod";
 import { postContentTypeSchema } from "./post.ts";
 
+export const topicContentTypeSchema = z.union([
+  z.literal(0),
+  z.literal(1),
+  z.literal(2),
+  z.literal(3),
+  z.literal(4),
+]);
+export type TopicContentType = z.infer<typeof topicContentTypeSchema>;
+
+export const mediaTopicContentSchema = z.looseObject({
+  thumbnail: z.array(z.string()).optional(),
+  video: z.string().optional(),
+  audio: z.string().optional(),
+  width: z.number().optional(),
+  height: z.number().optional(),
+});
+export type MediaTopicContent = z.infer<typeof mediaTopicContentSchema>;
+
 export const topicSchema = z
   .looseObject({
     id: z.number().optional(),
@@ -34,6 +52,8 @@ export const topicSchema = z
     favoriteCount: z.number().optional(),
     canNotifyAllReplier: z.boolean().optional(),
     lastBrowsingTime: z.string().optional(),
+    contentType: topicContentTypeSchema.optional(),
+    mediaContent: mediaTopicContentSchema.nullable().optional(),
   })
   .meta({ id: "Topic" });
 export type Topic = z.infer<typeof topicSchema>;

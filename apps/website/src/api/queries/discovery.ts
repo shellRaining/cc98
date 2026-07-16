@@ -1,4 +1,4 @@
-import { boardSchema, recommendedTopicSchema, topicSchema } from "@cc98/api";
+import { boardSchema, recommendedTopicSchema, tagSchema, topicSchema } from "@cc98/api";
 import { infiniteQueryOptions, queryOptions } from "@tanstack/vue-query";
 import type { HotPeriod } from "../../lib/discovery";
 import { typedGet } from "../../lib/http";
@@ -15,18 +15,29 @@ export const hotTopicsQuery = (period: HotPeriod, enabled = true) =>
     staleTime: 5 * 60 * 1000,
   });
 
-export const newTopicsInfiniteQuery = (authScope: AuthScope, size = 20, enabled = true) =>
+export const globalTagsQuery = queryOptions({
+  queryKey: queryKeys.globalTags,
+  queryFn: async () => tagSchema.array().parse(await typedGet<unknown[]>("/config/global/alltag")),
+  staleTime: 30 * 60 * 1000,
+});
+
+export const newTopicsInfiniteQuery = (
+  mode: "all" | "media",
+  authScope: AuthScope,
+  size = 20,
+  enabled = true,
+) =>
   infiniteQueryOptions({
-    queryKey: queryKeys.newTopics(size, authScope),
+    queryKey: queryKeys.newTopics(mode, size, authScope),
     queryFn: async ({ pageParam }) => {
-      const data = await typedGet<unknown[]>("/topic/new", {
+      const data = await typedGet<unknown[]>(mode === "media" ? "/topic/new-media" : "/topic/new", {
         query: { from: pageParam, size },
       });
       return topicSchema.array().parse(data);
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, _pages, lastPageParam) => {
-      if (lastPage.length < size) return undefined;
+      if (lastPage.length < size || lastPageParam + size >= 500) return undefined;
       return lastPageParam + size;
     },
     enabled: enabled && authScope !== "anonymous",
