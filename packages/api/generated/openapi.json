@@ -1613,7 +1613,7 @@
         "summary": "Get topic event records",
         "tags": ["Topic", "Moderation"],
         "security": [],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "verified-anonymous",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -1648,19 +1648,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {},
-                        "additionalProperties": {}
-                      }
-                    },
-                    {
-                      "$ref": "#/components/schemas/ErrorEnvelope"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/TopicEventPage"
                 }
               }
             }
@@ -7857,6 +7845,12 @@
           "canNotifyAllReplier": {
             "type": "boolean"
           },
+          "topicAuthorPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "lastBrowsingTime": {
             "type": "string"
           },
@@ -8313,12 +8307,17 @@
         "required": ["userId", "userName", "items", "ip", "time"],
         "additionalProperties": {}
       },
-      "ErrorEnvelope": {
+      "TopicEventPage": {
         "type": "object",
         "properties": {
           "data": {
             "anyOf": [
-              {},
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TopicEvent"
+                }
+              },
               {
                 "type": "null"
               }
@@ -8345,6 +8344,39 @@
             "type": "number"
           }
         },
+        "required": ["data", "count", "from", "size", "errorCode"],
+        "additionalProperties": {}
+      },
+      "TopicEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "targetUserName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "time": {
+            "type": "string"
+          },
+          "operatorUserName": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "content", "time", "operatorUserName", "ip"],
         "additionalProperties": {}
       },
       "TopicIpGroup": {

@@ -7,6 +7,7 @@ import type { CreatePostRequest, Post } from "@cc98/api";
 import { useCreatePostMutation, useUploadFilesMutation } from "../api/mutations";
 import {
   boardQuery,
+  boardsQuery,
   boardTagsQuery,
   fullUsersByIdsQuery,
   homepageAdvertisementsQuery,
@@ -23,12 +24,16 @@ import PostItem from "../components/PostItem.vue";
 import TopicFavoriteAction from "../components/TopicFavoriteAction.vue";
 import TopicVotePanel from "../components/TopicVotePanel.vue";
 import TopicHeader from "../components/topic/TopicHeader.vue";
+import TopicHistoryDialog from "../components/topic/TopicHistoryDialog.vue";
+import TopicIpDialog from "../components/topic/TopicIpDialog.vue";
+import TopicModerationDialog from "../components/topic/TopicModerationDialog.vue";
 import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts";
 import { visibleHomepageColumns } from "../lib/home.ts";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { shouldJumpToLatestReply } from "../lib/message-settings";
+import { resolveTopicModerationAccess, type TopicModerationAction } from "../lib/moderation";
 import {
   clampPage,
   floorAnchorId,
@@ -85,6 +90,9 @@ const replyError = ref("");
 const pendingPostId = ref<number | null>(null);
 const imagesCollapsed = ref(false);
 const shareStatus = ref("");
+const moderationOpen = ref(false);
+const historyOpen = ref(false);
+const ipOpen = ref(false);
 let shareStatusTimer: ReturnType<typeof setTimeout> | undefined;
 
 watch(
@@ -119,6 +127,15 @@ const {
   isPending: boardPending,
   refetch: refetchBoard,
 } = useQuery(boardOptions);
+
+const moderationAccess = computed(() =>
+  resolveTopicModerationAccess(user.user, board.value, topic.value),
+);
+const moderationBoardsOptions = computed(() => ({
+  ...boardsQuery,
+  enabled: moderationAccess.value.canManage,
+}));
+const { data: moderationBoardGroups } = useQuery(moderationBoardsOptions);
 
 const tagsOptions = computed(() =>
   boardTagsQuery(boardId.value ?? 0, canLoad.value && boardId.value != null),
@@ -472,6 +489,22 @@ async function submitReply() {
   }
 }
 
+async function handleModerationCompleted(action: TopicModerationAction) {
+  if (action === "delete") {
+    await router.push({ name: "board", params: { boardId: String(boardId.value) } });
+    return;
+  }
+
+  await Promise.all([
+    refetchTopic(),
+    refetchBoard(),
+    filter.value.mode === "all"
+      ? regularPostsQuery.refetch()
+      : Promise.all([filteredPostsQuery.refetch(), filteredCountQuery.refetch()]),
+    hotPostsQuery.refetch(),
+  ]);
+}
+
 onBeforeUnmount(() => {
   if (shareStatusTimer) clearTimeout(shareStatusTimer);
 });
@@ -578,6 +611,36 @@ onBeforeUnmount(() => {
         </nav>
         <Pagination :current-page="currentPage" :total-pages="totalPages" :to-page="toPage" />
       </div>
+
+      <div v-if="moderationAccess.canManage" class="topic-moderation-toolbar">
+        <UiButton size="sm" @click="moderationOpen = true">管理</UiButton>
+        <UiButton v-if="moderationAccess.canViewHistory" size="sm" @click="historyOpen = true">
+          管理记录
+        </UiButton>
+        <UiButton v-if="moderationAccess.canViewIp" size="sm" @click="ipOpen = true">
+          查看 IP
+        </UiButton>
+      </div>
+
+      <TopicModerationDialog
+        v-model:open="moderationOpen"
+        :topic="topic"
+        :board-id="board.id ?? 0"
+        :boards="moderationBoardGroups"
+        :auth-scope="authScope"
+        @completed="handleModerationCompleted"
+      />
+      <TopicHistoryDialog
+        v-model:open="historyOpen"
+        :topic-id="numericTopicId ?? 0"
+        :auth-scope="authScope"
+      />
+      <TopicIpDialog
+        v-if="moderationAccess.canViewIp"
+        v-model:open="ipOpen"
+        :topic-id="numericTopicId ?? 0"
+        :auth-scope="authScope"
+      />
 
       <form
         v-if="(topic.state ?? 0) === 0"

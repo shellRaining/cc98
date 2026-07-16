@@ -3,7 +3,6 @@ import { defineOperations } from "./types.ts";
 import {
   createPostRequestSchema,
   errorCodeSchema,
-  errorEnvelopeSchema,
   numericIdResponseSchema,
   postSchema,
   reasonRequestSchema,
@@ -11,6 +10,7 @@ import {
   submitVoteRequestSchema,
   topicSchema,
   topicHighlightRequestSchema,
+  topicEventPageSchema,
   topicIpGroupSchema,
   topicPagedResultSchema,
   topicTopRequestSchema,
@@ -238,7 +238,7 @@ export const topicOperations = defineOperations([
       "200": {
         description: "Topic events",
         contentType: "application/json",
-        schema: z.union([z.array(z.looseObject({})), errorEnvelopeSchema]),
+        schema: topicEventPageSchema,
       },
       default: {
         description: "API 错误码",
@@ -247,7 +247,7 @@ export const topicOperations = defineOperations([
       },
     },
     auth: "anonymous",
-    risk: "destructive",
+    risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
   },

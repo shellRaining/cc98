@@ -6,3 +6,4 @@ export * from "./me.ts";
 export * from "./message.ts";
 export * from "./signin.ts";
 export * from "./site-manage.ts";
+export * from "./moderation.ts";

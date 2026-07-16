@@ -51,6 +51,7 @@ export const topicSchema = z
     isInternalOnly: z.boolean().optional(),
     favoriteCount: z.number().optional(),
     canNotifyAllReplier: z.boolean().optional(),
+    topicAuthorPermissions: z.array(z.string()).optional(),
     lastBrowsingTime: z.string().optional(),
     contentType: topicContentTypeSchema.optional(),
     mediaContent: mediaTopicContentSchema.nullable().optional(),
@@ -194,6 +195,30 @@ export const topicIpGroupSchema = z
   })
   .meta({ id: "TopicIpGroup" });
 export type TopicIpGroup = z.infer<typeof topicIpGroupSchema>;
+
+export const topicEventSchema = z
+  .looseObject({
+    id: z.number(),
+    content: z.string(),
+    targetUserName: z.string().nullable().optional(),
+    time: z.string(),
+    operatorUserName: z.string(),
+    ip: z.string(),
+  })
+  .meta({ id: "TopicEvent" });
+export type TopicEvent = z.infer<typeof topicEventSchema>;
+
+export const topicEventPageSchema = z
+  .looseObject({
+    data: z.array(topicEventSchema).nullable(),
+    count: z.number(),
+    from: z.number(),
+    size: z.number(),
+    extra: z.unknown().nullable().optional(),
+    errorCode: z.number(),
+  })
+  .meta({ id: "TopicEventPage" });
+export type TopicEventPage = z.infer<typeof topicEventPageSchema>;
 
 export const createTopicRequestSchema = z
   .object({

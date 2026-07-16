@@ -17,6 +17,7 @@ export const queryKeys = {
   boardTopicsRoot: (boardId: number) => ["board", boardId, "topics"] as const,
   boardTopTopics: (boardId: number, authScope: AuthScope) =>
     ["board", boardId, "top-topics", authScope] as const,
+  boardTopTopicsRoot: (boardId: number) => ["board", boardId, "top-topics"] as const,
   boardFilteredTopics: (
     boardId: number,
     mode: "best" | "save" | "tag",
@@ -29,6 +30,11 @@ export const queryKeys = {
     ["board", boardId, "events", from, authScope] as const,
   boardTags: (boardId: number) => ["board", boardId, "tags"] as const,
   topic: (id: number, authScope: AuthScope) => ["topic", id, authScope] as const,
+  topicRoot: (id: number) => ["topic", id] as const,
+  topicEvents: (id: number, from: number, size: number, authScope: AuthScope) =>
+    ["topic", id, "events", from, size, authScope] as const,
+  topicEventsRoot: (id: number) => ["topic", id, "events"] as const,
+  topicIpGroups: (id: number, authScope: AuthScope) => ["topic", id, "ip", authScope] as const,
   topicPosts: (topicId: number, from: number, size: number, authScope: AuthScope) =>
     ["topic", topicId, "posts", from, size, authScope] as const,
   topicFilteredPosts: (
