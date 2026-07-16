@@ -8,10 +8,10 @@ catalog:
   "@types/node": ^24
   typescript: ^7
   vite: npm:@voidzero-dev/vite-plus-core@latest
-  vitest: 4.1.9
+  vitest: 4.1.10
   vite-plus: latest
   vue: 3.6.0-beta.17
-  vue-router: 5.1.0
+  vue-router: 5.2.0
   pinia: 3.0.4
   pinia-plugin-persistedstate: 4.7.1
   "@tanstack/vue-query": 5.101.2
@@ -31,7 +31,7 @@ catalog:
   "@unocss/preset-attributify": 66.7.5
   "@unocss/preset-typography": 66.7.5
   "@types/markdown-it": ^14.1.2
-  "@vitejs/plugin-vue": 6.0.7
+  "@vitejs/plugin-vue": 6.0.8
   "@vueuse/core": 14.3.0
   "@vueuse/integrations": 14.3.0
   dayjs: 1.11.21
