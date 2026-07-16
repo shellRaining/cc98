@@ -66,7 +66,7 @@ function formatBrowsingTime(value: string | undefined): string {
         />
         {{ me?.browsingHistoryEnabled ? "已开启" : "已关闭" }}
       </label>
-      <p v-if="meError" class="w-full text-sm text-red-500">
+      <p v-if="meError" class="w-full text-sm text-cc98-error">
         {{ normalizeApiError(meError).message }}
         <button class="cc98-link ml-2" @click="refetchMe()">重试</button>
       </p>

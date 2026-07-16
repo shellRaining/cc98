@@ -155,7 +155,7 @@ async function submit() {
           type="text"
           maxlength="100"
           :disabled="editPost.isPending.value"
-          class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+          class="w-full cc98-input"
         />
       </label>
       <MarkdownEditor
@@ -166,11 +166,7 @@ async function submit() {
       />
       <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
       <div class="flex gap-3">
-        <button
-          type="submit"
-          :disabled="editPost.isPending.value"
-          class="rounded bg-cc98-primary px-4 py-2 text-white disabled:opacity-50"
-        >
+        <button type="submit" :disabled="editPost.isPending.value" class="cc98-btn">
           {{ editPost.isPending.value ? "保存中…" : "保存修改" }}
         </button>
         <button type="button" class="cc98-link" @click="router.back()">取消</button>

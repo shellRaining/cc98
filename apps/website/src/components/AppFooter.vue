@@ -18,7 +18,7 @@ const stats = computed(() => {
 
 <template>
   <footer
-    class="border-t border-cc98-border bg-cc98-bg-elevated text-center text-xs text-cc98-text-muted py-4"
+    class="border-t border-cc98-border bg-cc98-surface text-center text-xs text-cc98-text-muted py-4"
   >
     <p v-if="stats" class="space-x-2">
       <span>最高在线 {{ stats.online }}</span>

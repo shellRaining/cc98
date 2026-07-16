@@ -49,9 +49,8 @@
   --cc98-color-warning: var(--cc98-amber);
   --cc98-color-error: var(--cc98-red);
 
-  /* 旧命名兼容，组件迁移到语义名后移除（见 exec-plans 第八阶段） */
-  --cc98-color-bg: var(--cc98-color-background);
-  --cc98-color-bg-elevated: var(--cc98-color-surface);
+  /* 遮罩层：浮层下方的半透明覆盖，深色模式透明度更高保证可读 */
+  --cc98-color-overlay: rgb(0 0 0 / 0.5);
 }
 
 :root[data-theme="dark"] {
@@ -74,6 +73,8 @@
   --cc98-paper-subtle: #232830;
   --cc98-line: #2a2e37;
   --cc98-on-accent: #ffffff;
+
+  --cc98-color-overlay: rgb(0 0 0 / 0.65);
 }
 
 html,

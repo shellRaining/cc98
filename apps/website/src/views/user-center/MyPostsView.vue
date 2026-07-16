@@ -58,11 +58,7 @@ function changeKind(event: Event) {
       </div>
       <label class="text-sm text-cc98-text-muted">
         类型
-        <select
-          :value="kind"
-          class="ml-2 rounded border border-cc98-border bg-cc98-bg px-2 py-1 text-cc98-text"
-          @change="changeKind"
-        >
+        <select :value="kind" class="ml-2 cc98-input px-2 py-1" @change="changeKind">
           <option value="recent">最近回复</option>
           <option value="hot">热门回复</option>
         </select>

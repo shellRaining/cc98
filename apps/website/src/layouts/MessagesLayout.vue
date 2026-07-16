@@ -34,13 +34,13 @@ const links = computed(
           v-for="[to, label, count] in links"
           :key="to"
           :to="to"
-          class="rounded px-3 py-2 text-sm whitespace-nowrap text-cc98-text-muted hover:bg-cc98-bg hover:text-cc98-primary flex items-center justify-between gap-3"
-          active-class="bg-cc98-bg text-cc98-primary font-medium"
+          class="rounded px-3 py-2 text-sm whitespace-nowrap text-cc98-text-muted hover:bg-cc98-surface-subtle hover:text-cc98-primary flex items-center justify-between gap-3"
+          active-class="bg-cc98-surface-subtle text-cc98-primary font-medium"
         >
           <span>{{ label }}</span>
           <span
             v-if="count > 0"
-            class="min-w-5 rounded-full bg-cc98-accent px-1.5 text-center text-xs text-white"
+            class="min-w-5 rounded-full bg-cc98-accent px-1.5 text-center text-xs text-cc98-on-primary"
           >
             {{ count > 99 ? "99+" : count }}
           </span>

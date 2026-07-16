@@ -116,7 +116,7 @@ async function submit() {
       <div v-if="vote?.canVote" class="flex gap-3">
         <button
           type="button"
-          class="rounded bg-cc98-primary px-4 py-2 text-sm text-white disabled:opacity-50"
+          class="cc98-btn text-sm"
           :disabled="submitVote.isPending.value || selected.length === 0"
           @click="submit"
         >

@@ -107,7 +107,7 @@ function signInToday() {
         </p>
         <button
           type="button"
-          class="rounded bg-cc98-primary px-4 py-2 text-sm text-white disabled:opacity-50"
+          class="cc98-btn text-sm"
           :disabled="infoQuery.data.value.hasSignedInToday || signin.isPending.value"
           @click="signInToday"
         >
@@ -143,7 +143,7 @@ function signInToday() {
               <div
                 v-if="day"
                 class="h-full rounded border border-cc98-border p-2 text-sm"
-                :class="recordMap.has(day) ? 'bg-cc98-bg' : ''"
+                :class="recordMap.has(day) ? 'bg-cc98-surface-subtle' : ''"
               >
                 <div class="flex items-center justify-between gap-1">
                   <span>{{ day }}</span>

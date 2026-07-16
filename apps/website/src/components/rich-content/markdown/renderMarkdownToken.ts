@@ -94,7 +94,7 @@ function renderSingleToken(token: Token, options: Readonly<RichContentOptions>):
     case "code_inline":
       return h(
         "code",
-        { class: "rounded bg-cc98-bg-elevated px-1 py-0.5 font-mono text-sm" },
+        { class: "rounded bg-cc98-surface px-1 py-0.5 font-mono text-sm" },
         token.content,
       );
     case "fence":

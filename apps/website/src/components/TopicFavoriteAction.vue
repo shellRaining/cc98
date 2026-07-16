@@ -103,21 +103,15 @@ async function add() {
         </button>
       </DialogTrigger>
       <DialogPortal>
-        <DialogOverlay class="fixed inset-0 z-40 bg-black/50" />
-        <DialogContent
-          class="fixed left-1/2 top-1/2 z-50 w-[min(28rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 rounded border border-cc98-border bg-cc98-bg-elevated p-5 shadow-xl"
-        >
+        <DialogOverlay class="cc98-overlay" />
+        <DialogContent class="cc98-modal w-[min(28rem,calc(100vw-2rem))]">
           <DialogTitle class="text-lg font-semibold">收藏主题</DialogTitle>
           <DialogDescription class="mt-1 text-sm text-cc98-text-muted">
             选择收藏分组，之后可在用户中心管理。
           </DialogDescription>
           <label class="mt-4 block space-y-1 text-sm">
             <span>收藏分组</span>
-            <select
-              v-model="groupId"
-              class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2"
-              :disabled="pending"
-            >
+            <select v-model="groupId" class="w-full cc98-input" :disabled="pending">
               <option :value="null">默认收藏夹</option>
               <option v-for="group in groups?.data ?? []" :key="group.id" :value="group.id ?? null">
                 {{ group.name ?? `分组 ${group.id}` }}
@@ -137,7 +131,7 @@ async function add() {
             </DialogClose>
             <button
               type="button"
-              class="rounded bg-cc98-primary px-3 py-1.5 text-sm text-white disabled:opacity-50"
+              class="cc98-btn px-3 py-1.5 text-sm disabled:opacity-50"
               :disabled="pending"
               @click="add"
             >

@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <blockquote class="my-3 border-l-4 border-cc98-border bg-cc98-bg-elevated px-4 py-3">
+  <blockquote class="my-3 border-l-4 border-cc98-border bg-cc98-surface px-4 py-3">
     <cite v-if="source" class="mb-2 block text-sm not-italic text-cc98-text-muted">
       {{ source }}：
     </cite>

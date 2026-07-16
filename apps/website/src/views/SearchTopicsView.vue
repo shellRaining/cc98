@@ -102,7 +102,7 @@ function goLogin() {
             v-model="draftKeyword"
             type="search"
             name="keyword"
-            class="rounded border border-cc98-border bg-cc98-bg px-3 py-1.5 min-w-56"
+            class="cc98-input px-3 py-1.5 min-w-56"
             placeholder="输入关键词"
             autocomplete="off"
           />
@@ -114,7 +114,7 @@ function goLogin() {
             type="text"
             name="boardId"
             inputmode="numeric"
-            class="rounded border border-cc98-border bg-cc98-bg px-3 py-1.5 w-32"
+            class="cc98-input px-3 py-1.5 w-32"
             placeholder="全站"
             autocomplete="off"
           />

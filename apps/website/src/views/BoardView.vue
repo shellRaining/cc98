@@ -222,7 +222,7 @@ function toggleBoardFollow() {
             </button>
             <RouterLink
               :to="{ name: 'create-topic', params: { boardId } }"
-              class="rounded bg-cc98-primary px-4 py-2 text-sm text-white"
+              class="cc98-btn text-sm"
             >
               发主题
             </RouterLink>

@@ -48,7 +48,7 @@ async function handleLogin() {
           v-model="loginName"
           type="text"
           autocomplete="username"
-          class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2 text-cc98-text outline-none focus:border-cc98-primary"
+          class="w-full cc98-input"
           :disabled="submitting"
         />
       </div>
@@ -59,16 +59,12 @@ async function handleLogin() {
           v-model="loginPassword"
           type="password"
           autocomplete="current-password"
-          class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2 text-cc98-text outline-none focus:border-cc98-primary"
+          class="w-full cc98-input"
           :disabled="submitting"
         />
       </div>
-      <p v-if="errorMsg" class="text-sm text-red-500">{{ errorMsg }}</p>
-      <button
-        type="submit"
-        class="w-full rounded bg-cc98-primary px-4 py-2 text-sm text-white hover:opacity-90 disabled:opacity-50"
-        :disabled="submitting"
-      >
+      <p v-if="errorMsg" class="text-sm text-cc98-error">{{ errorMsg }}</p>
+      <button type="submit" class="w-full cc98-btn text-sm hover:opacity-90" :disabled="submitting">
         {{ submitting ? "登录中…" : "登录" }}
       </button>
     </form>

@@ -183,7 +183,7 @@ async function submit() {
           maxlength="100"
           required
           :disabled="createTopic.isPending.value"
-          class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+          class="w-full cc98-input"
         />
       </label>
 
@@ -193,7 +193,7 @@ async function submit() {
           <select
             v-model="draft[group.layer === 2 ? 'tag2' : 'tag1']"
             :disabled="createTopic.isPending.value"
-            class="rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+            class="cc98-input"
           >
             <option :value="null">不选择</option>
             <option v-for="tag in group.tags" :key="tag.id" :value="tag.id">
@@ -233,7 +233,7 @@ async function submit() {
                 type="number"
                 min="1"
                 max="1000"
-                class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+                class="w-full cc98-input"
                 :disabled="createTopic.isPending.value"
               />
             </label>
@@ -244,7 +244,7 @@ async function submit() {
                 type="number"
                 min="1"
                 :max="draft.voteItems.length"
-                class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+                class="w-full cc98-input"
                 :disabled="createTopic.isPending.value"
               />
             </label>
@@ -263,7 +263,7 @@ async function submit() {
               type="text"
               maxlength="50"
               :placeholder="`投票选项 ${index + 1}`"
-              class="min-w-0 flex-1 rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+              class="min-w-0 flex-1 cc98-input"
               :disabled="createTopic.isPending.value"
             />
             <button
@@ -289,11 +289,7 @@ async function submit() {
 
       <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
       <div class="flex gap-3">
-        <button
-          type="submit"
-          :disabled="createTopic.isPending.value"
-          class="rounded bg-cc98-primary px-4 py-2 text-white disabled:opacity-50"
-        >
+        <button type="submit" :disabled="createTopic.isPending.value" class="cc98-btn">
           {{ createTopic.isPending.value ? "发布中…" : "发布主题" }}
         </button>
         <RouterLink :to="{ name: 'board', params: { boardId } }" class="cc98-link py-2">

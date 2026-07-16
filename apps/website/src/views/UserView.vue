@@ -221,14 +221,14 @@ function toggleFollow() {
             <RouterLink
               v-if="profile.id && userStore.isLoggedIn"
               :to="`/messages/private/${profile.id}`"
-              class="rounded bg-cc98-primary px-3 py-1.5 text-sm text-white"
+              class="cc98-btn px-3 py-1.5 text-sm"
             >
               发私信
             </RouterLink>
             <button
               v-else-if="profile.id"
               type="button"
-              class="rounded bg-cc98-primary px-3 py-1.5 text-sm text-white"
+              class="cc98-btn px-3 py-1.5 text-sm"
               @click="goLogin"
             >
               发私信

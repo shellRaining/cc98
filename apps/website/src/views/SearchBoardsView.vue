@@ -64,7 +64,7 @@ function goLogin() {
             v-model="draftKeyword"
             type="search"
             name="keyword"
-            class="rounded border border-cc98-border bg-cc98-bg px-3 py-1.5 min-w-56"
+            class="cc98-input px-3 py-1.5 min-w-56"
             placeholder="版面名称或描述"
             autocomplete="off"
           />

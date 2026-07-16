@@ -195,20 +195,12 @@ async function removeTopic(topicId: number) {
             v-model="createName"
             maxlength="10"
             placeholder="新分组名称"
-            class="min-w-0 flex-1 rounded border border-cc98-border bg-cc98-bg px-3 py-2 text-sm"
+            class="min-w-0 flex-1 cc98-input text-sm"
           />
-          <button
-            class="rounded bg-cc98-primary px-3 py-2 text-sm text-white"
-            :disabled="mutationPending"
-          >
-            新增
-          </button>
+          <button class="cc98-btn px-3 py-2 text-sm" :disabled="mutationPending">新增</button>
         </form>
         <form class="flex gap-2" @submit.prevent="renameFavoriteGroup">
-          <select
-            v-model.number="renameId"
-            class="min-w-0 rounded border border-cc98-border bg-cc98-bg px-2 text-sm"
-          >
+          <select v-model.number="renameId" class="min-w-0 cc98-input px-2 text-sm">
             <option :value="0">选择分组</option>
             <option v-for="group in editableGroups" :key="group.id" :value="group.id">
               {{ group.name }}
@@ -218,7 +210,7 @@ async function removeTopic(topicId: number) {
             v-model="renameName"
             maxlength="10"
             placeholder="新名称"
-            class="min-w-0 flex-1 rounded border border-cc98-border bg-cc98-bg px-3 py-2 text-sm"
+            class="min-w-0 flex-1 cc98-input text-sm"
           />
           <button
             class="rounded border border-cc98-border px-3 py-2 text-sm"
@@ -228,10 +220,7 @@ async function removeTopic(topicId: number) {
           </button>
         </form>
         <div class="flex items-center gap-2">
-          <select
-            v-model.number="deleteId"
-            class="min-w-0 flex-1 rounded border border-cc98-border bg-cc98-bg px-2 py-2 text-sm"
-          >
+          <select v-model.number="deleteId" class="min-w-0 flex-1 cc98-input px-2 py-2 text-sm">
             <option :value="0">选择分组</option>
             <option v-for="group in editableGroups" :key="group.id" :value="group.id">
               {{ group.name }}
@@ -248,7 +237,7 @@ async function removeTopic(topicId: number) {
           />
         </div>
       </div>
-      <p v-if="groupError" class="text-sm text-red-500">
+      <p v-if="groupError" class="text-sm text-cc98-error">
         {{ normalizeApiError(groupError).message }}
         <button class="cc98-link ml-2" @click="refetchGroups()">重试</button>
       </p>
@@ -260,7 +249,7 @@ async function removeTopic(topicId: number) {
         分组
         <select
           :value="groupId"
-          class="ml-2 rounded border border-cc98-border bg-cc98-bg px-2 py-1.5 text-cc98-text"
+          class="ml-2 cc98-input px-2 py-1.5"
           :disabled="Boolean(keyword)"
           @change="
             updateFilter({ group: Number(($event.target as HTMLSelectElement).value), keyword: '' })
@@ -275,7 +264,7 @@ async function removeTopic(topicId: number) {
         排序
         <select
           :value="order"
-          class="ml-2 rounded border border-cc98-border bg-cc98-bg px-2 py-1.5 text-cc98-text"
+          class="ml-2 cc98-input px-2 py-1.5"
           :disabled="Boolean(keyword)"
           @change="
             updateFilter({ order: Number(($event.target as HTMLSelectElement).value), keyword: '' })
@@ -290,11 +279,11 @@ async function removeTopic(topicId: number) {
         搜索收藏
         <input
           v-model="draftKeyword"
-          class="mt-1 w-full rounded border border-cc98-border bg-cc98-bg px-3 py-1.5 text-cc98-text"
+          class="mt-1 w-full cc98-input px-3 py-1.5 text-cc98-text"
           placeholder="输入关键词"
         />
       </label>
-      <button class="rounded bg-cc98-primary px-4 py-1.5 text-sm text-white">搜索</button>
+      <button class="cc98-btn px-4 py-1.5 text-sm">搜索</button>
       <button
         v-if="keyword"
         type="button"
@@ -325,7 +314,7 @@ async function removeTopic(topicId: number) {
               <label class="text-cc98-text-muted">
                 移动到
                 <select
-                  class="ml-1 rounded border border-cc98-border bg-cc98-bg px-2 py-1"
+                  class="ml-1 cc98-input px-2 py-1"
                   value=""
                   :disabled="mutationPending"
                   @change="moveTopic(topic.id, $event)"

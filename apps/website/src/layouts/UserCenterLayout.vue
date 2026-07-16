@@ -28,10 +28,10 @@ const links = [
           v-for="[to, label] in links"
           :key="to"
           :to="to"
-          class="rounded px-3 py-2 text-sm whitespace-nowrap text-cc98-text-muted hover:bg-cc98-bg hover:text-cc98-primary"
-          active-class="bg-cc98-bg text-cc98-primary font-medium"
+          class="rounded px-3 py-2 text-sm whitespace-nowrap text-cc98-text-muted hover:bg-cc98-surface-subtle hover:text-cc98-primary"
+          active-class="bg-cc98-surface-subtle text-cc98-primary font-medium"
           :exact-active-class="
-            to === '/usercenter' ? 'bg-cc98-bg text-cc98-primary font-medium' : ''
+            to === '/usercenter' ? 'bg-cc98-surface-subtle text-cc98-primary font-medium' : ''
           "
         >
           {{ label }}

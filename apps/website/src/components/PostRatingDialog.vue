@@ -102,10 +102,8 @@ async function submit() {
       </button>
     </DialogTrigger>
     <DialogPortal>
-      <DialogOverlay class="fixed inset-0 z-40 bg-black/50" />
-      <DialogContent
-        class="fixed left-1/2 top-1/2 z-50 w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 rounded border border-cc98-border bg-cc98-bg-elevated p-5 shadow-xl"
-      >
+      <DialogOverlay class="cc98-overlay" />
+      <DialogContent class="cc98-modal w-[min(30rem,calc(100vw-2rem))]">
         <DialogTitle class="text-lg font-semibold">楼层评分</DialogTitle>
         <DialogDescription class="mt-1 text-sm text-cc98-text-muted">
           选择正面或负面评分，并说明理由。
@@ -131,7 +129,7 @@ async function submit() {
             <span>评分理由</span>
             <select
               v-model="reasonId"
-              class="w-full rounded border border-cc98-border bg-cc98-bg px-3 py-2"
+              class="w-full cc98-input"
               :disabled="ratePost.isPending.value || reasonsPending"
             >
               <option :value="null">请选择</option>
@@ -162,7 +160,7 @@ async function submit() {
           <button
             v-if="user.isLoggedIn && !isOwn"
             type="button"
-            class="rounded bg-cc98-primary px-3 py-1.5 text-sm text-white disabled:opacity-50"
+            class="cc98-btn px-3 py-1.5 text-sm disabled:opacity-50"
             :disabled="ratePost.isPending.value || reasonsPending || visibleReasons.length === 0"
             @click="submit"
           >

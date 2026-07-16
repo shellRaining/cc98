@@ -378,11 +378,7 @@ async function submitReply() {
           </label>
         </div>
         <p v-if="replyError" class="text-sm text-cc98-accent">{{ replyError }}</p>
-        <button
-          type="submit"
-          :disabled="createPost.isPending.value"
-          class="rounded bg-cc98-primary px-4 py-2 text-white disabled:opacity-50"
-        >
+        <button type="submit" :disabled="createPost.isPending.value" class="cc98-btn">
           {{ createPost.isPending.value ? "提交中…" : "提交回复" }}
         </button>
       </form>

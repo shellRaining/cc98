@@ -40,10 +40,8 @@ const emit = defineEmits<{
       </button>
     </AlertDialogTrigger>
     <AlertDialogPortal>
-      <AlertDialogOverlay class="fixed inset-0 z-40 bg-black/50" />
-      <AlertDialogContent
-        class="fixed left-1/2 top-1/2 z-50 w-[min(28rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 rounded border border-cc98-border bg-cc98-bg-elevated p-5 shadow-xl"
-      >
+      <AlertDialogOverlay class="cc98-overlay" />
+      <AlertDialogContent class="cc98-modal w-[min(28rem,calc(100vw-2rem))]">
         <AlertDialogTitle class="text-lg font-semibold text-cc98-text">{{
           title
         }}</AlertDialogTitle>
@@ -63,7 +61,7 @@ const emit = defineEmits<{
           <AlertDialogAction as-child>
             <button
               type="button"
-              class="rounded bg-red-600 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+              class="cc98-btn bg-cc98-error px-3 py-1.5 text-sm"
               :disabled="pending"
               @click="emit('confirm')"
             >

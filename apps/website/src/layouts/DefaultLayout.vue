@@ -9,7 +9,7 @@ theme.apply();
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-cc98-bg text-cc98-text">
+  <div class="min-h-screen flex flex-col bg-cc98-background text-cc98-text">
     <AppHeader />
     <MessageRealtimeController />
     <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-6">

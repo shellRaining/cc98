@@ -35,7 +35,7 @@ const resolvedMessage = computed(() => props.message ?? defaults[props.kind].mes
 </script>
 
 <template>
-  <div class="rounded border border-cc98-border bg-cc98-bg-elevated px-4 py-6 text-sm space-y-3">
+  <div class="rounded border border-cc98-border bg-cc98-surface px-4 py-6 text-sm space-y-3">
     <h2 class="text-base font-semibold text-cc98-text">{{ resolvedTitle }}</h2>
     <p class="text-cc98-text-muted">{{ resolvedMessage }}</p>
     <div class="flex flex-wrap gap-3">

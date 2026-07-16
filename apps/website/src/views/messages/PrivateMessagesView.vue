@@ -142,8 +142,8 @@ function submit() {
             v-for="contact in contacts"
             :key="contact.userId"
             type="button"
-            class="w-full border-0 bg-transparent p-3 text-left hover:bg-cc98-bg"
-            :class="contact.userId === targetUserId ? 'bg-cc98-bg' : ''"
+            class="w-full border-0 bg-transparent p-3 text-left hover:bg-cc98-surface-subtle"
+            :class="contact.userId === targetUserId ? 'bg-cc98-surface-subtle' : ''"
             @click="openConversation(contact.userId)"
           >
             <div class="flex items-center gap-3">
@@ -220,7 +220,9 @@ function submit() {
                 <div
                   class="rounded px-3 py-2 text-sm"
                   :class="
-                    message.senderId === user.user?.id ? 'bg-cc98-primary text-white' : 'bg-cc98-bg'
+                    message.senderId === user.user?.id
+                      ? 'bg-cc98-primary text-cc98-on-primary'
+                      : 'bg-cc98-surface-subtle'
                   "
                 >
                   <ContentRenderer
@@ -236,7 +238,7 @@ function submit() {
             <textarea
               v-model="content"
               rows="3"
-              class="w-full resize-y rounded border border-cc98-border bg-cc98-bg px-3 py-2 text-sm"
+              class="w-full resize-y cc98-input text-sm"
               placeholder="输入私信内容"
               :disabled="sendMessage.isPending.value"
             />
@@ -244,7 +246,7 @@ function submit() {
               <p class="text-xs text-cc98-text-muted">发送失败时内容会保留。</p>
               <button
                 type="submit"
-                class="rounded bg-cc98-primary px-4 py-2 text-sm text-white disabled:opacity-50"
+                class="cc98-btn text-sm"
                 :disabled="!content.trim() || sendMessage.isPending.value"
               >
                 {{ sendMessage.isPending.value ? "发送中…" : "发送" }}

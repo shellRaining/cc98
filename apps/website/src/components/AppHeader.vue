@@ -25,7 +25,7 @@ function goLogin(event?: Event) {
 </script>
 
 <template>
-  <header class="border-b border-cc98-border bg-cc98-bg-elevated">
+  <header class="border-b border-cc98-border bg-cc98-surface">
     <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-6">
         <RouterLink to="/" class="text-lg font-bold text-cc98-text hover:text-cc98-primary">
@@ -53,7 +53,7 @@ function goLogin(event?: Event) {
             消息
             <span
               v-if="unreadTotal > 0"
-              class="absolute -right-3 -top-2 min-w-5 rounded-full bg-cc98-accent px-1 text-center text-xs leading-5 text-white"
+              class="absolute -right-3 -top-2 min-w-5 rounded-full bg-cc98-accent px-1 text-center text-xs leading-5 text-cc98-on-primary"
             >
               {{ unreadTotal > 99 ? "99+" : unreadTotal }}
             </span>
