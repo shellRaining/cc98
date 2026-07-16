@@ -19,6 +19,7 @@ import {
   themeSettingSchema,
   topicSchema,
   transferWealthRequestSchema,
+  transferWealthResponseSchema,
 } from "../schemas/index.ts";
 
 export const meOperations = defineOperations([
@@ -629,7 +630,7 @@ export const meOperations = defineOperations([
       "200": {
         description: "Successful receiver names",
         contentType: "application/json",
-        schema: z.array(z.string()),
+        schema: transferWealthResponseSchema,
       },
       default: {
         description: "API 错误码",

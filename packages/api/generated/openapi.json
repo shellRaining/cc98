@@ -5840,10 +5840,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/TransferWealthResponse"
                 }
               }
             }
@@ -8784,6 +8781,12 @@
         },
         "required": ["data", "count", "from", "size", "errorCode"],
         "additionalProperties": {}
+      },
+      "TransferWealthResponse": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
       },
       "MessageCounts": {
         "type": "object",

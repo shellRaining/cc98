@@ -31,6 +31,11 @@ export const transferWealthRequestSchema = z
   .meta({ id: "TransferWealthRequest" });
 export type TransferWealthRequest = z.infer<typeof transferWealthRequestSchema>;
 
+export const transferWealthResponseSchema = z
+  .array(z.string())
+  .meta({ id: "TransferWealthResponse" });
+export type TransferWealthResponse = z.infer<typeof transferWealthResponseSchema>;
+
 export const signinInfoSchema = z
   .looseObject({
     hasSignedInToday: z.boolean(),

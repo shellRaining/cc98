@@ -5,7 +5,9 @@ import {
   type MeUser,
   type PagedTopicResultData,
   type Topic,
+  type TransferWealthRequest,
   type User,
+  transferWealthResponseSchema,
 } from "@cc98/api";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedDelete, typedPost, typedPostForm, typedPut } from "../../lib/http";
@@ -290,6 +292,27 @@ export function useSetTopicViewModeMutation() {
     onSuccess: (_data, mode) => {
       queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
         me ? { ...me, topicViewMode: mode } : undefined,
+      );
+    },
+  });
+}
+
+export function useTransferWealthMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    retry: 0,
+    mutationFn: async (payload: TransferWealthRequest) => {
+      const data = await typedPut<unknown>("/me/transfer-wealth", payload);
+      return transferWealthResponseSchema.parse(data);
+    },
+    onSuccess: (successNames, payload) => {
+      queryClient.setQueryData<MeUser>(queryKeys.currentUser, (me) =>
+        me
+          ? {
+              ...me,
+              wealth: Math.max(0, (me.wealth ?? 0) - successNames.length * payload.wealth),
+            }
+          : undefined,
       );
     },
   });

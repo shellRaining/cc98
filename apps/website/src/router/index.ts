@@ -172,6 +172,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../views/user-center/FollowersView.vue"),
       },
       {
+        path: "transfer",
+        name: "user-center-transfer",
+        component: () => import("../views/user-center/TransferWealthView.vue"),
+      },
+      {
         path: "boards",
         name: "user-center-boards",
         component: () => import("../views/user-center/MyBoardsView.vue"),
