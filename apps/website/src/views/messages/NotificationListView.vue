@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
+import { useTitle } from "@vueuse/core";
 import dayjs from "dayjs";
 import { useRoute } from "vue-router";
-import { useReadAllNotificationsMutation } from "../../api/mutations";
-import { notificationsQuery, unreadCountsQuery, type NotificationKind } from "../../api/queries";
+import {
+  allMessageCountsQuery,
+  notificationsQuery,
+  type NotificationKind,
+} from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
-import UiBadge from "../../components/ui/Badge.vue";
-import UiButton from "../../components/ui/Button.vue";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import {
@@ -17,9 +19,10 @@ import {
   notificationTopicPath,
 } from "../../lib/messages";
 import { pageToFrom, parsePageNumber } from "../../lib/route-params";
+import { pageCount } from "../../lib/user-center";
 import { useUserStore } from "../../stores/user";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const route = useRoute();
 const user = useUserStore();
 const kind = computed(() => route.meta.notificationKind as NotificationKind);
@@ -37,16 +40,19 @@ const { data, error, isPending, refetch } = useQuery(
     ),
   ),
 );
-const { data: counts } = useQuery(
-  computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
+const { data: allCounts } = useQuery(
+  computed(() => allMessageCountsQuery(authScope.value, user.isLoggedIn)),
 );
-const readAll = useReadAllNotificationsMutation();
 
 const title = computed(() => {
   if (kind.value === "replies") return "回复我的";
   if (kind.value === "mentions") return "@ 我的";
   return "系统通知";
 });
+const totalPages = computed(() =>
+  pageCount(notificationCount(allCounts.value, kind.value), PAGE_SIZE),
+);
+useTitle(computed(() => `${title.value} - CC98 论坛`));
 const state = computed(() => {
   if (isPending.value) return "loading" as const;
   if (error.value) return "error" as const;
@@ -60,34 +66,10 @@ const errorMessage = computed(() =>
 function toPage(nextPage: number) {
   return { path: route.path, query: nextPage > 1 ? { page: nextPage } : {} };
 }
-
-function markAllRead() {
-  readAll.mutate({ kind: kind.value, authScope: authScope.value });
-}
 </script>
 
 <template>
-  <section class="space-y-4">
-    <header class="flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <h1 class="text-2xl font-bold">{{ title }}</h1>
-        <p class="text-sm text-cc98-text-muted">未读 {{ notificationCount(counts, kind) }}</p>
-      </div>
-      <UiButton
-        variant="ghost"
-        type="button"
-        size="sm"
-        :disabled="notificationCount(counts, kind) === 0 || readAll.isPending.value"
-        @click="markAllRead"
-      >
-        {{ readAll.isPending.value ? "处理中…" : "全部标为已读" }}
-      </UiButton>
-    </header>
-
-    <p v-if="readAll.error.value" class="text-sm text-cc98-accent">
-      {{ normalizeApiError(readAll.error.value).message }}
-    </p>
-
+  <section class="message-notification-page">
     <PageState
       v-if="state"
       :kind="state"
@@ -97,44 +79,40 @@ function markAllRead() {
     />
 
     <template v-else>
-      <div class="space-y-3">
-        <article
-          v-for="item in data"
-          :key="item.id"
-          class="cc98-card p-4 space-y-2"
-          :class="item.isRead ? '' : 'border-cc98-primary'"
-        >
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2 text-sm">
-              <UiBadge v-if="!item.isRead" dot variant="primary" />
-              <RouterLink v-if="item.board?.id" :to="`/list/${item.board.id}`" class="cc98-link">
-                {{ item.board.name ?? `版面 ${item.board.id}` }}
-              </RouterLink>
-              <span v-else-if="item.title" class="font-medium">{{ item.title }}</span>
-            </div>
-            <time class="text-xs text-cc98-text-muted">{{
-              dayjs(item.time).format("YYYY-MM-DD HH:mm")
-            }}</time>
+      <div :class="kind === 'system' ? 'message-system-list' : 'message-notification-list'">
+        <article v-for="item in data" :key="item.id" :class="{ 'is-unread': !item.isRead }">
+          <div class="message-notification__bar">
+            <span v-if="item.kind === 'system'">{{ item.title || "系统通知" }}</span>
+            <RouterLink v-else-if="item.board?.id" :to="`/list/${item.board.id}`">
+              {{ item.board.name ?? `版面 ${item.board.id}` }}
+            </RouterLink>
+            <span v-else>未知版面</span>
+            <time>{{ dayjs(item.time).format("YYYY-MM-DD HH:mm:ss") }}</time>
           </div>
 
           <ContentRenderer
             v-if="item.kind === 'system'"
+            class="message-notification__content"
             :content="notificationDescription(item)"
             type="ubb"
             :options="{ allowMediaContent: false, allowToolbox: false, maxImageCount: 3 }"
           />
-          <RouterLink
-            v-else-if="notificationTopicPath(item)"
-            :to="notificationTopicPath(item)!"
-            :class="item.isRead ? 'text-cc98-text-muted' : 'font-medium'"
-          >
-            {{ notificationDescription(item) }}
-          </RouterLink>
-          <p v-else class="text-cc98-text-muted">{{ notificationDescription(item) }}</p>
+          <p v-else class="message-notification__content">
+            <RouterLink v-if="item.userId" :to="`/user/id/${item.userId}`">
+              {{ item.userName || "有人" }}
+            </RouterLink>
+            <span v-else>{{ item.userName || "有人" }}</span>
+            <span> 在《</span>
+            <RouterLink v-if="notificationTopicPath(item)" :to="notificationTopicPath(item)!">
+              {{ item.topic?.title?.trim() || "一个主题" }}
+            </RouterLink>
+            <span v-else>{{ item.topic?.title?.trim() || "一个主题" }}</span>
+            <span>》中{{ item.kind === "replies" ? "回复了你。" : "提到了你。" }}</span>
+          </p>
           <RouterLink
             v-if="item.kind === 'system' && notificationTopicPath(item)"
             :to="notificationTopicPath(item)!"
-            class="cc98-link inline-block text-sm"
+            class="message-notification__topic-link"
           >
             查看相关主题
           </RouterLink>
@@ -143,8 +121,9 @@ function markAllRead() {
 
       <Pagination
         :current-page="page"
-        :has-next-page="(data?.length ?? 0) >= PAGE_SIZE"
+        :total-pages="totalPages"
         :to-page="toPage"
+        variant="user-center"
       />
     </template>
   </section>

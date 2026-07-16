@@ -9,26 +9,20 @@ const readAllPath: Record<NotificationKind, string | null> = {
   system: "/notification/read-all-system",
 };
 
-const countField: Record<NotificationKind, keyof MessageCounts> = {
-  replies: "replyCount",
-  mentions: "atCount",
-  system: "systemCount",
-};
-
-export function useReadAllNotificationsMutation() {
+export function useReadAllNotificationKindsMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ kind }: { kind: NotificationKind; authScope: AuthScope }) => {
-      const path = readAllPath[kind];
-      if (!path) return;
-      await typedPut<void>(path);
+    mutationFn: async ({ authScope: _authScope }: { authScope: AuthScope }) => {
+      await Promise.all(
+        Object.values(readAllPath).flatMap((path) => (path ? [typedPut<void>(path)] : [])),
+      );
     },
-    onSuccess: async (_data, { kind, authScope }) => {
+    onSuccess: async (_data, { authScope }) => {
       queryClient.setQueryData<MessageCounts>(queryKeys.unreadCounts(authScope), (counts) =>
-        counts ? { ...counts, [countField[kind]]: 0 } : counts,
+        counts ? { ...counts, replyCount: 0, atCount: 0, systemCount: 0 } : counts,
       );
       queryClient.setQueriesData(
-        { queryKey: ["messages", "notifications", kind] },
+        { queryKey: queryKeys.notificationsRoot },
         (items: Array<{ isRead: boolean }> | undefined) =>
           items?.map((item) => ({ ...item, isRead: true })),
       );

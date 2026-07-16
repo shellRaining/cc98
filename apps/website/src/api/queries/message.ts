@@ -102,6 +102,15 @@ export const unreadCountsQuery = (authScope: AuthScope, enabled = true) =>
     refetchOnWindowFocus: true,
   });
 
+export const allMessageCountsQuery = (authScope: AuthScope, enabled = true) =>
+  queryOptions({
+    queryKey: queryKeys.allMessageCounts(authScope),
+    queryFn: async () =>
+      messageCountsSchema.parse(await typedGet<unknown>("/me/all-message-count")),
+    enabled: enabled && authScope !== "anonymous",
+    staleTime: 60 * 1000,
+  });
+
 export const notificationsQuery = (
   kind: NotificationKind,
   authScope: AuthScope,

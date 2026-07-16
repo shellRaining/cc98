@@ -101,6 +101,7 @@ export const queryKeys = {
   boardRoot: (id: number) => ["board", id] as const,
   unreadCounts: (authScope: AuthScope) => ["messages", "unread", authScope] as const,
   unreadCountsRoot: ["messages", "unread"] as const,
+  allMessageCounts: (authScope: AuthScope) => ["messages", "all-counts", authScope] as const,
   notifications: (
     kind: "replies" | "mentions" | "system",
     from: number,
