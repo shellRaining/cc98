@@ -62,23 +62,25 @@ export const recommendedTopicsQuery = (
     gcTime: 5 * 60 * 1000,
   });
 
-export const searchTopicsQuery = (
+export const searchTopicsInfiniteQuery = (
   keyword: string,
   boardId: number | null,
   authScope: AuthScope,
-  from = 0,
   size = 20,
   enabled = true,
 ) =>
-  queryOptions({
-    queryKey: queryKeys.searchTopics(keyword, boardId, from, size, authScope),
-    queryFn: async () => {
+  infiniteQueryOptions({
+    queryKey: queryKeys.searchTopics(keyword, boardId, size, authScope),
+    queryFn: async ({ pageParam }) => {
       const path = boardId != null ? `/topic/search/board/${boardId}` : "/topic/search";
       const data = await typedGet<unknown[]>(path, {
-        query: { keyword, from, size },
+        query: { keyword, from: pageParam, size },
       });
       return topicSchema.array().parse(data);
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _pages, lastPageParam) =>
+      lastPage.length < size ? undefined : lastPageParam + size,
     enabled: enabled && keyword.length > 0 && authScope !== "anonymous",
   });
 

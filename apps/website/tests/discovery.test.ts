@@ -94,11 +94,11 @@ describe("discovery query keys", () => {
     expect(queryKeys.recommendedTopics(10, 1, 3)).not.toEqual(
       queryKeys.recommendedTopics(10, 2, 3),
     );
-    expect(queryKeys.searchTopics("a", null, 0, 20, 1)).not.toEqual(
-      queryKeys.searchTopics("b", null, 0, 20, 1),
+    expect(queryKeys.searchTopics("a", null, 20, 1)).not.toEqual(
+      queryKeys.searchTopics("b", null, 20, 1),
     );
-    expect(queryKeys.searchTopics("a", 1, 0, 20, 1)).not.toEqual(
-      queryKeys.searchTopics("a", null, 0, 20, 1),
+    expect(queryKeys.searchTopics("a", 1, 20, 1)).not.toEqual(
+      queryKeys.searchTopics("a", null, 20, 1),
     );
     expect(queryKeys.hotTopics("weekly")).not.toEqual(queryKeys.hotTopics("monthly"));
     expect(queryKeys.newTopics("all", 20, 1)).not.toEqual(queryKeys.newTopics("media", 20, 1));

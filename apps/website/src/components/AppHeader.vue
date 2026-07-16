@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { RouterLink, useRoute, useRouter } from "vue-router";
-import { unreadCountsQuery } from "../api/queries";
-import { searchBoardsPath, searchTopicsPath, userNamePath } from "../lib/discovery";
+import { topicQuery, unreadCountsQuery } from "../api/queries";
+import {
+  normalizeSearchBoardId,
+  searchBoardsPath,
+  searchTopicsPath,
+  userNamePath,
+} from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { totalUnreadCount } from "../lib/messages";
 import { useUserStore } from "../stores/user";
 import UiBadge from "./ui/Badge.vue";
 
-type SearchKind = "topic" | "user" | "board";
+type SearchKind = "topic" | "within" | "user" | "board";
 
 const user = useUserStore();
 const route = useRoute();
@@ -18,10 +23,37 @@ const keyword = ref("");
 const searchKind = ref<SearchKind>("topic");
 const isHome = computed(() => route.name === "home");
 const authScope = computed(() => user.user?.id ?? "anonymous");
+const routeTopicId = computed(() => {
+  if (route.name !== "topic") return 0;
+  const value = Number(route.params.topicId);
+  return Number.isInteger(value) && value > 0 ? value : 0;
+});
+const topicOptions = computed(() =>
+  topicQuery(routeTopicId.value, authScope.value, routeTopicId.value > 0),
+);
+const { data: currentTopic } = useQuery(topicOptions);
+const contextBoardId = computed(() => {
+  if (route.name === "board") return normalizeSearchBoardId(String(route.params.boardId ?? ""));
+  if (route.name === "topic") return currentTopic.value?.boardId ?? null;
+  if (route.name === "search-topics") {
+    return normalizeSearchBoardId(String(route.query.boardId ?? ""));
+  }
+  return null;
+});
+const hasBoardContext = computed(() => contextBoardId.value != null);
 const { data: unreadCounts } = useQuery(
   computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
 );
 const unreadTotal = computed(() => totalUnreadCount(unreadCounts.value));
+
+watch(
+  hasBoardContext,
+  (hasContext) => {
+    if (hasContext && searchKind.value === "topic") searchKind.value = "within";
+    if (!hasContext && searchKind.value === "within") searchKind.value = "topic";
+  },
+  { immediate: true },
+);
 
 function goLogin(event?: Event) {
   event?.preventDefault();
@@ -34,7 +66,9 @@ function submitSearch() {
   if (!value) return;
   if (searchKind.value === "board") void router.push(searchBoardsPath(value));
   else if (searchKind.value === "user") void router.push(userNamePath(value));
-  else void router.push(searchTopicsPath(value));
+  else if (searchKind.value === "within" && contextBoardId.value != null) {
+    void router.push(searchTopicsPath(value, contextBoardId.value));
+  } else void router.push(searchTopicsPath(value));
 }
 </script>
 
@@ -57,7 +91,8 @@ function submitSearch() {
           <form class="header-search" role="search" @submit.prevent="submitSearch">
             <label class="sr-only" for="header-search-kind">搜索类型</label>
             <select id="header-search-kind" v-model="searchKind">
-              <option value="topic">主题</option>
+              <option v-if="hasBoardContext" value="within">版内</option>
+              <option value="topic">{{ hasBoardContext ? "全站" : "主题" }}</option>
               <option value="user">用户</option>
               <option value="board">版面</option>
             </select>

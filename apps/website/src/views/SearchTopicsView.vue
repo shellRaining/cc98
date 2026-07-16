@@ -1,89 +1,95 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { useQuery } from "@tanstack/vue-query";
+import { computed } from "vue";
+import { useTitle, useWindowScroll } from "@vueuse/core";
+import { useInfiniteQuery, useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
-import { searchTopicsQuery } from "../api/queries";
+import {
+  boardsByIdsQuery,
+  globalTagsQuery,
+  searchTopicsInfiniteQuery,
+  usersByIdsQuery,
+} from "../api/queries";
+import NewTopicClassicItem from "../components/discovery/NewTopicClassicItem.vue";
 import PageState from "../components/PageState.vue";
-import UiButton from "../components/ui/Button.vue";
-import Pagination from "../components/Pagination.vue";
-import TopicList from "../components/TopicList.vue";
 import { normalizeApiError } from "../lib/api-error";
-import { normalizeSearchBoardId, normalizeSearchKeyword, searchTopicsPath } from "../lib/discovery";
+import {
+  dedupeTopicsById,
+  normalizeSearchBoardId,
+  normalizeSearchKeyword,
+  uniqueTopicBoardIds,
+  uniqueTopicUserIds,
+} from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
-import { pageToFrom, parsePageNumber } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
 
 const PAGE_SIZE = 20;
+
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
+const { y } = useWindowScroll({ behavior: "smooth" });
 
-const draftKeyword = ref("");
-const draftBoardId = ref("");
+useTitle("搜索结果 - CC98 论坛");
 
 const keyword = computed(() => normalizeSearchKeyword(String(route.query.keyword ?? "")));
 const boardId = computed(() => normalizeSearchBoardId(String(route.query.boardId ?? "")));
-const currentPage = computed(() => parsePageNumber(String(route.query.page ?? "")));
-const from = computed(() => pageToFrom(currentPage.value, PAGE_SIZE));
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const canSearch = computed(() => user.isLoggedIn && keyword.value.length > 0);
-
-watch(
-  () => [route.query.keyword, route.query.boardId] as const,
-  () => {
-    draftKeyword.value = String(route.query.keyword ?? "");
-    draftBoardId.value = boardId.value != null ? String(boardId.value) : "";
-  },
-  { immediate: true },
-);
-
 const options = computed(() =>
-  searchTopicsQuery(
+  searchTopicsInfiniteQuery(
     keyword.value,
     boardId.value,
     authScope.value,
-    from.value,
     PAGE_SIZE,
     canSearch.value,
   ),
 );
+const query = useInfiniteQuery(options);
+const topics = computed(() =>
+  dedupeTopicsById(query.data.value?.pages.flatMap((page) => page) ?? []),
+);
 
-const { data: topics, error, isPending, refetch } = useQuery(options);
+const boardIds = computed(() => uniqueTopicBoardIds(topics.value));
+const authorIds = computed(() => uniqueTopicUserIds(topics.value));
+const boardsOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
+const authorsOptions = computed(() => usersByIdsQuery(authorIds.value, authorIds.value.length > 0));
+const { data: boards } = useQuery(boardsOptions);
+const { data: authors } = useQuery(authorsOptions);
+const { data: tags } = useQuery(globalTagsQuery);
+const boardMap = computed(() => new Map((boards.value ?? []).map((board) => [board.id, board])));
+const authorMap = computed(
+  () => new Map((authors.value ?? []).map((author) => [author.id, author])),
+);
+const tagMap = computed(() => new Map((tags.value ?? []).map((tag) => [tag.id, tag.name])));
 
 const pageError = computed(() => {
   if (!user.isLoggedIn) return normalizeApiError({ status: 401 });
-  if (error.value) {
-    return normalizeApiError(error.value, {
-      forbiddenMessage: "搜索过于频繁或无权搜索，请稍后再试",
-    });
-  }
-  return null;
+  return query.error.value
+    ? normalizeApiError(query.error.value, {
+        forbiddenMessage: "搜索过于频繁或无权搜索，请稍后再试",
+      })
+    : null;
 });
-
 const stateKind = computed(() => {
-  if (!user.isLoggedIn) return "unauthorized" as const;
+  if (pageError.value?.kind === "unauthorized") return "unauthorized" as const;
   if (!keyword.value) return "empty" as const;
-  if (isPending.value) return "loading" as const;
+  if (query.isPending.value) return "loading" as const;
   if (pageError.value?.kind === "forbidden") return "forbidden" as const;
   if (pageError.value?.kind === "not-found") return "not-found" as const;
   if (pageError.value) return "error" as const;
-  if ((topics.value?.length ?? 0) === 0) return "empty" as const;
+  if (topics.value.length === 0) return "empty" as const;
   return null;
 });
 
-const emptyMessage = computed(() => {
-  if (!keyword.value) return "输入关键词后搜索主题。";
-  return "没有找到相关主题。";
-});
-
-function submitSearch() {
-  const nextKeyword = normalizeSearchKeyword(draftKeyword.value);
-  const nextBoardId = normalizeSearchBoardId(draftBoardId.value);
-  void router.push(searchTopicsPath(nextKeyword, nextBoardId, 1));
+function topicTags(topic: { tag1?: number | null; tag2?: number | null }) {
+  return [topic.tag1, topic.tag2].flatMap((id) =>
+    id != null && id > 0 ? [tagMap.value.get(id) || String(id)] : [],
+  );
 }
 
-function toPage(page: number) {
-  return searchTopicsPath(keyword.value, boardId.value, page);
+function loadMore() {
+  if (!query.hasNextPage.value || query.isFetchingNextPage.value) return;
+  void query.fetchNextPage();
 }
 
 function goLogin() {
@@ -93,62 +99,56 @@ function goLogin() {
 </script>
 
 <template>
-  <section class="space-y-4">
-    <header class="space-y-3">
-      <h1 class="text-2xl font-bold">搜索主题</h1>
-      <form class="flex flex-wrap gap-2 items-end" @submit.prevent="submitSearch">
-        <label class="flex flex-col gap-1 text-sm">
-          <span class="text-cc98-text-muted">关键词</span>
-          <input
-            v-model="draftKeyword"
-            type="search"
-            name="keyword"
-            class="cc98-input px-3 py-1.5 min-w-56"
-            placeholder="输入关键词"
-            autocomplete="off"
-          />
-        </label>
-        <label class="flex flex-col gap-1 text-sm">
-          <span class="text-cc98-text-muted">版面 ID（可选）</span>
-          <input
-            v-model="draftBoardId"
-            type="text"
-            name="boardId"
-            inputmode="numeric"
-            class="cc98-input px-3 py-1.5 w-32"
-            placeholder="全站"
-            autocomplete="off"
-          />
-        </label>
-        <UiButton variant="text" type="submit" size="sm" class="px-2 py-1.5">搜索</UiButton>
-        <RouterLink to="/search/boards" class="cc98-link text-sm px-2 py-1.5">搜版面</RouterLink>
-      </form>
-    </header>
+  <section class="search-page">
+    <nav class="new-topics-breadcrumb" aria-label="当前位置">
+      <RouterLink to="/">首页</RouterLink>
+      <span>›</span>
+      <span>搜索主题</span>
+    </nav>
+
+    <p v-if="keyword" class="search-summary">
+      {{ boardId ? `版内搜索“${keyword}”` : `全站搜索“${keyword}”` }}
+    </p>
 
     <PageState
-      v-if="stateKind"
+      v-if="stateKind && stateKind !== 'empty'"
       :kind="stateKind"
-      :title="stateKind === 'empty' && !keyword ? '开始搜索' : undefined"
-      :message="stateKind === 'empty' ? emptyMessage : pageError?.message"
+      :message="pageError?.message"
       :show-retry="stateKind === 'error'"
       @login="goLogin"
-      @retry="refetch()"
+      @retry="query.refetch()"
     />
 
+    <div v-else-if="stateKind === 'empty'" class="search-empty">
+      <p>
+        {{ keyword ? "抱歉呢前辈，没有找到你想要的帖子哦~" : "请在顶部搜索框输入关键词。" }}
+      </p>
+    </div>
+
     <template v-else>
-      <Pagination
-        :current-page="currentPage"
-        :has-next-page="(topics?.length ?? 0) >= PAGE_SIZE"
-        :to-page="toPage"
-      />
-      <div class="cc98-card px-4">
-        <TopicList :topics="topics ?? []" />
+      <div class="search-topic-list">
+        <NewTopicClassicItem
+          v-for="topic in topics"
+          :key="topic.id"
+          :topic="topic"
+          :board="topic.boardId ? boardMap.get(topic.boardId) : undefined"
+          :author="topic.userId ? authorMap.get(topic.userId) : undefined"
+          :tag-names="topicTags(topic)"
+        />
       </div>
-      <Pagination
-        :current-page="currentPage"
-        :has-next-page="(topics?.length ?? 0) >= PAGE_SIZE"
-        :to-page="toPage"
-      />
+      <button
+        v-if="query.hasNextPage.value"
+        type="button"
+        class="search-load-more"
+        :disabled="query.isFetchingNextPage.value"
+        @click="loadMore"
+      >
+        <span>{{ query.isFetchingNextPage.value ? "正在加载" : "点击获取更多搜索结果~" }}</span>
+        <span>······</span>
+      </button>
+      <p v-else class="search-end">没有更多帖子啦~</p>
     </template>
+
+    <button v-if="y > 234" type="button" class="new-topics-to-top" @click="y = 0">回到顶部</button>
   </section>
 </template>

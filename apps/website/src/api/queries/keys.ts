@@ -57,13 +57,8 @@ export const queryKeys = {
   ) => ["me", "focus", mode, boardId, size, authScope] as const,
   recommendedTopics: (size: number, refreshToken: number, authScope: AuthScope) =>
     ["topic", "recommended", size, refreshToken, authScope] as const,
-  searchTopics: (
-    keyword: string,
-    boardId: number | null,
-    from: number,
-    size: number,
-    authScope: AuthScope,
-  ) => ["topic", "search", keyword, boardId, from, size, authScope] as const,
+  searchTopics: (keyword: string, boardId: number | null, size: number, authScope: AuthScope) =>
+    ["topic", "search", keyword, boardId, size, authScope] as const,
   searchBoards: (keyword: string) => ["board", "search", keyword] as const,
   userById: (id: number, authScope: AuthScope) => ["user", "id", id, authScope] as const,
   userByName: (name: string, authScope: AuthScope) => ["user", "name", name, authScope] as const,
