@@ -64,6 +64,30 @@ const routes: RouteRecordRaw[] = [
     component: () => import("../views/NewTopicsView.vue"),
   },
   {
+    path: "/focus",
+    name: "focus",
+    component: () => import("../views/FocusView.vue"),
+    meta: { requiresAuth: true, focusMode: "board" },
+  },
+  {
+    path: "/focus/board",
+    name: "focus-board",
+    component: () => import("../views/FocusView.vue"),
+    meta: { requiresAuth: true, focusMode: "board" },
+  },
+  {
+    path: "/focus/user",
+    name: "focus-user",
+    component: () => import("../views/FocusView.vue"),
+    meta: { requiresAuth: true, focusMode: "user" },
+  },
+  {
+    path: "/focus/favorite",
+    name: "focus-favorite",
+    component: () => import("../views/FocusView.vue"),
+    meta: { requiresAuth: true, focusMode: "favorite" },
+  },
+  {
     path: "/recommendedtopics",
     name: "recommended-topics",
     component: () => import("../views/RecommendedTopicsView.vue"),

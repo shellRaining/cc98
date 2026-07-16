@@ -6,7 +6,8 @@ import {
   pagedTopicResultDataSchema,
   topicSchema,
 } from "@cc98/api";
-import { queryOptions } from "@tanstack/vue-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/vue-query";
+import type { FocusMode } from "../../lib/discovery";
 import { typedGet } from "../../lib/http";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
@@ -18,6 +19,41 @@ export const currentUserQuery = queryOptions({
   },
   staleTime: 5 * 60 * 1000,
 });
+
+export const focusTopicsInfiniteQuery = (
+  mode: FocusMode,
+  boardId: number,
+  authScope: AuthScope,
+  size = 20,
+  enabled = true,
+) =>
+  infiniteQueryOptions({
+    queryKey: queryKeys.focusTopics(mode, boardId, size, authScope),
+    queryFn: async ({ pageParam }) => {
+      const path =
+        mode === "user"
+          ? "/me/followee/topic"
+          : mode === "favorite"
+            ? "/topic/me/favorite"
+            : boardId > 0
+              ? `/board/${boardId}/topic`
+              : "/me/custom-board/topic";
+      const query = {
+        from: pageParam,
+        size,
+        ...(mode === "user" ? { order: 0 } : {}),
+        ...(mode === "favorite" ? { order: 1 } : {}),
+      };
+      const data = await typedGet<unknown[]>(path, { query });
+      return topicSchema.array().parse(data);
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _pages, lastPageParam) => {
+      if (lastPage.length < size || lastPageParam + size >= 200) return undefined;
+      return lastPageParam + size;
+    },
+    enabled: enabled && authScope !== "anonymous",
+  });
 
 export const meRecentTopicsQuery = (
   authScope: AuthScope,

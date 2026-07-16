@@ -1,6 +1,7 @@
 /** 热门周期，对应 `/topic/hot-{period}`。 */
 export type HotPeriod = "weekly" | "monthly" | "history";
 export type NewTopicViewMode = "classic" | "card" | "media";
+export type FocusMode = "board" | "user" | "favorite";
 
 export const HOT_PERIOD_LABELS: Record<HotPeriod, string> = {
   weekly: "7日热门",
@@ -27,6 +28,23 @@ export function newTopicViewPreference(mode: NewTopicViewMode) {
 
 export function newTopicsPath(mode: NewTopicViewMode) {
   return mode === "classic" ? "/newtopics" : `/newtopics?view=${mode}`;
+}
+
+export function resolveFocusMode(value: unknown): FocusMode {
+  if (value === "user" || value === "favorite") return value;
+  return "board";
+}
+
+export function resolveFocusBoardId(value: unknown) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const boardId = Number(raw);
+  return Number.isInteger(boardId) && boardId > 0 ? boardId : 0;
+}
+
+export function focusPath(mode: FocusMode, boardId = 0) {
+  if (mode === "user") return "/focus/user";
+  if (mode === "favorite") return "/focus/favorite";
+  return boardId > 0 ? `/focus/board?boardId=${boardId}` : "/focus/board";
 }
 
 export function uniqueTopicBoardIds(topics: Array<{ boardId?: number }>) {

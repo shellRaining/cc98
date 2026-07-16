@@ -51,7 +51,7 @@ function submitSearch() {
           <nav class="site-header__nav" aria-label="主导航">
             <RouterLink to="/boardlist">版面列表</RouterLink>
             <RouterLink to="/newtopics">新帖</RouterLink>
-            <RouterLink to="/usercenter/boards">关注</RouterLink>
+            <RouterLink to="/focus">关注</RouterLink>
             <RouterLink to="/recommendedtopics">精选</RouterLink>
           </nav>
           <form class="header-search" role="search" @submit.prevent="submitSearch">

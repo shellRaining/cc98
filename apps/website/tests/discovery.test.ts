@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vite-plus/test";
 import {
   dedupeTopicsById,
+  focusPath,
   formatDiscoveryTime,
   hotTopicsPath,
   isHotPeriod,
@@ -8,6 +9,8 @@ import {
   normalizeSearchKeyword,
   newTopicsPath,
   newTopicViewPreference,
+  resolveFocusBoardId,
+  resolveFocusMode,
   resolveNewTopicViewMode,
   searchBoardsPath,
   searchTopicsPath,
@@ -61,6 +64,17 @@ describe("discovery helpers", () => {
     expect(newTopicsPath("media")).toBe("/newtopics?view=media");
   });
 
+  test("解析关注页状态并生成可刷新的路径", () => {
+    expect(resolveFocusMode("user")).toBe("user");
+    expect(resolveFocusMode("unknown")).toBe("board");
+    expect(resolveFocusBoardId("81")).toBe(81);
+    expect(resolveFocusBoardId(["182", "81"])).toBe(182);
+    expect(resolveFocusBoardId("0")).toBe(0);
+    expect(focusPath("board")).toBe("/focus/board");
+    expect(focusPath("board", 81)).toBe("/focus/board?boardId=81");
+    expect(focusPath("favorite")).toBe("/focus/favorite");
+  });
+
   test("提取新帖关联实体并格式化相对时间", () => {
     const topics = [
       { boardId: 1, userId: 2 },
@@ -88,6 +102,12 @@ describe("discovery query keys", () => {
     );
     expect(queryKeys.hotTopics("weekly")).not.toEqual(queryKeys.hotTopics("monthly"));
     expect(queryKeys.newTopics("all", 20, 1)).not.toEqual(queryKeys.newTopics("media", 20, 1));
+    expect(queryKeys.focusTopics("board", 0, 20, 1)).not.toEqual(
+      queryKeys.focusTopics("board", 81, 20, 1),
+    );
+    expect(queryKeys.focusTopics("board", 0, 20, 1)).not.toEqual(
+      queryKeys.focusTopics("user", 0, 20, 1),
+    );
     expect(queryKeys.userById(1, "anonymous")).not.toEqual(queryKeys.userById(1, 9));
   });
 });
