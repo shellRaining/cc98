@@ -59,3 +59,16 @@ export const usersByIdsQuery = (ids: number[], enabled = true) => {
     staleTime: 5 * 60 * 1000,
   });
 };
+
+export const fullUsersByIdsQuery = (ids: number[], authScope: AuthScope, enabled = true) => {
+  const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
+  return queryOptions({
+    queryKey: queryKeys.fullUsersByIds(normalizedIds, authScope),
+    queryFn: async () => {
+      const data = await typedGet<unknown[]>("/user", { query: { id: normalizedIds } });
+      return userSchema.array().parse(data);
+    },
+    enabled: enabled && normalizedIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+  });
+};

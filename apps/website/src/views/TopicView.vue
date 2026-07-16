@@ -1,20 +1,32 @@
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, reactive, ref, watch } from "vue";
+import { useTitle } from "@vueuse/core";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import type { CreatePostRequest, Post } from "@cc98/api";
-import dayjs from "dayjs";
 import { useCreatePostMutation, useUploadFilesMutation } from "../api/mutations";
-import { boardQuery, topicPostsQuery, topicQuery } from "../api/queries";
+import {
+  boardQuery,
+  boardTagsQuery,
+  fullUsersByIdsQuery,
+  homepageAdvertisementsQuery,
+  topicFilteredPostsQuery,
+  topicHotPostsQuery,
+  topicPostsQuery,
+  topicQuery,
+} from "../api/queries";
+import HomeAdvertisement from "../components/home/HomeAdvertisement.vue";
 import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
-import UiButton from "../components/ui/Button.vue";
 import Pagination from "../components/Pagination.vue";
 import PostItem from "../components/PostItem.vue";
 import TopicFavoriteAction from "../components/TopicFavoriteAction.vue";
 import TopicVotePanel from "../components/TopicVotePanel.vue";
+import TopicHeader from "../components/topic/TopicHeader.vue";
+import UiButton from "../components/ui/Button.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../lib/drafts";
+import { visibleHomepageColumns } from "../lib/home.ts";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import {
   clampPage,
@@ -25,6 +37,12 @@ import {
   parsePositiveInt,
   topicTotalPages,
 } from "../lib/route-params";
+import {
+  filteredTopicTotalPages,
+  resolveTopicPostFilter,
+  topicViewQuery,
+  uniquePostUserIds,
+} from "../lib/topic-view.ts";
 import { useUserStore } from "../stores/user";
 
 const props = defineProps<{
@@ -32,15 +50,17 @@ const props = defineProps<{
   page?: string;
 }>();
 
+const PAGE_SIZE = 10;
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
-
-const PAGE_SIZE = 10;
 const numericTopicId = computed(() => parsePositiveInt(props.topicId));
 const requestedPage = computed(() => parsePageNumber(props.page));
+const preliminaryPage = computed(() => Math.max(1, requestedPage.value));
 const invalidId = computed(() => numericTopicId.value == null);
 const authScope = computed(() => user.user?.id ?? "anonymous");
+const filter = computed(() => resolveTopicPostFilter(route.query));
+const canLoad = computed(() => !invalidId.value && user.isLoggedIn);
 
 interface ReplyDraft {
   content: string;
@@ -58,6 +78,14 @@ const initialReplyDraft: ReplyDraft = {
 const draftKey = createDraftKey("reply", numericTopicId.value ?? 0);
 const replyDraft = reactive(readDraft(draftKey, initialReplyDraft));
 const persistDraft = ref(true);
+const createPost = useCreatePostMutation();
+const upload = useUploadFilesMutation();
+const replyError = ref("");
+const pendingPostId = ref<number | null>(null);
+const imagesCollapsed = ref(false);
+const shareStatus = ref("");
+let shareStatusTimer: ReturnType<typeof setTimeout> | undefined;
+
 watch(
   replyDraft,
   (value) => {
@@ -65,12 +93,6 @@ watch(
   },
   { deep: true },
 );
-const createPost = useCreatePostMutation();
-const upload = useUploadFilesMutation();
-const replyError = ref("");
-const pendingPostId = ref<number | null>(null);
-
-const canLoad = computed(() => !invalidId.value && user.isLoggedIn);
 
 const topicOptions = computed(() =>
   topicQuery(numericTopicId.value ?? 0, authScope.value, canLoad.value),
@@ -82,13 +104,96 @@ const {
   refetch: refetchTopic,
 } = useQuery(topicOptions);
 
-const totalPages = computed(() => topicTotalPages(topic.value?.replyCount, PAGE_SIZE));
-const currentPage = computed(() => clampPage(requestedPage.value, totalPages.value));
-const from = computed(() => pageToFrom(currentPage.value, PAGE_SIZE));
+useTitle(
+  computed(() => (topic.value?.title ? `${topic.value.title} - CC98 论坛` : "主题 - CC98 论坛")),
+);
+
+const boardId = computed(() => topic.value?.boardId ?? null);
+const boardOptions = computed(() =>
+  boardQuery(boardId.value ?? 0, authScope.value, canLoad.value && boardId.value != null),
+);
+const {
+  data: board,
+  error: boardError,
+  isPending: boardPending,
+  refetch: refetchBoard,
+} = useQuery(boardOptions);
+
+const tagsOptions = computed(() =>
+  boardTagsQuery(boardId.value ?? 0, canLoad.value && boardId.value != null),
+);
+const { data: tagGroups } = useQuery(tagsOptions);
+const tagNamesById = computed(() => {
+  const result = new Map<number, string>();
+  for (const group of tagGroups.value ?? []) {
+    for (const tag of group.tags ?? []) {
+      if (tag.id != null && tag.name) result.set(tag.id, tag.name);
+    }
+  }
+  return result;
+});
+const topicTagNames = computed(() => {
+  const result: string[] = [];
+  for (const id of [topic.value?.tag1, topic.value?.tag2]) {
+    if (id != null && id > 0) result.push(tagNamesById.value.get(id) ?? String(id));
+  }
+  return result;
+});
+
+const from = computed(() => pageToFrom(preliminaryPage.value, PAGE_SIZE));
+const postsOptions = computed(() =>
+  topicPostsQuery(
+    numericTopicId.value ?? 0,
+    authScope.value,
+    from.value,
+    PAGE_SIZE,
+    canLoad.value && topic.value != null && filter.value.mode === "all",
+  ),
+);
+const regularPostsQuery = useQuery(postsOptions);
+
+const filteredMode = computed(() => (filter.value.mode === "all" ? "user" : filter.value.mode));
+const filteredPostsOptions = computed(() =>
+  topicFilteredPostsQuery(
+    numericTopicId.value ?? 0,
+    filteredMode.value,
+    filter.value.targetId ?? 0,
+    authScope.value,
+    from.value,
+    PAGE_SIZE,
+    canLoad.value && topic.value != null && filter.value.mode !== "all",
+  ),
+);
+const filteredPostsQuery = useQuery(filteredPostsOptions);
+const filteredCountOptions = computed(() =>
+  topicFilteredPostsQuery(
+    numericTopicId.value ?? 0,
+    filteredMode.value,
+    filter.value.targetId ?? 0,
+    authScope.value,
+    0,
+    1,
+    canLoad.value && topic.value != null && filter.value.mode !== "all",
+  ),
+);
+const filteredCountQuery = useQuery(filteredCountOptions);
+
+const displayedPosts = computed(() =>
+  filter.value.mode === "all"
+    ? (regularPostsQuery.data.value ?? [])
+    : (filteredPostsQuery.data.value ?? []),
+);
+const filteredReplyCount = computed(() => filteredCountQuery.data.value?.[0]?.count);
+const totalPages = computed(() =>
+  filter.value.mode === "all"
+    ? topicTotalPages(topic.value?.replyCount, PAGE_SIZE)
+    : filteredTopicTotalPages(filteredReplyCount.value, PAGE_SIZE),
+);
+const currentPage = computed(() => clampPage(preliminaryPage.value, totalPages.value));
 
 watch(
-  [requestedPage, totalPages, numericTopicId],
-  ([page, total, id]) => {
+  [requestedPage, totalPages, numericTopicId, filter],
+  ([page, total, id, currentFilter]) => {
     if (id == null || total == null) return;
     const clamped = clampPage(page, total);
     if (page !== clamped) {
@@ -98,6 +203,7 @@ watch(
           topicId: String(id),
           ...(clamped > 1 ? { page: String(clamped) } : {}),
         },
+        query: topicViewQuery(currentFilter.mode, currentFilter.targetId),
         hash: route.hash,
       });
     }
@@ -105,43 +211,56 @@ watch(
   { flush: "post" },
 );
 
-const boardId = computed(() => topic.value?.boardId ?? null);
-const boardOptions = computed(() =>
-  boardQuery(boardId.value ?? 0, authScope.value, canLoad.value && boardId.value != null),
-);
-const { data: board } = useQuery(boardOptions);
-
-const postsOptions = computed(() =>
-  topicPostsQuery(
+const hotPostsOptions = computed(() =>
+  topicHotPostsQuery(
     numericTopicId.value ?? 0,
     authScope.value,
-    from.value,
-    PAGE_SIZE,
-    canLoad.value && topic.value != null,
+    canLoad.value &&
+      topic.value != null &&
+      filter.value.mode === "all" &&
+      currentPage.value === 1 &&
+      topic.value.disableHot !== true,
   ),
 );
-const {
-  data: posts,
-  error: postsError,
-  isPending: postsPending,
-  refetch: refetchPosts,
-} = useQuery(postsOptions);
+const hotPostsQuery = useQuery(hotPostsOptions);
+const hotPosts = computed(() => {
+  if (filter.value.mode !== "all" || currentPage.value !== 1 || topic.value?.disableHot === true) {
+    return [];
+  }
+  return hotPostsQuery.data.value ?? [];
+});
+
+const allVisiblePosts = computed(() => [...displayedPosts.value, ...hotPosts.value]);
+const postUserIds = computed(() => uniquePostUserIds(allVisiblePosts.value));
+const usersOptions = computed(() =>
+  fullUsersByIdsQuery(
+    postUserIds.value,
+    authScope.value,
+    canLoad.value && postUserIds.value.length > 0,
+  ),
+);
+const { data: postUsers } = useQuery(usersOptions);
+const postUserMap = computed(
+  () => new Map((postUsers.value ?? []).map((postUser) => [postUser.id, postUser])),
+);
+
+const advertisementsQuery = useQuery(homepageAdvertisementsQuery);
+const advertisements = computed(() => visibleHomepageColumns(advertisementsQuery.data.value ?? []));
 
 watch(
-  [() => route.hash, posts],
+  [() => route.hash, displayedPosts, hotPosts],
   async ([hash]) => {
     const target = normalizeFloorHash(hash);
     if (!target) return;
     await nextTick();
-    const el = document.getElementById(target);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "center" });
   },
   { flush: "post" },
 );
 
-watch(posts, (items) => {
+watch(displayedPosts, (items) => {
   if (pendingPostId.value == null) return;
-  const created = items?.find((post) => post.id === pendingPostId.value);
+  const created = items.find((post) => post.id === pendingPostId.value);
   if (created?.floor == null) return;
   pendingPostId.value = null;
   void router.replace({
@@ -154,43 +273,48 @@ watch(posts, (items) => {
   });
 });
 
+const activePostsError = computed(() =>
+  filter.value.mode === "all"
+    ? regularPostsQuery.error.value
+    : (filteredPostsQuery.error.value ?? filteredCountQuery.error.value),
+);
+const activePostsPending = computed(() =>
+  filter.value.mode === "all"
+    ? regularPostsQuery.isPending.value
+    : filteredPostsQuery.isPending.value || filteredCountQuery.isPending.value,
+);
 const pageError = computed(() => {
   if (invalidId.value) return normalizeApiError({ status: 404 });
   if (!user.isLoggedIn) return normalizeApiError({ status: 401 });
   if (topicError.value) return normalizeApiError(topicError.value);
-  if (postsError.value) return normalizeApiError(postsError.value);
+  if (boardError.value) return normalizeApiError(boardError.value);
+  if (activePostsError.value) return normalizeApiError(activePostsError.value);
   return null;
 });
-
 const stateKind = computed(() => {
   if (invalidId.value) return "not-found" as const;
   if (!user.isLoggedIn) return "unauthorized" as const;
   if (topicPending.value) return "loading" as const;
+  if (boardId.value != null && boardPending.value) return "loading" as const;
   if (pageError.value?.kind === "unauthorized") return "unauthorized" as const;
   if (pageError.value?.kind === "forbidden") return "forbidden" as const;
   if (pageError.value?.kind === "not-found") return "not-found" as const;
   if (pageError.value) return "error" as const;
-  if (postsPending.value) return "loading" as const;
-  if ((posts.value?.length ?? 0) === 0) return "empty" as const;
+  if (activePostsPending.value) return "loading" as const;
+  if (displayedPosts.value.length === 0) return "empty" as const;
   return null;
 });
 
 const topicTitle = computed(() => topic.value?.title?.trim() || `主题 ${props.topicId}`);
-const author = computed(() => {
-  if (topic.value?.isAnonymous) return "匿名用户";
-  return topic.value?.userName?.trim() || "已注销用户";
-});
-const timeText = computed(() => formatTime(topic.value?.time));
 const replyTarget = computed(() => {
   if (replyDraft.parentId == null) return null;
-  return posts.value?.find((post) => post.id === replyDraft.parentId) ?? null;
+  return allVisiblePosts.value.find((post) => post.id === replyDraft.parentId) ?? null;
 });
-
-function formatTime(value: string | undefined): string {
-  if (!value) return "—";
-  const parsed = dayjs(value);
-  return parsed.isValid() ? parsed.format("YYYY-MM-DD HH:mm") : value;
-}
+const filterDescription = computed(() => {
+  if (filter.value.mode === "trace") return "正在追踪与该楼层相关的回复";
+  if (filter.value.mode === "user") return "当前只显示此人的回复";
+  return "";
+});
 
 function toPage(page: number) {
   return {
@@ -199,6 +323,7 @@ function toPage(page: number) {
       topicId: props.topicId,
       ...(page > 1 ? { page: String(page) } : {}),
     },
+    query: topicViewQuery(filter.value.mode, filter.value.targetId),
   };
 }
 
@@ -209,7 +334,13 @@ function goLogin() {
 
 function retry() {
   void refetchTopic();
-  void refetchPosts();
+  void refetchBoard();
+  if (filter.value.mode === "all") {
+    void regularPostsQuery.refetch();
+  } else {
+    void filteredPostsQuery.refetch();
+    void filteredCountQuery.refetch();
+  }
 }
 
 function quotePost(post: Post) {
@@ -218,6 +349,63 @@ function quotePost(post: Post) {
   void nextTick(() =>
     document.getElementById("reply-editor")?.scrollIntoView({ behavior: "smooth" }),
   );
+}
+
+function showOnlyUser(post: Post) {
+  if (post.isAnonymous || post.userId == null) return;
+  void router.push({
+    name: "topic",
+    params: { topicId: props.topicId },
+    query: topicViewQuery("user", post.userId),
+  });
+}
+
+function tracePost(post: Post) {
+  if (post.id == null) return;
+  void router.push({
+    name: "topic",
+    params: { topicId: props.topicId },
+    query: topicViewQuery("trace", post.id),
+  });
+}
+
+function showAllPosts() {
+  void router.push({ name: "topic", params: { topicId: props.topicId } });
+}
+
+function toggleImages() {
+  imagesCollapsed.value = !imagesCollapsed.value;
+}
+
+async function writeClipboard(text: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("复制失败");
+}
+
+async function shareTopic() {
+  if (!topic.value || !board.value) return;
+  const text = `【${board.value.name || "CC98"}】${topicTitle.value} https://www.cc98.org/topic/${numericTopicId.value} 复制本链接到浏览器或者打开【CC98】微信小程序查看~`;
+  try {
+    await writeClipboard(text);
+    shareStatus.value = "已复制";
+  } catch {
+    shareStatus.value = "复制失败";
+  }
+  if (shareStatusTimer) clearTimeout(shareStatusTimer);
+  shareStatusTimer = setTimeout(() => {
+    shareStatus.value = "";
+  }, 2500);
 }
 
 async function uploadImages(files: File[]) {
@@ -272,28 +460,40 @@ async function submitReply() {
       },
     });
     await nextTick();
-    await refetchPosts();
+    await regularPostsQuery.refetch();
   } catch (error) {
     replyError.value = normalizeApiError(error, {
       forbiddenMessage: "你没有回复该主题的权限",
     }).message;
   }
 }
+
+onBeforeUnmount(() => {
+  if (shareStatusTimer) clearTimeout(shareStatusTimer);
+});
 </script>
 
 <template>
-  <section class="space-y-4">
-    <nav class="text-sm text-cc98-text-muted flex flex-wrap gap-1">
-      <RouterLink to="/boardlist" class="cc98-link">全部版面</RouterLink>
-      <template v-if="board?.id != null">
-        <span>/</span>
-        <RouterLink :to="`/list/${board.id}`" class="cc98-link">
-          {{ board.name ?? `版面 ${board.id}` }}
-        </RouterLink>
-      </template>
-      <span>/</span>
-      <span>{{ topicTitle }}</span>
-    </nav>
+  <section class="topic-page" :class="{ 'images-collapsed': imagesCollapsed }">
+    <div class="topic-navigation-row">
+      <nav class="topic-breadcrumb" aria-label="当前位置">
+        <RouterLink to="/">首页</RouterLink>
+        <span>›</span>
+        <RouterLink to="/boardlist">版面列表</RouterLink>
+        <template v-if="board?.id != null">
+          <span>›</span>
+          <RouterLink :to="`/list/${board.id}`">{{ board.name ?? `版面 ${board.id}` }}</RouterLink>
+        </template>
+        <span>›</span>
+        <RouterLink :to="{ name: 'topic', params: { topicId } }">{{ topicTitle }}</RouterLink>
+      </nav>
+      <Pagination
+        v-if="!stateKind"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :to-page="toPage"
+      />
+    </div>
 
     <PageState
       v-if="stateKind"
@@ -304,51 +504,92 @@ async function submitReply() {
       @retry="retry"
     />
 
-    <template v-else-if="topic">
-      <header class="space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <h1 class="text-2xl font-bold">{{ topicTitle }}</h1>
+    <template v-else-if="topic && board">
+      <p v-if="(topic.state ?? 0) > 0" class="topic-locked-notice">该帖已被锁定</p>
+
+      <TopicHeader
+        :topic="topic"
+        :board="board"
+        :tag-names="topicTagNames"
+        :images-collapsed="imagesCollapsed"
+        :share-status="shareStatus"
+        @toggle-images="toggleImages"
+        @share="shareTopic"
+      >
+        <template #favorite>
           <TopicFavoriteAction :topic-id="numericTopicId ?? 0" />
-        </div>
-        <p class="text-sm text-cc98-text-muted">
-          {{ author }} · {{ timeText }} · 回复 {{ topic.replyCount ?? 0 }} · 浏览
-          {{ topic.hitCount ?? 0 }}
-          <span v-if="(topic.state ?? 0) > 0"> · 已锁定/特殊状态</span>
-        </p>
-      </header>
+        </template>
+        <template #advertisement>
+          <HomeAdvertisement v-if="advertisements.length" :items="advertisements" />
+        </template>
+      </TopicHeader>
 
-      <TopicVotePanel
-        v-if="topic.isVote"
-        :topic-id="numericTopicId ?? 0"
-        :auth-scope="authScope"
-        :enabled="user.isLoggedIn"
-      />
+      <div v-if="filter.mode !== 'all'" class="topic-filter-notice">
+        <span>{{ filterDescription }}</span>
+        <UiButton variant="text" type="button" size="sm" @click="showAllPosts">
+          返回全部回复
+        </UiButton>
+      </div>
 
-      <Pagination :current-page="currentPage" :total-pages="totalPages" :to-page="toPage" />
+      <ol class="topic-post-list">
+        <li v-for="(post, index) in displayedPosts" :key="post.id ?? post.floor">
+          <PostItem
+            :post="post"
+            :user="post.userId ? postUserMap.get(post.userId) : undefined"
+            @reply="quotePost"
+            @filter-user="showOnlyUser"
+            @trace="tracePost"
+          >
+            <template v-if="topic.isVote && post.floor === 1" #before-content>
+              <TopicVotePanel
+                :topic-id="numericTopicId ?? 0"
+                :auth-scope="authScope"
+                :enabled="user.isLoggedIn"
+              />
+            </template>
+          </PostItem>
 
-      <ol class="space-y-4">
-        <li v-for="post in posts" :key="post.id ?? post.floor">
-          <PostItem :post="post" @reply="quotePost" />
+          <div v-if="index === 0 && hotPosts.length" class="topic-hot-replies">
+            <PostItem
+              v-for="hotPost in hotPosts"
+              :key="`hot-${hotPost.id ?? hotPost.floor}`"
+              :post="hotPost"
+              :user="hotPost.userId ? postUserMap.get(hotPost.userId) : undefined"
+              hot
+              @reply="quotePost"
+              @filter-user="showOnlyUser"
+              @trace="tracePost"
+            />
+          </div>
         </li>
       </ol>
 
-      <Pagination :current-page="currentPage" :total-pages="totalPages" :to-page="toPage" />
+      <div class="topic-navigation-row topic-navigation-row--bottom">
+        <nav class="topic-breadcrumb" aria-label="当前位置">
+          <RouterLink to="/">首页</RouterLink>
+          <span>›</span>
+          <RouterLink to="/boardlist">版面列表</RouterLink>
+          <span>›</span>
+          <RouterLink :to="`/list/${board.id}`">{{ board.name }}</RouterLink>
+        </nav>
+        <Pagination :current-page="currentPage" :total-pages="totalPages" :to-page="toPage" />
+      </div>
 
       <form
         v-if="(topic.state ?? 0) === 0"
         id="reply-editor"
-        class="cc98-card p-4 space-y-4"
+        class="topic-reply-editor"
         @submit.prevent="submitReply"
       >
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <h2 class="text-lg font-semibold">回复主题</h2>
-          <p v-if="replyDraft.parentId != null" class="text-sm text-cc98-text-muted">
+        <div class="topic-reply-editor__heading">
+          <h2>回复主题</h2>
+          <p v-if="replyDraft.parentId != null">
             正在引用
             <span v-if="replyTarget">
               #{{ replyTarget.floor ?? "?" }} {{ replyTarget.userName ?? "匿名用户" }}
             </span>
             <span v-else>帖子 {{ replyDraft.parentId }}</span>
-            <UiButton variant="text" type="button" class="ml-2" @click="replyDraft.parentId = null">
+            <UiButton variant="text" type="button" size="sm" @click="replyDraft.parentId = null">
               取消引用
             </UiButton>
           </p>
@@ -360,8 +601,8 @@ async function submitReply() {
           :upload-attachments="uploadAttachments"
           placeholder="写下你的回复"
         />
-        <div class="flex flex-wrap gap-4 text-sm">
-          <label class="flex items-center gap-2">
+        <div class="topic-reply-editor__options">
+          <label>
             <input
               v-model="replyDraft.isAnonymous"
               type="checkbox"
@@ -369,7 +610,7 @@ async function submitReply() {
             />
             匿名回复
           </label>
-          <label class="flex items-center gap-2">
+          <label>
             <input
               v-model="replyDraft.notifyAllReplier"
               type="checkbox"
@@ -378,12 +619,12 @@ async function submitReply() {
             通知参与者
           </label>
         </div>
-        <p v-if="replyError" class="text-sm text-cc98-accent">{{ replyError }}</p>
+        <p v-if="replyError" class="topic-reply-editor__error">{{ replyError }}</p>
         <UiButton type="submit" :loading="createPost.isPending.value">
           {{ createPost.isPending.value ? "提交中…" : "提交回复" }}
         </UiButton>
       </form>
-      <p v-else class="cc98-card p-4 text-sm text-cc98-text-muted">该主题当前不可回复。</p>
+      <p v-else class="topic-locked-card">该主题当前不可回复。</p>
     </template>
   </section>
 </template>

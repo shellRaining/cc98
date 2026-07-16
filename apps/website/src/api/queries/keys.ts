@@ -26,6 +26,16 @@ export const queryKeys = {
   topic: (id: number, authScope: AuthScope) => ["topic", id, authScope] as const,
   topicPosts: (topicId: number, from: number, size: number, authScope: AuthScope) =>
     ["topic", topicId, "posts", from, size, authScope] as const,
+  topicFilteredPosts: (
+    topicId: number,
+    mode: "user" | "trace",
+    targetId: number,
+    from: number,
+    size: number,
+    authScope: AuthScope,
+  ) => ["topic", topicId, "posts", mode, targetId, from, size, authScope] as const,
+  topicHotPosts: (topicId: number, authScope: AuthScope) =>
+    ["topic", topicId, "hot-posts", authScope] as const,
   topicPostsRoot: (topicId: number) => ["topic", topicId, "posts"] as const,
   topicFavorite: (topicId: number, authScope: AuthScope) =>
     ["topic", topicId, "favorite", authScope] as const,
@@ -52,6 +62,8 @@ export const queryKeys = {
   userRecentTopics: (id: number, size: number, authScope: AuthScope) =>
     ["user", id, "recent-topics", size, authScope] as const,
   usersByIds: (ids: number[]) => ["users", "batch", ...ids] as const,
+  fullUsersByIds: (ids: number[], authScope: AuthScope) =>
+    ["users", "full-batch", authScope, ...ids] as const,
   boardsByIds: (ids: number[]) => ["boards", "batch", ...ids] as const,
   meRecentTopics: (from: number, size: number, authScope: AuthScope) =>
     ["me", "recent-topics", from, size, authScope] as const,
