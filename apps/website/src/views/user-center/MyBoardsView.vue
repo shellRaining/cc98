@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { Board } from "@cc98/api";
-import { computed, ref } from "vue";
 import { useQuery } from "@tanstack/vue-query";
-import { RouterLink } from "vue-router";
-import { useUnfollowBoardMutation } from "../../api/mutations";
+import { computed, ref, watch } from "vue";
+import { useFollowBoardMutation, useUnfollowBoardMutation } from "../../api/mutations";
 import { boardsByIdsQuery, currentUserQuery } from "../../api/queries";
-import ConfirmDialog from "../../components/ConfirmDialog.vue";
 import PageState from "../../components/PageState.vue";
 import { normalizeApiError } from "../../lib/api-error";
+import { BOARD_ICON_FALLBACK, boardIconUrl } from "../../lib/board-list";
 
 const {
   data: me,
@@ -23,33 +22,100 @@ const {
   isPending: boardsPending,
   refetch: refetchBoards,
 } = useQuery(boardOptions);
-const rows = computed<Array<Board & { id: number }>>(() => {
-  const byId = new Map(
-    (boards.value ?? []).flatMap((board) => (board.id == null ? [] : [[board.id, board] as const])),
-  );
-  return boardIds.value.map((id) => byId.get(id) ?? { id, name: "版面信息不可用" });
-});
-const unfollow = useUnfollowBoardMutation();
-const notice = ref("");
 
-async function unfollowBoard(boardId: number) {
-  try {
-    await unfollow.mutateAsync(boardId);
-    notice.value = "已取消关注版面";
-  } catch (mutationError) {
-    notice.value = normalizeApiError(mutationError).message;
+const recentlyUnfollowed = ref(new Map<number, Board & { id: number }>());
+const knownBoards = ref(new Map<number, Board & { id: number }>());
+const boardOrder = ref<number[]>([]);
+const pendingBoardId = ref(0);
+const actionMessages = ref(new Map<number, string>());
+
+watch(
+  boardIds,
+  (ids) => {
+    boardOrder.value = [...boardOrder.value, ...ids.filter((id) => !boardOrder.value.includes(id))];
+  },
+  { immediate: true },
+);
+
+watch(
+  boards,
+  (value) => {
+    if (!value) return;
+    const next = new Map(knownBoards.value);
+    for (const board of value) {
+      if (board.id != null) next.set(board.id, { ...board, id: board.id });
+    }
+    knownBoards.value = next;
+  },
+  { immediate: true },
+);
+
+const rows = computed<Array<Board & { id: number }>>(() => {
+  return boardOrder.value.flatMap((id) => {
+    const board = knownBoards.value.get(id) ?? recentlyUnfollowed.value.get(id);
+    return board ? [board] : [];
+  });
+});
+
+const unfollow = useUnfollowBoardMutation();
+const follow = useFollowBoardMutation();
+
+function isFollowing(boardId: number): boolean {
+  return boardIds.value.includes(boardId);
+}
+
+function buttonLabel(boardId: number): string {
+  if (pendingBoardId.value === boardId) return isFollowing(boardId) ? "取关中" : "关注中";
+  return actionMessages.value.get(boardId) ?? (isFollowing(boardId) ? "取消关注" : "重新关注");
+}
+
+function setActionMessage(boardId: number, message?: string) {
+  const next = new Map(actionMessages.value);
+  if (message) next.set(boardId, message);
+  else next.delete(boardId);
+  actionMessages.value = next;
+}
+
+async function toggleBoard(board: Board & { id: number }) {
+  if (pendingBoardId.value) return;
+  pendingBoardId.value = board.id;
+  setActionMessage(board.id);
+  if (isFollowing(board.id)) {
+    const next = new Map(recentlyUnfollowed.value);
+    next.set(board.id, board);
+    recentlyUnfollowed.value = next;
+    try {
+      await unfollow.mutateAsync(board.id);
+    } catch (mutationError) {
+      const rollback = new Map(recentlyUnfollowed.value);
+      rollback.delete(board.id);
+      recentlyUnfollowed.value = rollback;
+      setActionMessage(board.id, "取关失败");
+      void normalizeApiError(mutationError);
+    }
+  } else {
+    try {
+      await follow.mutateAsync(board.id);
+      const next = new Map(recentlyUnfollowed.value);
+      next.delete(board.id);
+      recentlyUnfollowed.value = next;
+    } catch (mutationError) {
+      setActionMessage(board.id, "关注失败");
+      void normalizeApiError(mutationError);
+    }
   }
+  pendingBoardId.value = 0;
+}
+
+function useFallbackIcon(event: Event) {
+  const image = event.currentTarget as HTMLImageElement;
+  if (!image.src.endsWith(BOARD_ICON_FALLBACK)) image.src = BOARD_ICON_FALLBACK;
 }
 </script>
 
 <template>
-  <div class="space-y-4">
-    <header>
-      <h1 class="text-2xl font-bold">关注版面</h1>
-      <p class="mt-1 text-sm text-cc98-text-muted">查看并管理自定义版面。</p>
-    </header>
-    <p v-if="notice" class="text-sm text-cc98-text-muted" role="status">{{ notice }}</p>
-    <PageState v-if="mePending || boardsPending" kind="loading" />
+  <div class="user-content-page user-followed-boards">
+    <PageState v-if="(mePending || boardsPending) && rows.length === 0" kind="loading" />
     <PageState
       v-else-if="meError || boardsError"
       kind="error"
@@ -60,28 +126,33 @@ async function unfollowBoard(boardId: number) {
         refetchBoards();
       "
     />
-    <PageState v-else-if="rows.length === 0" kind="empty" message="还没有关注版面。" />
-    <ul v-else class="cc98-card m-0 list-none divide-y divide-cc98-border px-4">
-      <li v-for="board in rows" :key="board.id" class="flex items-start gap-4 py-4">
-        <div class="min-w-0 flex-1">
-          <RouterLink :to="`/list/${board.id}`" class="cc98-link font-medium">
-            {{ board.name || `版面 ${board.id}` }}
+    <p v-else-if="rows.length === 0" class="user-content-empty">没有关注</p>
+    <ul v-else class="user-followed-board-list">
+      <li v-for="board in rows" :key="board.id">
+        <RouterLink :to="`/list/${board.id}`" class="user-followed-board__icon">
+          <img
+            :src="board.logoUri || boardIconUrl(board.name)"
+            :alt="board.name || `版面 ${board.id}`"
+            @error="useFallbackIcon"
+          />
+        </RouterLink>
+        <div class="user-followed-board__info">
+          <RouterLink :to="`/list/${board.id}`">
+            <h2>{{ board.name || `版面 ${board.id}` }}</h2>
           </RouterLink>
-          <p v-if="board.description" class="mt-1 text-sm text-cc98-text-muted line-clamp-2">
-            {{ board.description }}
-          </p>
-          <p class="mt-1 text-xs text-cc98-text-muted">
-            主题 {{ board.topicCount ?? 0 }} · 今日 {{ board.todayCount ?? 0 }}
+          <p>
+            版主：{{ board.boardMasters?.join(" ") || "暂无" }} 今日主题
+            {{ board.todayCount ?? 0 }} / 总主题 {{ board.topicCount ?? 0 }}
           </p>
         </div>
-        <ConfirmDialog
-          title="取消关注版面"
-          :description="`确定不再关注 ${board.name || `版面 ${board.id}`} 吗？`"
-          trigger-label="取消关注"
-          :pending="unfollow.isPending.value"
-          :disabled="unfollow.isPending.value"
-          @confirm="unfollowBoard(board.id)"
-        />
+        <button
+          type="button"
+          :class="{ 'is-unfollowed': !isFollowing(board.id) }"
+          :disabled="pendingBoardId !== 0"
+          @click="toggleBoard(board)"
+        >
+          {{ buttonLabel(board.id) }}
+        </button>
       </li>
     </ul>
   </div>
