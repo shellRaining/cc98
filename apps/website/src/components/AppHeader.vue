@@ -12,7 +12,6 @@ import {
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { totalUnreadCount } from "../lib/messages";
 import { useUserStore } from "../stores/user";
-import UiBadge from "./ui/Badge.vue";
 
 type SearchKind = "topic" | "within" | "user" | "board";
 
@@ -114,10 +113,48 @@ function submitSearch() {
 
         <div class="site-header__account">
           <template v-if="user.isLoggedIn">
-            <RouterLink to="/messages" class="site-header__message">
-              消息
-              <UiBadge v-if="unreadTotal > 0" :count="unreadTotal" />
-            </RouterLink>
+            <div class="site-header__message-menu">
+              <RouterLink
+                to="/messages/replies"
+                class="site-header__message-trigger"
+                :aria-label="unreadTotal > 0 ? `消息，${unreadTotal} 条未读` : '消息'"
+              >
+                <span class="site-header__message-bell" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+                  </svg>
+                </span>
+                <span v-if="unreadTotal > 0" class="site-header__message-total">
+                  {{ unreadTotal }}
+                </span>
+              </RouterLink>
+              <nav class="site-header__message-dropdown" aria-label="消息分类">
+                <RouterLink to="/messages/replies">
+                  <span>回复我的</span>
+                  <span v-if="unreadCounts?.replyCount" class="site-header__message-count">
+                    {{ unreadCounts.replyCount }}
+                  </span>
+                </RouterLink>
+                <RouterLink to="/messages/mentions">
+                  <span>@ 我的</span>
+                  <span v-if="unreadCounts?.atCount" class="site-header__message-count">
+                    {{ unreadCounts.atCount }}
+                  </span>
+                </RouterLink>
+                <RouterLink to="/messages/system">
+                  <span>系统通知</span>
+                  <span v-if="unreadCounts?.systemCount" class="site-header__message-count">
+                    {{ unreadCounts.systemCount }}
+                  </span>
+                </RouterLink>
+                <RouterLink to="/messages/private">
+                  <span>我的私信</span>
+                  <span v-if="unreadCounts?.messageCount" class="site-header__message-count">
+                    {{ unreadCounts.messageCount }}
+                  </span>
+                </RouterLink>
+              </nav>
+            </div>
             <RouterLink to="/signin">签到</RouterLink>
             <RouterLink to="/usercenter" class="site-header__user">
               <img v-if="user.user?.avatarUrl" :src="user.user.avatarUrl" alt="" />
