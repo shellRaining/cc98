@@ -3297,6 +3297,31 @@ a:hover {
   color: var(--cc98-color-text-muted);
 }
 
+.user-content-toggle {
+  width: 8rem;
+  height: 2rem;
+  margin: -1rem 0 2rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-content-toggle:hover {
+  background: var(--cc98-color-primary-hover);
+}
+
+.user-content-list__meta--post {
+  gap: 2rem;
+}
+
+.user-content-list__meta--post a,
+.user-content-list__meta--post a:visited {
+  min-width: 0;
+}
+
 @media (max-width: 1180px) {
   .header-search {
     width: 22rem;

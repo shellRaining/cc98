@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
+import dayjs from "dayjs";
 import { useRoute, useRouter } from "vue-router";
 import { boardsByIdsQuery, mePostsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
-import PostSummaryList from "../../components/PostSummaryList.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageToFrom } from "../../lib/route-params";
 import {
   normalizeMePostKind,
   pageCount,
   parseUserCenterPage,
+  postExcerpt,
   userCenterPagePath,
 } from "../../lib/user-center";
 import { useUserStore } from "../../stores/user";
@@ -43,27 +44,27 @@ const boardNames = computed(
 );
 const totalPages = computed(() => pageCount(data.value?.count, PAGE_SIZE));
 
-function changeKind(event: Event) {
-  const value = (event.target as HTMLSelectElement).value;
-  void router.push(userCenterPagePath("/usercenter/posts", 1, { kind: value }));
+function toggleKind() {
+  const next = kind.value === "recent" ? "hot" : "recent";
+  void router.push(userCenterPagePath("/usercenter/posts", 1, { kind: next }));
+}
+
+function formatTime(value: string | undefined): string {
+  if (!value) return "—";
+  const parsed = dayjs(value);
+  return parsed.isValid() ? parsed.format("YYYY-MM-DD HH:mm:ss") : value;
+}
+
+function postLink(post: (typeof posts.value)[number]): string {
+  if (post.topicId == null) return "/";
+  return post.floor != null && post.floor > 0
+    ? `/topic/${post.topicId}#floor-${post.floor}`
+    : `/topic/${post.topicId}`;
 }
 </script>
 
 <template>
-  <div class="space-y-4">
-    <header class="flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 class="text-2xl font-bold">我的回复</h1>
-        <p class="mt-1 text-sm text-cc98-text-muted">查看最近回复或收到较多关注的回复。</p>
-      </div>
-      <label class="text-sm text-cc98-text-muted">
-        类型
-        <select :value="kind" class="ml-2 cc98-input px-2 py-1" @change="changeKind">
-          <option value="recent">最近回复</option>
-          <option value="hot">热门回复</option>
-        </select>
-      </label>
-    </header>
+  <div class="user-content-page">
     <PageState v-if="isPending" kind="loading" />
     <PageState
       v-else-if="error"
@@ -72,15 +73,33 @@ function changeKind(event: Event) {
       show-retry
       @retry="refetch()"
     />
-    <PageState v-else-if="posts.length === 0" kind="empty" />
-    <template v-else-if="posts.length > 0">
-      <div class="cc98-card px-4"><PostSummaryList :posts="posts" :board-names="boardNames" /></div>
+    <PageState v-else-if="posts.length === 0" kind="empty" message="没有回复" />
+    <template v-else>
+      <button type="button" class="user-content-toggle" @click="toggleKind">
+        {{ kind === "recent" ? "显示热门回复" : "显示全部回复" }}
+      </button>
+      <ul class="user-content-list">
+        <li v-for="post in posts" :key="post.id">
+          <div class="user-content-list__meta user-content-list__meta--post">
+            <time :datetime="post.time">{{ formatTime(post.time) }}</time>
+            <span>赞：{{ post.likeCount ?? 0 }}</span>
+            <span>踩：{{ post.dislikeCount ?? 0 }}</span>
+            <RouterLink v-if="post.boardId" :to="`/list/${post.boardId}`">
+              {{ boardNames.get(post.boardId) ?? `版面 ${post.boardId}` }}
+            </RouterLink>
+          </div>
+          <RouterLink :to="postLink(post)" class="user-content-list__title">
+            {{ postExcerpt(post.content, post.contentType) }}
+          </RouterLink>
+        </li>
+      </ul>
     </template>
     <Pagination
       v-if="!isPending && !error && (posts.length > 0 || page > 1)"
       :current-page="page"
       :total-pages="totalPages"
       :to-page="(target) => userCenterPagePath('/usercenter/posts', target, { kind })"
+      variant="user-center"
     />
   </div>
 </template>
