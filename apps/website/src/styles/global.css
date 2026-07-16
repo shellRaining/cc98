@@ -1,28 +1,86 @@
+/*
+ * 主题 token 分两层：
+ * - 原始调色板（--cc98-blue / --cc98-ink 等）：具体颜色值，深色模式和后续皮肤在这一层覆盖。
+ * - 语义 token（--cc98-color-*）：业务和 UnoCSS 只消费这一层，取值全部引用原始调色板。
+ * 取值规范见根目录 DESIGN.md，改公共颜色先改那里再落到这里。
+ */
+
 :root {
-  --cc98-color-primary: #2f5fd6;
-  --cc98-color-accent: #d64545;
-  --cc98-color-text: #1a1a1a;
-  --cc98-color-text-muted: #6b7280;
-  --cc98-color-bg: #ffffff;
-  --cc98-color-bg-elevated: #f9fafb;
-  --cc98-color-border: #e5e7eb;
+  color-scheme: light;
+
+  /* 原始调色板（浅色） */
+  --cc98-blue: #3399ff;
+  --cc98-blue-strong: #1668dc;
+  --cc98-blue-strong-hover: #0f56bd;
+  --cc98-red: #e5484d;
+  --cc98-green: #2f9e6d;
+  --cc98-amber: #b8770a;
+  --cc98-purple: #7a3d6b;
+
+  --cc98-ink: #1a1d21;
+  --cc98-ink-muted: #5c6570;
+  --cc98-ink-caption: #8a929c;
+  --cc98-page: #eef1f5;
+  --cc98-paper: #ffffff;
+  --cc98-paper-subtle: #f6f8fa;
+  --cc98-line: #e3e7ec;
+  --cc98-on-accent: #ffffff;
+
+  /* 语义 token */
+  --cc98-color-brand: var(--cc98-blue);
+  --cc98-color-primary: var(--cc98-blue-strong);
+  --cc98-color-primary-hover: var(--cc98-blue-strong-hover);
+  --cc98-color-accent: var(--cc98-red);
+  --cc98-color-on-primary: var(--cc98-on-accent);
+
+  --cc98-color-background: var(--cc98-page);
+  --cc98-color-surface: var(--cc98-paper);
+  --cc98-color-surface-subtle: var(--cc98-paper-subtle);
+  --cc98-color-border: var(--cc98-line);
+
+  --cc98-color-text: var(--cc98-ink);
+  --cc98-color-text-muted: var(--cc98-ink-muted);
+  --cc98-color-text-caption: var(--cc98-ink-caption);
+
+  --cc98-color-link: var(--cc98-blue-strong);
+  --cc98-color-link-visited: var(--cc98-purple);
+
+  --cc98-color-success: var(--cc98-green);
+  --cc98-color-warning: var(--cc98-amber);
+  --cc98-color-error: var(--cc98-red);
+
+  /* 旧命名兼容，组件迁移到语义名后移除（见 exec-plans 第八阶段） */
+  --cc98-color-bg: var(--cc98-color-background);
+  --cc98-color-bg-elevated: var(--cc98-color-surface);
 }
 
 :root[data-theme="dark"] {
-  --cc98-color-primary: #7aa2ff;
-  --cc98-color-accent: #ff7a7a;
-  --cc98-color-text: #f3f4f6;
-  --cc98-color-text-muted: #9ca3af;
-  --cc98-color-bg: #111418;
-  --cc98-color-bg-elevated: #1c1f26;
-  --cc98-color-border: #2a2e37;
+  color-scheme: dark;
+
+  /* 原始调色板（深色）：只覆盖原始层，语义层自动跟随 */
+  --cc98-blue: #5aa9ff;
+  --cc98-blue-strong: #3b82f6;
+  --cc98-blue-strong-hover: #5a95f7;
+  --cc98-red: #ff6b6f;
+  --cc98-green: #4ec08a;
+  --cc98-amber: #d99a3a;
+  --cc98-purple: #c9a0bd;
+
+  --cc98-ink: #e8eaed;
+  --cc98-ink-muted: #9aa3ad;
+  --cc98-ink-caption: #6b7480;
+  --cc98-page: #111418;
+  --cc98-paper: #1c1f26;
+  --cc98-paper-subtle: #232830;
+  --cc98-line: #2a2e37;
+  --cc98-on-accent: #ffffff;
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--cc98-color-bg);
+  background: var(--cc98-color-background);
   color: var(--cc98-color-text);
   font-family:
     system-ui,
@@ -40,12 +98,16 @@ body {
 }
 
 a {
-  color: var(--cc98-color-primary);
+  color: var(--cc98-color-link);
   text-decoration: none;
 }
 
+a:visited {
+  color: var(--cc98-color-link-visited);
+}
+
 a:hover {
-  color: var(--cc98-color-accent);
+  color: var(--cc98-color-primary-hover);
 }
 
 button.cc98-link {
