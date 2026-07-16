@@ -42,6 +42,26 @@ export const userOperationRequestSchema = z
   .meta({ id: "UserOperationRequest" });
 export type UserOperationRequest = z.infer<typeof userOperationRequestSchema>;
 
+export const userModerationPostSchema = z
+  .looseObject({
+    boardId: z.number(),
+    content: z.string(),
+    floor: z.number(),
+    ip: z.string(),
+    time: z.string(),
+    topicId: z.number(),
+  })
+  .meta({ id: "UserModerationPost" });
+export type UserModerationPost = z.infer<typeof userModerationPostSchema>;
+
+export const userModerationPostPageSchema = z
+  .looseObject({
+    postInfos: z.array(userModerationPostSchema),
+    count: z.number(),
+  })
+  .meta({ id: "UserModerationPostPage" });
+export type UserModerationPostPage = z.infer<typeof userModerationPostPageSchema>;
+
 export const userSchema = basicUserSchema
   .and(
     z.looseObject({

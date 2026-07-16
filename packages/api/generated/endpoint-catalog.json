@@ -1295,7 +1295,7 @@
     "operationId": "getUserIdPost",
     "summary": "Get a user's recent posts for moderation",
     "tags": ["User", "Post", "Moderation"],
-    "risk": "destructive",
+    "risk": "read-only",
     "verificationStatus": "authentication-rejected",
     "requiresAuthentication": true
   },

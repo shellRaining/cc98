@@ -4537,7 +4537,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Deleted count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
           }
         }
       },
@@ -4551,7 +4558,7 @@
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "authentication-rejected",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -4590,7 +4597,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Legacy moderation response; live schema not verified"
+            "description": "Moderation post page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModerationPostPage"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authentication rejected",
@@ -4648,7 +4662,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Deleted count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
           }
         }
       }
@@ -8695,6 +8716,47 @@
           }
         },
         "required": ["id", "name"],
+        "additionalProperties": {}
+      },
+      "UserModerationPostPage": {
+        "type": "object",
+        "properties": {
+          "postInfos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserModerationPost"
+            }
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": ["postInfos", "count"],
+        "additionalProperties": {}
+      },
+      "UserModerationPost": {
+        "type": "object",
+        "properties": {
+          "boardId": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "floor": {
+            "type": "number"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "topicId": {
+            "type": "number"
+          }
+        },
+        "required": ["boardId", "content", "floor", "ip", "time", "topicId"],
         "additionalProperties": {}
       },
       "MeUser": {

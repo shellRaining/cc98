@@ -6,6 +6,7 @@ import {
   topicSchema,
   userSchema,
   userOperationRequestSchema,
+  userModerationPostPageSchema,
 } from "../schemas/index.ts";
 
 export const userOperations = defineOperations([
@@ -208,7 +209,9 @@ export const userOperations = defineOperations([
       { name: "id", in: "path", required: true, schema: z.number(), probeValue: 758 },
       { name: "days", in: "query", required: true, schema: z.number() },
     ],
-    responses: { "200": { description: "Success" } },
+    responses: {
+      "200": { description: "Deleted count", contentType: "application/json", schema: z.number() },
+    },
     auth: "required",
     risk: "destructive",
     verificationStatus: "unknown",
@@ -227,7 +230,11 @@ export const userOperations = defineOperations([
       { name: "size", in: "query", required: true, schema: z.number(), probeValue: 2 },
     ],
     responses: {
-      "200": { description: "Legacy moderation response; live schema not verified" },
+      "200": {
+        description: "Moderation post page",
+        contentType: "application/json",
+        schema: userModerationPostPageSchema,
+      },
       "401": {
         description: "Authentication rejected",
         contentType: "application/json",
@@ -240,7 +247,7 @@ export const userOperations = defineOperations([
       },
     },
     auth: "required",
-    risk: "destructive",
+    risk: "read-only",
     verificationStatus: "authentication-rejected",
     sources: ["legacy-openapi", "live-probe"],
     description:
@@ -256,7 +263,9 @@ export const userOperations = defineOperations([
       { name: "id", in: "path", required: true, schema: z.number(), probeValue: 758 },
       { name: "days", in: "query", required: true, schema: z.number() },
     ],
-    responses: { "200": { description: "Success" } },
+    responses: {
+      "200": { description: "Deleted count", contentType: "application/json", schema: z.number() },
+    },
     auth: "required",
     risk: "destructive",
     verificationStatus: "unknown",

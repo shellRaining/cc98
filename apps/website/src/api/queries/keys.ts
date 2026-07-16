@@ -77,6 +77,14 @@ export const queryKeys = {
   userByName: (name: string, authScope: AuthScope) => ["user", "name", name, authScope] as const,
   userRecentTopics: (id: number, size: number, authScope: AuthScope) =>
     ["user", id, "recent-topics", size, authScope] as const,
+  userModerationPosts: (
+    id: number,
+    days: number,
+    from: number,
+    size: number,
+    authScope: AuthScope,
+  ) => ["user", id, "moderation-posts", days, from, size, authScope] as const,
+  userModerationPostsRoot: (id: number) => ["user", id, "moderation-posts"] as const,
   usersByIds: (ids: number[]) => ["users", "batch", ...ids] as const,
   fullUsersByIds: (ids: number[], authScope: AuthScope) =>
     ["users", "full-batch", authScope, ...ids] as const,

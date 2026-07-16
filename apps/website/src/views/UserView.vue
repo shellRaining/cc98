@@ -16,6 +16,7 @@ import UserProfileOverview from "../components/user/UserProfileOverview.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { userIdPath } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
+import { isSiteAdministrator } from "../lib/site-manage";
 import { parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
 
@@ -177,6 +178,16 @@ function toggleFollow() {
                 />
               </svg>
               <span>个人中心</span>
+            </RouterLink>
+          </li>
+          <li v-if="isSiteAdministrator(user.user?.privilege)">
+            <RouterLink :to="`/user/id/${profile.id}/manage`">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8m9 4-2.1 1.2.1 2.4-2.1 2.1-2.4-.1L12 21l-1.2-2.1-2.4.1-2.1-2.1.1-2.4L4 12l2.1-1.2-.1-2.4 2.1-2.1 2.4.1L12 4l1.2 2.1 2.4-.1 2.1 2.1-.1 2.4z"
+                />
+              </svg>
+              <span>管理</span>
             </RouterLink>
           </li>
         </ul>
