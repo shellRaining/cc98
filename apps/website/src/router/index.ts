@@ -231,6 +231,42 @@ const routes: RouteRecordRaw[] = [
     component: () => import("../views/LogOnView.vue"),
   },
   {
+    path: "/error/401",
+    name: "error-401",
+    component: () => import("../views/StatusView.vue"),
+    meta: { statusKind: "unauthorized" },
+  },
+  {
+    path: "/error/403",
+    name: "error-403",
+    component: () => import("../views/StatusView.vue"),
+    meta: { statusKind: "forbidden" },
+  },
+  {
+    path: "/error/404",
+    name: "error-404",
+    component: () => import("../views/StatusView.vue"),
+    meta: { statusKind: "not-found" },
+  },
+  {
+    path: "/error/500",
+    name: "error-500",
+    component: () => import("../views/StatusView.vue"),
+    meta: { statusKind: "server" },
+  },
+  {
+    path: "/error/maintenance",
+    name: "error-maintenance",
+    component: () => import("../views/StatusView.vue"),
+    meta: { statusKind: "maintenance" },
+  },
+  {
+    path: "/error/network",
+    name: "error-network",
+    component: () => import("../views/StatusView.vue"),
+    meta: { statusKind: "network" },
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: () => import("../views/NotFoundView.vue"),
