@@ -13,6 +13,7 @@ import {
 import LoadMore from "../../components/LoadMore.vue";
 import PageState from "../../components/PageState.vue";
 import UiButton from "../../components/ui/Button.vue";
+import UiBadge from "../../components/ui/Badge.vue";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { createConversationReadSynchronizer, mergeConversationPages } from "../../lib/messages";
@@ -159,7 +160,7 @@ function submit() {
                   <span class="truncate text-sm font-medium">{{
                     contact.user?.name ?? `用户 ${contact.userId}`
                   }}</span>
-                  <span v-if="!contact.isRead" class="h-2 w-2 rounded-full bg-cc98-primary" />
+                  <UiBadge v-if="!contact.isRead" dot variant="primary" />
                 </div>
                 <p class="truncate text-xs text-cc98-text-muted">{{ contact.lastContent }}</p>
               </div>

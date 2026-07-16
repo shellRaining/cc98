@@ -7,6 +7,7 @@ import { totalUnreadCount } from "../lib/messages";
 import { useUserStore } from "../stores/user";
 import { useThemeStore } from "../stores/theme";
 import { saveLoginRedirect } from "../lib/login-redirect";
+import UiBadge from "./ui/Badge.vue";
 
 const user = useUserStore();
 const theme = useThemeStore();
@@ -51,12 +52,7 @@ function goLogin(event?: Event) {
         <template v-if="user.isLoggedIn">
           <RouterLink to="/messages" class="relative text-sm cc98-link">
             消息
-            <span
-              v-if="unreadTotal > 0"
-              class="absolute -right-3 -top-2 min-w-5 rounded-full bg-cc98-accent px-1 text-center text-xs leading-5 text-cc98-on-primary"
-            >
-              {{ unreadTotal > 99 ? "99+" : unreadTotal }}
-            </span>
+            <UiBadge v-if="unreadTotal > 0" :count="unreadTotal" class="absolute -right-3 -top-2" />
           </RouterLink>
           <RouterLink to="/signin" class="text-sm cc98-link">签到</RouterLink>
           <RouterLink v-if="user.user?.id" to="/usercenter" class="text-sm cc98-link">

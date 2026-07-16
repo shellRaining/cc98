@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { RouterLink, RouterView } from "vue-router";
 import { unreadCountsQuery } from "../api/queries";
 import { useUserStore } from "../stores/user";
+import UiBadge from "../components/ui/Badge.vue";
 
 const user = useUserStore();
 const authScope = computed(() => user.user?.id ?? "anonymous");
@@ -38,12 +39,7 @@ const links = computed(
           active-class="bg-cc98-surface-subtle text-cc98-primary font-medium"
         >
           <span>{{ label }}</span>
-          <span
-            v-if="count > 0"
-            class="min-w-5 rounded-full bg-cc98-accent px-1.5 text-center text-xs text-cc98-on-primary"
-          >
-            {{ count > 99 ? "99+" : count }}
-          </span>
+          <UiBadge v-if="count > 0" :count="count" />
         </RouterLink>
       </nav>
       <RouterLink to="/signin" class="cc98-link text-sm px-3">每日签到</RouterLink>

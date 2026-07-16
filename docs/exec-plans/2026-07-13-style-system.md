@@ -76,7 +76,7 @@ flowchart TD
 - [x] 把 `styles/global.css` 扩成原始层加语义层两级 token，补齐 light/dark 取值。
 - [x] UnoCSS theme 和 shortcuts 改为消费语义 token，收敛现有 `cc98-*` 命名到 `DESIGN.md` 的语义名。
 - [x] 主题 Store 从 `mode + season` 升级为 `mode + skin + style`，接入 `PUT /me/theme` 和 `/me/theme-setting` 与日夜切换。
-- [ ] 建立 `components/ui`：Button、Dialog 已落地，Input/Textarea/Card/Badge/Tabs 按需补齐。
+- [ ] 建立 `components/ui`：Button、Dialog、Badge 已落地，Input/Textarea/Card/Tabs 按需补齐。
 - [ ] 迁移 Header、DefaultLayout、PageState、TopicList、PostItem 到语义 token 和基础组件。
 - [ ] 实现默认亮、默认暗、一套节日皮肤，完成首页、版面页、主题页回归。
 - [ ] 按首发 `solid` 风格迁移其余页面，再逐步补齐老论坛皮肤和 `elegant`、`fluent` 方向。

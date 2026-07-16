@@ -7,6 +7,7 @@ import { useReadAllNotificationsMutation } from "../../api/mutations";
 import { notificationsQuery, unreadCountsQuery, type NotificationKind } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
+import UiBadge from "../../components/ui/Badge.vue";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import {
@@ -103,7 +104,7 @@ function markAllRead() {
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2 text-sm">
-              <span v-if="!item.isRead" class="h-2 w-2 rounded-full bg-cc98-primary" />
+              <UiBadge v-if="!item.isRead" dot variant="primary" />
               <RouterLink v-if="item.board?.id" :to="`/list/${item.board.id}`" class="cc98-link">
                 {{ item.board.name ?? `版面 ${item.board.id}` }}
               </RouterLink>
