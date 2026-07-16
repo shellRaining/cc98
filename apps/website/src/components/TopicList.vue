@@ -9,12 +9,18 @@ withDefaults(
     showBoard?: boolean;
     variant?: "default" | "board";
     tagNames?: Map<number, string>;
+    selectable?: boolean;
+    selectedIds?: Set<number>;
   }>(),
   {
     showBoard: true,
     variant: "default",
   },
 );
+
+const emit = defineEmits<{
+  toggle: [topic: Topic, checked: boolean];
+}>();
 </script>
 
 <template>
@@ -27,6 +33,9 @@ withDefaults(
       :show-board="showBoard"
       :variant="variant"
       :tag-names="tagNames"
+      :selectable="selectable"
+      :selected="topic.id != null && selectedIds?.has(topic.id)"
+      @toggle="emit('toggle', topic, $event)"
     >
       <slot name="item" :topic="topic" />
     </TopicListItem>

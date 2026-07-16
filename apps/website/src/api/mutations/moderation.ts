@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedDelete, typedPost, typedPut } from "../../lib/http";
-import type { PostModerationRequest, TopicModerationRequest } from "../../lib/moderation";
+import type {
+  BatchTopicModerationRequest,
+  PostModerationRequest,
+  TopicModerationRequest,
+} from "../../lib/moderation";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
 
 export function moderateTopic(request: TopicModerationRequest): Promise<void> {
@@ -108,6 +112,29 @@ export function useModeratePostMutation() {
           queryKey: queryKeys.postRewardDailyRecordRoot(request.boardId),
         }),
       ]);
+    },
+  });
+}
+
+export function batchModerateTopics(request: BatchTopicModerationRequest): Promise<void> {
+  return typedPut<void>(
+    request.action === "lock" ? "/topic/multi-lock" : "/topic/multi-delete",
+    {
+      reason: request.reason.trim(),
+      ...(request.action === "lock" ? { value: request.days } : {}),
+    },
+    { query: { id: request.topicIds } },
+  );
+}
+
+export function useBatchModerateTopicsMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    retry: 0,
+    mutationFn: ({ request }: { request: BatchTopicModerationRequest; boardId: number }) =>
+      batchModerateTopics(request),
+    onSuccess: async (_data, { boardId }) => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.boardRoot(boardId) });
     },
   });
 }

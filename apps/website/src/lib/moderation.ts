@@ -37,6 +37,15 @@ export interface PostModerationRequest {
   days?: number;
 }
 
+export type BatchTopicModerationAction = "lock" | "delete";
+
+export interface BatchTopicModerationRequest {
+  action: BatchTopicModerationAction;
+  topicIds: number[];
+  reason: string;
+  days?: number;
+}
+
 export interface TopicModerationRequest {
   action: TopicModerationAction;
   topicId: number;
@@ -105,6 +114,17 @@ export function validatePostModerationRequest(request: PostModerationRequest): s
     return Number.isInteger(request.days) && (request.days ?? 0) > 0 ? null : "请输入有效天数";
   }
   return Number.isInteger(request.value) && (request.value ?? 0) > 0 ? null : "请输入大于 0 的整数";
+}
+
+export function validateBatchTopicModerationRequest(
+  request: BatchTopicModerationRequest,
+): string | null {
+  if (request.topicIds.length === 0) return "请至少选择一个主题";
+  if (!request.reason.trim()) return "请输入操作理由";
+  if (request.action === "lock" && (!Number.isInteger(request.days) || (request.days ?? 0) <= 0)) {
+    return "请选择有效天数";
+  }
+  return null;
 }
 
 export function flattenModerationBoards(groups: readonly BoardGroup[] | undefined): Board[] {

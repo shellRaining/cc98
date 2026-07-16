@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from "vite-plus/test";
 import { topicEventPageSchema } from "@cc98/api";
-import { moderatePost, moderateTopic } from "../src/api/mutations/moderation.ts";
+import {
+  batchModerateTopics,
+  moderatePost,
+  moderateTopic,
+} from "../src/api/mutations/moderation.ts";
 import { typedDelete, typedPost, typedPut } from "../src/lib/http.ts";
 import {
   canManagePost,
@@ -10,6 +14,7 @@ import {
   resolveTopicModerationAccess,
   type TopicModerationRequest,
   validatePostModerationRequest,
+  validateBatchTopicModerationRequest,
   validateTopicModerationRequest,
 } from "../src/lib/moderation.ts";
 
@@ -135,6 +140,48 @@ describe("楼层版务表单", () => {
         reason: "",
       }),
     ).toBe("该楼层缺少用户信息，无法解除 TP");
+  });
+});
+
+describe("版面批量管理", () => {
+  test("要求选择主题、填写理由和锁沉天数", () => {
+    expect(
+      validateBatchTopicModerationRequest({ action: "delete", topicIds: [], reason: "重复发帖" }),
+    ).toBe("请至少选择一个主题");
+    expect(
+      validateBatchTopicModerationRequest({ action: "lock", topicIds: [1], reason: "", days: 7 }),
+    ).toBe("请输入操作理由");
+    expect(
+      validateBatchTopicModerationRequest({
+        action: "lock",
+        topicIds: [1],
+        reason: "管理要求",
+        days: 0,
+      }),
+    ).toBe("请选择有效天数");
+  });
+
+  test("批量锁沉和删除使用重复 id 查询参数", async () => {
+    vi.mocked(typedPut).mockReset().mockResolvedValue(undefined);
+    await batchModerateTopics({
+      action: "lock",
+      topicIds: [101, 102],
+      reason: "管理要求",
+      days: 30,
+    });
+    expect(typedPut).toHaveBeenNthCalledWith(
+      1,
+      "/topic/multi-lock",
+      { reason: "管理要求", value: 30 },
+      { query: { id: [101, 102] } },
+    );
+    await batchModerateTopics({ action: "delete", topicIds: [101], reason: "重复发帖" });
+    expect(typedPut).toHaveBeenNthCalledWith(
+      2,
+      "/topic/multi-delete",
+      { reason: "重复发帖" },
+      { query: { id: [101] } },
+    );
   });
 });
 

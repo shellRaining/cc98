@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useTitle } from "@vueuse/core";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
@@ -14,6 +14,7 @@ import {
 } from "../api/queries";
 import { useFollowBoardMutation, useUnfollowBoardMutation } from "../api/mutations";
 import BoardEventList from "../components/board/BoardEventList.vue";
+import BoardBatchModerationDialog from "../components/board/BoardBatchModerationDialog.vue";
 import BoardHeader from "../components/board/BoardHeader.vue";
 import HomeAdvertisement from "../components/home/HomeAdvertisement.vue";
 import PageState from "../components/PageState.vue";
@@ -28,6 +29,7 @@ import {
 } from "../lib/board-view.ts";
 import { visibleHomepageColumns } from "../lib/home.ts";
 import { saveLoginRedirect } from "../lib/login-redirect";
+import { isBoardManager } from "../lib/moderation";
 import { boardTotalPages, clampPage, pageToFrom, parsePositiveInt } from "../lib/route-params";
 import { useUserStore } from "../stores/user";
 
@@ -51,6 +53,8 @@ const requestedPage = computed(() => resolveBoardViewPage(props.type, props.page
 const tag1 = computed(() => resolveBoardTag(route.query.tag1));
 const tag2 = computed(() => resolveBoardTag(route.query.tag2));
 const authScope = computed(() => user.user?.id ?? "anonymous");
+const selectedTopicIds = ref(new Set<number>());
+const batchDialogOpen = ref(false);
 
 const boardOptions = computed(() =>
   boardQuery(numericBoardId.value ?? 0, authScope.value, !invalidId.value),
@@ -226,6 +230,13 @@ const blockingState = computed(() => {
 const relationPending = computed(
   () => followBoard.isPending.value || unfollowBoard.isPending.value,
 );
+const canBatchManage = computed(
+  () => mode.value === "all" && isBoardManager(user.user, board.value),
+);
+
+watch([displayedTopics, mode], () => {
+  selectedTopicIds.value = new Set();
+});
 
 function toPage(page: number) {
   return boardViewPath(props.boardId, mode.value, page, { tag1: tag1.value, tag2: tag2.value });
@@ -262,6 +273,21 @@ function toggleBoardFollow() {
   if (!user.isLoggedIn) return goLogin();
   if (board.value?.isUserCustomBoard) unfollowBoard.mutate(id);
   else followBoard.mutate(id);
+}
+
+function toggleTopic(topic: { id?: number }, checked: boolean) {
+  if (topic.id == null) return;
+  const next = new Set(selectedTopicIds.value);
+  if (checked) next.add(topic.id);
+  else next.delete(topic.id);
+  selectedTopicIds.value = next;
+}
+
+function completeBatchModeration() {
+  selectedTopicIds.value = new Set();
+  void normalQuery.refetch();
+  void topQuery.refetch();
+  void refetchBoard();
 }
 </script>
 
@@ -334,6 +360,16 @@ function toggleBoardFollow() {
       </div>
 
       <div class="board-list-panel">
+        <div v-if="canBatchManage" class="board-batch-toolbar">
+          <span>已选择 {{ selectedTopicIds.size }} 个主题</span>
+          <button
+            type="button"
+            :disabled="selectedTopicIds.size === 0"
+            @click="batchDialogOpen = true"
+          >
+            批量管理
+          </button>
+        </div>
         <div class="board-list-panel__head">
           <nav aria-label="主题筛选">
             <RouterLink
@@ -372,8 +408,18 @@ function toggleBoardFollow() {
           :show-board="false"
           variant="board"
           :tag-names="tagNames"
+          :selectable="canBatchManage"
+          :selected-ids="selectedTopicIds"
+          @toggle="toggleTopic"
         />
       </div>
+
+      <BoardBatchModerationDialog
+        v-model:open="batchDialogOpen"
+        :board-id="numericBoardId ?? 0"
+        :topic-ids="[...selectedTopicIds]"
+        @completed="completeBatchModeration"
+      />
 
       <div class="board-page__bottom">
         <Pagination

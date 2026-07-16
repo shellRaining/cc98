@@ -13,12 +13,18 @@ const props = withDefaults(
     showBoard?: boolean;
     variant?: "default" | "board";
     tagNames?: Map<number, string>;
+    selectable?: boolean;
+    selected?: boolean;
   }>(),
   {
     showBoard: true,
     variant: "default",
   },
 );
+
+const emit = defineEmits<{
+  toggle: [checked: boolean];
+}>();
 
 const topicId = computed(() => props.topic.id ?? 0);
 const title = computed(() => props.topic.title?.trim() || "(无标题)");
@@ -101,6 +107,14 @@ function formatCount(value: number): string {
 <template>
   <li v-if="variant === 'board'" class="board-topic-row">
     <div class="board-topic-row__title">
+      <input
+        v-if="selectable"
+        type="checkbox"
+        class="board-topic-row__checkbox"
+        :checked="selected"
+        :aria-label="`选择主题：${title}`"
+        @change="emit('toggle', ($event.target as HTMLInputElement).checked)"
+      />
       <TopicStateIcon :topic="topic" :pinned="pinned" />
       <div class="board-topic-row__title-content">
         <RouterLink :to="`/topic/${topicId}`" :style="titleStyle">
