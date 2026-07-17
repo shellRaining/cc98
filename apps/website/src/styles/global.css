@@ -106,35 +106,6 @@
   --cc98-color-overlay: rgb(0 0 0 / 0.65);
 }
 
-/*
- * 皮肤：只覆盖原始层的主色和背景图变量，语义层自动跟随。
- * 亮暗由 [data-theme] 控制，皮肤与 mode 正交叠加。
- */
-
-/* 金舞迎春（亮） */
-:root[data-skin="spring-festival"] {
-  --cc98-blue: #3399ff;
-  --cc98-blue-strong: #d4452f;
-  --cc98-blue-strong-hover: #bf3a26;
-  --cc98-blue-sub: #6b7178;
-  --cc98-topbar: rgb(197 61 55 / 0.84);
-  --cc98-page: #e6e7ec;
-  --cc98-banner-image: url("/skins/spring-festival/banner.jpg");
-  --cc98-banner-card-image: url("/skins/spring-festival/banner-card.jpg");
-  --cc98-banner-height: 12rem;
-}
-
-/* 金舞迎春（暗）：深底色版本 */
-:root[data-skin="spring-festival"][data-theme="dark"] {
-  --cc98-blue-strong: #c53d37;
-  --cc98-blue-strong-hover: #a8302a;
-  --cc98-topbar: rgb(36 26 26 / 0.94);
-  --cc98-page: #1e1e1e;
-  --cc98-paper: #241a1a;
-  --cc98-paper-subtle: #2d2020;
-  --cc98-line: #3a2828;
-}
-
 html,
 body {
   margin: 0;

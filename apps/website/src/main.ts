@@ -11,6 +11,7 @@ import { useThemeStore } from "./stores/theme";
 
 import "virtual:uno.css";
 import "./styles/global.css";
+import "./styles/skins.css";
 
 const app = createApp(App);
 const pinia = createPinia();
