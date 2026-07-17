@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
+import { useTitle } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { POST_CONTENT_TYPE, type EditPostRequest } from "@cc98/api";
 import { ubbToMarkdown } from "@cc98/ubb";
 import { useEditPostMutation, useUploadFilesMutation } from "../api/mutations";
-import { postOriginalQuery } from "../api/queries";
+import { boardQuery, boardTagsQuery, postOriginalQuery, topicQuery } from "../api/queries";
 import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
 import UiButton from "../components/ui/Button.vue";
@@ -23,9 +24,20 @@ const authScope = computed(() => user.user?.id ?? "anonymous");
 interface EditDraft {
   title: string;
   content: string;
+  tag1: number | null;
+  tag2: number | null;
+  topicType: number;
+  notifyPoster: boolean;
 }
 
-const initialDraft: EditDraft = { title: "", content: "" };
+const initialDraft: EditDraft = {
+  title: "",
+  content: "",
+  tag1: null,
+  tag2: null,
+  topicType: 0,
+  notifyPoster: true,
+};
 const draftKey = createDraftKey("edit", numericPostId.value ?? 0);
 const hadDraft = localStorage.getItem(draftKey) != null;
 const draft = reactive(readDraft(draftKey, initialDraft));
@@ -35,18 +47,52 @@ const originalOptions = computed(() =>
   postOriginalQuery(numericPostId.value ?? 0, authScope.value, numericPostId.value != null),
 );
 const { data: original, error: originalError, isPending, refetch } = useQuery(originalOptions);
+const topicId = computed(() => original.value?.topicId ?? 0);
+const boardId = computed(() => original.value?.boardId ?? 0);
+const isTopicPost = computed(() => original.value?.floor === 1);
+const topicOptions = computed(() => topicQuery(topicId.value, authScope.value, topicId.value > 0));
+const boardOptions = computed(() => boardQuery(boardId.value, authScope.value, boardId.value > 0));
+const tagsOptions = computed(() =>
+  boardTagsQuery(boardId.value, boardId.value > 0 && isTopicPost.value),
+);
+const topicResult = useQuery(topicOptions);
+const boardResult = useQuery(boardOptions);
+const tagsResult = useQuery(tagsOptions);
+const topic = topicResult.data;
+const board = boardResult.data;
+const tagGroups = tagsResult.data;
+const pageModeText = computed(() => (isTopicPost.value ? "编辑主题" : "编辑回复"));
+const pageTitle = computed(() =>
+  board.value?.name
+    ? `${pageModeText.value} - ${board.value.name} - CC98 论坛`
+    : `${pageModeText.value} - CC98 论坛`,
+);
+const canCreateActivity = computed(() => {
+  const currentName = user.user?.name;
+  return (
+    (currentName != null && (board.value?.boardMasters ?? []).includes(currentName)) ||
+    (user.user?.userTitleIds ?? []).includes(91)
+  );
+});
+useTitle(pageTitle);
 const initialized = ref(false);
 watch(
-  original,
-  (post) => {
+  [original, topic, board],
+  ([post, topicInfo, boardInfo]) => {
     if (!post || initialized.value) return;
+    if (!topicInfo || !boardInfo) return;
     initialized.value = true;
     if (hadDraft) return;
-    draft.title = post.title ?? "";
+    draft.title = topicInfo.title || post.title || "";
     draft.content =
       post.contentType === POST_CONTENT_TYPE.markdown
         ? (post.content ?? "")
         : ubbToMarkdown(post.content ?? "");
+    draft.tag1 = topicInfo?.tag1 ?? null;
+    draft.tag2 = topicInfo?.tag2 ?? null;
+    draft.topicType =
+      topicInfo?.type === 1 && !canCreateActivity.value ? 0 : (topicInfo?.type ?? 0);
+    draft.notifyPoster = topicInfo?.notifyPoster ?? true;
   },
   { immediate: true },
 );
@@ -64,16 +110,32 @@ const pageError = computed(() => {
       forbiddenMessage: "你没有编辑该帖子的权限",
     });
   }
+  if (topicResult.error.value) return normalizeApiError(topicResult.error.value);
+  if (boardResult.error.value) return normalizeApiError(boardResult.error.value);
+  if (tagsResult.error.value) return normalizeApiError(tagsResult.error.value);
   return null;
 });
 const stateKind = computed(() => {
   if (numericPostId.value == null || pageError.value?.kind === "not-found")
     return "not-found" as const;
-  if (isPending.value) return "loading" as const;
+  if (
+    isPending.value ||
+    (original.value != null && (topicResult.isPending.value || boardResult.isPending.value))
+  )
+    return "loading" as const;
   if (pageError.value?.kind === "forbidden") return "forbidden" as const;
   if (pageError.value) return "error" as const;
   return null;
 });
+
+async function refetchPage() {
+  await Promise.all([
+    refetch(),
+    topicResult.refetch(),
+    boardResult.refetch(),
+    ...(isTopicPost.value ? [tagsResult.refetch()] : []),
+  ]);
+}
 
 async function uploadImages(files: File[]) {
   return upload.mutateAsync({ files });
@@ -99,6 +161,14 @@ async function submit() {
     title: draft.title.trim(),
     content: draft.content,
     contentType: POST_CONTENT_TYPE.markdown,
+    ...(isTopicPost.value
+      ? {
+          tag1: draft.tag1 ?? undefined,
+          tag2: draft.tag2 ?? undefined,
+          type: draft.topicType,
+          notifyPoster: draft.notifyPoster,
+        }
+      : {}),
   };
   try {
     await editPost.mutateAsync({
@@ -132,41 +202,85 @@ async function submit() {
 </script>
 
 <template>
-  <section class="space-y-4">
-    <h1 class="text-xl font-semibold">编辑帖子</h1>
+  <section class="writing-page">
+    <nav class="new-topics-breadcrumb" aria-label="当前位置">
+      <RouterLink to="/">首页</RouterLink>
+      <span>›</span>
+      <RouterLink v-if="boardId > 0" :to="{ name: 'board', params: { boardId: String(boardId) } }">
+        {{ board?.name ?? `版面 ${boardId}` }}
+      </RouterLink>
+      <span v-else>版面</span>
+      <span>›</span>
+      <span>{{ pageModeText }}</span>
+    </nav>
+    <h1 class="writing-page__sr-only">{{ pageModeText }}</h1>
     <PageState
       v-if="stateKind"
       :kind="stateKind"
       :message="pageError?.message"
       :show-retry="stateKind === 'error'"
-      @retry="refetch"
+      @retry="refetchPage"
     />
 
-    <form v-else-if="original" class="cc98-card p-4 space-y-4" @submit.prevent="submit">
-      <p
-        v-if="convertedFromUbb"
-        class="rounded border border-cc98-accent px-3 py-2 text-sm text-cc98-accent"
-      >
+    <form v-else-if="original" class="writing-form" @submit.prevent="submit">
+      <p v-if="convertedFromUbb" class="writing-conversion-notice">
         该帖子原为 UBB 格式，已转换成 Markdown。部分旧标签可能无法完整保留，请确认预览后再保存。
       </p>
-      <label class="block space-y-1">
-        <span class="text-sm">标题</span>
+      <div v-if="isTopicPost" class="writing-row writing-row--title">
+        <div class="writing-row__label">主题标题</div>
+        <div v-if="tagGroups?.length" class="writing-title-tags">
+          <select
+            v-for="group in tagGroups"
+            :key="group.layer"
+            v-model="draft[group.layer === 2 ? 'tag2' : 'tag1']"
+            :disabled="editPost.isPending.value"
+            :aria-label="`标签 ${group.layer ?? ''}`"
+          >
+            <option :value="null">不选择</option>
+            <option v-for="tag in group.tags" :key="tag.id" :value="tag.id">
+              {{ tag.name ?? `标签 ${tag.id}` }}
+            </option>
+          </select>
+        </div>
         <input
           v-model="draft.title"
+          class="writing-title-input"
           type="text"
           maxlength="100"
           :disabled="editPost.isPending.value"
-          class="w-full cc98-input"
+          placeholder="请输入主题标题"
         />
-      </label>
-      <MarkdownEditor
-        v-model="draft.content"
-        :disabled="editPost.isPending.value"
-        :upload-images="uploadImages"
-        :upload-attachments="uploadAttachments"
-      />
-      <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
-      <div class="flex gap-3">
+      </div>
+      <div v-if="isTopicPost" class="writing-row writing-row--options">
+        <div class="writing-row__label">发帖类型</div>
+        <label><input v-model.number="draft.topicType" type="radio" :value="0" /> 普通</label>
+        <label><input v-model.number="draft.topicType" type="radio" :value="2" /> 学术通知</label>
+        <label v-if="canCreateActivity">
+          <input v-model.number="draft.topicType" type="radio" :value="1" /> 校园活动
+        </label>
+        <span class="writing-row__warning">（活动帖和学术帖请选择正确的发帖类型）</span>
+      </div>
+      <div v-if="isTopicPost" class="writing-row writing-row--options">
+        <div class="writing-row__label">高级选项</div>
+        <label>
+          <input v-model="draft.notifyPoster" type="checkbox" />
+          接收消息提醒
+        </label>
+      </div>
+      <div class="writing-row writing-row--content">
+        <div class="writing-row__label">{{ isTopicPost ? "主题内容" : "回复内容" }}</div>
+        <span>使用 Markdown 编辑，支持图片、附件和实时预览。</span>
+      </div>
+      <div class="writing-editor">
+        <MarkdownEditor
+          v-model="draft.content"
+          :disabled="editPost.isPending.value"
+          :upload-images="uploadImages"
+          :upload-attachments="uploadAttachments"
+        />
+      </div>
+      <p v-if="submitError" class="writing-submit-error">{{ submitError }}</p>
+      <div class="writing-actions">
         <UiButton type="submit" :loading="editPost.isPending.value">
           {{ editPost.isPending.value ? "保存中…" : "保存修改" }}
         </UiButton>

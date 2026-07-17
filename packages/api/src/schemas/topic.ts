@@ -50,6 +50,7 @@ export const topicSchema = z
     tag2: z.number().nullable().optional(),
     isInternalOnly: z.boolean().optional(),
     favoriteCount: z.number().optional(),
+    notifyPoster: z.boolean().optional(),
     canNotifyAllReplier: z.boolean().optional(),
     topicAuthorPermissions: z.array(z.string()).optional(),
     lastBrowsingTime: z.string().optional(),

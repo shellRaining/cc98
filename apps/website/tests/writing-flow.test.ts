@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vite-plus/test";
 import {
+  createTopicRequestSchema,
+  editPostRequestSchema,
   fileUploadResponseSchema,
   voteInfoSchema,
   type CreateVoteInfo,
@@ -81,6 +83,35 @@ describe("上传响应契约", () => {
     );
     expect(appendMarkdownBlock("正文", block)).toBe(`正文\n\n${block}`);
     expect(() => createAttachmentMarkdown(["a.txt"], [])).toThrow("数量不一致");
+  });
+});
+
+describe("主题编辑字段", () => {
+  test("创建主题保留发帖类型与消息提醒", () => {
+    const payload = createTopicRequestSchema.parse({
+      title: "测试主题",
+      content: "正文",
+      contentType: 1,
+      type: 2,
+      notifyPoster: false,
+      isAnonymous: false,
+      clientType: 1,
+    });
+    expect(payload.type).toBe(2);
+    expect(payload.notifyPoster).toBe(false);
+  });
+
+  test("编辑主楼可同步标签、类型与消息提醒", () => {
+    const payload = editPostRequestSchema.parse({
+      title: "编辑后的主题",
+      content: "编辑后的正文",
+      contentType: 1,
+      tag1: 10,
+      tag2: 20,
+      type: 1,
+      notifyPoster: true,
+    });
+    expect(payload).toMatchObject({ tag1: 10, tag2: 20, type: 1, notifyPoster: true });
   });
 });
 

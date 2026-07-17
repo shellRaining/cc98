@@ -7861,6 +7861,9 @@
           "favoriteCount": {
             "type": "number"
           },
+          "notifyPoster": {
+            "type": "boolean"
+          },
           "canNotifyAllReplier": {
             "type": "boolean"
           },

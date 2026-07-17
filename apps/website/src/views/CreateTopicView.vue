@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
+import { useTitle } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
 import type { CreateTopicRequest, CreateVoteInfo } from "@cc98/api";
 import { boardQuery, boardTagsQuery } from "../api/queries";
@@ -28,6 +29,8 @@ interface TopicDraft {
   tag1: number | null;
   tag2: number | null;
   isVote: boolean;
+  topicType: number;
+  notifyPoster: boolean;
   voteItems: string[];
   expiredDays: number;
   maxVoteCount: number;
@@ -41,6 +44,8 @@ const initialDraft: TopicDraft = {
   tag1: null,
   tag2: null,
   isVote: false,
+  topicType: 0,
+  notifyPoster: true,
   voteItems: ["", ""],
   expiredDays: 7,
   maxVoteCount: 1,
@@ -62,6 +67,34 @@ const { data: tagGroups } = useQuery(tagsOptions);
 const createTopic = useCreateTopicMutation();
 const upload = useUploadFilesMutation();
 const submitError = ref("");
+const pageModeText = computed(() =>
+  route.query.vote === "1" && board.value?.canVote ? "发表投票主题" : "发表主题",
+);
+const pageTitle = computed(() =>
+  board.value?.name
+    ? `${pageModeText.value} - ${board.value.name} - CC98 论坛`
+    : `${pageModeText.value} - CC98 论坛`,
+);
+const canCreateActivity = computed(() => {
+  const currentName = user.user?.name;
+  return (
+    (currentName != null && (board.value?.boardMasters ?? []).includes(currentName)) ||
+    (user.user?.userTitleIds ?? []).includes(91)
+  );
+});
+const anonymousState = computed(() => board.value?.anonymousState ?? 0);
+const canChooseAnonymous = computed(() => [2, 3].includes(anonymousState.value));
+const anonymousOnly = computed(() => anonymousState.value === 1);
+useTitle(pageTitle);
+
+watch(
+  anonymousState,
+  (state) => {
+    if (state === 0) draft.isAnonymous = false;
+    if (state === 1) draft.isAnonymous = true;
+  },
+  { immediate: true },
+);
 
 const pageError = computed(() => {
   if (numericBoardId.value == null) return normalizeApiError({ status: 404 });
@@ -132,10 +165,10 @@ async function submit() {
     title: draft.title.trim(),
     content: draft.content,
     contentType: 1,
-    type: 0,
+    type: draft.topicType === 1 && !canCreateActivity.value ? 0 : draft.topicType,
     tag1: draft.tag1 ?? undefined,
     tag2: draft.tag2 ?? undefined,
-    notifyPoster: false,
+    notifyPoster: draft.notifyPoster,
     isAnonymous: draft.isAnonymous,
     clientType: 1,
     isVote,
@@ -159,13 +192,17 @@ async function submit() {
 </script>
 
 <template>
-  <section class="space-y-4">
-    <nav class="text-sm text-cc98-text-muted">
-      <RouterLink :to="{ name: 'board', params: { boardId } }" class="cc98-link">
+  <section class="writing-page">
+    <nav class="new-topics-breadcrumb" aria-label="当前位置">
+      <RouterLink to="/">首页</RouterLink>
+      <span>›</span>
+      <RouterLink :to="{ name: 'board', params: { boardId } }">
         {{ board?.name ?? `版面 ${boardId}` }}
       </RouterLink>
-      <span> / 发主题</span>
+      <span>›</span>
+      <span>{{ pageModeText }}</span>
     </nav>
+    <h1 class="writing-page__sr-only">{{ pageModeText }}</h1>
 
     <PageState
       v-if="stateKind"
@@ -175,54 +212,76 @@ async function submit() {
       @retry="refetch"
     />
 
-    <form v-else class="cc98-card p-4 space-y-4" @submit.prevent="submit">
-      <h1 class="text-xl font-semibold">在「{{ board?.name ?? `版面 ${boardId}` }}」发主题</h1>
-
-      <label class="block space-y-1">
-        <span class="text-sm">标题</span>
-        <input
-          v-model="draft.title"
-          type="text"
-          maxlength="100"
-          required
-          :disabled="createTopic.isPending.value"
-          class="w-full cc98-input"
-        />
-      </label>
-
-      <div v-if="tagGroups?.length" class="flex flex-wrap gap-4">
-        <label v-for="group in tagGroups" :key="group.layer" class="space-y-1 text-sm">
-          <span class="block">标签 {{ group.layer ?? "" }}</span>
+    <form v-else class="writing-form" @submit.prevent="submit">
+      <div class="writing-row writing-row--title">
+        <div class="writing-row__label">主题标题</div>
+        <div v-if="tagGroups?.length" class="writing-title-tags">
           <select
+            v-for="group in tagGroups"
+            :key="group.layer"
             v-model="draft[group.layer === 2 ? 'tag2' : 'tag1']"
             :disabled="createTopic.isPending.value"
-            class="cc98-input"
+            :aria-label="`标签 ${group.layer ?? ''}`"
           >
             <option :value="null">不选择</option>
             <option v-for="tag in group.tags" :key="tag.id" :value="tag.id">
               {{ tag.name ?? `标签 ${tag.id}` }}
             </option>
           </select>
-        </label>
-      </div>
-
-      <MarkdownEditor
-        v-model="draft.content"
-        :disabled="createTopic.isPending.value"
-        :upload-images="uploadImages"
-        :upload-attachments="uploadAttachments"
-      />
-
-      <label class="flex items-center gap-2 text-sm">
+        </div>
         <input
-          v-model="draft.isAnonymous"
-          type="checkbox"
+          v-model="draft.title"
+          class="writing-title-input"
+          type="text"
+          maxlength="100"
+          required
+          placeholder="请输入新主题的标题"
           :disabled="createTopic.isPending.value"
         />
-        匿名发布
-      </label>
+      </div>
 
-      <fieldset v-if="board?.canVote" class="rounded border border-cc98-border p-4 space-y-3">
+      <p v-if="tagGroups?.some((group) => group.layer === 2)" class="writing-tag-notice">
+        【提示】↓↓↓ 该版面有两层标签，请先选择第 1 个标签，再选择第 2 个标签 ↓↓↓
+      </p>
+
+      <div class="writing-row writing-row--options">
+        <div class="writing-row__label">发帖类型</div>
+        <label><input v-model.number="draft.topicType" type="radio" :value="0" /> 普通</label>
+        <label><input v-model.number="draft.topicType" type="radio" :value="2" /> 学术通知</label>
+        <label v-if="canCreateActivity">
+          <input v-model.number="draft.topicType" type="radio" :value="1" /> 校园活动
+        </label>
+        <span class="writing-row__warning">（活动帖和学术帖请选择正确的发帖类型）</span>
+      </div>
+
+      <div class="writing-row writing-row--options">
+        <div class="writing-row__label">高级选项</div>
+        <label>
+          <input v-model="draft.notifyPoster" type="checkbox" />
+          接收消息提醒
+        </label>
+        <label v-if="canChooseAnonymous" class="writing-anonymous-option">
+          <input v-model="draft.isAnonymous" type="checkbox" />
+          匿名发布
+        </label>
+        <span v-else-if="anonymousOnly">本版面只允许匿名发布</span>
+      </div>
+
+      <div class="writing-row writing-row--content">
+        <div class="writing-row__label">主题内容</div>
+        <span>使用 Markdown 编辑，支持图片、附件和实时预览。</span>
+      </div>
+
+      <div class="writing-editor">
+        <MarkdownEditor
+          v-model="draft.content"
+          :disabled="createTopic.isPending.value"
+          :upload-images="uploadImages"
+          :upload-attachments="uploadAttachments"
+        />
+      </div>
+
+      <fieldset v-if="board?.canVote" class="writing-vote">
         <label class="flex items-center gap-2 text-sm font-medium">
           <input v-model="draft.isVote" type="checkbox" :disabled="createTopic.isPending.value" />
           创建投票主题
@@ -290,12 +349,12 @@ async function submit() {
         </template>
       </fieldset>
 
-      <p v-if="submitError" class="text-sm text-cc98-accent">{{ submitError }}</p>
-      <div class="flex gap-3">
+      <p v-if="submitError" class="writing-submit-error">{{ submitError }}</p>
+      <div class="writing-actions">
         <UiButton type="submit" :loading="createTopic.isPending.value">
           {{ createTopic.isPending.value ? "发布中…" : "发布主题" }}
         </UiButton>
-        <RouterLink :to="{ name: 'board', params: { boardId } }" class="cc98-link py-2">
+        <RouterLink :to="{ name: 'board', params: { boardId } }" class="cc98-link">
           取消
         </RouterLink>
       </div>
