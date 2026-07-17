@@ -2,14 +2,20 @@
 import type { BasicUser, Board, Topic } from "@cc98/api";
 import { computed } from "vue";
 import { floorAnchorId, floorToPage } from "../../lib/route-params";
-import { formatDiscoveryTime } from "../../lib/discovery";
+import { formatDiscoveryDateTime, formatDiscoveryTime } from "../../lib/discovery";
 
-const props = defineProps<{
-  topic: Topic;
-  board?: Board;
-  author?: BasicUser;
-  tagNames?: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    topic: Topic;
+    board?: Board;
+    author?: BasicUser;
+    tagNames?: string[];
+    timeFormat?: "relative" | "absolute";
+  }>(),
+  {
+    timeFormat: "relative",
+  },
+);
 
 const anonymous = computed(() => props.topic.isAnonymous || props.topic.userId == null);
 const authorName = computed(() =>
@@ -32,6 +38,8 @@ const lastPostUrl = computed(() => ({
   },
   hash: `#${floorAnchorId(floor.value)}`,
 }));
+const formatTime = (value: string | undefined) =>
+  props.timeFormat === "absolute" ? formatDiscoveryDateTime(value) : formatDiscoveryTime(value);
 
 function replaceBrokenAvatar(event: Event) {
   const image = event.currentTarget as HTMLImageElement;
@@ -62,7 +70,7 @@ function replaceBrokenAvatar(event: Event) {
       </RouterLink>
       <div class="new-topic-classic-item__meta">
         <span v-if="tagNames?.length">标签：{{ tagNames.join(" / ") }}</span>
-        <time :datetime="topic.time">◷ {{ formatDiscoveryTime(topic.time) }}</time>
+        <time :datetime="topic.time">◷ {{ formatTime(topic.time) }}</time>
         <span>◉ {{ topic.hitCount ?? 0 }}</span>
         <span>
           最后回复：
@@ -74,7 +82,7 @@ function replaceBrokenAvatar(event: Event) {
           </RouterLink>
           <span v-else>暂无</span>
         </span>
-        <RouterLink :to="lastPostUrl">{{ formatDiscoveryTime(topic.lastPostTime) }}</RouterLink>
+        <RouterLink :to="lastPostUrl">{{ formatTime(topic.lastPostTime) }}</RouterLink>
       </div>
     </div>
 

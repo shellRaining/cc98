@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useTitle } from "@vueuse/core";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
-import { hotTopicsQuery } from "../api/queries";
+import { boardsByIdsQuery, globalTagsQuery, hotTopicsQuery, usersByIdsQuery } from "../api/queries";
+import NewTopicClassicItem from "../components/discovery/NewTopicClassicItem.vue";
 import PageState from "../components/PageState.vue";
-import TopicList from "../components/TopicList.vue";
 import { normalizeApiError } from "../lib/api-error";
-import { HOT_PERIOD_LABELS, hotTopicsPath, isHotPeriod, type HotPeriod } from "../lib/discovery";
+import {
+  HOT_PERIOD_LABELS,
+  isHotPeriod,
+  uniqueTopicBoardIds,
+  uniqueTopicUserIds,
+  type HotPeriod,
+} from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
 
 const route = useRoute();
@@ -18,9 +25,22 @@ const period = computed<HotPeriod>(() => {
 });
 
 const title = computed(() => HOT_PERIOD_LABELS[period.value]);
+useTitle(computed(() => `${title.value} - CC98 论坛`));
 
 const options = computed(() => hotTopicsQuery(period.value));
 const { data: topics, error, isPending, refetch } = useQuery(options);
+const boardIds = computed(() => uniqueTopicBoardIds(topics.value ?? []));
+const authorIds = computed(() => uniqueTopicUserIds(topics.value ?? []));
+const boardsOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
+const authorsOptions = computed(() => usersByIdsQuery(authorIds.value, authorIds.value.length > 0));
+const { data: boards } = useQuery(boardsOptions);
+const { data: authors } = useQuery(authorsOptions);
+const { data: tags } = useQuery(globalTagsQuery);
+const boardMap = computed(() => new Map((boards.value ?? []).map((board) => [board.id, board])));
+const authorMap = computed(
+  () => new Map((authors.value ?? []).map((author) => [author.id, author])),
+);
+const tagMap = computed(() => new Map((tags.value ?? []).map((tag) => [tag.id, tag.name])));
 
 const pageError = computed(() => (error.value ? normalizeApiError(error.value) : null));
 
@@ -38,36 +58,21 @@ function goLogin() {
   saveLoginRedirect(route.fullPath);
   void router.push({ name: "logon" });
 }
+
+function topicTags(topic: { tag1?: number | null; tag2?: number | null }) {
+  return [topic.tag1, topic.tag2].flatMap((id) =>
+    id != null && id > 0 ? [tagMap.value.get(id) || String(id)] : [],
+  );
+}
 </script>
 
 <template>
-  <section class="space-y-4">
-    <header class="space-y-3">
-      <h1 class="text-2xl font-bold">{{ title }}</h1>
-      <nav class="flex flex-wrap gap-3 text-sm">
-        <RouterLink
-          :to="hotTopicsPath('weekly')"
-          class="cc98-link"
-          :class="{ 'font-semibold text-cc98-primary': period === 'weekly' }"
-        >
-          本周
-        </RouterLink>
-        <RouterLink
-          :to="hotTopicsPath('monthly')"
-          class="cc98-link"
-          :class="{ 'font-semibold text-cc98-primary': period === 'monthly' }"
-        >
-          本月
-        </RouterLink>
-        <RouterLink
-          :to="hotTopicsPath('history')"
-          class="cc98-link"
-          :class="{ 'font-semibold text-cc98-primary': period === 'history' }"
-        >
-          历史上的今天
-        </RouterLink>
-      </nav>
-    </header>
+  <section class="hot-topics-page">
+    <nav class="hot-topics-breadcrumb" aria-label="面包屑">
+      <RouterLink to="/">首页</RouterLink>
+      <span aria-hidden="true">›</span>
+      <span>{{ title }}</span>
+    </nav>
 
     <PageState
       v-if="stateKind"
@@ -78,8 +83,45 @@ function goLogin() {
       @retry="refetch()"
     />
 
-    <div v-else class="cc98-card px-4">
-      <TopicList :topics="topics ?? []" />
+    <div v-else class="new-topic-classic-list hot-topics-list">
+      <NewTopicClassicItem
+        v-for="topic in topics"
+        :key="topic.id"
+        :topic="topic"
+        :board="topic.boardId ? boardMap.get(topic.boardId) : undefined"
+        :author="topic.userId ? authorMap.get(topic.userId) : undefined"
+        :tag-names="topicTags(topic)"
+        time-format="absolute"
+      />
     </div>
   </section>
 </template>
+
+<style scoped>
+.hot-topics-page {
+  min-height: 48.75rem;
+  padding-bottom: 3.75rem;
+}
+
+.hot-topics-breadcrumb {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+}
+
+.hot-topics-breadcrumb a,
+.hot-topics-breadcrumb a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.hot-topics-breadcrumb a:hover {
+  color: var(--cc98-color-primary);
+}
+
+.hot-topics-list {
+  margin-top: 0;
+}
+</style>

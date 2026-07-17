@@ -2,6 +2,7 @@ import { describe, expect, test } from "vite-plus/test";
 import {
   dedupeTopicsById,
   focusPath,
+  formatDiscoveryDateTime,
   formatDiscoveryTime,
   hotTopicsPath,
   isHotPeriod,
@@ -86,6 +87,7 @@ describe("discovery helpers", () => {
     expect(
       formatDiscoveryTime("2026-07-17T11:30:00+08:00", new Date("2026-07-17T12:00:00+08:00")),
     ).toBe("30分钟前");
+    expect(formatDiscoveryDateTime("2026-07-17T11:30:45+08:00")).toBe("2026-07-17 11:30:45");
   });
 });
 

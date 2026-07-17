@@ -1,12 +1,14 @@
+import dayjs from "dayjs";
+
 /** 热门周期，对应 `/topic/hot-{period}`。 */
 export type HotPeriod = "weekly" | "monthly" | "history";
 export type NewTopicViewMode = "classic" | "card" | "media";
 export type FocusMode = "board" | "user" | "favorite";
 
 export const HOT_PERIOD_LABELS: Record<HotPeriod, string> = {
-  weekly: "7日热门",
-  monthly: "30日热门",
-  history: "历史热门",
+  weekly: "7日热门话题",
+  monthly: "30日热门话题",
+  history: "历史上的今天",
 };
 
 export function isHotPeriod(value: unknown): value is HotPeriod {
@@ -85,6 +87,12 @@ export function formatDiscoveryTime(value: string | undefined, now = new Date())
   if (dayDiff === 1) return `昨天 ${clock}`;
   if (dayDiff === 2) return `前天 ${clock}`;
   return `${time.getFullYear()}-${String(time.getMonth() + 1).padStart(2, "0")}-${String(time.getDate()).padStart(2, "0")} ${clock}`;
+}
+
+export function formatDiscoveryDateTime(value: string | undefined): string {
+  if (!value) return "—";
+  const time = dayjs(value);
+  return time.isValid() ? time.format("YYYY-MM-DD HH:mm:ss") : value;
 }
 
 /** 去掉首尾空白；空串视为无关键词。 */
