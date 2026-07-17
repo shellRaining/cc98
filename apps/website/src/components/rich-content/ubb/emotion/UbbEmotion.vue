@@ -12,6 +12,6 @@ defineProps<{
     :alt="emotion.alt"
     :title="emotion.alt"
     loading="lazy"
-    class="mx-0.5 inline-block max-h-12 max-w-24 align-middle"
+    class="inline-block max-w-full align-middle"
   />
 </template>

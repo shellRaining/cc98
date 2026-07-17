@@ -65,6 +65,27 @@ describe("ContentRenderer", () => {
     expect(markdown).toContain("rich-content-table-wrap");
   });
 
+  test("UBB 代码保留旧站行号并去掉首尾空行", async () => {
+    const html = await renderContent("[code]\n第一行\n\n第三行\n[/code]");
+    expect(html).toContain("ubb-code-block");
+    expect(html.match(/<li/g)).toHaveLength(3);
+    expect(html).toContain("第一行");
+    expect(html).toContain("第三行");
+  });
+
+  test("历史表情不再统一压缩到 48px", async () => {
+    const html = await renderContent("[ac1001]");
+    expect(html).toContain("max-w-full");
+    expect(html).not.toContain("max-h-12");
+    expect(html).not.toContain("max-w-24");
+  });
+
+  test("B 站播放器保留旧站海报参数和容器标记", async () => {
+    const html = await renderContent("[bili]BV1xx411c7mD[/bili]");
+    expect(html).toContain("ubb-bili-player");
+    expect(html).toContain("poster=1");
+  });
+
   test("Markdown 原始 HTML 和危险 URL 不进入可执行输出", async () => {
     const html = await renderContent(
       "<script>alert(1)</script> [危险](javascript:alert(1)) ![图](data:text/html,x)",

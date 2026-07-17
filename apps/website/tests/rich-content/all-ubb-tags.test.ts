@@ -59,7 +59,7 @@ const staticCases: StaticCase[] = [
   {
     covers: ["code", "md", "noubb"],
     content: "[code][b]代码[/b][/code][md]**粗体**[/md][noubb][i]字面量[/i][/noubb]",
-    assertions: ["<pre", "[b]代码[/b]", "<strong>粗体</strong>", "[i]字面量[/i]"],
+    assertions: ["ubb-code-block", "[b]代码[/b]", "<strong>粗体</strong>", "[i]字面量[/i]"],
   },
   {
     covers: ["img", "audio", "mp3", "video", "upload", "bili"],
