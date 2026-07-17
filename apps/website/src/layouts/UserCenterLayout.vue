@@ -1,10 +1,21 @@
 <script setup lang="ts">
 import { useTitle, useWindowScroll } from "@vueuse/core";
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
+import FullPageStatus from "../components/FullPageStatus.vue";
+import { saveLoginRedirect } from "../lib/login-redirect";
+import { useUserStore } from "../stores/user";
 
 useTitle("个人中心 - CC98 论坛");
 
+const route = useRoute();
+const router = useRouter();
+const user = useUserStore();
 const { y } = useWindowScroll({ behavior: "smooth" });
+
+function goLogin() {
+  saveLoginRedirect(route.fullPath);
+  void router.push({ name: "logon" });
+}
 
 const links = [
   ["/usercenter", "个人主页", "M12 3h8v12h6V14h4v9h6V11z"],
@@ -50,7 +61,8 @@ const links = [
 </script>
 
 <template>
-  <section class="user-center-page">
+  <FullPageStatus v-if="!user.isLoggedIn" kind="unauthorized" @login="goLogin" />
+  <section v-else class="user-center-page">
     <h1 class="user-center-page__title">个人中心</h1>
 
     <div class="user-center-shell">

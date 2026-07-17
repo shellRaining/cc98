@@ -132,7 +132,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/usercenter",
     component: () => import("../layouts/UserCenterLayout.vue"),
-    meta: { requiresAuth: true },
     children: [
       {
         path: "",
@@ -237,7 +236,6 @@ const routes: RouteRecordRaw[] = [
     path: "/annual-review-2025",
     name: "annual-review-2025",
     component: () => import("../views/AnnualReviewView.vue"),
-    meta: { requiresAuth: true },
   },
   {
     path: "/sitemanage",

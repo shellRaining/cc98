@@ -3,7 +3,9 @@ import { computed, ref, watch } from "vue";
 import dayjs from "dayjs";
 import { useQuery } from "@tanstack/vue-query";
 import { useTitle } from "@vueuse/core";
+import { useRoute, useRouter } from "vue-router";
 import { annualReviewQuery, boardsByIdsQuery, currentUserQuery } from "../api/queries";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import PageState from "../components/PageState.vue";
 import {
   annualReviewAchievements,
@@ -13,16 +15,19 @@ import {
   type AnnualReviewPage,
 } from "../lib/annual-review";
 import { normalizeApiError } from "../lib/api-error";
+import { saveLoginRedirect } from "../lib/login-redirect";
 import { useUserStore } from "../stores/user";
 
 const YEAR = 2025;
 const DEFAULT_AVATAR = "/static/images/default_avatar_boy.png";
+const route = useRoute();
+const router = useRouter();
 const user = useUserStore();
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const reviewQuery = useQuery(
   computed(() => annualReviewQuery(YEAR, authScope.value, user.isLoggedIn)),
 );
-const profileQuery = useQuery(currentUserQuery);
+const profileQuery = useQuery({ ...currentUserQuery, enabled: () => user.isLoggedIn });
 const data = computed(() => reviewQuery.data.value ?? null);
 const profile = computed(() => profileQuery.data.value ?? null);
 useTitle(`${YEAR} 年度总结 - CC98 论坛`);
@@ -68,12 +73,18 @@ const timeBars = computed(() => [
 const maxTimeCount = computed(() => Math.max(1, ...timeBars.value.map((item) => item.count)));
 
 const pageState = computed(() => {
+  if (!user.isLoggedIn) return "unauthorized" as const;
   if (reviewQuery.isPending.value || profileQuery.isPending.value) return "loading" as const;
   const error = reviewQuery.error.value ?? profileQuery.error.value;
   if (error) return normalizeApiError(error).kind;
   if (!data.value || !profile.value) return "not-found" as const;
   return null;
 });
+
+function goLogin() {
+  saveLoginRedirect(route.fullPath);
+  void router.push({ name: "logon" });
+}
 
 function previousPage() {
   if (canPrevious.value) pageIndex.value -= 1;
@@ -138,7 +149,8 @@ function formatTime(value?: string | null) {
 </script>
 
 <template>
-  <section class="annual-review-view">
+  <FullPageStatus v-if="pageState === 'unauthorized'" kind="unauthorized" @login="goLogin" />
+  <section v-else class="annual-review-view">
     <h1 class="sr-only">{{ YEAR }} 年度总结</h1>
     <PageState
       v-if="pageState"
