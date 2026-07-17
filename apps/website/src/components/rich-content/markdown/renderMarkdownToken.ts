@@ -51,7 +51,7 @@ function renderContainer(
     case "list_item_open":
       return h("li", children);
     case "table_open":
-      return h("div", { class: "my-3 overflow-x-auto" }, [
+      return h("div", { class: "rich-content-table-wrap my-3 overflow-x-auto" }, [
         h("table", { class: "w-full border-collapse text-left" }, children),
       ]);
     case "thead_open":

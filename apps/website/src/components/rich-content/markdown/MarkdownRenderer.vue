@@ -19,7 +19,7 @@ export default defineComponent({
   },
   setup(props) {
     return () =>
-      h(UniverseRoot, { preserveWhitespace: false }, () =>
+      h(UniverseRoot, { contentType: "markdown", preserveWhitespace: false }, () =>
         renderMarkdownTokens(markdownIt.parse(props.content, {}), props.options),
       );
   },

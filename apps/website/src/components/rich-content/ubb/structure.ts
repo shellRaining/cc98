@@ -62,7 +62,7 @@ function positiveSpan(value: string | undefined): number | undefined {
 export const renderTableTag: UbbTagRenderer = (node, context, renderChildren) => {
   const children = renderChildren(node, context);
   if (node.tag === "table") {
-    return h("div", { class: "my-3 overflow-x-auto" }, [
+    return h("div", { class: "rich-content-table-wrap my-3 overflow-x-auto" }, [
       h("table", { class: "w-full border-collapse text-left" }, children),
     ]);
   }

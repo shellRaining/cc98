@@ -21,7 +21,7 @@ export default defineComponent({
   setup(props) {
     return () => {
       const context = createUbbRenderContext(props.options);
-      return h(UniverseRoot, null, () => renderUbbNodes(props.nodes, context));
+      return h(UniverseRoot, { contentType: "ubb" }, () => renderUbbNodes(props.nodes, context));
     };
   },
 });

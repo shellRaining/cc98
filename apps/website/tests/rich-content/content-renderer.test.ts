@@ -54,6 +54,15 @@ describe("ContentRenderer", () => {
     expect(embedded).toContain("**加粗**");
     expect(embedded).not.toContain("<strong>");
     expect(topLevel).toContain("<strong>加粗</strong>");
+    expect(embedded).toContain("rich-content--ubb");
+    expect(topLevel).toContain("rich-content--markdown");
+  });
+
+  test("UBB 与 Markdown 表格共用可横向滚动容器", async () => {
+    const ubb = await renderContent("[table][tr][td]内容[/td][/tr][/table]");
+    const markdown = await renderContent("| 表头 |\n| --- |\n| 内容 |", "markdown");
+    expect(ubb).toContain("rich-content-table-wrap");
+    expect(markdown).toContain("rich-content-table-wrap");
   });
 
   test("Markdown 原始 HTML 和危险 URL 不进入可执行输出", async () => {
