@@ -16,6 +16,7 @@ import { useFollowBoardMutation, useUnfollowBoardMutation } from "../api/mutatio
 import BoardEventList from "../components/board/BoardEventList.vue";
 import BoardBatchModerationDialog from "../components/board/BoardBatchModerationDialog.vue";
 import BoardHeader from "../components/board/BoardHeader.vue";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import HomeAdvertisement from "../components/home/HomeAdvertisement.vue";
 import PageState from "../components/PageState.vue";
 import Pagination from "../components/Pagination.vue";
@@ -292,7 +293,15 @@ function completeBatchModeration() {
 </script>
 
 <template>
-  <section class="board-page">
+  <FullPageStatus
+    v-if="blockingState === 'unauthorized'"
+    kind="unauthorized"
+    document-title="您没有权限进入这个版面"
+    message="您没有权限进入这个版面或未登录"
+    show-home
+    @login="goLogin"
+  />
+  <section v-else class="board-page">
     <nav v-if="!blockingState" class="board-breadcrumb" aria-label="面包屑">
       <RouterLink to="/">首页</RouterLink><span>›</span>
       <RouterLink to="/boardlist">版面列表</RouterLink><span>›</span>

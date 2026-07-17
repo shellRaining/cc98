@@ -6,6 +6,8 @@ import { FULL_PAGE_STATUS_CONFIG, type FullPageStatusKind } from "../lib/full-pa
 const props = defineProps<{
   kind: FullPageStatusKind;
   message?: string;
+  documentTitle?: string;
+  showHome?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -15,8 +17,10 @@ const emit = defineEmits<{
 
 const config = computed(() => FULL_PAGE_STATUS_CONFIG[props.kind]);
 const resolvedMessage = computed(() => props.message || config.value.message);
+const resolvedDocumentTitle = computed(() => props.documentTitle || config.value.documentTitle);
+const resolvedShowHome = computed(() => props.showHome ?? config.value.showHome !== false);
 
-useTitle(computed(() => config.value.documentTitle + " - CC98论坛"));
+useTitle(computed(() => resolvedDocumentTitle.value + " - CC98论坛"));
 </script>
 
 <template>
@@ -26,7 +30,7 @@ useTitle(computed(() => config.value.documentTitle + " - CC98论坛"));
       <h1 :id="'status-page-title-' + kind" class="status-page__title">{{ config.title }}</h1>
       <p class="status-page__message">{{ resolvedMessage }}</p>
       <div class="status-page__actions">
-        <RouterLink v-if="config.showHome !== false" to="/">返回首页</RouterLink>
+        <RouterLink v-if="resolvedShowHome" to="/">返回首页</RouterLink>
         <button v-if="config.showRetry" type="button" @click="emit('retry')">重新尝试</button>
         <button v-if="config.showLogin" type="button" @click="emit('login')">点我登录</button>
       </div>

@@ -16,6 +16,7 @@ import {
   topicPostsQuery,
   topicQuery,
 } from "../api/queries";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import HomeAdvertisement from "../components/home/HomeAdvertisement.vue";
 import MarkdownEditor from "../components/MarkdownEditor.vue";
 import PageState from "../components/PageState.vue";
@@ -535,7 +536,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="topic-page" :class="{ 'images-collapsed': imagesCollapsed }">
+  <FullPageStatus v-if="stateKind === 'unauthorized'" kind="unauthorized" @login="goLogin" />
+  <section v-else class="topic-page" :class="{ 'images-collapsed': imagesCollapsed }">
     <div class="topic-navigation-row">
       <nav class="topic-breadcrumb" aria-label="当前位置">
         <RouterLink to="/">首页</RouterLink>
