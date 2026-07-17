@@ -1334,12 +1334,17 @@ a:hover {
 
 .board-topic-row {
   display: grid;
-  min-height: 4rem;
+  min-height: 3rem;
   align-items: center;
   border-bottom: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
   color: var(--cc98-color-text);
   font-size: 0.75rem;
   grid-template-columns: minmax(0, 1fr) 7.5rem 8.5rem 12rem;
+}
+
+.board-topic-row:nth-child(even) {
+  background: var(--cc98-color-surface-subtle);
 }
 
 .board-topic-row:last-child {
@@ -1347,7 +1352,7 @@ a:hover {
 }
 
 .board-topic-row:hover {
-  background: #eaeaea;
+  background: color-mix(in srgb, var(--cc98-color-primary) 8%, var(--cc98-color-surface));
 }
 
 .board-topic-row__title {
