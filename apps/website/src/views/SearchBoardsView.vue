@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useRoute } from "vue-router";
 import { searchBoardsQuery } from "../api/queries";
 import PageState from "../components/PageState.vue";
+import SearchEmptyState from "../components/search/SearchEmptyState.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { normalizeSearchKeyword } from "../lib/discovery";
 
@@ -47,11 +48,11 @@ const stateKind = computed(() => {
       @retry="refetch()"
     />
 
-    <div v-else-if="stateKind === 'empty'" class="search-empty">
-      <p>
-        {{ keyword ? "抱歉呢前辈，没有找到你想要的版面哦~" : "请在顶部搜索框输入版面关键词。" }}
-      </p>
-    </div>
+    <SearchEmptyState
+      v-else-if="stateKind === 'empty'"
+      target="版面"
+      :has-keyword="Boolean(keyword)"
+    />
 
     <div v-else class="search-board-results">
       <RouterLink v-for="board in boards" :key="board.id" :to="`/list/${board.id}`">

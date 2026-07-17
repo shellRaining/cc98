@@ -3120,12 +3120,24 @@ a:hover {
 }
 
 .search-empty {
-  display: grid;
-  min-height: 22rem;
-  place-items: center;
-  align-content: center;
+  display: flex;
+  min-height: 34rem;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   color: var(--cc98-color-text-muted);
   text-align: center;
+}
+
+.search-empty img {
+  display: block;
+  width: 22.5rem;
+  max-width: 50%;
+}
+
+.search-empty p {
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
 }
 
 .search-board-results {

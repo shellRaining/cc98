@@ -11,6 +11,7 @@ import {
 } from "../api/queries";
 import NewTopicClassicItem from "../components/discovery/NewTopicClassicItem.vue";
 import PageState from "../components/PageState.vue";
+import SearchEmptyState from "../components/search/SearchEmptyState.vue";
 import { normalizeApiError } from "../lib/api-error";
 import {
   dedupeTopicsById,
@@ -119,11 +120,11 @@ function goLogin() {
       @retry="query.refetch()"
     />
 
-    <div v-else-if="stateKind === 'empty'" class="search-empty">
-      <p>
-        {{ keyword ? "抱歉呢前辈，没有找到你想要的帖子哦~" : "请在顶部搜索框输入关键词。" }}
-      </p>
-    </div>
+    <SearchEmptyState
+      v-else-if="stateKind === 'empty'"
+      target="帖子"
+      :has-keyword="Boolean(keyword)"
+    />
 
     <template v-else>
       <div class="search-topic-list">
