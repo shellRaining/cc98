@@ -156,6 +156,13 @@ a:hover {
   padding: 0;
 }
 
+@media (min-width: 71.25rem) {
+  .site-header__topbar > .cc98-content,
+  .site-main--home {
+    max-width: 100%;
+  }
+}
+
 .site-main--inner {
   padding-top: 1.5rem;
 }
