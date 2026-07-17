@@ -55,9 +55,10 @@
       </a>
     </div>
     <div class="site-footer__row">
-      <span>Copyright © 2003-{{ new Date().getFullYear() }} CC98</span>
-      <span>|</span>
-      <a href="mailto:contact@cc98.org">Email: contact@cc98.org</a>
+      <span>
+        Copyright © 2003-{{ new Date().getFullYear() }} CC98 Durian v3.5.0 |
+        <a href="mailto:contact@cc98.org">Email: contact@cc98.org</a>
+      </span>
     </div>
   </footer>
 </template>
