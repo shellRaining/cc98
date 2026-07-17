@@ -99,14 +99,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import("../views/SearchTopicsView.vue"),
   },
   {
-    path: "/search/boards",
+    path: "/searchBoard",
     name: "search-boards",
     component: () => import("../views/SearchBoardsView.vue"),
   },
   {
-    path: "/searchBoard",
+    path: "/search/boards",
     redirect: (to) => ({
-      path: "/search/boards",
+      path: "/searchBoard",
       query: to.query,
     }),
   },

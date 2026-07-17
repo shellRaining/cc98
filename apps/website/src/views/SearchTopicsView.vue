@@ -10,6 +10,7 @@ import {
   usersByIdsQuery,
 } from "../api/queries";
 import NewTopicClassicItem from "../components/discovery/NewTopicClassicItem.vue";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import PageState from "../components/PageState.vue";
 import SearchEmptyState from "../components/search/SearchEmptyState.vue";
 import { normalizeApiError } from "../lib/api-error";
@@ -30,7 +31,7 @@ const router = useRouter();
 const user = useUserStore();
 const { y } = useWindowScroll({ behavior: "smooth" });
 
-useTitle("搜索结果 - CC98 论坛");
+useTitle("搜索结果 - CC98论坛");
 
 const keyword = computed(() => normalizeSearchKeyword(String(route.query.keyword ?? "")));
 const boardId = computed(() => normalizeSearchBoardId(String(route.query.boardId ?? "")));
@@ -56,7 +57,8 @@ const boardsOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.v
 const authorsOptions = computed(() => usersByIdsQuery(authorIds.value, authorIds.value.length > 0));
 const { data: boards } = useQuery(boardsOptions);
 const { data: authors } = useQuery(authorsOptions);
-const { data: tags } = useQuery(globalTagsQuery);
+const tagsOptions = computed(() => ({ ...globalTagsQuery, enabled: canSearch.value }));
+const { data: tags } = useQuery(tagsOptions);
 const boardMap = computed(() => new Map((boards.value ?? []).map((board) => [board.id, board])));
 const authorMap = computed(
   () => new Map((authors.value ?? []).map((author) => [author.id, author])),
@@ -100,16 +102,13 @@ function goLogin() {
 </script>
 
 <template>
-  <section class="search-page">
+  <FullPageStatus v-if="stateKind === 'unauthorized'" kind="unauthorized" @login="goLogin" />
+  <section v-else class="search-page">
     <nav class="new-topics-breadcrumb" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink>
       <span>›</span>
       <span>搜索主题</span>
     </nav>
-
-    <p v-if="keyword" class="search-summary">
-      {{ boardId ? `版内搜索“${keyword}”` : `全站搜索“${keyword}”` }}
-    </p>
 
     <PageState
       v-if="stateKind && stateKind !== 'empty'"

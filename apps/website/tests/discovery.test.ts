@@ -35,10 +35,10 @@ describe("discovery helpers", () => {
 
   test("生成发现页路径", () => {
     expect(hotTopicsPath("weekly")).toBe("/topic/hot-weekly");
-    expect(searchTopicsPath("vue", null, 1)).toBe("/search?keyword=vue");
-    expect(searchTopicsPath("vue", 758, 2)).toBe("/search?keyword=vue&boardId=758&page=2");
-    expect(searchTopicsPath("  ", null, 1)).toBe("/search");
-    expect(searchBoardsPath("水区")).toBe(`/search/boards?keyword=${encodeURIComponent("水区")}`);
+    expect(searchTopicsPath("vue")).toBe("/search?boardId=0&keyword=vue");
+    expect(searchTopicsPath("vue", 758)).toBe("/search?boardId=758&keyword=vue");
+    expect(searchTopicsPath("  ")).toBe("/search");
+    expect(searchBoardsPath("水区")).toBe(`/searchBoard?keyword=${encodeURIComponent("水区")}`);
     expect(userIdPath(12)).toBe("/user/id/12");
     expect(userNamePath("alice")).toBe("/user/name/alice");
   });

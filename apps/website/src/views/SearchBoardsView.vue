@@ -11,7 +11,7 @@ import { normalizeSearchKeyword } from "../lib/discovery";
 
 const route = useRoute();
 
-useTitle("搜索结果 - CC98 论坛");
+useTitle("搜索结果 - CC98论坛");
 
 const keyword = computed(() => normalizeSearchKeyword(String(route.query.keyword ?? "")));
 const options = computed(() => searchBoardsQuery(keyword.value, keyword.value.length > 0));
@@ -37,8 +37,6 @@ const stateKind = computed(() => {
       <span>›</span>
       <span>搜索版面</span>
     </nav>
-
-    <p v-if="keyword" class="search-summary">搜索版面“{{ keyword }}”</p>
 
     <PageState
       v-if="stateKind && stateKind !== 'empty'"

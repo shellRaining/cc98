@@ -112,20 +112,20 @@ export function hotTopicsPath(period: HotPeriod): string {
   return `/topic/hot-${period}`;
 }
 
-export function searchTopicsPath(keyword: string, boardId?: number | null, page = 1): string {
-  const params = new URLSearchParams();
+export function searchTopicsPath(keyword: string, boardId?: number | null): string {
   const normalized = normalizeSearchKeyword(keyword);
-  if (normalized) params.set("keyword", normalized);
+  if (!normalized) return "/search";
+
+  const params = new URLSearchParams();
   const board = normalizeSearchBoardId(boardId);
-  if (board != null) params.set("boardId", String(board));
-  if (page > 1) params.set("page", String(page));
-  const query = params.toString();
-  return query ? `/search?${query}` : "/search";
+  params.set("boardId", String(board ?? 0));
+  params.set("keyword", normalized);
+  return `/search?${params.toString()}`;
 }
 
 export function searchBoardsPath(keyword: string): string {
   const normalized = normalizeSearchKeyword(keyword);
-  return normalized ? `/search/boards?keyword=${encodeURIComponent(normalized)}` : "/search/boards";
+  return normalized ? `/searchBoard?keyword=${encodeURIComponent(normalized)}` : "/searchBoard";
 }
 
 export function userIdPath(userId: number | string): string {
