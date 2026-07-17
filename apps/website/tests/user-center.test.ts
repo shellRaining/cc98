@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vite-plus/test";
 import { withoutCustomBoard, withoutId, withoutTopic } from "../src/api/mutations/index.ts";
 import { queryKeys } from "../src/api/queries/index.ts";
+import { getAvatarFrame } from "../src/lib/avatar-frame.ts";
 import {
   normalizeFavoriteGroup,
   normalizeFavoriteKeyword,
@@ -108,5 +109,19 @@ describe("用户中心列表工具", () => {
         birthday: { year: 2023, month: 2, day: 29 },
       }),
     ).toBe("请检查生日是否正确");
+  });
+});
+
+describe("用户头像框", () => {
+  test("按旧站头衔编号映射共享资源与尺寸", () => {
+    expect(getAvatarFrame(18)).toMatchObject({
+      imageUrl: "/static/images/相框/版主.png",
+      post: { width: "7.64rem", left: "-3.5rem", top: "-3.5rem" },
+      profile: { width: "15rem", left: "-1.75rem", top: "-2rem" },
+    });
+    expect(getAvatarFrame(22)).toEqual(getAvatarFrame(18));
+    expect(getAvatarFrame(104)?.keepPostShadow).toBe(true);
+    expect(getAvatarFrame(7)).toBeNull();
+    expect(getAvatarFrame(null)).toBeNull();
   });
 });

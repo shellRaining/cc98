@@ -8641,6 +8641,12 @@
                   "type": "number"
                 }
               },
+              "boardMasterTitles": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BoardMasterTitle"
+                }
+              },
               "displayTitleId": {
                 "anyOf": [
                   {
@@ -8716,6 +8722,31 @@
           }
         },
         "required": ["id", "name"],
+        "additionalProperties": {}
+      },
+      "BoardMasterTitle": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "boardId": {
+            "type": "number"
+          },
+          "boardName": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "boardMasterLevel": {
+            "type": "number"
+          }
+        },
+        "required": ["userId", "userName", "boardId", "boardName", "title", "boardMasterLevel"],
         "additionalProperties": {}
       },
       "UserModerationPostPage": {

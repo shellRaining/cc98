@@ -1,0 +1,62 @@
+<script setup lang="ts">
+import { computed, type CSSProperties } from "vue";
+import { getAvatarFrame, type AvatarFrameVariant } from "../../lib/avatar-frame";
+
+const props = withDefaults(
+  defineProps<{
+    src: string;
+    alt: string;
+    displayTitleId?: number | null;
+    to?: string | null;
+    variant?: AvatarFrameVariant;
+    fallback?: string;
+  }>(),
+  {
+    displayTitleId: null,
+    to: null,
+    variant: "post",
+    fallback: "/static/images/default_avatar_boy.png",
+  },
+);
+
+const frame = computed(() => getAvatarFrame(props.displayTitleId));
+const frameStyle = computed<CSSProperties | undefined>(() => {
+  const definition = frame.value;
+  if (!definition) return undefined;
+  const style = definition[props.variant];
+  return {
+    width: style.width,
+    top: style.top,
+    ...(style.left ? { left: style.left } : {}),
+  };
+});
+
+function replaceBrokenAvatar(event: Event) {
+  const image = event.currentTarget as HTMLImageElement;
+  if (image.src.endsWith(props.fallback)) return;
+  image.src = props.fallback;
+}
+</script>
+
+<template>
+  <div
+    class="framed-avatar"
+    :class="[
+      `framed-avatar--${variant}`,
+      {
+        'framed-avatar--has-frame': frame,
+        'framed-avatar--flat': frame && !frame.keepPostShadow,
+      },
+    ]"
+  >
+    <RouterLink v-if="to" :to="to" class="framed-avatar__link">
+      <img class="framed-avatar__portrait" :src="src" :alt="alt" @error="replaceBrokenAvatar" />
+    </RouterLink>
+    <span v-else class="framed-avatar__link">
+      <img class="framed-avatar__portrait" :src="src" :alt="alt" @error="replaceBrokenAvatar" />
+    </span>
+    <span v-if="frame" class="framed-avatar__frame" aria-hidden="true">
+      <img :src="frame.imageUrl" alt="" :style="frameStyle" />
+    </span>
+  </div>
+</template>

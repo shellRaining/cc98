@@ -62,6 +62,18 @@ export const userModerationPostPageSchema = z
   .meta({ id: "UserModerationPostPage" });
 export type UserModerationPostPage = z.infer<typeof userModerationPostPageSchema>;
 
+export const boardMasterTitleSchema = z
+  .looseObject({
+    userId: z.number(),
+    userName: z.string(),
+    boardId: z.number(),
+    boardName: z.string(),
+    title: z.string(),
+    boardMasterLevel: z.number(),
+  })
+  .meta({ id: "BoardMasterTitle" });
+export type BoardMasterTitle = z.infer<typeof boardMasterTitleSchema>;
+
 export const userSchema = basicUserSchema
   .and(
     z.looseObject({
@@ -82,6 +94,7 @@ export const userSchema = basicUserSchema
       lockState: z.number(),
       popularity: z.number().optional(),
       userTitleIds: z.array(z.number()).optional(),
+      boardMasterTitles: z.array(boardMasterTitleSchema).optional(),
       displayTitleId: z.number().nullable().optional(),
       fanCount: z.number().optional(),
       wealth: z.number().optional(),

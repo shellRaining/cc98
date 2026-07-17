@@ -7,6 +7,7 @@ import UiButton from "./ui/Button.vue";
 import ContentRenderer from "./rich-content/ContentRenderer.vue";
 import type { RichContentType } from "./rich-content/types";
 import { floorAnchorId } from "../lib/route-params";
+import FramedAvatar from "./user/FramedAvatar.vue";
 
 const props = defineProps<{
   post: Post;
@@ -58,13 +59,6 @@ function formatTime(value: string | null | undefined): string {
 function getContentType(contentType: PostContentType | undefined): RichContentType {
   return contentType === POST_CONTENT_TYPE.markdown ? "markdown" : "ubb";
 }
-
-function replaceBrokenAvatar(event: Event) {
-  const image = event.currentTarget as HTMLImageElement;
-  image.src = props.post.isAnonymous
-    ? "/static/images/心灵头像.gif"
-    : "/static/images/default_avatar_boy.png";
-}
 </script>
 
 <template>
@@ -88,10 +82,17 @@ function replaceBrokenAvatar(event: Event) {
         <span v-if="!post.isAnonymous" class="topic-post__gender">{{
           user?.gender === 0 ? "♀" : "♂"
         }}</span>
-        <RouterLink v-if="authorLink" :to="authorLink">
-          <img :src="avatar" :alt="`${author} 的头像`" @error="replaceBrokenAvatar" />
-        </RouterLink>
-        <img v-else :src="avatar" alt="匿名用户头像" @error="replaceBrokenAvatar" />
+        <FramedAvatar
+          :src="avatar"
+          :alt="post.isAnonymous ? '匿名用户头像' : `${author} 的头像`"
+          :display-title-id="post.isAnonymous ? null : user?.displayTitleId"
+          :to="authorLink"
+          :fallback="
+            post.isAnonymous
+              ? '/static/images/心灵头像.gif'
+              : '/static/images/default_avatar_boy.png'
+          "
+        />
         <div v-if="authorLink" class="topic-post__user-actions">
           <RouterLink :to="authorLink">资料</RouterLink>
           <RouterLink :to="`/messages/private/${post.userId}`">私信</RouterLink>
