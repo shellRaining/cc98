@@ -54,7 +54,7 @@ const relationPending = computed(() => followUser.isPending.value || unfollowUse
 
 useTitle(
   computed(() =>
-    profile.value ? `${profile.value.name} - 用户详情 - CC98 论坛` : "用户详情 - CC98 论坛",
+    profile.value ? `${profile.value.name} - 用户详情 - CC98论坛` : "用户详情 - CC98论坛",
   ),
 );
 
@@ -103,7 +103,7 @@ const profileError = computed(() => {
 });
 
 const recentState = computed(() => {
-  if (!user.isLoggedIn) return "unauthorized" as const;
+  if (!user.isLoggedIn) return "empty" as const;
   if (recentQuery.isPending.value) return "loading" as const;
   if (recentQuery.error.value) return normalizeApiError(recentQuery.error.value).kind;
   if (recentTopics.value.length === 0) return "empty" as const;
@@ -227,15 +227,15 @@ function toggleFollow() {
             </header>
 
             <PageState
-              v-if="recentState"
+              v-if="recentState && recentState !== 'empty'"
               :kind="recentState"
-              :message="
-                recentState === 'unauthorized' ? '登录后可查看该用户发表的主题。' : undefined
-              "
               :show-retry="recentState === 'error'"
               @login="goLogin"
               @retry="recentQuery.refetch()"
             />
+            <p v-else-if="recentState === 'empty'" class="user-center-activities__empty">
+              没有主题
+            </p>
             <ul v-else class="user-center-topic-list">
               <li v-for="topic in recentTopics" :key="topic.id">
                 <div class="user-center-topic-list__meta">

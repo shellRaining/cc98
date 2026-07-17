@@ -142,8 +142,8 @@ function formatDate(value: string | undefined): string {
       </header>
 
       <p v-if="statusMessage" class="user-center-profile__status">{{ statusMessage }}</p>
-      <p v-if="profile.introduction" class="user-center-profile__introduction">
-        {{ profile.introduction }}
+      <p class="user-center-profile__introduction">
+        {{ profile.introduction ?? "" }}
       </p>
 
       <dl class="user-center-profile__fields">
@@ -156,7 +156,11 @@ function formatDate(value: string | undefined): string {
       <section v-if="profile.signatureCode" class="user-center-signature">
         <h2>个性签名</h2>
         <div class="user-center-signature__content">
-          <ContentRenderer type="ubb" :content="profile.signatureCode" />
+          <ContentRenderer
+            type="ubb"
+            :content="profile.signatureCode"
+            :options="{ allowExternalImage: false }"
+          />
         </div>
       </section>
     </section>

@@ -3467,6 +3467,7 @@ a:hover {
   position: relative;
   width: 100%;
   min-height: 48rem;
+  margin-top: -1.5rem;
   margin-bottom: 3rem;
   font-size: 0.88rem;
 }
@@ -3480,8 +3481,8 @@ a:hover {
 
 .user-center-shell {
   display: grid;
-  grid-template-columns: 12.5rem minmax(0, 1fr);
-  gap: 2rem;
+  grid-template-columns: 12.625rem minmax(0, 1fr);
+  gap: 1.75rem;
   align-items: start;
 }
 
@@ -3692,8 +3693,8 @@ a:hover {
 
 .user-center-profile {
   display: grid;
-  grid-template-columns: 10rem minmax(0, 1fr);
-  gap: 0 2rem;
+  min-width: 0;
+  grid-template-columns: 20% minmax(0, 1fr);
 }
 
 .user-profile-overview {
@@ -3739,12 +3740,16 @@ a:hover {
 
 .user-center-profile__badges a,
 .user-center-profile__badges a:visited {
+  min-width: 0;
   width: 60%;
   color: #35a7ff;
+  overflow-wrap: anywhere;
 }
 
 .user-center-profile__badges span {
+  min-width: 0;
   width: 40%;
+  overflow-wrap: anywhere;
 }
 
 .user-center-profile__badge-title {
@@ -3753,11 +3758,13 @@ a:hover {
 
 .user-center-profile__details {
   min-width: 0;
+  padding: 0 2rem;
 }
 
 .user-center-profile__identity {
   display: flex;
-  min-height: 2rem;
+  min-height: 5rem;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -3765,13 +3772,18 @@ a:hover {
 
 .user-center-profile__name {
   display: flex;
+  min-width: 0;
+  flex: 1 1 12rem;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: 2rem;
 }
 
 .user-center-profile__identity strong {
+  min-width: 0;
   font-size: 1.125rem;
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 .user-center-profile__identity span {
@@ -3781,6 +3793,7 @@ a:hover {
 
 .user-center-profile__tools {
   display: flex;
+  flex: 0 0 auto;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
@@ -3823,6 +3836,7 @@ a:hover {
   margin: 1rem 0 1rem 2rem;
   color: var(--cc98-color-text-muted);
   font-size: 0.75rem;
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
@@ -3855,6 +3869,7 @@ a:hover {
 }
 
 .user-center-signature {
+  max-width: 36.25rem;
   margin-top: 0.25rem;
 }
 
@@ -3865,8 +3880,8 @@ a:hover {
 }
 
 .user-center-signature__content {
-  max-height: 12rem;
-  overflow: auto;
+  min-width: 0;
+  overflow: hidden;
   padding: 1rem;
   border: 1px solid var(--cc98-color-border);
   font-size: 0.75rem;
@@ -3874,7 +3889,7 @@ a:hover {
 
 .user-center-activities {
   grid-column: 1 / -1;
-  margin-top: 2.25rem;
+  margin-top: 3rem;
 }
 
 .user-center-activities > header {
@@ -3898,12 +3913,14 @@ a:hover {
 }
 
 .user-center-topic-list {
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .user-center-topic-list li {
+  min-width: 0;
   padding: 0 0 1.25rem;
 }
 
@@ -3931,7 +3948,10 @@ a:hover {
 .user-center-topic-list__title,
 .user-center-topic-list__title:visited {
   display: block;
+  max-height: 5rem;
+  overflow: hidden;
   color: var(--cc98-color-text);
+  overflow-wrap: anywhere;
 }
 
 .user-center-topic-list__title:hover {
