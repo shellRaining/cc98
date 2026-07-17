@@ -26,7 +26,7 @@ useTitle(computed(() => config.value.documentTitle + " - CC98论坛"));
       <h1 :id="'status-page-title-' + kind" class="status-page__title">{{ config.title }}</h1>
       <p class="status-page__message">{{ resolvedMessage }}</p>
       <div class="status-page__actions">
-        <RouterLink to="/">返回首页</RouterLink>
+        <RouterLink v-if="config.showHome !== false" to="/">返回首页</RouterLink>
         <button v-if="config.showRetry" type="button" @click="emit('retry')">重新尝试</button>
         <button v-if="config.showLogin" type="button" @click="emit('login')">点我登录</button>
       </div>

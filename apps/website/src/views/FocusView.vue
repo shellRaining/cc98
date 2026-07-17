@@ -11,6 +11,7 @@ import {
   usersByIdsQuery,
 } from "../api/queries";
 import NewTopicClassicItem from "../components/discovery/NewTopicClassicItem.vue";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import LoadMore from "../components/LoadMore.vue";
 import PageState from "../components/PageState.vue";
 import { normalizeApiError } from "../lib/api-error";
@@ -138,7 +139,8 @@ useIntersectionObserver(
 </script>
 
 <template>
-  <section class="focus-page">
+  <FullPageStatus v-if="stateKind === 'unauthorized'" kind="unauthorized" @login="goLogin" />
+  <section v-else class="focus-page">
     <nav class="focus-tabs" aria-label="关注分类">
       <RouterLink
         v-for="item in [

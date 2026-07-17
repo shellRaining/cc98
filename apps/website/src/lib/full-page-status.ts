@@ -12,17 +12,19 @@ export interface FullPageStatusConfig {
   imageAlt: string;
   title: string;
   message: string;
+  showHome?: boolean;
   showLogin?: boolean;
   showRetry?: boolean;
 }
 
 export const FULL_PAGE_STATUS_CONFIG: Record<FullPageStatusKind, FullPageStatusConfig> = {
   unauthorized: {
-    documentTitle: "您没有权限进入这个页面",
+    documentTitle: "您未登录",
     image: "/static/images/401.webp",
     imageAlt: "401 未授权",
     title: "糟糕！好像出错了",
-    message: "您没有权限进入这个页面或未登录",
+    message: "您当前未登录",
+    showHome: false,
     showLogin: true,
   },
   forbidden: {

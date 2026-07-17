@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import { boardsByIdsQuery, recommendedTopicsQuery, usersByIdsQuery } from "../api/queries";
 import RecommendedTopicItem from "../components/discovery/RecommendedTopicItem.vue";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import PageState from "../components/PageState.vue";
 import { normalizeApiError } from "../lib/api-error";
 import { uniqueTopicBoardIds, uniqueTopicUserIds } from "../lib/discovery";
@@ -103,7 +104,8 @@ function restorePreviousBatch() {
 </script>
 
 <template>
-  <section class="recommended-page">
+  <FullPageStatus v-if="stateKind === 'unauthorized'" kind="unauthorized" @login="goLogin" />
+  <section v-else class="recommended-page">
     <nav class="new-topics-breadcrumb" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink>
       <span>›</span>

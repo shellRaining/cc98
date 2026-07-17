@@ -14,6 +14,7 @@ import {
 } from "../api/queries";
 import NewTopicCard from "../components/discovery/NewTopicCard.vue";
 import NewTopicClassicItem from "../components/discovery/NewTopicClassicItem.vue";
+import FullPageStatus from "../components/FullPageStatus.vue";
 import LoadMore from "../components/LoadMore.vue";
 import PageState from "../components/PageState.vue";
 import { normalizeApiError } from "../lib/api-error";
@@ -131,7 +132,8 @@ function formatCount(value: number | undefined) {
 </script>
 
 <template>
-  <section class="new-topics-page">
+  <FullPageStatus v-if="stateKind === 'unauthorized'" kind="unauthorized" @login="goLogin" />
+  <section v-else class="new-topics-page">
     <nav class="new-topics-breadcrumb" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink>
       <span>›</span>
