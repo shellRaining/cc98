@@ -4,7 +4,7 @@ CC98 API 的公共契约包，提供：
 
 - Zod 运行时 schema
 - TypeScript 推导类型
-- OpenAPI JSON
+- 主 API 与 OpenID 的 OpenAPI JSON
 - 接口目录与验证状态
 
 当前包仍处于契约重建阶段，尚未发布。人工维护入口分为两部分：
@@ -12,9 +12,11 @@ CC98 API 的公共契约包，提供：
 - `src/schemas/`：按领域维护 Zod schema，通过 `z.infer` 导出 TypeScript 类型；需要成为稳定 OpenAPI component 的领域 schema 在定义处使用 `.meta({ id })` 声明名称。
 - `src/operations/`：维护 operation registry，包括路径、参数、请求体、响应、认证、风险和验证状态。
 
-`vp run generate` 使用 `zod-openapi` 从这两类 TypeScript 源文件生成并格式化 `generated/openapi.json`，并从 registry 派生 `generated/endpoint-catalog.json`。组件名称与领域 schema 定义放在一起；简单参数和临时包装保持内联。组件引用和可达性由生成库管理，只输出 operation 实际可达的 schema。匿名和登录探测直接使用 registry 中的 Zod schema 校验响应。
+`vp run generate` 使用 `zod-openapi` 从这两类 TypeScript 源文件生成并格式化两份规范：`generated/openapi.json` 包含主 API，`generated/openid.openapi.json` 包含登录和 Token 刷新接口；接口目录仍从完整 registry 派生为 `generated/endpoint-catalog.json`。两份规范分别保留主 API 与 OpenID 的 server 和认证语义，不把 `/connect/token` 混入主 API。
 
-包测试会在临时目录重新生成 OpenAPI 和 endpoint catalog，并与仓库中的 JSON 做结构化比较。因此根目录 `vp run ready` 会拒绝过期生成物，但不会在检查过程中改写工作区。
+组件名称与领域 schema 定义放在一起；简单参数和临时包装保持内联。组件引用和可达性由生成库管理，只输出 operation 实际可达的 schema。匿名和登录探测直接使用 registry 中的 Zod schema 校验响应。
+
+包测试会在临时目录重新生成两份 OpenAPI 和 endpoint catalog，并与仓库中的 JSON 做结构化比较。因此根目录 `vp run ready` 会拒绝过期生成物，但不会在检查过程中改写工作区。
 
 旧 OpenAPI 已在迁移完成后删除。新增或修正契约时直接维护领域 Zod schema 和 operation registry，不再保留平行的历史规范。
 

@@ -1,6 +1,6 @@
 # 开发环境与 Worktree 启动契约
 
-> 状态：已实施，等待一段时间的日常使用反馈。外部分支 worktree、依赖安装、稳定域名和本地凭证复制均已验证；pnpm Global Virtual Store 因 Vite+ 原生绑定不兼容而回退。
+> 状态：已完成。外部分支 worktree、依赖安装、稳定域名、生产预览和本地凭证复制均已验证；pnpm Global Virtual Store 因 Vite+ 原生绑定不兼容而回退。
 
 ## 背景
 
@@ -198,7 +198,11 @@ CC98_PASSWORD=example
 - [x] 生产构建通过独立的 portless 路由启动 Vite Preview。
 - [x] Global Virtual Store 完成兼容试验并因 Vite+ 原生绑定失败而回退。
 - [x] 标准 pnpm store 下的新 worktree 执行 `vp run ready` 通过。
-- [ ] 观察 Windows、Linux 和 Safari 下的使用反馈，出现真实需求后再补适配。
+
+## 范围变化与遗留项
+
+- Global Virtual Store 原计划作为多 worktree 的依赖复用方案，兼容试验发现 Vite+ 原生绑定无法加载，因此回退到标准 pnpm store。
+- Windows、Linux 和 Safari 的适配不属于当前启动契约的验收条件。后续根据真实使用反馈单独处理，不阻塞本计划归档。
 
 ## 决策记录
 
