@@ -50,8 +50,9 @@ CC98_PASSWORD=example
 ## 常用命令
 
 ```bash
-vp run dev   # 通过 portless 启动当前 worktree
-vp run ready # format + lint + typecheck + test + build
+vp run dev     # 通过 portless 启动当前 worktree
+vp run preview # 构建并预览生产产物
+vp run ready   # format + lint + typecheck + test + build
 ```
 
 查询当前 worktree 的稳定地址：
@@ -67,6 +68,8 @@ http://cc98.localhost:1355
 ```
 
 分支 worktree 使用 `http://<branch>.cc98.localhost:1355`。所有 worktree 都运行 `vp run dev`，portless 会分配应用端口并注册对应域名。端口代理使用普通 HTTP 和高位端口，不需要管理员授权或本地 CA。
+
+`vp run preview` 会先执行全量构建，再用 Vite Preview 启动生产产物。主 worktree 使用 `http://cc98-preview.localhost:1355`，分支 worktree 使用 `http://<branch>.cc98-preview.localhost:1355`，可以和 dev server 同时运行。
 
 环境异常时直接使用各工具的标准诊断命令：
 

@@ -126,7 +126,7 @@ pnpm 11 的 `enableGlobalVirtualStore` 试验结果如下：
 
 因此仓库不启用 Global Virtual Store。标准 pnpm store 下，新的 Worktrunk worktree 实测安装约 4 秒，虽然 `node_modules` 表观体积较大，包文件仍通过 pnpm store 复用。
 
-## 稳定开发地址
+## 稳定开发与预览地址
 
 `vp run dev` 是所有 worktree 的统一开发入口。该任务直接由 Vite+ 声明：通过 `dependsOn` 构建 `@cc98/api` 和 `@cc98/ubb`，再调用 portless 启动网站，不维护额外 Node.js 包装脚本。
 
@@ -139,6 +139,8 @@ pnpm 11 的 `enableGlobalVirtualStore` 试验结果如下：
 5. 分支 worktree 使用 `http://<branch>.cc98.localhost:1355`。
 
 portless 固定使用 HTTP 高位代理端口 1355，并关闭 `/etc/hosts` 同步，不需要管理员授权、CA 或系统信任。Chrome、Chromium、Firefox 和 agent-browser 可以解析 `.localhost` 子域名；Safari 兼容性不在当前验收范围内。
+
+`vp run preview` 会先执行 `vp run -r build`，再通过 portless 启动 Vite Preview。主 worktree 使用 `http://cc98-preview.localhost:1355`，分支 worktree 使用 `http://<branch>.cc98-preview.localhost:1355`。preview 和 dev 使用不同路由，可以同时运行。
 
 实测并发结果：
 
@@ -193,6 +195,7 @@ CC98_PASSWORD=example
 - [x] 当前 Agent 在外部 worktree 中完成命令执行和文件读写验证。
 - [x] 主 worktree 与分支 worktree 通过 portless 并发启动。
 - [x] 两个稳定地址均返回 HTTP 200，并通过 agent-browser 验证。
+- [x] 生产构建通过独立的 portless 路由启动 Vite Preview。
 - [x] Global Virtual Store 完成兼容试验并因 Vite+ 原生绑定失败而回退。
 - [x] 标准 pnpm store 下的新 worktree 执行 `vp run ready` 通过。
 - [ ] 观察 Windows、Linux 和 Safari 下的使用反馈，出现真实需求后再补适配。
@@ -210,6 +213,7 @@ CC98_PASSWORD=example
 - 2026-07-18：Vite+ 的唯一宿主约束限定在项目内；不执行用户级 `vp env setup`，避免影响其他项目的 fnm、nvm 或系统 Node.js。
 - 2026-07-18：当前 Agent 通过 Worktrunk 的 JSON 输出获取 worktree 路径，再显式定向后续工具；不使用 `-x codex` 启动第二个 Agent。
 - 2026-07-18：单 worktree 和多 worktree 统一运行 `vp run dev`，不再提供绕过 portless 的 5173 入口。
+- 2026-07-18：增加 `vp run preview`，构建后通过独立 portless 路由预览生产产物。
 
 ## 参考资料
 
