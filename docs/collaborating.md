@@ -4,6 +4,8 @@
 
 `main` 是可发布主线。feature 分支命名 `feature/<short-desc>`，修复 `fix/<issue-or-desc>`
 
+分支合入统一使用 rebase，不创建 merge commit。功能分支先 rebase 到最新 `main`，验收后以 fast-forward 更新 `main`，保持提交历史线性。
+
 ## 提交
 
 使用 Conventional Commits，格式 `<type>(<scope>): <摘要>`。type 必填（英文小写），scope 可选，摘要正文用中文，不加句号。
