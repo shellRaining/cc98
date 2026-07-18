@@ -27,11 +27,10 @@
 
 ## 进行中的计划
 
-| 执行计划                                             | 状态     | 说明                                         |
-| ---------------------------------------------------- | -------- | -------------------------------------------- |
-| `active/2026-07-11-openapi-public-infrastructure.md` | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
-| `active/2026-07-13-milkdown-evaluation.md`           | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
-| `active/2026-07-18-apifox-cli-integration.md`        | 调研中   | CLI 依赖已固定，待登录验证同步算法和远端结构 |
+| 执行计划                                      | 状态   | 说明                                         |
+| --------------------------------------------- | ------ | -------------------------------------------- |
+| `active/2026-07-13-milkdown-evaluation.md`    | 待实施 | 选型调研已完成，生产编辑器迁移尚未开始       |
+| `active/2026-07-18-apifox-cli-integration.md` | 调研中 | CLI 依赖已固定，待登录验证同步算法和远端结构 |
 
 ## 已完成的计划
 
@@ -43,6 +42,7 @@
 | `completed/2026-07-08-ubb-test-and-logger-foundation.md`            | UBB 测试和前端日志入口均已落地                     |
 | `completed/2026-07-09-login-migration.md`                           | 登录、续期、登出和鉴权链路已验收                   |
 | `completed/2026-07-10-ubb-vue-renderer.md`                          | UBB 与 Markdown 共享富内容渲染已落地               |
+| `completed/2026-07-11-openapi-public-infrastructure.md`             | API 契约、静态文档和发布包验证已完成               |
 | `completed/2026-07-11-core-reading-loop.md`                         | 版面、主题、分页和权限链路已验收                   |
 | `completed/2026-07-11-discovery-list-migration.md`                  | 热门、新帖、推荐和搜索已迁移                       |
 | `completed/2026-07-12-realtime-message-migration.md`                | 消息、实时更新、关注和签到已迁移                   |

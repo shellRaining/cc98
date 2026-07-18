@@ -2,8 +2,16 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CC98 API",
-    "version": "0.0.0",
-    "description": "根据 CC98 前端调用与真实接口响应维护的公共 API 契约。"
+    "version": "0.1.0-alpha.0",
+    "description": "根据 CC98 前端调用与真实接口响应维护的公共 API 契约。",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    },
+    "contact": {
+      "name": "CC98 前端维护者",
+      "url": "https://github.com/shellRaining/cc98/issues"
+    }
   },
   "servers": [
     {

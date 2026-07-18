@@ -1,8 +1,9 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { createDocument } from "zod-openapi";
+import { stringify as stringifyYaml } from "yaml";
 import { operationRegistry } from "../src/operations/index.ts";
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -12,6 +13,7 @@ const outputDirArgument = process.argv
 const generatedDir = outputDirArgument
   ? resolve(packageDir, outputDirArgument)
   : resolve(packageDir, "generated");
+const packageJson = JSON.parse(await readFile(resolve(packageDir, "package.json"), "utf8"));
 
 function responseToOpenApi(response) {
   return {
@@ -98,7 +100,13 @@ function createOpenApiDocument({
 }) {
   return createDocument({
     openapi: "3.1.0",
-    info: { title, version: "0.0.0", description },
+    info: {
+      title,
+      version: packageJson.version,
+      description,
+      license: { name: "MIT", identifier: "MIT" },
+      contact: { name: "CC98 前端维护者", url: "https://github.com/shellRaining/cc98/issues" },
+    },
     servers,
     security,
     paths: operationsToPaths(operations, { includeOperationServers }),
@@ -155,8 +163,16 @@ await writeFile(
 );
 await writeFile(resolve(generatedDir, "openapi.json"), `${JSON.stringify(openapi, null, 2)}\n`);
 await writeFile(
+  resolve(generatedDir, "openapi.yaml"),
+  stringifyYaml(openapi, { aliasDuplicateObjects: false, lineWidth: 0 }),
+);
+await writeFile(
   resolve(generatedDir, "openid.openapi.json"),
   `${JSON.stringify(openIdOpenapi, null, 2)}\n`,
+);
+await writeFile(
+  resolve(generatedDir, "openid.openapi.yaml"),
+  stringifyYaml(openIdOpenapi, { aliasDuplicateObjects: false, lineWidth: 0 }),
 );
 
 console.log(
