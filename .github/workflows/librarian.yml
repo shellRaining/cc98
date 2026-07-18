@@ -1,0 +1,238 @@
+name: 每日文档巡检
+
+on:
+  schedule:
+    # UTC 16:30，对应北京时间次日 00:30，检查前一个完整自然日。
+    - cron: "30 16 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 要检查的北京时间日期，格式为 YYYY-MM-DD；留空时检查前一天
+        required: false
+        type: string
+  # 仅用于当前分支的首次远端验证，验证通过后删除。
+  push:
+    branches:
+      - codex/librarian-new-api-ci
+
+concurrency:
+  group: daily-librarian-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate_patch:
+    name: 生成文档补丁
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    env:
+      TZ: Asia/Shanghai
+    outputs:
+      base_branch: ${{ steps.window.outputs.base_branch }}
+      base_sha: ${{ steps.window.outputs.base_sha }}
+      has_patch: ${{ steps.patch.outputs.has_patch }}
+      since: ${{ steps.window.outputs.since }}
+      target_date: ${{ steps.window.outputs.target_date }}
+      until: ${{ steps.window.outputs.until }}
+    steps:
+      - name: Checkout 目标分支
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref_name || github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: 计算检查窗口
+        id: window
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MANUAL_DATE: ${{ inputs.date }}
+        run: |
+          if [[ -n "$MANUAL_DATE" ]]; then
+            normalized_date="$(date --date="$MANUAL_DATE" +%F 2>/dev/null || true)"
+            if [[ ! "$MANUAL_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ || "$normalized_date" != "$MANUAL_DATE" ]]; then
+              echo "日期必须是有效的 YYYY-MM-DD：$MANUAL_DATE" >&2
+              exit 1
+            fi
+            target_date="$MANUAL_DATE"
+          elif [[ "$EVENT_NAME" == "push" ]]; then
+            target_date="2026-07-18"
+          else
+            target_date="$(date --date=yesterday +%F)"
+          fi
+
+          since="$target_date 00:00:00 +0800"
+          until="$target_date 23:59:59 +0800"
+          commit_count="$(git rev-list --count --since="$since" --until="$until" HEAD)"
+
+          echo "base_branch=$(git branch --show-current)" >> "$GITHUB_OUTPUT"
+          echo "base_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "commit_count=$commit_count" >> "$GITHUB_OUTPUT"
+          echo "since=$since" >> "$GITHUB_OUTPUT"
+          echo "target_date=$target_date" >> "$GITHUB_OUTPUT"
+          echo "until=$until" >> "$GITHUB_OUTPUT"
+
+      - name: 记录无提交结果
+        if: steps.window.outputs.commit_count == '0'
+        run: |
+          echo "目标日期没有进入目标分支的提交，无需调用 Codex。" >> "$GITHUB_STEP_SUMMARY"
+          echo "HEAD: ${{ steps.window.outputs.base_sha }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 配置 Vite+
+        if: steps.window.outputs.commit_count != '0'
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: "24.18.0"
+          cache: true
+
+      - name: 安装依赖
+        if: steps.window.outputs.commit_count != '0'
+        run: vp install --frozen-lockfile
+
+      - name: 运行 Librarian
+        if: steps.window.outputs.commit_count != '0'
+        uses: openai/codex-action@v1
+        env:
+          LIBRARIAN_SINCE: ${{ steps.window.outputs.since }}
+          LIBRARIAN_UNTIL: ${{ steps.window.outputs.until }}
+        with:
+          openai-api-key: ${{ secrets.NEWAPI_CODEX_TOKEN }}
+          responses-api-endpoint: https://api.shellraining.xyz/v1/responses
+          model: gpt-5.6-sol-fast
+          prompt-file: .agents/agents/librarian.md
+          codex-args: '["--ephemeral"]'
+          safety-strategy: drop-sudo
+          sandbox: workspace-write
+
+      - name: 检查候选改动范围
+        id: candidate
+        run: |
+          git add -N .
+          changed_paths="$(git diff --name-only --diff-filter=ACMRTUXB HEAD)"
+
+          if [[ -z "$changed_paths" ]]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          invalid=0
+          while IFS= read -r path; do
+            case "$path" in
+              .github/*|.agents/*)
+                echo "Librarian 不允许自修改：$path" >&2
+                invalid=1
+                ;;
+              *.md) ;;
+              *)
+                echo "Librarian 只能修改 Markdown：$path" >&2
+                invalid=1
+                ;;
+            esac
+          done <<< "$changed_paths"
+
+          if [[ "$invalid" == "1" ]]; then
+            exit 1
+          fi
+
+          git diff --check
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: 运行项目质量门禁
+        if: steps.candidate.outputs.has_changes == 'true'
+        run: vp run ready
+
+      - name: 生成补丁
+        id: patch
+        run: |
+          git add -N .
+          changed_paths="$(git diff --name-only --diff-filter=ACMRTUXB HEAD)"
+
+          if [[ -z "$changed_paths" ]]; then
+            echo "has_patch=false" >> "$GITHUB_OUTPUT"
+            echo "没有生成文档补丁。" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          invalid=0
+          while IFS= read -r path; do
+            case "$path" in
+              .github/*|.agents/*)
+                echo "质量门禁后出现禁止路径：$path" >&2
+                invalid=1
+                ;;
+              *.md) ;;
+              *)
+                echo "质量门禁后出现非 Markdown：$path" >&2
+                invalid=1
+                ;;
+            esac
+          done <<< "$changed_paths"
+
+          if [[ "$invalid" == "1" ]]; then
+            exit 1
+          fi
+
+          git diff --check
+          git diff --binary HEAD > librarian.patch
+          echo "has_patch=true" >> "$GITHUB_OUTPUT"
+
+      - name: 上传补丁
+        if: steps.patch.outputs.has_patch == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: librarian-patch
+          path: librarian.patch
+          if-no-files-found: error
+          retention-days: 7
+
+  open_pr:
+    name: 创建文档 PR
+    needs: generate_patch
+    if: needs.generate_patch.outputs.has_patch == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout 基线提交
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.generate_patch.outputs.base_sha }}
+          fetch-depth: 0
+
+      - name: 下载补丁
+        uses: actions/download-artifact@v4
+        with:
+          name: librarian-patch
+
+      - name: 应用补丁并创建 PR
+        env:
+          BASE_BRANCH: ${{ needs.generate_patch.outputs.base_branch }}
+          BASE_SHA: ${{ needs.generate_patch.outputs.base_sha }}
+          GH_TOKEN: ${{ github.token }}
+          LIBRARIAN_SINCE: ${{ needs.generate_patch.outputs.since }}
+          LIBRARIAN_UNTIL: ${{ needs.generate_patch.outputs.until }}
+          TARGET_DATE: ${{ needs.generate_patch.outputs.target_date }}
+        run: |
+          git apply --index librarian.patch
+
+          branch="codex/librarian-$TARGET_DATE-${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git commit -m "docs: 同步 $TARGET_DATE 项目文档"
+          git push origin "$branch"
+
+          body="$(printf '%s\n\n%s\n%s\n%s\n%s' \
+            '每日 Librarian 根据目标分支提交生成了这份文档同步。' \
+            "- 检查日期：$TARGET_DATE（Asia/Shanghai）" \
+            "- 检查窗口：$LIBRARIAN_SINCE 至 $LIBRARIAN_UNTIL" \
+            "- 基线提交：$BASE_SHA" \
+            '- 验证：vp run ready')"
+
+          gh pr create \
+            --base "$BASE_BRANCH" \
+            --head "$branch" \
+            --title "docs: 同步 $TARGET_DATE 项目文档" \
+            --body "$body"

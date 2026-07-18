@@ -70,3 +70,11 @@ agent-browser skills get dogfood # 系统性 QA、问题复现和证据采集时
 - 优先从公开入口或最终输出验证完整性，不重复断言内部对象键、函数引用和组件层级。
 
 如果 bug 不适合自动化回归测试，应在相关复杂逻辑旁写明原因和边界，避免后续维护时误删
+
+## 自动文档巡检
+
+`.github/workflows/librarian.yml` 在北京时间每天 00:30 检查前一个完整自然日进入默认分支的提交，也支持手动指定日期补跑。没有提交或没有文档漂移时不创建 PR；发现漂移时，Codex 按 `.agents/agents/librarian.md` 生成 Markdown 补丁，通过 `vp run ready` 后由独立任务发起 PR。
+
+Codex 通过 Action 的本地 Responses API proxy 访问项目现有 New API 服务。补丁生成任务只有仓库读权限，PR 任务不接收模型凭据。自动补丁只允许 Markdown，并拒绝修改 `.github/` 和 `.agents/`。需要同步代码、配置、图片或提示词时，Librarian 只报告缺口，由后续人工任务处理。
+
+仓库需要在 GitHub Actions secrets 中配置 `NEWAPI_CODEX_TOKEN`。secret 只传给 `openai/codex-action` 的 `openai-api-key` 输入，用于向 `https://api.shellraining.xyz/v1/responses` 注入 bearer token，不能写成 job 级环境变量，也不能传给安装、构建和 PR 创建步骤。
