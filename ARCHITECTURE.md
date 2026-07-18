@@ -4,7 +4,7 @@
 
 ## 公共 API 契约
 
-`packages/api` 是与前端框架无关的公共契约层。`src/schemas/` 中的 Zod schema 和 `src/operations/` 中的 operation registry 是事实源，OpenAPI 与 endpoint catalog 都由它们生成。`apps/website` 只维护请求编排、认证、缓存键和错误映射，不重复定义公共实体 schema。
+`packages/api` 是与前端框架无关的公共契约层。`src/schemas/` 中的 Zod schema 和 `src/operations/` 中的 operation registry 是事实源，业务 API OpenAPI、OpenID OpenAPI 与 endpoint catalog 都由它们生成。两份 OpenAPI 分别保留业务 API 和 OpenID 的 server 与认证语义。`apps/website` 只维护请求编排、认证、缓存键和错误映射，不重复定义公共实体 schema。
 
 ```mermaid
 flowchart LR
@@ -13,9 +13,13 @@ flowchart LR
   Registry --> Probe
   Schema --> Generator["生成器"]
   Registry --> Generator
-  Generator --> OpenAPI["OpenAPI 与 endpoint catalog"]
+  Generator --> ApiOpenAPI["业务 API OpenAPI"]
+  Generator --> OpenIdOpenAPI["OpenID OpenAPI"]
+  Generator --> Catalog["endpoint catalog"]
   Schema --> Website["apps/website"]
-  OpenAPI --> Community["其他 CC98 项目"]
+  ApiOpenAPI --> Community["其他 CC98 项目"]
+  OpenIdOpenAPI --> Community
+  Catalog --> Community
 ```
 
 ## 模块布局
