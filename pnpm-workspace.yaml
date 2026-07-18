@@ -18,10 +18,8 @@ catalog:
   reka-ui: 2.10.1
   ofetch: 1.5.1
   zod: 4.4.3
-  markdown-it: 14.3.0
   katex: 0.17.0
   "@microsoft/signalr": 10.0.0
-  md-editor-v3: 6.5.3
   vue-virtual-scroller: 3.0.4
   aplayer: 1.10.1
   dplayer: 1.27.1
@@ -30,7 +28,6 @@ catalog:
   unocss: 66.7.5
   "@unocss/preset-attributify": 66.7.5
   "@unocss/preset-typography": 66.7.5
-  "@types/markdown-it": ^14.1.2
   "@vitejs/plugin-vue": 6.0.8
   "@vueuse/core": 14.3.0
   "@vueuse/integrations": 14.3.0
@@ -44,6 +41,11 @@ catalog:
   "@iconify-json/fa": 1.2.2
   "@iconify-json/heroicons": ^1.2.3
   vitepress: 2.0.0-alpha.18
+  "@milkdown/kit": 7.21.3
+  remark-gfm: 4.0.1
+  remark-parse: 11.0.0
+  unified: 11.0.5
+  "@types/mdast": 4.0.4
 overrides:
   vite: "catalog:"
   vitest: "catalog:"

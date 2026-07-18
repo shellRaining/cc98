@@ -3,6 +3,8 @@
 Date: 2026-07-08
 Status: Accepted
 
+Markdown 编辑与渲染两项选型已由 [0002](./0002-markdown-stack.md) 替代，其余决策继续有效。
+
 ## 背景
 
 复刻浙江大学 CC98 论坛前端（原项目 `/Forum`，React 16 + Redux + Webpack 4 + UBB）。新前端是 SPA，不能改动后端，必须兼容历史 UBB 帖（占存量 99%）和新 Markdown 帖。构建在现有 Vite+ monorepo 上。
@@ -34,14 +36,14 @@ Status: Accepted
 
 实测后端 `Post.content` 字段原样存 UBB 文本（`[quote][b]...[/b][/quote]`、`[img]...`、`[ac01]` 等），全站几十万帖。`Post.contentType` 实测取值 `{0: UBB, 1: Markdown}`，与 OpenAPI spec 的 `enum: [0, 1]` 一致（之前探测到的 2/4 是 `Topic.contentType`，主题卡片类型，另一个字段）。
 
-策略：读取按 `contentType` 分流（0→UBB 渲染器，1→markdown-it）；写入一律 contentType=1；编辑老帖时前端做 UBB→MD 一次性转换。后端零改动。
+策略：读取按 `contentType` 分流（0→UBB 渲染器，1→remark/MDAST 渲染器）；写入一律 contentType=1；编辑老帖时前端做 UBB→MD 一次性转换。后端零改动。
 
 ## 备选
 
 - **Vue 3.5 稳定版起步**：风险更小，但放弃 Vapor 先发优势。被推翻，接受 beta 风险。
 - **shadcn-vue + Reka UI**：被推翻，shadcn 自带 zinc 色板/圆角风格与论坛视觉语言冲突。
 - **Ark UI**：备选无头库，Vue 生态文档相对薄弱。
-- **Milkdown**：备选 Markdown 编辑器，插件化更强但前期投入大，后续 md-editor-v3 不够用时再迁。
+- **Milkdown**：最初作为备选，已由 ADR 0002 采用。
 - **Tanstack Virtual (vue)**：备选虚拟滚动，需要自己处理动态高度。
 - **Plyr + howler**：备选播放器，没有弹幕，放弃。
 - **axios**：备选 HTTP 库，套一层 vue-query 后与 ofetch 优势差距抹平。

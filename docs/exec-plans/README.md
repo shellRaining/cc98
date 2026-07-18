@@ -30,7 +30,6 @@
 | 执行计划                                             | 状态     | 说明                                         |
 | ---------------------------------------------------- | -------- | -------------------------------------------- |
 | `active/2026-07-11-openapi-public-infrastructure.md` | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
-| `active/2026-07-13-milkdown-evaluation.md`           | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
 | `active/2026-07-18-apifox-cli-integration.md`        | 调研中   | CLI 依赖已固定，待登录验证同步算法和远端结构 |
 
 ## 已完成的计划
@@ -49,11 +48,13 @@
 | `completed/2026-07-12-user-center-migration.md`                     | 用户中心主要页面和管理操作已迁移                   |
 | `completed/2026-07-12-writing-flow-migration.md`                    | 发主题、回帖、编辑、上传和楼层互动已验收           |
 | `completed/2026-07-13-style-system.md`                              | 设计系统与换肤地基已完成，基础组件后续按需扩展     |
+| `completed/2026-07-13-milkdown-evaluation.md`                       | Milkdown 选型、体积和语法往返调研完成              |
 | `completed/2026-07-16-full-fidelity-migration.md`                   | 阶段 8 与最终浏览器矩阵已验收                      |
 | `completed/2026-07-17-user-documentation.md`                        | 用户帮助站、首批内容和 VitePress 默认主题已验收    |
 | `completed/2026-07-18-css-ownership-migration.md`                   | 业务 CSS 已迁回对应 SFC，全站对照通过              |
 | `completed/2026-07-18-development-environment-worktree-contract.md` | Worktree、Vite+ 和稳定域名开发契约已验收           |
 | `completed/2026-07-18-librarian-new-api-ci.md`                      | New API 每日文档巡检和自动 PR 链路已验证           |
+| `completed/2026-07-18-milkdown-remark-migration.md`                 | 编辑器与阅读解析已统一迁移到 Milkdown 和 remark    |
 | `completed/2026-07-18-frontend-migration-roadmap.md`                | 阶段 0 至阶段 8 的迁移历史与完成审计               |
 | `completed/2026-07-18-website-lib-ownership-migration.md`           | 业务 `lib` 已收敛，路由页和私有组件按域归位        |
 | `completed/2026-07-22-image-asset-organization.md`                  | 图片按业务所有权归档，`public` 收敛为固定 URL 资源 |

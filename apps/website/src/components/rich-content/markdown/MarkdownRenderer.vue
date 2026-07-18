@@ -2,8 +2,8 @@
 import { defineComponent, h, type PropType } from "vue";
 import type { RichContentOptions } from "../types";
 import UniverseRoot from "../universe/UniverseRoot.vue";
-import { markdownIt } from "./markdownIt";
-import { renderMarkdownTokens } from "./renderMarkdownToken";
+import { parseMarkdown } from "./remark";
+import { renderMarkdownRoot } from "./renderMarkdownNode";
 
 export default defineComponent({
   name: "MarkdownRenderer",
@@ -20,7 +20,7 @@ export default defineComponent({
   setup(props) {
     return () =>
       h(UniverseRoot, { contentType: "markdown", preserveWhitespace: false }, () =>
-        renderMarkdownTokens(markdownIt.parse(props.content, {}), props.options),
+        renderMarkdownRoot(parseMarkdown(props.content), props.options),
       );
   },
 });
