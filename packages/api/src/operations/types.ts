@@ -25,6 +25,7 @@ export interface OperationBody {
   required: boolean;
   contentType: string;
   schema: z.ZodType;
+  openApiSchema?: z.ZodType;
 }
 
 export interface OperationResponse {

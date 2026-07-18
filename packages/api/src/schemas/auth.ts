@@ -27,6 +27,22 @@ export const tokenRequestSchema = z
   .meta({ id: "TokenRequest" });
 export type TokenRequest = z.infer<typeof tokenRequestSchema>;
 
+export const tokenFormRequestSchema = z
+  .object({
+    client_id: z.string(),
+    client_secret: z.string(),
+    grant_type: z.enum(["password", "refresh_token"]),
+    username: z.string().optional(),
+    password: z.string().optional(),
+    scope: z.string().optional(),
+    refresh_token: z.string().optional(),
+  })
+  .meta({
+    id: "TokenFormRequest",
+    description:
+      "OpenAPI 表单描述。密码登录填写 username、password、scope；刷新登录填写 refresh_token。",
+  });
+
 export const tokenResponseSchema = z
   .looseObject({
     access_token: z.string(),

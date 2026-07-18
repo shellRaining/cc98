@@ -1,5 +1,10 @@
 import { defineOperations } from "./types.ts";
-import { errorCodeSchema, tokenRequestSchema, tokenResponseSchema } from "../schemas/index.ts";
+import {
+  errorCodeSchema,
+  tokenFormRequestSchema,
+  tokenRequestSchema,
+  tokenResponseSchema,
+} from "../schemas/index.ts";
 
 export const authOperations = defineOperations([
   {
@@ -14,6 +19,7 @@ export const authOperations = defineOperations([
       required: true,
       contentType: "application/x-www-form-urlencoded",
       schema: tokenRequestSchema,
+      openApiSchema: tokenFormRequestSchema,
     },
     responses: {
       "200": {

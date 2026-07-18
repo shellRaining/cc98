@@ -10,7 +10,7 @@ const execFileAsync = promisify(execFile);
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const generatedDir = resolve(packageDir, "generated");
 const temporaryDir = await mkdtemp(join(tmpdir(), "cc98-api-generated-"));
-const generatedFiles = ["openapi.json", "endpoint-catalog.json"];
+const generatedFiles = ["openapi.json", "openid.openapi.json", "endpoint-catalog.json"];
 
 try {
   await execFileAsync(process.execPath, [

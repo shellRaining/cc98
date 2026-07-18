@@ -11,57 +11,12 @@
       "description": "CC98 正式 API"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "paths": {
-    "/connect/token": {
-      "post": {
-        "operationId": "postConnectToken",
-        "summary": "Login or refresh access token",
-        "description": "The frontend calls this endpoint on the configured OpenID server.",
-        "tags": ["OpenID"],
-        "servers": [
-          {
-            "url": "https://openid.cc98.org",
-            "description": "CC98 OpenID 服务"
-          }
-        ],
-        "security": [],
-        "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
-        "x-cc98-source": ["legacy-openapi", "live-probe"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/TokenRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Token response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TokenResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "API 错误码",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorCode"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/config/global": {
       "get": {
         "operationId": "getConfigGlobal",
@@ -6816,68 +6771,6 @@
   },
   "components": {
     "schemas": {
-      "TokenRequest": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/PasswordTokenRequest"
-          },
-          {
-            "$ref": "#/components/schemas/RefreshTokenRequest"
-          }
-        ],
-        "type": "object",
-        "discriminator": {
-          "propertyName": "grant_type",
-          "mapping": {
-            "password": "#/components/schemas/PasswordTokenRequest",
-            "refresh_token": "#/components/schemas/RefreshTokenRequest"
-          }
-        }
-      },
-      "PasswordTokenRequest": {
-        "type": "object",
-        "properties": {
-          "client_id": {
-            "type": "string"
-          },
-          "client_secret": {
-            "type": "string"
-          },
-          "grant_type": {
-            "type": "string",
-            "const": "password"
-          },
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "scope": {
-            "type": "string"
-          }
-        },
-        "required": ["client_id", "client_secret", "grant_type", "username", "password", "scope"]
-      },
-      "RefreshTokenRequest": {
-        "type": "object",
-        "properties": {
-          "client_id": {
-            "type": "string"
-          },
-          "client_secret": {
-            "type": "string"
-          },
-          "grant_type": {
-            "type": "string",
-            "const": "refresh_token"
-          },
-          "refresh_token": {
-            "type": "string"
-          }
-        },
-        "required": ["client_id", "client_secret", "grant_type", "refresh_token"]
-      },
       "IndexColumn": {
         "type": "object",
         "properties": {
@@ -7347,28 +7240,6 @@
         "required": ["receiverId", "content"],
         "additionalProperties": false
       },
-      "TokenResponse": {
-        "type": "object",
-        "properties": {
-          "access_token": {
-            "type": "string"
-          },
-          "expires_in": {
-            "type": "number"
-          },
-          "refresh_token": {
-            "type": "string"
-          },
-          "token_type": {
-            "type": "string"
-          }
-        },
-        "required": ["access_token", "expires_in", "refresh_token", "token_type"],
-        "additionalProperties": {}
-      },
-      "ErrorCode": {
-        "type": "string"
-      },
       "GlobalConfig": {
         "type": "object",
         "properties": {
@@ -7387,6 +7258,9 @@
           }
         },
         "additionalProperties": {}
+      },
+      "ErrorCode": {
+        "type": "string"
       },
       "Tag": {
         "type": "object",

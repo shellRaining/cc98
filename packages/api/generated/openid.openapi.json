@@ -1,0 +1,123 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CC98 OpenID API",
+    "version": "0.0.0",
+    "description": "供 Apifox 等工具独立导入的 CC98 登录与 Token 刷新契约。"
+  },
+  "servers": [
+    {
+      "url": "https://openid.cc98.org",
+      "description": "CC98 OpenID 服务"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/connect/token": {
+      "post": {
+        "operationId": "postConnectToken",
+        "summary": "Login or refresh access token",
+        "description": "The frontend calls this endpoint on the configured OpenID server.",
+        "tags": ["OpenID"],
+        "security": [],
+        "x-cc98-risk": "write",
+        "x-cc98-verification": "unknown",
+        "x-cc98-source": ["legacy-openapi", "live-probe"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenFormRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API 错误码",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorCode"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TokenFormRequest": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          },
+          "grant_type": {
+            "type": "string",
+            "enum": ["password", "refresh_token"]
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        },
+        "required": ["client_id", "client_secret", "grant_type"],
+        "description": "OpenAPI 表单描述。密码登录填写 username、password、scope；刷新登录填写 refresh_token。"
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "number"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "token_type": {
+            "type": "string"
+          }
+        },
+        "required": ["access_token", "expires_in", "refresh_token", "token_type"],
+        "additionalProperties": {}
+      },
+      "ErrorCode": {
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

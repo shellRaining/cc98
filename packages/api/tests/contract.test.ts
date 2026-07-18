@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import anonymousProbe from "../generated/probe-anonymous.json" with { type: "json" };
 import authenticatedProbe from "../generated/probe-authenticated.json" with { type: "json" };
 import openapi from "../generated/openapi.json" with { type: "json" };
+import openIdOpenapi from "../generated/openid.openapi.json" with { type: "json" };
 import {
   endpointCatalog,
   boardEventPageSchema,
@@ -27,7 +28,10 @@ import type { ApiOperation } from "../src/operations/types.ts";
 describe("API 契约基线", () => {
   it("包含规范中的全部 operation", () => {
     expect(endpointCatalog).toHaveLength(136);
-    expect(Object.keys(openapi.paths)).toHaveLength(116);
+    expect(Object.keys(openapi.paths)).toHaveLength(115);
+    expect(Object.keys(openIdOpenapi.paths)).toHaveLength(1);
+    expect(openapi.security).toEqual([{ bearerAuth: [] }]);
+    expect(openIdOpenapi.security).toEqual([]);
   });
 
   it("operationId 唯一且非空", () => {
@@ -149,7 +153,7 @@ describe("API 契约基线", () => {
     ).toMatchObject({ floor: 20, boardId: 10 });
   });
 
-  it("Token operation 使用真实表单契约和 OpenID server", () => {
+  it("Token operation 使用真实运行时契约和可展开的 OpenAPI 表单", () => {
     expect(
       tokenRequestSchema.safeParse({
         client_id: "client",
@@ -169,13 +173,17 @@ describe("API 契约基线", () => {
       }).success,
     ).toBe(true);
 
-    const operation = openapi.paths["/connect/token"].post;
-    expect(operation.servers).toEqual([
+    expect("/connect/token" in openapi.paths).toBe(false);
+    expect(openIdOpenapi.servers).toEqual([
       { url: "https://openid.cc98.org", description: "CC98 OpenID 服务" },
     ]);
-    expect(operation.requestBody.content["application/x-www-form-urlencoded"].schema).toEqual({
-      $ref: "#/components/schemas/TokenRequest",
-    });
+    expect(Object.keys(openIdOpenapi.paths)).toEqual(["/connect/token"]);
+    expect("servers" in openIdOpenapi.paths["/connect/token"].post).toBe(false);
+    expect(
+      openIdOpenapi.paths["/connect/token"].post.requestBody.content[
+        "application/x-www-form-urlencoded"
+      ].schema,
+    ).toEqual({ $ref: "#/components/schemas/TokenFormRequest" });
   });
 
   it("现有探测报告中的 operation 都属于 registry", () => {
