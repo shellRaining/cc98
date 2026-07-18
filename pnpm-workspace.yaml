@@ -46,6 +46,8 @@ catalog:
   "@iconify-json/heroicons": ^1.2.3
   vitepress: 2.0.0-alpha.18
   workbox-window: 7.4.1
+  "@redocly/cli": 2.39.0
+  yaml: 2.9.0
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
