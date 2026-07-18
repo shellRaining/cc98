@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vite-plus/test";
-import { collectOperations, compareOperations, validateLocalSpecs } from "../scripts/apifox.mjs";
+import {
+  collectOperations,
+  compareOperations,
+  deleteResourceErrorMessage,
+  validateLocalSpecs,
+} from "../scripts/apifox.mjs";
 
 const config = {
   modules: {
@@ -98,6 +103,15 @@ describe("Apifox 同步脚本", () => {
     const overlapping = structuredClone(openid);
     overlapping.paths["/board"] = { get: { operationId: "getBoard" } };
     expect(() => validateLocalSpecs(main, overlapping, config)).toThrow("重复 method + path");
+
+    main.components = { schemas: { ErrorCode: { type: "string" } } };
+    openid.components = {
+      schemas: {
+        ErrorCode: { type: "integer" },
+        TokenFormRequest: tokenRequestBody.content["application/x-www-form-urlencoded"].schema,
+      },
+    };
+    expect(() => validateLocalSpecs(main, openid, config)).toThrow("同名模型 ErrorCode");
   });
 
   test("分别报告缺失、残留、operationId 和认证差异", () => {
@@ -131,5 +145,20 @@ describe("Apifox 同步脚本", () => {
       "缺少接口 GET /me",
       "残留接口 GET /stale",
     ]);
+  });
+
+  test("删除被自动化分支策略拒绝时保留 CLI 的版本与权限指引", () => {
+    const message = deleteResourceErrorMessage("endpoint", 42, {
+      code: "403075",
+      result: {
+        agentHints: {
+          summary: "请在 Apifox 客户端 2.8.32 及以上版本的项目设置中开启外部 AI 编辑权限。",
+        },
+      },
+    });
+
+    expect(message).toContain("endpoint 42");
+    expect(message).toContain("2.8.32");
+    expect(deleteResourceErrorMessage("endpoint", 42, { code: "OTHER" })).toBeNull();
   });
 });

@@ -1,6 +1,6 @@
 # Apifox CLI 单向同步接入
 
-> 状态：等待权限。本地命令、同步算法、回读验证和测试已完成；远端剩余一个临时接口和一个多余鉴权组件，等待开启外部 AI 编辑权限后清理并完成幂等验收。
+> 状态：已完成。Apifox 客户端已升级到 2.8.39，主分支外部 AI 编辑权限已开启。两次连续同步和独立回读均通过，远端受管模块与仓库生成物一致。
 
 ## 背景
 
@@ -29,7 +29,7 @@ Apifox 项目 ID 为 `6295240`。截至 2026-07-18，`packages/api` 已将 `apif
 - 不保存 CC98 用户名、密码、access token、refresh token 或 client secret。
 - 不把 Apifox 云端同步加入 `vp check`、`vp run ready`、普通测试或 CI。
 - 不创建项目专用 Skill。
-- 不使用桌面自动化操作 Apifox GUI。
+- 不把桌面自动化放入日常同步流程。首次接入时仅用桌面端完成客户端升级、权限设置和人工验收。
 - 不把本次接入扩展为通用 API 发布平台或完整的 Apifox 项目治理。
 
 ## 事实源与同步边界
@@ -76,7 +76,7 @@ OpenID 规范中的 `POST /connect/token` 使用 `application/x-www-form-urlenco
 - GUI 的导入设置支持目标模块、覆盖、目录同步和删除未匹配资源，但这些选项没有出现在一次性 OpenAPI 导入的 CLI 命令面中，不能把 GUI 能力当作 CLI 已支持能力。
 - 自动导入配置的 schema 包含 `moduleId`、`targetBranchId`、覆盖模式、`syncApiFolder` 和 `deleteUnmatchedResources`，数据源来自 URL 或 Git。当前 CLI 只提供配置的 `list`、`create`、`get`、`delete`，没有显式执行命令，不适合作为本地生成物的 `apifox:sync` 入口。
 - `endpoint list` 可以按模块过滤，`export` 可以按模块导出，`folder create` 可以在指定模块中创建目录。登录后可以用这些命令完成项目盘点、受管范围定位和回读验证。
-- 当前用户级 CLI 尚未登录，因此还不能确认项目模块 ID、主分支写权限、现有重复接口、环境结构和真实导入结果。
+- 用户级 CLI 已登录。远端项目、主分支、模块、环境、接口和鉴权结构均已通过 CLI 回读确认。
 
 这轮调研否定了“直接把两份 OpenAPI 分别替换到两个模块”的原假设。实施必须先完成一次可清理的小规模导入试验，再决定同步算法。不能仅凭 CLI 帮助推断删除和组件迁移语义。
 
@@ -141,7 +141,7 @@ OpenID 规范中的 `POST /connect/token` 使用 `application/x-www-form-urlenco
 - [x] 确认一次性 OpenAPI 导入不能指定目标模块、冲突策略和资源清理；不传 `--branch` 时默认主分支。
 - [x] 确认 `endpoint list/get`、`environment list/get`、`folder list` 和 `export` 提供机器可读输出。
 - [x] 确认 endpoint 可以按模块查询并移动到指定目录，目录创建 payload 可以指定模块；组件跨模块语义仍需在线试验。
-- [ ] 确认主分支允许外部 AI 或 CLI 直接写入。若权限关闭，请用户在 Apifox 中开启，不创建 AI 分支规避限制。
+- [x] 使用 Apifox 2.8.39 开启主分支外部 AI 编辑权限。迭代分支和通用分支权限保持关闭。
 - [x] 确认用户已经执行 `apifox auth login`。登录凭证保存在 CLI 的用户级配置中，不写入仓库。
 - [x] 登录后读取项目、分支、模块、接口目录、环境和现有 endpoint，形成写入前快照。
 
@@ -183,11 +183,11 @@ vp run @cc98/api#apifox:verify
 ### 阶段 4：完成最小写入试验并选择同步算法
 
 - [x] 在主分支使用唯一命名的临时 operation 做最小导入试验，记录首次导入、重复导入、源码删除后再导入的资源变化。
-- [ ] 试验前保存相关模块的 endpoint、目录、环境和导出快照，试验结束后删除临时资源并确认快照差异归零。
-- [ ] 验证 endpoint 移动到目标模块目录后，数据模型、鉴权组件、server 和请求体引用是否完整。
-- [ ] 如果公开 CLI 工作流能够指定受管模块并安全删除未匹配资源，使用导入器完成同步。
+- [x] 保存相关模块的 endpoint、目录、环境和导出快照，试验结束后删除临时接口和多余鉴权组件。
+- [x] 验证 OpenID 接口通过 Apifox 原生格式和模块映射导入后，数据模型、server 与请求体引用完整。
+- [x] 采用公开 CLI 的 Apifox 原生格式导出与 `--module-map`，把 OpenID 规范写入独立模块。
 - [x] 采用“清理受管模块、分别导入、回读验证”的方案；清理前置，避免权限关闭时先导入再失败。
-- [ ] 如果两条路线都不能保证模块边界和幂等性，暂停实现，不调用未公开接口，也不在仓库中重写一套 OpenAPI 到 Apifox 的完整转换器。
+- [x] 同步只使用公开 CLI，不调用未公开接口，也不在仓库中重写 OpenAPI 到 Apifox 的完整转换器。
 
 ### 阶段 5：实现受管模块同步
 
@@ -206,8 +206,8 @@ vp run @cc98/api#apifox:verify
 - [x] 用本地 OpenAPI 生成期望集合，不复制维护接口清单。
 - [x] 比较 operationId、method、path、模块、server、security、content type 和请求字段。
 - [x] 将缺失、重复、残留和字段差异分别输出。
-- [ ] 第一次同步后立即验证，再执行第二次同步和第二次验证，确认资源数量不增长。
-- [ ] 在 GUI 中人工检查两个模块、服务地址和 `/connect/token` Body 展开效果，GUI 不参与自动化流程。
+- [x] 第一次同步后立即验证，再执行第二次同步和第二次验证，资源数量没有增长。
+- [x] 在 Apifox 桌面端检查两个模块、服务地址和 `/connect/token` Body 展开效果，GUI 不参与日常自动化流程。
 
 ### 阶段 7：补充包内知识并收尾
 
@@ -216,8 +216,8 @@ vp run @cc98/api#apifox:verify
 - [x] 说明 `apifox auth login` 是用户级登录，仓库不保存认证信息。
 - [x] 说明 `apifox:sync` 会修改云端，`apifox:check` 和 `apifox:verify` 不发送 CC98 请求。
 - [x] 说明修复契约时应修改 Zod schema 或 operation registry，不能只改 Apifox。
-- [ ] 运行中文标点检查、`vp check` 和 `vp run ready`。
-- [ ] 最后单独执行三条 Apifox 命令完成外部验证，不把它们塞进 `vp run ready`。
+- [x] 运行中文标点检查、`vp check` 和 `vp run ready`。
+- [x] 单独执行三条 Apifox 命令完成外部验证，没有把它们塞进 `vp run ready`。
 
 ## 失败处理
 
@@ -228,7 +228,7 @@ vp run @cc98/api#apifox:verify
 | 项目或主分支无权限             | 停止同步，提示用户调整 Apifox 权限                                          |
 | 生成物过期                     | 停止同步，先修复源码并重新生成                                              |
 | 主 API 导入失败                | 不继续导入 OpenID，保留 CLI 错误摘要                                        |
-| OpenID 导入失败                | 标记主 API 已变更，要求修复后重新运行完整同步                               |
+| OpenID 导入失败                | 清理转换阶段的主模块临时资源，修复后重新运行完整同步                        |
 | 回读发现重复或残留             | 同步失败，输出具体 endpoint 和模块，不忽略差异                              |
 | Apifox 与 OpenAPI 表达能力不同 | 优先修正导入映射；若属于 CLI 限制，在计划中记录并暂停                       |
 | OpenAPI 本身有问题             | 修改 `src/schemas/` 或 `src/operations/`，重新生成、测试、同步              |
@@ -258,11 +258,17 @@ vp run @cc98/api#apifox:verify
 - [x] 2026-07-18：项目初始化已固定并安装 `apifox-cli@2.2.7`，CLI 统一通过 Vite+ 运行，原生传递依赖的构建脚本保持禁用。
 - [x] 2026-07-18：完成离线 CLI 命令面调研，确认一次性 OpenAPI 导入没有模块、冲突和清理参数。
 - [x] 2026-07-18：登录后完成项目结构和最小写入调研。重复导入保留 endpoint ID，但不会删除源码中消失的接口。
-- [x] 2026-07-18：实现非敏感配置、`apifox:check`、`apifox:sync` 和 `apifox:verify`，API 包测试增至 21 项并通过。
+- [x] 2026-07-18：实现非敏感配置、`apifox:check`、`apifox:sync` 和 `apifox:verify`，API 包测试增至 22 项并通过。
 - [x] 2026-07-18：回读确认远端仅剩临时接口 `GET /__codex_apifox_sync_probe_20260718` 和 OpenID 模块的多余 Bearer 组件。
 - [x] 2026-07-18：删除操作被 `403075 Automation caller branch required` 拒绝。同步已调整为先清理后导入，权限未开启时不会先修改正式规范。
-- [ ] 完成两次幂等同步与 GUI 人工检查。
-- [ ] 通过完整质量门禁并完成远端收尾。
+- [x] 2026-07-18：核对 CLI `agentHints`，确认 `403075` 对删除操作的处理要求是使用 Apifox 客户端 2.8.32 或更高版本开启外部 AI 编辑权限。当前桌面端为 2.8.21，因此设置项尚未显示。
+- [x] 2026-07-18：同步脚本改为保留 CLI 返回的官方版本与权限指引，不再把错误码压缩成缺少版本条件的固定提示。
+- [x] 2026-07-18：Apifox 客户端升级到 2.8.39，仅开启主分支外部 AI 编辑权限。
+- [x] 2026-07-18：清理临时接口和 OpenID 多余 Bearer 组件。主模块保留一个 Bearer JWT，OpenID 模块保持匿名。
+- [x] 2026-07-18：确认一次性 OpenAPI 导入固定落入默认模块。OpenID 改为先转换成 Apifox 原生格式，再用 `--module-map` 写入独立模块；转换阶段的临时接口和专用模型由 `finally` 清理。
+- [x] 2026-07-18：连续执行两次 `apifox:sync` 并再次执行 `apifox:verify`，每次均回读到主 API 135 个接口、OpenID 1 个接口。
+- [x] 2026-07-18：Apifox 桌面端和 CLI 回读均确认 `/connect/token` 使用表单请求体，包含登录与刷新所需字段，且不要求 Bearer。
+- [x] 2026-07-18：中文标点检查、`vp check` 和 `vp run ready` 全部通过，执行计划移入 `completed/`。
 
 ## 决策记录
 
@@ -276,6 +282,8 @@ vp run @cc98/api#apifox:verify
 - 2026-07-18：首次接入只验证结构和幂等性，不发起真实认证请求。
 - 2026-07-18：不采用自动导入作为首版同步入口，因为当前 CLI 只能管理自动导入配置，不能显式执行本地生成物同步。
 - 2026-07-18：同步算法必须通过可清理的最小写入试验确定。若公开 CLI 无法保证模块边界和残留清理，计划停在调研阶段。
+- 2026-07-18：一次性 OpenAPI 导入不能指定目标模块。OpenID 同步先用公开 CLI 转换为 Apifox 原生格式，再通过 `--module-map` 写入 OpenID 模块，随后清理主模块中的临时资源。
+- 2026-07-18：主分支外部 AI 编辑权限是远端同步的运行前置条件。项目仅开放主分支权限，不扩大到迭代分支和通用分支。
 
 ## 官方资料
 

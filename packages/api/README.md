@@ -46,7 +46,7 @@ vp run @cc98/api#apifox:verify
 
 `apifox:check` 检查生成物、CLI 版本、登录状态、项目、主分支和模块配置，不修改云端。`apifox:verify` 回读两个受管模块，比较接口集合、operationId、认证、服务地址和 token 表单。两条命令都不会请求真实 CC98 API。
 
-`apifox:sync` 会修改 Apifox 主分支。它先清理受管模块中的残留和重复资源，再导入主 API 与 OpenID 规范，最后自动回读验证。清理范围只包括 `apifox.config.json` 声明的两个模块。
+`apifox:sync` 会修改 Apifox 主分支。它先清理受管模块中的残留和重复资源，再导入主 API。OpenID 规范会先转换成 Apifox 原生格式，通过模块映射写入独立模块；转换时产生的主模块临时接口和 OpenID 专用模型会在同一次运行中清理。同步结束后命令会自动回读验证，受管范围只包括 `apifox.config.json` 声明的两个模块。
 
 首次使用前运行：
 
@@ -54,4 +54,4 @@ vp run @cc98/api#apifox:verify
 vp exec -F @cc98/api apifox auth login
 ```
 
-登录信息由 Apifox CLI 保存到用户配置，仓库不保存 token。若同步提示外部 AI 无权删除资源，请在 Apifox 项目设置中开启外部 AI 编辑权限，再重新执行完整同步。
+登录信息由 Apifox CLI 保存到用户配置，仓库不保存 token。删除主分支已有资源需要 Apifox 客户端 2.8.32 或更高版本，并在项目设置的 AI 功能设置中开启外部 AI 编辑权限。只需允许 CLI 或 MCP 修改主分支，迭代分支和通用分支权限可以保持关闭。CLI 返回限制时，`apifox:sync` 会在导入前停止并保留官方处理指引。

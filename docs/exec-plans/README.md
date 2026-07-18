@@ -31,7 +31,6 @@
 | ---------------------------------------------------- | -------- | -------------------------------------------- |
 | `active/2026-07-11-openapi-public-infrastructure.md` | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
 | `active/2026-07-13-milkdown-evaluation.md`           | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
-| `active/2026-07-18-apifox-cli-integration.md`        | 等待权限 | 本地实现完成，等待清理远端残留并验证幂等性   |
 
 ## 已完成的计划
 
@@ -54,6 +53,7 @@
 | `completed/2026-07-18-css-ownership-migration.md`                   | 业务 CSS 已迁回对应 SFC，全站对照通过              |
 | `completed/2026-07-18-development-environment-worktree-contract.md` | Worktree、Vite+ 和稳定域名开发契约已验收           |
 | `completed/2026-07-18-librarian-new-api-ci.md`                      | New API 每日文档巡检和自动 PR 链路已验证           |
+| `completed/2026-07-18-apifox-cli-integration.md`                    | Apifox 主分支单向同步、模块映射和回读验收完成      |
 | `completed/2026-07-18-frontend-migration-roadmap.md`                | 阶段 0 至阶段 8 的迁移历史与完成审计               |
 | `completed/2026-07-18-website-lib-ownership-migration.md`           | 业务 `lib` 已收敛，路由页和私有组件按域归位        |
 | `completed/2026-07-22-image-asset-organization.md`                  | 图片按业务所有权归档，`public` 收敛为固定 URL 资源 |

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
@@ -98,6 +98,13 @@ export function validateLocalSpecs(mainSpec, openIdSpec, config) {
     "OpenID token 接口不能要求 Bearer",
   );
 
+  for (const [name, schema] of Object.entries(openIdSpec.components?.schemas ?? {})) {
+    const mainSchema = mainSpec.components?.schemas?.[name];
+    if (mainSchema) {
+      assert.deepStrictEqual(schema, mainSchema, `主 API 与 OpenID 的同名模型 ${name} 定义不一致`);
+    }
+  }
+
   const tokenBody =
     openIdOperations[0]?.requestBody?.content?.["application/x-www-form-urlencoded"];
   assert.ok(tokenBody, "/connect/token 必须使用 application/x-www-form-urlencoded");
@@ -146,6 +153,16 @@ export function compareOperations(expected, actual) {
     if (!expectedByKey.has(key)) differences.push(`残留接口 ${key}`);
   }
   return differences;
+}
+
+export function deleteResourceErrorMessage(resource, id, error) {
+  if (error.code !== "403075") return null;
+  const guidance = error.result?.agentHints?.summary;
+  return [
+    `Apifox 拒绝删除 ${resource} ${id}。`,
+    guidance ??
+      "请将 Apifox 客户端升级到 2.8.32 或更高版本，并在项目设置中开启外部 AI 直接编辑权限后重试。",
+  ].join("\n");
 }
 
 async function readJson(path) {
@@ -294,6 +311,18 @@ async function listSecuritySchemes(config) {
   );
 }
 
+async function listSchemas(config) {
+  const listed = await runCli([
+    "schema",
+    "list",
+    "--project",
+    String(config.projectId),
+    "--branch",
+    config.branch,
+  ]);
+  return listed.data;
+}
+
 function duplicateEndpointDifferences(endpoints, moduleName) {
   const grouped = Map.groupBy(endpoints, (endpoint) =>
     operationKey(endpoint.method, endpoint.path),
@@ -397,11 +426,8 @@ async function deleteResource(config, resource, id) {
       config.branch,
     ]);
   } catch (error) {
-    if (error.code === "403075") {
-      throw new Error(
-        `Apifox 拒绝删除 ${resource} ${id}。请在项目设置中开启外部 AI 直接编辑权限后重试。`,
-      );
-    }
+    const message = deleteResourceErrorMessage(resource, id, error);
+    if (message) throw new Error(message);
     throw error;
   }
 }
@@ -450,6 +476,115 @@ async function importSpec(config, module) {
   ]);
 }
 
+async function syncOpenIdSpec(context, temporaryDir) {
+  const { config, mainSpec, openIdSpec } = context;
+  const mainModule = config.modules.main;
+  const openIdModule = config.modules.openid;
+  const convertedPath = resolve(temporaryDir, "openid.apifox.json");
+  const noAuthPath = resolve(temporaryDir, "openid-noauth.json");
+
+  try {
+    await importSpec(config, openIdModule);
+    const mainTokenEndpoints = (await listEndpoints(config, mainModule.id)).filter(
+      (endpoint) => operationKey(endpoint.method, endpoint.path) === "POST /connect/token",
+    );
+    assert.equal(
+      mainTokenEndpoints.length,
+      1,
+      "OpenID 转换阶段应在主模块生成且只生成一个 POST /connect/token",
+    );
+
+    await runCli([
+      "export",
+      "--project",
+      String(config.projectId),
+      "--branch",
+      config.branch,
+      "--format",
+      "apifox",
+      "--scope",
+      "apis",
+      "--api-ids",
+      String(mainTokenEndpoints[0].id),
+      "--module-id",
+      String(mainModule.id),
+      "--no-include-api-cases",
+      "--output",
+      convertedPath,
+    ]);
+    await runCli([
+      "import",
+      "--project",
+      String(config.projectId),
+      "--branch",
+      config.branch,
+      "--format",
+      "apifox",
+      "--file",
+      convertedPath,
+      "--module-map",
+      `source:${mainModule.id}=${openIdModule.id}`,
+    ]);
+
+    const openIdTokenEndpoints = (await listEndpoints(config, openIdModule.id)).filter(
+      (endpoint) => operationKey(endpoint.method, endpoint.path) === "POST /connect/token",
+    );
+    assert.equal(
+      openIdTokenEndpoints.length,
+      1,
+      "OpenID 模块应包含且只包含一个 POST /connect/token",
+    );
+    await writeFile(noAuthPath, `${JSON.stringify({ auth: { type: "noauth" } }, null, 2)}\n`);
+    await runCli(["cli-schema", "validate", "endpoint-update", "--file", noAuthPath]);
+    await runCli([
+      "endpoint",
+      "update",
+      String(openIdTokenEndpoints[0].id),
+      "--project",
+      String(config.projectId),
+      "--branch",
+      config.branch,
+      "--file",
+      noAuthPath,
+    ]);
+  } finally {
+    const transientEndpoints = (await listEndpoints(config, mainModule.id)).filter(
+      (endpoint) => operationKey(endpoint.method, endpoint.path) === "POST /connect/token",
+    );
+    for (const endpoint of transientEndpoints) {
+      await deleteResource(config, "endpoint", endpoint.id);
+    }
+
+    const mainSchemaNames = new Set(Object.keys(mainSpec.components?.schemas ?? {}));
+    const openIdOnlySchemaNames = new Set(
+      Object.keys(openIdSpec.components?.schemas ?? {}).filter(
+        (name) => !mainSchemaNames.has(name),
+      ),
+    );
+    const candidates = (await listSchemas(config)).filter((schema) =>
+      openIdOnlySchemaNames.has(schema.name),
+    );
+    const details = await Promise.all(
+      candidates.map((schema) =>
+        runCli([
+          "schema",
+          "get",
+          String(schema.id),
+          "--project",
+          String(config.projectId),
+          "--branch",
+          config.branch,
+        ]),
+      ),
+    );
+    for (const detail of details) {
+      if (detail.data.moduleId === mainModule.id) {
+        await deleteResource(config, "schema", detail.data.id);
+      }
+    }
+  }
+}
+
 async function check(context) {
   await checkGeneratedFiles();
   const remote = await readRemoteContext(context.config);
@@ -467,9 +602,14 @@ async function sync(context) {
     context.openIdOperations,
   );
   await cleanSecuritySchemes(context.config);
-  await importSpec(context.config, context.config.modules.main);
-  await importSpec(context.config, context.config.modules.openid);
-  await verifyRemote(context);
+  const temporaryDir = await mkdtemp(resolve(tmpdir(), "cc98-apifox-sync-"));
+  try {
+    await importSpec(context.config, context.config.modules.main);
+    await syncOpenIdSpec(context, temporaryDir);
+    await verifyRemote(context);
+  } finally {
+    await rm(temporaryDir, { recursive: true, force: true });
+  }
 }
 
 async function main() {
