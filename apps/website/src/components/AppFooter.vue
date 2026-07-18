@@ -62,3 +62,38 @@
     </div>
   </footer>
 </template>
+
+<style scoped>
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5rem;
+  padding-top: 0.9375rem;
+  color: var(--cc98-color-text-muted);
+  font-family: "Microsoft YaHei", sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.site-footer__row {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 0.9375rem;
+}
+
+.site-footer strong {
+  margin-right: 0.9375rem;
+  color: var(--cc98-color-text);
+  font-weight: 400;
+}
+
+.site-footer a,
+.site-footer a:visited {
+  margin-inline: 0.375rem;
+  color: var(--cc98-color-text-muted);
+}
+</style>

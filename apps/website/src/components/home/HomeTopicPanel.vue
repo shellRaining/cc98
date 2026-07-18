@@ -36,3 +36,67 @@ withDefaults(
     </div>
   </section>
 </template>
+
+<style scoped>
+.home-panel {
+  margin-top: 0.75rem;
+  border: 1px solid currentcolor;
+  border-top-width: 8px;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+}
+
+.home-panel--primary {
+  border-color: var(--cc98-color-primary);
+}
+
+.home-panel--secondary {
+  border-color: var(--cc98-color-secondary);
+}
+
+.home-topic-section {
+  min-width: 0;
+}
+
+.home-topic-panel {
+  height: 20rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.75rem;
+}
+
+.home-topic-panel ul {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-topic-panel ul {
+  display: grid;
+  grid-template-rows: repeat(10, minmax(0, 1fr));
+}
+
+.home-topic-panel li {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.home-topic-panel__board {
+  flex: none;
+  color: var(--cc98-color-primary);
+}
+
+.home-topic-panel__title {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-topic-panel a:hover {
+  text-decoration: underline;
+}
+</style>

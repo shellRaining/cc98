@@ -445,3 +445,205 @@ function completeBatchModeration() {
     </template>
   </section>
 </template>
+
+<style scoped>
+.board-page {
+  width: 100%;
+  font-family: "Microsoft YaHei", system-ui, sans-serif;
+}
+
+.board-breadcrumb {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+}
+
+.board-breadcrumb a,
+.board-breadcrumb a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.board-breadcrumb a:hover {
+  color: var(--cc98-color-primary);
+}
+
+.board-page__error {
+  margin: 0.5rem 0 0;
+  color: var(--cc98-color-accent);
+  font-size: 0.75rem;
+}
+
+.board-action-row {
+  display: flex;
+  min-height: 6.25rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.board-action-row__buttons {
+  display: flex;
+  gap: 2rem;
+}
+
+.board-action-row__buttons a,
+.board-action-row__buttons a:visited {
+  display: grid;
+  width: 7rem;
+  height: 4rem;
+  border-radius: 1rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font-size: 1.25rem;
+  place-items: center;
+}
+
+.board-action-row__buttons a:hover {
+  background: var(--cc98-color-primary-hover);
+}
+
+.board-action-row :deep(.home-advertisement) {
+  width: 18.75rem;
+  flex: none;
+}
+
+.board-filter-row {
+  display: flex;
+  min-height: 4.75rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.9375rem 0 1rem;
+}
+
+.board-tag-layers {
+  display: flex;
+  max-width: 35rem;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.board-tag-layer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.board-tag-layer a,
+.board-tag-layer a:visited {
+  display: grid;
+  min-width: 5rem;
+  height: 2rem;
+  padding-inline: 0.65rem;
+  border: 1px solid var(--cc98-color-secondary);
+  border-radius: 0.3125rem;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font-size: 0.75rem;
+  place-items: center;
+}
+
+.board-tag-layer a:hover,
+.board-tag-layer a.is-active {
+  background: var(--cc98-color-secondary);
+  color: #fff;
+}
+
+.board-list-panel {
+  overflow: hidden;
+  border: 1px solid var(--cc98-color-primary);
+  background: var(--cc98-color-surface);
+}
+
+.board-list-panel__head {
+  display: grid;
+  min-height: 3rem;
+  align-items: center;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  grid-template-columns: minmax(0, 1fr) 28rem;
+}
+
+.board-list-panel__head nav {
+  display: flex;
+  gap: 1.25rem;
+  padding-inline: 1.25rem;
+}
+
+.board-list-panel__head a,
+.board-list-panel__head a:visited {
+  padding-block: 0.625rem;
+  color: #fff;
+}
+
+.board-list-panel__head a.is-active,
+.board-list-panel__head a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.board-list-panel__columns {
+  display: grid;
+  font-size: 0.75rem;
+  grid-template-columns: 15rem 12rem;
+}
+
+.board-list-panel > :deep(.rounded) {
+  border: 0;
+  border-radius: 0;
+}
+
+.board-batch-toolbar {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.35rem 1rem;
+  border-bottom: 1px solid var(--cc98-color-border);
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.board-batch-toolbar button {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: 0.2rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  cursor: pointer;
+}
+
+.board-batch-toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.board-page__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.board-page__bottom > div {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.board-page__bottom > div a,
+.board-page__bottom > div a:visited {
+  padding: 0.4rem 0.75rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font-size: 0.875rem;
+}
+</style>

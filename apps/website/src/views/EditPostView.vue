@@ -289,3 +289,158 @@ async function submit() {
     </form>
   </section>
 </template>
+
+<style scoped>
+.new-topics-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+}
+
+.new-topics-breadcrumb a,
+.new-topics-breadcrumb a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.writing-page {
+  width: 100%;
+  min-height: 48.75rem;
+  margin-bottom: 3.75rem;
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+}
+
+.writing-page__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.writing-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.writing-row {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+}
+
+.writing-row__label {
+  display: grid;
+  width: 7.5rem;
+  align-self: stretch;
+  flex: 0 0 7.5rem;
+  border-right: 1px solid var(--cc98-color-border);
+  place-items: center;
+}
+
+.writing-title-tags {
+  display: flex;
+  align-self: stretch;
+}
+
+.writing-title-tags select {
+  width: 5rem;
+  border: 0;
+  border-right: 1px solid var(--cc98-color-border);
+  background: transparent;
+  color: var(--cc98-color-text);
+  font: inherit;
+  text-align: center;
+}
+
+.writing-title-input {
+  min-width: 0;
+  flex: 1;
+  align-self: stretch;
+  padding: 0 1rem;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--cc98-color-text);
+  font: inherit;
+}
+
+.writing-title-input:focus,
+.writing-title-tags select:focus {
+  box-shadow: inset 0 -2px var(--cc98-color-primary);
+}
+
+.writing-conversion-notice {
+  margin: -0.5rem 0 1.25rem;
+  color: var(--cc98-color-accent);
+  text-align: center;
+}
+
+.writing-conversion-notice {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--cc98-color-accent);
+  background: var(--cc98-color-surface);
+  text-align: left;
+}
+
+.writing-row--options {
+  gap: 1.25rem;
+}
+
+.writing-row--options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.writing-row__warning {
+  color: var(--cc98-color-accent);
+}
+
+.writing-row--content {
+  justify-content: space-between;
+  margin-bottom: 0;
+}
+
+.writing-row--content > span {
+  flex: 1;
+  padding: 0 1rem;
+  color: var(--cc98-color-text-muted);
+}
+
+.writing-editor :deep(.md-editor) {
+  height: 31.25rem;
+  border: 1px solid var(--cc98-color-border);
+  border-top: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.writing-editor > div > :deep(div:not(.md-editor)) {
+  padding-inline: 0.75rem;
+}
+
+.writing-submit-error {
+  margin-top: 1rem;
+  color: var(--cc98-color-accent);
+  text-align: center;
+}
+
+.writing-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+</style>

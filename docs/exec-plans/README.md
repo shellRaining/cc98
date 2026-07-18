@@ -35,6 +35,7 @@
 | `completed/2026-07-12-writing-flow-migration.md`         | 发主题、回帖、编辑、上传和楼层互动已验收       |
 | `completed/2026-07-13-style-system.md`                   | 设计系统与换肤地基已完成，基础组件后续按需扩展 |
 | `completed/2026-07-16-full-fidelity-migration.md`        | 阶段 8 与最终浏览器矩阵已验收                  |
+| `completed/2026-07-18-css-ownership-migration.md`        | 业务 CSS 已迁回对应 SFC，全站对照通过          |
 | `completed/2026-07-18-frontend-migration-roadmap.md`     | 阶段 0 至阶段 8 的迁移历史与完成审计           |
 
 ## 何时写

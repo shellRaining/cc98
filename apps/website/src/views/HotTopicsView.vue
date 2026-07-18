@@ -98,6 +98,13 @@ function topicTags(topic: { tag1?: number | null; tag2?: number | null }) {
 </template>
 
 <style scoped>
+.new-topic-classic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.45rem;
+}
+
 .hot-topics-page {
   min-height: 48.75rem;
   padding-bottom: 3.75rem;

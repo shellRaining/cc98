@@ -37,3 +37,36 @@ defineProps<{ items: IndexColumn[] }>();
     </div>
   </section>
 </template>
+
+<style scoped>
+.home-sidebar-block {
+  min-width: 0;
+}
+
+.home-functions {
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--cc98-color-primary);
+}
+
+.home-function-link,
+.home-function-link:visited {
+  display: flex;
+  height: 3.25rem;
+  align-items: center;
+  gap: 1rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.home-function-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.home-function-link img {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+</style>

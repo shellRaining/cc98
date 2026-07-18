@@ -95,3 +95,93 @@ function retry() {
     </section>
   </div>
 </template>
+
+<style scoped>
+.user-center-profile {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 20% minmax(0, 1fr);
+}
+
+.user-center-activities {
+  grid-column: 1 / -1;
+  margin-top: 3rem;
+}
+
+.user-center-activities > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.user-center-activities h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+
+.user-center-activities header a,
+.user-center-activities header a:visited,
+.user-center-activities__more,
+.user-center-activities__more:visited {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-topic-list {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-center-topic-list li {
+  min-width: 0;
+  padding: 0 0 1.25rem;
+}
+
+.user-center-topic-list li + li {
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-center-topic-list__meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.user-center-topic-list__meta a,
+.user-center-topic-list__meta a:visited {
+  min-width: 6rem;
+  color: var(--cc98-color-primary);
+}
+
+.user-center-topic-list__meta time {
+  color: var(--cc98-color-text-muted);
+}
+
+.user-center-topic-list__title,
+.user-center-topic-list__title:visited {
+  display: block;
+  max-height: 5rem;
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  overflow-wrap: anywhere;
+}
+
+.user-center-topic-list__title:hover {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-activities__empty {
+  margin: 0 0 0 2rem;
+  color: var(--cc98-color-text-muted);
+}
+
+.user-center-activities__more {
+  display: block;
+  margin-top: 1rem;
+  text-align: center;
+}
+</style>

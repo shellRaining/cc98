@@ -22,3 +22,19 @@ theme.apply();
     <AppFooter />
   </div>
 </template>
+
+<style scoped>
+.site-main--home {
+  padding: 0;
+}
+
+.site-main--inner {
+  padding-top: 1.5rem;
+}
+
+@media (min-width: 71.25rem) {
+  .site-main--home {
+    max-width: 100%;
+  }
+}
+</style>

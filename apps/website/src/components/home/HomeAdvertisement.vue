@@ -42,3 +42,48 @@ const imageUrl = computed(() => normalizeHomepageAssetUrl(current.value?.imageUr
     </div>
   </div>
 </template>
+
+<style scoped>
+.home-advertisement__dots button {
+  width: 0.625rem;
+  height: 0.625rem;
+  padding: 0;
+  border: 1px solid var(--cc98-color-text-muted);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-advertisement__dots button.is-active {
+  border-color: var(--cc98-color-accent);
+  background: var(--cc98-color-accent);
+}
+
+.home-advertisement {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 6.25rem;
+  overflow: hidden;
+}
+
+.home-advertisement img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-advertisement__dots {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.35rem;
+  display: flex;
+  gap: 0.35rem;
+}
+
+.home-advertisement__dots button {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.22);
+}
+</style>

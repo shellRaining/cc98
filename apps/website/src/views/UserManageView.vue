@@ -301,3 +301,244 @@ function formatTime(value: string) {
     </div>
   </section>
 </template>
+
+<style scoped>
+.user-center-page {
+  position: relative;
+  width: 100%;
+  min-height: 46.875rem;
+  margin-top: -1.5rem;
+  margin-bottom: 3rem;
+  font-size: 0.88rem;
+}
+
+.user-center-page__title {
+  margin: 0 0 1.25rem;
+  color: var(--cc98-color-text);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.user-center-shell {
+  display: grid;
+  grid-template-columns: 12.625rem minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.user-center-nav,
+.user-center-main {
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+}
+
+.user-center-nav {
+  min-height: 40rem;
+  padding: 0 0.625rem;
+}
+
+.user-center-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-center-nav li + li {
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-center-nav a,
+.user-center-nav a:visited {
+  display: flex;
+  height: 3.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.65rem;
+  color: var(--cc98-color-text);
+  text-decoration: none;
+}
+
+.user-center-nav a:hover,
+.user-center-nav a.router-link-active,
+.user-center-nav a.is-active {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-nav svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.user-center-main {
+  min-height: 40rem;
+  padding: 2rem;
+}
+
+.user-manage-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.user-manage-panel {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed var(--cc98-color-border);
+}
+
+.user-manage-panel:last-child {
+  border-bottom: 0;
+}
+
+.user-manage-panel h2 {
+  margin: 0 0 1rem;
+  color: var(--cc98-color-text);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.user-manage-identity {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 2rem;
+  margin: 0;
+}
+
+.user-manage-identity div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+}
+
+.user-manage-identity dt {
+  color: var(--cc98-color-text-muted);
+}
+
+.user-manage-identity dd {
+  margin: 0;
+  color: var(--cc98-color-text);
+}
+
+.user-manager-form {
+  display: grid;
+  align-items: end;
+  gap: 1rem;
+}
+
+.user-manager-form--operation {
+  grid-template-columns: 8rem minmax(12rem, 1fr) 8rem auto;
+}
+
+.user-manager-form--compact {
+  grid-template-columns: 10rem auto;
+  justify-content: start;
+}
+
+.user-manager-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-manager-form input,
+.user-manager-form select {
+  width: 100%;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+}
+
+.user-manager-form button,
+.user-manage-posts button {
+  min-width: 5rem;
+  height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: 0.2rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-manager-form button:disabled,
+.user-manage-posts button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.user-manager-form__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.user-manage-notice,
+.user-manage-empty {
+  margin: 0.75rem 0 0;
+  color: var(--cc98-color-accent);
+  font-size: 0.8rem;
+}
+
+.user-manage-empty {
+  color: var(--cc98-color-text-muted);
+}
+
+.user-manage-posts {
+  margin-top: 1rem;
+  border-top: 1px solid var(--cc98-color-border);
+}
+
+.user-manage-posts article {
+  display: grid;
+  min-height: 3.25rem;
+  grid-template-columns: 9.5rem minmax(0, 1fr) 6rem 3rem 7rem;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--cc98-color-border);
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-manage-posts article > a:first-of-type,
+.user-manage-posts article > span:first-of-type {
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-manage-posts footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-manage-posts footer div {
+  display: flex;
+  gap: 0.75rem;
+}
+
+@media (max-width: 1000px) {
+  .user-center-shell {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .user-center-main {
+    padding: 1.5rem;
+  }
+}
+</style>

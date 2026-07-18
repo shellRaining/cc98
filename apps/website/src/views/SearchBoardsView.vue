@@ -59,3 +59,56 @@ const stateKind = computed(() => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.new-topics-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+}
+
+.new-topics-breadcrumb a,
+.new-topics-breadcrumb a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.search-page {
+  position: relative;
+  width: 100%;
+  min-height: 48.75rem;
+  margin-top: -1.5rem;
+  margin-bottom: 3.75rem;
+}
+
+.search-page .new-topics-breadcrumb {
+  line-height: 1.5;
+}
+
+.search-board-results {
+  display: flex;
+  min-height: 1.875rem;
+  flex-wrap: wrap;
+}
+
+.search-board-results a,
+.search-board-results a:visited {
+  flex-shrink: 0;
+  margin: 1rem 1rem 0 0;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: 0.25rem;
+  color: var(--cc98-color-primary);
+  font-family: "Microsoft YaHei", sans-serif;
+  font-size: 1rem;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.search-board-results a:hover {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+</style>

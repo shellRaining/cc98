@@ -60,3 +60,80 @@ function replaceBrokenAvatar(event: Event) {
     </span>
   </div>
 </template>
+
+<style scoped>
+.framed-avatar {
+  position: relative;
+}
+
+.framed-avatar__link {
+  position: relative;
+  z-index: 100;
+  display: block;
+}
+
+.framed-avatar__portrait {
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.framed-avatar__frame {
+  position: absolute;
+  z-index: 150;
+  pointer-events: none;
+}
+
+.framed-avatar__frame img {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.framed-avatar--post {
+  display: flex;
+  width: 100%;
+  height: 5rem;
+  justify-content: center;
+}
+
+.framed-avatar--post .framed-avatar__link {
+  max-height: 5rem;
+}
+
+.framed-avatar--post .framed-avatar__portrait {
+  display: block;
+  width: 5rem;
+  height: 5rem;
+  box-shadow: 0 0 5px rgb(0 0 0 / 0.45);
+}
+
+.framed-avatar--post.framed-avatar--flat .framed-avatar__portrait {
+  box-shadow: none;
+}
+
+.framed-avatar--post .framed-avatar__frame {
+  top: 50%;
+  left: 50%;
+}
+
+.framed-avatar--profile {
+  width: 10rem;
+  height: 10rem;
+}
+
+.framed-avatar--profile .framed-avatar__portrait {
+  width: 10rem;
+  height: 10rem;
+}
+
+.framed-avatar--profile .framed-avatar__frame {
+  inset: 0;
+}
+
+.framed-avatar--profile .framed-avatar__frame img:not([style*="left"]),
+.framed-avatar--profile .framed-avatar__frame img[style*="left: auto"] {
+  left: 50%;
+  transform: translateX(-50%);
+}
+</style>

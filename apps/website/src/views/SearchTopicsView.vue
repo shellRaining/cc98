@@ -152,3 +152,81 @@ function goLogin() {
     <button v-if="y > 234" type="button" class="new-topics-to-top" @click="y = 0">回到顶部</button>
   </section>
 </template>
+
+<style scoped>
+.new-topics-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+}
+
+.new-topics-breadcrumb a,
+.new-topics-breadcrumb a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.new-topics-to-top {
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
+  z-index: 2;
+  width: 6rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.new-topics-to-top:hover {
+  opacity: 0.85;
+}
+
+.search-page {
+  position: relative;
+  width: 100%;
+  min-height: 48.75rem;
+  margin-top: -1.5rem;
+  margin-bottom: 3.75rem;
+}
+
+.search-page .new-topics-breadcrumb {
+  line-height: 1.5;
+}
+
+.search-topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.search-load-more {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.search-load-more:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.search-end {
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--cc98-color-text-muted);
+}
+</style>

@@ -19,3 +19,26 @@ const message = computed(() =>
     <p>{{ message }}</p>
   </div>
 </template>
+
+<style scoped>
+.search-empty {
+  display: flex;
+  min-height: 34rem;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+.search-empty img {
+  display: block;
+  width: 22.5rem;
+  max-width: 50%;
+}
+
+.search-empty p {
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+}
+</style>

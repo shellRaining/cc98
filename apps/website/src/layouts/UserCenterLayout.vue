@@ -91,3 +91,113 @@ const links = [
     <button v-if="y > 234" type="button" class="new-topics-to-top" @click="y = 0">回到顶部</button>
   </section>
 </template>
+
+<style scoped>
+.new-topics-to-top {
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
+  z-index: 2;
+  width: 6rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.new-topics-to-top:hover {
+  opacity: 0.85;
+}
+
+.user-center-page {
+  position: relative;
+  width: 100%;
+  min-height: 46.875rem;
+  margin-top: -1.5rem;
+  margin-bottom: 3rem;
+  font-size: 0.88rem;
+}
+
+.user-center-page__title {
+  margin: 0 0 1.25rem;
+  color: var(--cc98-color-text);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.user-center-shell {
+  display: grid;
+  grid-template-columns: 12.625rem minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.user-center-nav,
+.user-center-main {
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+}
+
+.user-center-nav {
+  min-height: 40rem;
+  padding: 0 0.625rem;
+}
+
+.user-center-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-center-nav li + li {
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-center-nav a,
+.user-center-nav a:visited {
+  display: flex;
+  height: 3.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.65rem;
+  color: var(--cc98-color-text);
+  text-decoration: none;
+}
+
+.user-center-nav a:hover,
+.user-center-nav a.router-link-active,
+.user-center-nav a.is-active {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-nav svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.user-center-main {
+  min-height: 40rem;
+  padding: 2rem;
+}
+
+@media (max-width: 1000px) {
+  .user-center-shell {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .user-center-main {
+    padding: 1.5rem;
+  }
+}
+</style>

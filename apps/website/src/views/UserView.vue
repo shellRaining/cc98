@@ -262,3 +262,220 @@ function toggleFollow() {
     </div>
   </section>
 </template>
+
+<style scoped>
+.user-center-page {
+  position: relative;
+  width: 100%;
+  min-height: 46.875rem;
+  margin-top: -1.5rem;
+  margin-bottom: 3rem;
+  font-size: 0.88rem;
+}
+
+.user-center-page__title {
+  margin: 0 0 1.25rem;
+  color: var(--cc98-color-text);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.user-center-shell {
+  display: grid;
+  grid-template-columns: 12.625rem minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.user-center-nav,
+.user-center-main {
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+}
+
+.user-center-nav {
+  min-height: 40rem;
+  padding: 0 0.625rem;
+}
+
+.user-center-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-center-nav li + li {
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-center-nav a,
+.user-center-nav a:visited {
+  display: flex;
+  height: 3.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.65rem;
+  color: var(--cc98-color-text);
+  text-decoration: none;
+}
+
+.user-center-nav a:hover,
+.user-center-nav a.router-link-active,
+.user-center-nav a.is-active {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-nav svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.user-center-main {
+  min-height: 40rem;
+  padding: 2rem;
+}
+
+.user-center-profile {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 20% minmax(0, 1fr);
+}
+
+.user-center-activities {
+  grid-column: 1 / -1;
+  margin-top: 3rem;
+}
+
+.user-center-activities > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.user-center-activities h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+
+.user-center-activities header a,
+.user-center-activities header a:visited {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-topic-list {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-center-topic-list li {
+  min-width: 0;
+  padding: 0 0 1.25rem;
+}
+
+.user-center-topic-list li + li {
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-center-topic-list__meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.user-center-topic-list__meta a,
+.user-center-topic-list__meta a:visited {
+  min-width: 6rem;
+  color: var(--cc98-color-primary);
+}
+
+.user-center-topic-list__meta time {
+  color: var(--cc98-color-text-muted);
+}
+
+.user-center-topic-list__title,
+.user-center-topic-list__title:visited {
+  display: block;
+  max-height: 5rem;
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  overflow-wrap: anywhere;
+}
+
+.user-center-topic-list__title:hover {
+  color: var(--cc98-color-primary);
+}
+
+.user-center-activities__empty {
+  margin: 0 0 0 2rem;
+  color: var(--cc98-color-text-muted);
+}
+
+.user-detail-actions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.user-detail-actions a,
+.user-detail-actions a:visited,
+.user-detail-actions button {
+  display: inline-flex;
+  min-width: 5rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 0.2rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-detail-actions button.is-following {
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text-muted);
+}
+
+.user-detail-actions button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.user-detail-relation-error {
+  grid-column: 1 / -1;
+  margin: 1rem 0 0;
+  color: var(--cc98-color-accent);
+}
+
+.user-detail-load-target {
+  min-height: 3rem;
+  padding-top: 1rem;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .user-center-shell {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .user-center-main {
+    padding: 1.5rem;
+  }
+}
+</style>

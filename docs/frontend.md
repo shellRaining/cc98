@@ -58,6 +58,14 @@ graph TD
 - `components/ui/` 下放基于 Reka UI 二次封装的基础组件，业务组件依赖这些封装而非直接用 reka-ui 或原生元素
 - Reka UI 没提供的（Button / Input）用 `Primitive` + cva 从零封装，变体走 UnoCSS 语义 class
 
+## 样式所有权
+
+`styles/global.css` 只存放主题 token、文档级基础样式、reset 和跨页面稳定原语；`styles/skins.css` 只负责皮肤变量覆盖。Header、页面、业务组件和响应式规则不进入全局样式文件。
+
+组件和页面专属样式放在对应 Vue SFC 的 `<style scoped>` 中。选择器涉及子组件内部节点时，优先把规则下移到子组件；父组件确实需要控制插槽、富内容或第三方组件后代时，使用作用范围明确的 `:deep()`。页面级网格和多个子组件之间的排列由 View 或 Layout 持有。
+
+UnoCSS 负责语义 token、简单原子样式和基础组件变体。组件专属的复杂网格、后代关系、伪元素、状态组合和响应式规则继续使用 scoped CSS。只有单个元素上的简单静态声明适合直接改成 utility；多处样式相似时，先确认是否存在稳定的组件语义，不为减少几行 CSS 随意新增 shortcut。
+
 ## 富内容渲染
 
 `components/rich-content/ContentRenderer.vue` 是页面入口，只接收原文、内容类型和渲染选项。

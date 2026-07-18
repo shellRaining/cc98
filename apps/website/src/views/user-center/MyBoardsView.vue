@@ -157,3 +157,90 @@ function useFallbackIcon(event: Event) {
     </ul>
   </div>
 </template>
+
+<style scoped>
+.user-content-page {
+  min-height: 36rem;
+}
+
+.user-content-empty {
+  margin: 2rem 0;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+.user-followed-board-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-followed-board-list li {
+  display: flex;
+  align-items: center;
+  min-height: 9rem;
+  padding-bottom: 1.875rem;
+}
+
+.user-followed-board-list li + li {
+  padding-top: 1.875rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-followed-board__icon {
+  display: block;
+  width: 7rem;
+  height: 7rem;
+  flex: 0 0 7rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--cc98-color-primary);
+}
+
+.user-followed-board__icon img {
+  width: 7rem;
+  height: 7rem;
+  object-fit: cover;
+}
+
+.user-followed-board__info {
+  max-width: 36.75rem;
+  flex: 1 1 auto;
+  margin-left: 3rem;
+}
+
+.user-followed-board__info h2 {
+  margin: 0 0 1rem;
+  color: var(--cc98-color-text);
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+
+.user-followed-board__info p {
+  margin: 0;
+  color: var(--cc98-color-text-muted);
+  white-space: nowrap;
+}
+
+.user-followed-board-list li > button {
+  width: 6rem;
+  height: 2rem;
+  flex: 0 0 6rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-followed-board-list li > button.is-unfollowed {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.user-followed-board-list li > button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+</style>

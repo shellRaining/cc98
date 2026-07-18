@@ -43,3 +43,54 @@ const boardGroups = computed(() =>
     </nav>
   </section>
 </template>
+
+<style scoped>
+.board-list-page {
+  position: relative;
+}
+
+.board-list-page__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.board-list-guide {
+  position: fixed;
+  top: 4.25rem;
+  left: calc(50% + 582px);
+  z-index: 5;
+  display: flex;
+  width: 5rem;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.board-list-guide a,
+.board-list-guide a:visited {
+  padding: 0.35rem 0.25rem;
+  border-bottom: 1px dashed var(--cc98-color-border);
+  color: var(--cc98-color-text-muted);
+  white-space: nowrap;
+}
+
+.board-list-guide a:last-child {
+  border-bottom: 0;
+}
+
+.board-list-guide a:hover,
+.board-list-guide a:focus-visible {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+@media (max-width: 1180px) {
+  .board-list-guide {
+    display: none;
+  }
+}
+</style>

@@ -218,3 +218,115 @@ async function submit() {
     </form>
   </UiDialog>
 </template>
+
+<style scoped>
+.topic-moderation-tabs {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 0.25rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--cc98-color-border);
+}
+
+.topic-moderation-tabs button {
+  position: relative;
+  min-width: max-content;
+  padding: 0.7rem 0.65rem;
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.topic-moderation-tabs button:hover,
+.topic-moderation-tabs button.is-active {
+  color: var(--cc98-color-primary);
+}
+
+.topic-moderation-tabs button.is-active::after {
+  position: absolute;
+  right: 0.4rem;
+  bottom: -1px;
+  left: 0.4rem;
+  height: 2px;
+  background: var(--cc98-color-primary);
+  content: "";
+}
+
+.topic-moderation-tabs button.is-danger {
+  color: var(--cc98-color-error);
+}
+
+.topic-moderation-tabs button.is-danger.is-active::after {
+  background: var(--cc98-color-error);
+}
+
+.topic-moderation-form {
+  display: grid;
+  gap: 1rem;
+  min-height: 10rem;
+  padding: 0.5rem 0;
+}
+
+.topic-moderation-form > label,
+.topic-moderation-color {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+}
+
+.topic-moderation-form input[type="text"],
+.topic-moderation-form input[type="number"],
+.topic-moderation-form select {
+  width: 100%;
+  min-width: 0;
+  height: 2.4rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--cc98-color-border);
+  border-radius: 0.2rem;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+}
+
+.topic-moderation-highlight {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.75rem 1rem 1rem;
+  border: 1px solid var(--cc98-color-border);
+}
+
+.topic-moderation-highlight > label:not(.topic-moderation-color) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+}
+
+.topic-moderation-color {
+  grid-template-columns: auto 2.5rem 7rem;
+}
+
+.topic-moderation-color input[type="color"] {
+  width: 2.5rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--cc98-color-border);
+  background: transparent;
+}
+
+.topic-moderation-warning,
+.topic-moderation-error {
+  margin: 0;
+  color: var(--cc98-color-error);
+  font-size: 0.875rem;
+}
+</style>

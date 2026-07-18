@@ -416,3 +416,355 @@ async function handleDrop(event: DragEvent) {
     </section>
   </section>
 </template>
+
+<style scoped>
+.message-private {
+  display: flex;
+  height: 42.125rem;
+  background: var(--cc98-color-surface);
+}
+
+.message-private__contacts {
+  display: flex;
+  width: 12.375rem;
+  flex: 0 0 12.375rem;
+  flex-direction: column;
+  border: 1px solid var(--cc98-color-border);
+  font-size: 0.875rem;
+}
+
+.message-private__contacts-title {
+  display: flex;
+  height: 2.5rem;
+  flex: 0 0 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-background);
+  color: var(--cc98-color-text-muted);
+}
+
+.message-private__contact-list {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.message-private__contact-list > button:not(.message-private__more-contacts) {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 5rem;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dashed var(--cc98-color-border);
+  background: transparent;
+  color: var(--cc98-color-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.message-private__contact-list > button:hover,
+.message-private__contact-list > button.is-active {
+  background: var(--cc98-color-surface-subtle);
+}
+
+.message-private__contact-list > button > img {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 2.5rem;
+  margin: 1.25rem 0.625rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message-private__contact-info {
+  display: flex;
+  width: 6.875rem;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.message-private__contact-name {
+  overflow: hidden;
+  padding-bottom: 0.625rem;
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-private__contact-preview {
+  overflow: hidden;
+  color: var(--cc98-color-text-caption);
+  font-size: 0.625rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-private__unread {
+  position: absolute;
+  top: 2.25rem;
+  right: 0.9375rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #fb6165;
+}
+
+.message-private__more-contacts {
+  display: flex;
+  width: 100%;
+  min-height: 4.25rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+}
+
+.message-private__more-contacts span {
+  margin-bottom: 0.375rem;
+  font-size: 1rem;
+}
+
+.message-private__more-contacts:disabled {
+  cursor: wait;
+}
+
+.message-private__contacts-end {
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.message-private__window {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.message-private__window > header {
+  display: flex;
+  height: 2.5rem;
+  flex: 0 0 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--cc98-color-border);
+  border-right: 1px solid var(--cc98-color-border);
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+}
+
+.message-private__conversation {
+  min-height: 0;
+  flex: 1 1 auto;
+  border-top: 1px solid var(--cc98-color-border);
+  border-right: 1px solid var(--cc98-color-border);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.message-private__older {
+  display: block;
+  height: 2.5rem;
+  margin: 0 auto;
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.625rem;
+}
+
+.message-private__older:disabled {
+  cursor: wait;
+}
+
+.message-private__history-end,
+.message-private__empty {
+  margin: 0;
+  padding: 0.625rem 0 1.3125rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.625rem;
+  text-align: center;
+}
+
+.message-private__empty {
+  padding-top: 8rem;
+  font-size: 0.875rem;
+}
+
+.message-private__message {
+  display: flex;
+  flex-direction: column;
+  margin: 0.625rem 0;
+}
+
+.message-private__message > time {
+  padding: 0.3125rem 0 0.5rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.625rem;
+  text-align: center;
+}
+
+.message-private__message > div {
+  position: relative;
+  display: flex;
+}
+
+.message-private__message > div.is-sender {
+  flex-direction: row-reverse;
+}
+
+.message-private__message > div > a {
+  flex: 0 0 auto;
+}
+
+.message-private__message > div > a > img {
+  width: 3.125rem;
+  height: 3.125rem;
+  margin: 0.3125rem 1.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message-private__bubble {
+  position: relative;
+  width: auto;
+  max-width: 31.25rem;
+  height: fit-content;
+  margin: 0.5rem 0 0.625rem;
+  border: 1px solid var(--cc98-color-border);
+  border-radius: 3px;
+  background: var(--cc98-color-background);
+  color: var(--cc98-color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+  overflow-wrap: anywhere;
+}
+
+.message-private__bubble::before,
+.message-private__bubble::after {
+  position: absolute;
+  top: 0.5625rem;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  content: "";
+}
+
+.is-receiver .message-private__bubble::before {
+  left: -1rem;
+  border-width: 0.5rem;
+  border-color: transparent var(--cc98-color-border) transparent transparent;
+}
+
+.is-receiver .message-private__bubble::after {
+  top: 0.6875rem;
+  left: -0.75rem;
+  border-width: 0.375rem;
+  border-color: transparent var(--cc98-color-background) transparent transparent;
+}
+
+.is-sender .message-private__bubble::before {
+  right: -1rem;
+  border-width: 0.5rem;
+  border-color: transparent transparent transparent var(--cc98-color-border);
+}
+
+.is-sender .message-private__bubble::after {
+  top: 0.6875rem;
+  right: -0.75rem;
+  border-width: 0.375rem;
+  border-color: transparent transparent transparent var(--cc98-color-background);
+}
+
+.message-private__bubble > * {
+  margin: 0.625rem !important;
+}
+
+.message-private__composer {
+  position: relative;
+  display: flex;
+  height: 10rem;
+  flex: 0 0 10rem;
+  flex-direction: column;
+  border-top: 1px solid var(--cc98-color-border);
+  border-right: 1px solid var(--cc98-color-border);
+  border-bottom: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface-subtle);
+}
+
+.message-private__composer textarea {
+  width: calc(100% - 3.625rem);
+  height: 4.875rem;
+  flex: 0 0 4.875rem;
+  margin: 1.1875rem 1.8125rem 0.625rem;
+  padding: 0.5rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+  font-size: 0.75rem;
+  line-height: 1.375rem;
+  resize: none;
+}
+
+.message-private__composer textarea:focus {
+  border-color: var(--cc98-color-primary);
+  outline: 0;
+}
+
+.message-private__composer textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.message-private__composer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  margin-right: 1.8125rem;
+}
+
+.message-private__composer-actions button {
+  width: 6.25rem;
+  height: 1.875rem;
+  border: 0;
+  border-radius: 3px;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+}
+
+.message-private__composer-actions button:hover {
+  filter: brightness(1.08);
+}
+
+.message-private__composer-actions button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.message-private__error {
+  position: absolute;
+  bottom: 0.45rem;
+  left: 1.8125rem;
+  max-width: calc(100% - 17rem);
+  margin: 0;
+  color: var(--cc98-color-accent);
+  font-size: 0.75rem;
+}
+</style>

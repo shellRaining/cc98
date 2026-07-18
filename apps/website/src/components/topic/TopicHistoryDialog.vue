@@ -108,3 +108,98 @@ function formatTime(value: string) {
     </template>
   </UiDialog>
 </template>
+
+<style scoped>
+.topic-history-body {
+  max-height: 20rem;
+  margin-top: 1rem;
+  overflow-y: auto;
+  border-top: 1px solid var(--cc98-color-border);
+}
+
+.topic-dialog-state {
+  margin: 0;
+  padding: 3rem 1rem;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+.topic-dialog-state--error {
+  color: var(--cc98-color-error);
+}
+
+.topic-dialog-state--error p {
+  margin: 0 0 1rem;
+}
+
+.topic-history-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topic-history-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12rem;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem 0.25rem;
+  border-bottom: 1px solid var(--cc98-color-border);
+}
+
+.topic-history-list__main {
+  min-width: 0;
+}
+
+.topic-history-list__main strong {
+  display: block;
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topic-history-list__main p,
+.topic-history-list__operator {
+  margin: 0.35rem 0 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.topic-history-list__main p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.topic-history-list__operator {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.topic-history-list__operator span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topic-dialog-footer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.topic-dialog-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+</style>

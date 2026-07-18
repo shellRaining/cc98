@@ -736,3 +736,132 @@ onBeforeUnmount(() => {
     </template>
   </section>
 </template>
+
+<style scoped>
+.topic-page {
+  width: 100%;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+.topic-navigation-row {
+  display: flex;
+  min-height: 2rem;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.topic-navigation-row--bottom {
+  margin-top: 2rem;
+}
+
+.topic-breadcrumb {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.topic-breadcrumb a,
+.topic-breadcrumb a:visited {
+  max-width: 15rem;
+  overflow: hidden;
+  color: var(--cc98-color-text-muted);
+  text-overflow: ellipsis;
+}
+
+.topic-breadcrumb a:hover {
+  color: var(--cc98-color-primary);
+}
+
+.topic-locked-notice {
+  margin: 0.5rem;
+  color: var(--cc98-color-accent);
+  font-size: 0.875rem;
+}
+
+.topic-filter-notice {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px dashed var(--cc98-color-primary);
+  color: var(--cc98-color-primary);
+  font-size: 0.75rem;
+}
+
+.topic-post-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.images-collapsed :deep(.topic-post__content .rich-content img),
+.images-collapsed :deep(.topic-post__signature .rich-content img) {
+  display: none !important;
+}
+
+.topic-hot-replies {
+  display: flex;
+  flex-direction: column;
+}
+
+.topic-reply-editor,
+.topic-locked-card {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  box-shadow: 0 0 10px 1px rgb(0 0 0 / 0.15);
+}
+
+.topic-moderation-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 1rem 0 0;
+}
+
+.topic-reply-editor__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.topic-reply-editor__heading h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.topic-reply-editor__heading p {
+  margin: 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.topic-reply-editor__options {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+}
+
+.topic-reply-editor__options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topic-reply-editor__error {
+  color: var(--cc98-color-accent);
+  font-size: 0.875rem;
+}
+</style>

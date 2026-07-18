@@ -92,3 +92,43 @@ const canNext = computed(() => {
     </template>
   </nav>
 </template>
+
+<style scoped>
+.user-center-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.user-center-pagination > a,
+.user-center-pagination > span {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cc98-color-border);
+  border-radius: 0.5rem;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+}
+
+.user-center-pagination > a:hover {
+  border-color: var(--cc98-color-primary);
+  color: var(--cc98-color-primary);
+}
+
+.user-center-pagination > span[aria-current="page"] {
+  border-color: #ccc;
+  background: #ccc;
+  color: #fff;
+}
+
+.user-center-pagination > .user-center-pagination__ellipsis {
+  border-color: transparent;
+  background: transparent;
+  color: var(--cc98-color-text-muted);
+}
+</style>

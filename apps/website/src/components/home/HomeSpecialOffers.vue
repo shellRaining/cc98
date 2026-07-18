@@ -24,3 +24,34 @@ defineProps<{ items: IndexColumn[] }>();
     </ul>
   </section>
 </template>
+
+<style scoped>
+.home-special-offers {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-sidebar-block {
+  min-width: 0;
+}
+
+.home-special-offers {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-top: 8px solid var(--cc98-color-secondary);
+  background: var(--cc98-color-surface);
+}
+
+.home-special-offers li {
+  overflow: hidden;
+  padding-block: 0.3rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-special-offers li::before {
+  content: "• ";
+}
+</style>

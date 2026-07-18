@@ -164,3 +164,126 @@ function replaceBrokenAvatar(event: Event) {
     </template>
   </div>
 </template>
+
+<style scoped>
+.user-content-page {
+  min-height: 36rem;
+}
+
+.user-content-empty {
+  margin: 2rem 0;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+.user-relation-list {
+  min-height: 40rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-relation-list li {
+  display: flex;
+  align-items: center;
+  padding-bottom: 1.875rem;
+}
+
+.user-relation-list li + li {
+  padding-top: 1.875rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-relation__avatar {
+  display: block;
+  width: 3.75rem;
+  height: 3.75rem;
+  flex: 0 0 3.75rem;
+  overflow: hidden;
+  margin-right: 1.25rem;
+  border-radius: 50%;
+}
+
+.user-relation__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-relation__summary {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.user-relation__name {
+  min-width: 7rem;
+  margin-right: 1.25rem;
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  text-overflow: ellipsis;
+}
+
+.user-relation__name:hover {
+  color: var(--cc98-color-primary);
+}
+
+.user-relation__summary strong {
+  font-weight: 400;
+}
+
+.user-relation__posts {
+  min-width: 2rem;
+  margin: 0 0.88rem 0 0.75rem;
+  color: #35a7ff;
+}
+
+.user-relation__fans {
+  min-width: 2rem;
+  margin: 0 0.88rem 0 0.75rem;
+  color: #ff3636;
+}
+
+.user-relation__follow,
+.user-relation__message {
+  display: inline-flex;
+  width: 4.375rem;
+  height: 1.625rem;
+  flex: 0 0 4.375rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1rem;
+  border: 0;
+  border-radius: 3px;
+  background: #e6e6e6;
+  color: #a0a0a0;
+  font: inherit;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.4s;
+}
+
+.user-relation__message,
+.user-relation__follow.is-unfollowed {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.user-relation__follow:hover,
+.user-relation__message:hover {
+  opacity: 0.8;
+}
+
+.user-relation__follow:active,
+.user-relation__message:active {
+  opacity: 0.6;
+}
+
+.user-relation__follow:disabled {
+  cursor: wait;
+}
+</style>

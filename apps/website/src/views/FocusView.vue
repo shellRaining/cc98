@@ -215,3 +215,117 @@ useIntersectionObserver(
     <button v-if="y > 234" type="button" class="new-topics-to-top" @click="y = 0">回到顶部</button>
   </section>
 </template>
+
+<style scoped>
+.new-topics-to-top {
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
+  z-index: 2;
+  width: 6rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.new-topics-to-top:hover {
+  opacity: 0.85;
+}
+
+.focus-page {
+  position: relative;
+  width: 100%;
+  min-height: 48.75rem;
+  margin-bottom: 3.75rem;
+}
+
+.focus-tabs {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.focus-tabs a,
+.focus-tabs a:visited {
+  height: 2.5rem;
+  border-bottom: 2px solid transparent;
+  color: var(--cc98-color-text-muted);
+  font-size: 1.25rem;
+  line-height: 2.5rem;
+}
+
+.focus-tabs a:hover,
+.focus-tabs a.is-active,
+.focus-tabs a.is-active:visited {
+  border-bottom-color: var(--cc98-color-accent);
+  color: var(--cc98-color-accent);
+}
+
+.focus-tabs button {
+  margin-left: auto;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: 0.25rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.focus-tabs button:hover {
+  background: transparent;
+  color: var(--cc98-color-primary);
+}
+
+.focus-tabs button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.focus-board-picker {
+  display: flex;
+  min-height: 1.875rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.focus-board-picker button {
+  margin: 1rem 1rem 0 0;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--cc98-color-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.focus-board-picker button:hover,
+.focus-board-picker button.is-active {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.focus-board-picker p {
+  margin: 1.8rem 0 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.8rem;
+}
+
+.focus-topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.45rem;
+}
+
+.focus-load-more-target {
+  min-height: 3rem;
+}
+</style>

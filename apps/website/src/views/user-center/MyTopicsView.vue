@@ -70,3 +70,60 @@ function formatTime(value: string | undefined): string {
     />
   </div>
 </template>
+
+<style scoped>
+.user-content-page {
+  min-height: 36rem;
+}
+
+.user-content-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-content-list li {
+  padding-bottom: 1.875rem;
+}
+
+.user-content-list li + li {
+  padding-top: 1.875rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-content-list__meta {
+  display: flex;
+  min-height: 1.4rem;
+  align-items: baseline;
+  gap: 2rem;
+  margin-bottom: 1.875rem;
+}
+
+.user-content-list__meta a,
+.user-content-list__meta a:visited {
+  min-width: 6rem;
+  color: var(--cc98-color-primary);
+}
+
+.user-content-list__meta span,
+.user-content-list__meta time {
+  color: var(--cc98-color-text);
+}
+
+.user-content-list__title,
+.user-content-list__title:visited {
+  display: -webkit-box;
+  max-height: 5rem;
+  overflow: hidden;
+  padding-right: 3rem;
+  color: var(--cc98-color-text);
+  font-size: 0.88rem;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.user-content-list__title:hover {
+  color: var(--cc98-color-primary);
+}
+</style>

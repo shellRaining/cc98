@@ -10,3 +10,16 @@ defineProps<{ title: string; src: string }>();
     <img :src="src" :alt="`${title}二维码`" />
   </section>
 </template>
+
+<style scoped>
+.home-sidebar-block {
+  min-width: 0;
+}
+
+.home-qr-card img {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  background: #fff;
+}
+</style>

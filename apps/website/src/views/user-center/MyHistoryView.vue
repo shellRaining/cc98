@@ -126,3 +126,124 @@ function formatTime(value: string | undefined): string {
     />
   </div>
 </template>
+
+<style scoped>
+.user-content-page {
+  min-height: 36rem;
+}
+
+.user-content-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-content-list li {
+  padding-bottom: 1.875rem;
+}
+
+.user-content-list li + li {
+  padding-top: 1.875rem;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-content-list__meta {
+  display: flex;
+  min-height: 1.4rem;
+  align-items: baseline;
+  gap: 2rem;
+  margin-bottom: 1.875rem;
+}
+
+.user-content-list__meta a,
+.user-content-list__meta a:visited {
+  min-width: 6rem;
+  color: var(--cc98-color-primary);
+}
+
+.user-content-list__meta span,
+.user-content-list__meta time {
+  color: var(--cc98-color-text);
+}
+
+.user-content-list__title,
+.user-content-list__title:visited {
+  display: -webkit-box;
+  max-height: 5rem;
+  overflow: hidden;
+  padding-right: 3rem;
+  color: var(--cc98-color-text);
+  font-size: 0.88rem;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.user-content-list__title:hover {
+  color: var(--cc98-color-primary);
+}
+
+.user-content-empty {
+  margin: 2rem 0;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+.user-history-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-history-toggle > span {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cc98-color-border);
+  border-radius: 0.15rem;
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.user-history-toggle[aria-checked="true"] > span {
+  border-color: var(--cc98-color-primary);
+  background: var(--cc98-color-primary);
+}
+
+.user-history-toggle:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.user-history > hr {
+  height: 0;
+  margin: 1.5rem 0 1.875rem;
+  border: 0;
+  border-top: 1px dashed var(--cc98-color-border);
+}
+
+.user-history__message {
+  margin: 0.75rem 0 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-history__message button {
+  padding: 0;
+  border: 0;
+  margin-left: 0.5rem;
+  background: transparent;
+  color: var(--cc98-color-primary);
+  font: inherit;
+  cursor: pointer;
+}
+</style>

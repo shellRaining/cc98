@@ -141,3 +141,59 @@ function restorePreviousBatch() {
     </div>
   </section>
 </template>
+
+<style scoped>
+.new-topics-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+}
+
+.new-topics-breadcrumb a,
+.new-topics-breadcrumb a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.recommended-page {
+  width: 100%;
+  min-height: 48.75rem;
+  margin-bottom: 3.75rem;
+}
+
+.recommended-actions {
+  display: flex;
+  min-height: 1.875rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.recommended-actions button {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: 0.25rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.recommended-actions button:hover {
+  background: transparent;
+  color: var(--cc98-color-primary);
+}
+
+.recommended-actions button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.recommended-topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.45rem;
+}
+</style>

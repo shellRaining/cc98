@@ -44,3 +44,41 @@ const label = computed(
     <span class="sr-only">{{ label }}</span>
   </span>
 </template>
+
+<style scoped>
+.board-topic-state {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  color: #ffc90e;
+}
+
+.board-topic-state svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentcolor;
+}
+
+.board-topic-state--hot,
+.board-topic-state--global-top {
+  color: #e33131;
+}
+
+.board-topic-state--top {
+  color: #f28c1b;
+}
+
+.board-topic-state--best {
+  color: #ff1493;
+}
+
+.board-topic-state--locked {
+  color: #b0b0b0;
+}
+
+.board-topic-state__cutout {
+  fill: var(--cc98-color-surface);
+}
+</style>

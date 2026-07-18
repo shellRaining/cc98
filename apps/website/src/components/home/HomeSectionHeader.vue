@@ -23,3 +23,55 @@ withDefaults(
     </div>
   </div>
 </template>
+
+<style scoped>
+.home-section-heading {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-left: 0.75rem;
+  color: var(--cc98-color-primary);
+}
+
+.home-section-heading--secondary {
+  color: var(--cc98-color-secondary);
+}
+
+.home-section-heading__title,
+.home-section-heading__actions {
+  display: flex;
+  align-items: center;
+}
+
+.home-section-heading__title {
+  min-width: 0;
+  gap: 0.5rem;
+}
+
+.home-section-heading__title svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  fill: currentcolor;
+}
+
+.home-section-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.home-section-heading__actions {
+  gap: 0.65rem;
+  white-space: nowrap;
+}
+
+.home-section-heading__actions a,
+.home-section-heading__actions a:visited {
+  color: currentcolor;
+  font-size: 0.95rem;
+}
+</style>

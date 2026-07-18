@@ -57,3 +57,60 @@ const errorMessage = computed(() =>
     </template>
   </UiDialog>
 </template>
+
+<style scoped>
+.topic-ip-body {
+  max-height: 20rem;
+  margin-top: 1rem;
+  overflow-y: auto;
+  border-top: 1px solid var(--cc98-color-border);
+}
+
+.topic-dialog-state {
+  margin: 0;
+  padding: 3rem 1rem;
+  color: var(--cc98-color-text-muted);
+  text-align: center;
+}
+
+.topic-dialog-state--error {
+  color: var(--cc98-color-error);
+}
+
+.topic-dialog-state--error p {
+  margin: 0 0 1rem;
+}
+
+.topic-ip-groups details {
+  border-bottom: 1px solid var(--cc98-color-border);
+}
+
+.topic-ip-groups summary {
+  padding: 0.9rem 0.5rem;
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.topic-ip-groups ol {
+  margin: 0;
+  padding: 0 1rem 0.5rem 2rem;
+}
+
+.topic-ip-groups li {
+  padding: 0.5rem 0;
+}
+
+.topic-ip-groups li p {
+  margin: 0.2rem 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.topic-ip-groups li p:last-child {
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

@@ -265,3 +265,183 @@ function resetProfile() {
     </section>
   </form>
 </template>
+
+<style scoped>
+.user-settings h2 {
+  margin: 0 0 2rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.user-settings__section {
+  padding-bottom: 1.875rem;
+  border-bottom: 1px dashed var(--cc98-color-border);
+  margin-bottom: 1.875rem;
+}
+
+.user-settings-avatar {
+  display: flex;
+  align-items: center;
+}
+
+.user-settings-avatar > img {
+  width: 10rem;
+  height: 10rem;
+  flex: 0 0 10rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-settings-avatar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.25rem;
+  margin-left: 1.875rem;
+}
+
+.user-settings-avatar__actions input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.user-settings button,
+.user-settings-avatar__actions label {
+  display: inline-flex;
+  min-width: 6.25rem;
+  height: 1.875rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-settings button.is-primary {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.user-settings button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.user-settings-avatar__actions p {
+  width: 100%;
+  margin: 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-settings-signature {
+  width: 100%;
+  min-height: 15.75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+  resize: vertical;
+}
+
+.user-settings__hint {
+  margin: 0.75rem 0 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-settings-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.user-settings-fields h2 {
+  margin-bottom: 0;
+}
+
+.user-settings-fields > label {
+  display: flex;
+  align-items: center;
+}
+
+.user-settings-fields > label > span:first-child {
+  width: 10rem;
+  flex: 0 0 auto;
+}
+
+.user-settings-fields input,
+.user-settings-fields select,
+.user-settings-fields textarea {
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+}
+
+.user-settings-fields input,
+.user-settings-fields select {
+  height: 1.75rem;
+  padding: 0 0.5rem;
+}
+
+.user-settings-fields input {
+  width: 12rem;
+}
+
+.user-settings-birthday select {
+  max-width: 6rem;
+}
+
+.user-settings-birthday em {
+  margin: 0 0.75rem 0 0.35rem;
+  font-style: normal;
+}
+
+.user-settings-introduction {
+  align-items: flex-start !important;
+}
+
+.user-settings-introduction > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.user-settings-introduction textarea {
+  width: 30rem;
+  height: 4rem;
+  padding: 0.5rem;
+  resize: none;
+}
+
+.user-settings-introduction small {
+  color: var(--cc98-color-text-muted);
+}
+
+.user-settings-submit {
+  text-align: center;
+}
+
+.user-settings-submit h2 {
+  text-align: left;
+}
+
+.user-settings-submit > div {
+  display: flex;
+  justify-content: center;
+  gap: 6rem;
+}
+
+.user-settings__message {
+  color: var(--cc98-color-accent) !important;
+}
+</style>

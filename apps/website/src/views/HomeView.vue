@@ -133,3 +133,59 @@ const pageError = computed(() => (error.value ? normalizeApiError(error.value) :
     </aside>
   </div>
 </template>
+
+<style scoped>
+.home-page {
+  display: grid;
+  grid-template-columns: 51.25rem 18.75rem;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.home-main-column,
+.home-sidebar {
+  min-width: 0;
+}
+
+.home-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 25rem));
+  gap: 2rem 1.25rem;
+}
+
+.home-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.home-suggestion {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 6.25rem;
+  overflow: hidden;
+}
+
+.home-suggestion img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 1000px) {
+  .home-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-topic-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+</style>

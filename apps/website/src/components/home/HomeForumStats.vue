@@ -52,3 +52,34 @@ defineProps<{
     </dl>
   </section>
 </template>
+
+<style scoped>
+.home-sidebar-block {
+  min-width: 0;
+}
+
+.home-forum-stats {
+  margin: 0.75rem 0 0;
+  padding: 1rem 1.25rem;
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.home-forum-stats > div {
+  display: flex;
+  min-height: 1.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.home-forum-stats dt,
+.home-forum-stats dd {
+  margin: 0;
+}
+
+.home-forum-stats a,
+.home-forum-stats a:visited {
+  color: #fff;
+}
+</style>

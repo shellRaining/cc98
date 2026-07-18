@@ -58,3 +58,82 @@ onMounted(() => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.home-block {
+  margin-bottom: 1.25rem;
+}
+
+.home-panel {
+  margin-top: 0.75rem;
+  border: 1px solid currentcolor;
+  border-top-width: 8px;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+}
+
+.home-panel--secondary {
+  border-color: var(--cc98-color-secondary);
+}
+
+.home-reading {
+  display: flex;
+  height: 7.5rem;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.home-reading__image {
+  width: 3.75rem;
+  height: 3.75rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--cc98-color-secondary);
+  object-fit: cover;
+}
+
+.home-reading__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.home-reading__title {
+  display: block;
+  overflow: hidden;
+  color: var(--cc98-color-text-muted);
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-reading__summary {
+  margin: 0.45rem 0 0.65rem;
+  overflow: hidden;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-carousel-dots {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.home-carousel-dots button {
+  width: 0.625rem;
+  height: 0.625rem;
+  padding: 0;
+  border: 1px solid var(--cc98-color-text-muted);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-carousel-dots button.is-active {
+  border-color: var(--cc98-color-accent);
+  background: var(--cc98-color-accent);
+}
+</style>

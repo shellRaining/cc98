@@ -238,3 +238,225 @@ async function submitSetting() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.user-theme h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.user-theme__intro {
+  margin-bottom: 1.5rem;
+}
+
+.user-theme__intro p {
+  margin: 0.65rem 0 0;
+  color: var(--cc98-color-text-muted);
+}
+
+.user-theme-settings {
+  color: var(--cc98-color-text);
+}
+
+.user-theme-settings fieldset {
+  padding: 0;
+  border: 0;
+  margin: 0 0 1.25rem;
+}
+
+.user-theme-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.user-theme-mode legend {
+  float: left;
+  width: 8rem;
+}
+
+.user-theme-mode button,
+.user-theme-submit button {
+  min-width: 5rem;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--cc98-color-border);
+  border-radius: 0.2rem;
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-theme-mode button.is-active,
+.user-theme-submit button {
+  border-color: var(--cc98-color-primary);
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.user-theme-mode button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.user-theme-submit button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.user-theme-mode > span {
+  margin-left: 0.5rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-theme-check {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.user-theme-check input {
+  margin: 0;
+}
+
+.user-theme-support-tip {
+  margin-left: 0.25rem;
+  color: var(--cc98-color-primary);
+  cursor: help;
+}
+
+.user-theme-help {
+  margin: 0.35rem 0 1.25rem 1.25rem;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.user-theme-time-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.user-theme-time-row label + input {
+  margin-right: 1rem;
+}
+
+.user-theme-time-row input {
+  height: 1.875rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+}
+
+.user-theme-submit {
+  display: flex;
+  min-height: 1.875rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.user-theme-submit span,
+.user-theme__message {
+  color: var(--cc98-color-accent);
+}
+
+.user-theme hr {
+  height: 0;
+  margin: 2rem 0 1rem;
+  border: 0;
+  border-top: 1px solid var(--cc98-color-border);
+}
+
+.user-theme__message {
+  min-height: 1.4rem;
+  margin: 0 1rem 0.5rem;
+}
+
+.user-theme-config {
+  display: grid;
+  grid-template-columns: repeat(3, 14rem);
+  justify-content: space-evenly;
+  gap: 1.5rem 0.75rem;
+}
+
+.user-theme-config > button {
+  position: relative;
+  display: flex;
+  width: 14rem;
+  height: 6rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.12);
+  color: #fff;
+  font: inherit;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.8);
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    filter 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.user-theme-config > button:hover:not(:disabled),
+.user-theme-config > button:focus-visible {
+  border-color: var(--cc98-color-primary);
+  box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.4);
+}
+
+.user-theme-config > button.is-current {
+  border-color: var(--cc98-color-primary);
+  box-shadow:
+    inset 0 0 0 999px rgb(0 0 0 / 0.3),
+    0 0 0 1px var(--cc98-color-primary);
+}
+
+.user-theme-config > button.is-unavailable {
+  filter: grayscale(0.65);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.user-theme-config > button.is-pending {
+  cursor: wait;
+}
+
+.user-theme-config span {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.user-theme-config small {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+@media (max-width: 1180px) {
+  .user-theme-config {
+    grid-template-columns: repeat(3, 13rem);
+  }
+
+  .user-theme-config > button {
+    width: 13rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  .user-theme-config {
+    grid-template-columns: repeat(2, 14rem);
+  }
+}
+</style>

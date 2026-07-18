@@ -128,3 +128,78 @@ function toPage(nextPage: number) {
     </template>
   </section>
 </template>
+
+<style scoped>
+.message-notification-list,
+.message-system-list {
+  min-height: 59.5rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+}
+
+.message-notification-list article,
+.message-system-list article {
+  padding: 0 1.875rem 1.25rem;
+  border-bottom: 1px dashed var(--cc98-color-border);
+}
+
+.message-notification__bar {
+  display: flex;
+  height: 3.125rem;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.message-notification__bar > a {
+  flex: 0 0 auto;
+  margin-right: 0.625rem;
+  color: #1e90ff;
+}
+
+.message-notification__bar > span {
+  flex: 0 0 auto;
+  margin-right: 0.625rem;
+  color: var(--cc98-color-text);
+  font-size: 0.9375rem;
+}
+
+.message-notification__bar time {
+  color: var(--cc98-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.message-notification__content,
+.message-notification__content:visited {
+  display: block;
+  min-height: 1.5rem;
+  margin: 0;
+  color: var(--cc98-color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+.message-notification__content > a {
+  color: inherit;
+}
+
+.message-notification__content > a:hover {
+  color: var(--cc98-color-primary);
+}
+
+article.is-unread .message-notification__content,
+article.is-unread .message-notification__content:visited {
+  color: var(--cc98-color-text);
+  font-weight: 600;
+}
+
+.message-notification__topic-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: var(--cc98-color-primary);
+  font-size: 0.75rem;
+}
+
+.message-notification-page > :deep(.user-center-pagination) {
+  margin-top: 0.625rem;
+}
+</style>

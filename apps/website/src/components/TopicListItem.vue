@@ -186,3 +186,95 @@ function formatCount(value: number): string {
     <slot />
   </li>
 </template>
+
+<style scoped>
+.board-topic-row {
+  display: grid;
+  min-height: 3rem;
+  align-items: center;
+  border-bottom: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font-size: 0.75rem;
+  grid-template-columns: minmax(0, 1fr) 7.5rem 8.5rem 12rem;
+}
+
+.board-topic-row:nth-child(even) {
+  background: var(--cc98-color-surface-subtle);
+}
+
+.board-topic-row:last-child {
+  border-bottom: 0;
+}
+
+.board-topic-row:hover {
+  background: color-mix(in srgb, var(--cc98-color-primary) 8%, var(--cc98-color-surface));
+}
+
+.board-topic-row__title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+
+.board-topic-row__checkbox {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.board-topic-row__title-content {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.board-topic-row__title-content > a {
+  overflow: hidden;
+  color: var(--cc98-color-text);
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-topic-row__tag {
+  color: var(--cc98-color-primary);
+}
+
+.board-topic-row__pages {
+  display: flex;
+  flex: none;
+  gap: 0.35rem;
+}
+
+.board-topic-row__pages a,
+.board-topic-row__pages a:visited,
+.board-topic-row__author a,
+.board-topic-row__author a:visited {
+  color: var(--cc98-color-text-muted);
+}
+
+.board-topic-row__pages a:hover,
+.board-topic-row__author a:hover {
+  color: var(--cc98-color-primary);
+}
+
+.board-topic-row__author,
+.board-topic-row__last {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-topic-row__counts {
+  display: grid;
+  grid-template-columns: 4.5rem 4rem;
+}
+
+.board-topic-row__last {
+  padding-right: 0.75rem;
+}
+</style>

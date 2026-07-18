@@ -327,3 +327,184 @@ function formatExpiredTime(value: string | null): string {
     </section>
   </section>
 </template>
+
+<style scoped>
+.site-manage-page {
+  position: relative;
+  left: 50%;
+  width: min(90rem, calc(100vw - 2rem));
+  min-height: 36rem;
+  transform: translateX(-50%);
+  padding: 0.75rem 1rem 1.5rem;
+  background: var(--cc98-color-surface);
+}
+
+.site-manage-page > h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.site-manage-notice {
+  min-height: 2rem;
+  margin: 0.5rem 0;
+  color: var(--cc98-color-success);
+  font-size: 0.875rem;
+}
+
+.site-manage-notice.is-error {
+  color: var(--cc98-color-error);
+}
+
+.site-manage-announcement > header,
+.site-manage-columns > header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.site-manage-announcement h2,
+.site-manage-columns h2 {
+  margin: 0 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.site-manage-page button {
+  min-height: 2rem;
+  padding: 0.25rem 0.9rem;
+  border: 1px solid var(--cc98-color-primary);
+  border-radius: var(--cc98-radius-sm);
+  background: var(--cc98-color-primary);
+  color: var(--cc98-color-on-primary);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.site-manage-page button:hover:not(:disabled) {
+  background: var(--cc98-color-primary-hover);
+}
+
+.site-manage-page button:disabled,
+.site-manage-page button.is-active {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.site-manage-announcement textarea {
+  display: block;
+  width: 100%;
+  min-height: 12rem;
+  resize: vertical;
+  border: 1px solid var(--cc98-color-border);
+  padding: 0.5rem 0.75rem;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+  line-height: 1.5;
+}
+
+.site-manage-announcement__preview {
+  width: min(51.25rem, 100%);
+  margin-top: 1rem;
+}
+
+.site-manage-announcement__preview :deep(.home-block) {
+  margin-bottom: 0;
+}
+
+.site-manage-columns {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cc98-color-border);
+}
+
+.site-manage-columns > header {
+  justify-content: space-around;
+}
+
+.site-manage-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.site-manage-table {
+  width: 100%;
+  min-width: 62rem;
+  border-collapse: collapse;
+  border: 1px solid var(--cc98-color-border);
+  table-layout: fixed;
+  font-size: 0.8125rem;
+}
+
+.site-manage-table th,
+.site-manage-table td {
+  border: 1px solid var(--cc98-color-border);
+  padding: 0.5rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.site-manage-table th {
+  background: var(--cc98-color-surface-subtle);
+  font-weight: 500;
+}
+
+.site-manage-table th:first-child,
+.site-manage-table td:first-child {
+  width: 4.25rem;
+}
+
+.site-manage-table input[type="text"],
+.site-manage-table input[type="number"],
+.site-manage-table select {
+  width: 100%;
+  min-height: 2rem;
+  border: 1px solid var(--cc98-color-border);
+  padding: 0.25rem 0.4rem;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+}
+
+.site-manage-table input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+.site-manage-table__expired {
+  white-space: nowrap;
+}
+
+.site-manage-table__empty {
+  height: 7rem;
+  color: var(--cc98-color-text-muted);
+}
+
+.site-manage-pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.site-manage-pagination button {
+  min-width: 2rem;
+  padding-inline: 0.5rem;
+}
+
+@media (max-width: 72rem) {
+  .site-manage-page {
+    padding-inline: 0.75rem;
+  }
+
+  .site-manage-announcement > header,
+  .site-manage-columns > header {
+    flex-wrap: wrap;
+  }
+}
+</style>

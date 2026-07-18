@@ -120,3 +120,91 @@ async function submit() {
     <p v-if="notice" class="user-transfer-wealth__notice" role="status">{{ notice }}</p>
   </section>
 </template>
+
+<style scoped>
+.user-transfer-wealth h2,
+.user-transfer-wealth p {
+  margin: 0;
+}
+
+.user-transfer-wealth h2 {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.user-transfer-wealth form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+
+.user-transfer-wealth__field {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.user-transfer-wealth__field > span {
+  width: 5rem;
+  flex: 0 0 5rem;
+  margin: 0 1rem;
+}
+
+.user-transfer-wealth__field input {
+  width: 12rem;
+  height: 2rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
+  padding: 0.5rem;
+}
+
+.user-transfer-wealth__field input.is-wide {
+  width: 30rem;
+}
+
+.user-transfer-wealth__rules {
+  align-items: flex-start;
+}
+
+.user-transfer-wealth__rules ul {
+  max-width: 42rem;
+  margin: 0 0 0 2.5rem;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+}
+
+.user-transfer-wealth__preview {
+  margin: 1rem 6rem 0 !important;
+  color: var(--cc98-color-text-muted);
+}
+
+.user-transfer-wealth form > button {
+  width: 5rem;
+  height: 2rem;
+  align-self: center;
+  margin-top: 2rem;
+  border: 0;
+  border-radius: 3px;
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.user-transfer-wealth form > button:hover {
+  background: var(--cc98-color-primary);
+  color: #fff;
+}
+
+.user-transfer-wealth form > button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.user-transfer-wealth__notice {
+  margin: 1rem !important;
+  color: var(--cc98-color-accent);
+}
+</style>
