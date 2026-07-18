@@ -7,6 +7,11 @@
       "includeEntryExports": true,
       "vite": false
     },
+    "apps/docs": {
+      "project": [".vitepress/**/*.ts"],
+      "includeEntryExports": true,
+      "vite": false
+    },
     "packages/api": {
       "entry": ["src/index.ts", "scripts/*.mjs", "tests/**/*.test.ts"],
       "project": ["src/**/*.ts", "scripts/*.mjs", "tests/**/*.ts"],

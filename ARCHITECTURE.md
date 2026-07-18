@@ -23,15 +23,18 @@ flowchart LR
 ```mermaid
 graph TD
   website["apps/website<br/>Web 应用（Vue 3.6 SPA）"]
+  docs["apps/docs<br/>用户帮助静态站"]
   api["packages/api<br/>Zod-first API 契约"]
   ubb["packages/ubb<br/>UBB 解析器"]
   utils["packages/utils<br/>占位脚手架"]
   website --> api
   website --> ubb
   website -.-> utils
+  website -.帮助链接.-> docs
 ```
 
 - `apps/website`：面向用户的 Web 应用（Vue 3.6 SPA）。内部分层见 `docs/frontend.md`
+- `apps/docs`：面向论坛用户的 VitePress 帮助站，使用默认主题和独立静态构建，不依赖主站运行
 - `packages/api`：CC98 API 的 Zod schema、operation registry、OpenAPI 和验证工具
 - `packages/ubb`：UBB 解析器，核心产出是 AST（`parseUbb`），附带 HTML 和 Markdown 两个导出器。只读不做编辑器
 - `packages/utils`：TypeScript 工具包脚手架，当前仅有占位代码，尚未投入使用
@@ -65,6 +68,8 @@ graph LR
 - `apps/*` 反向被 `packages/*` 依赖
 
 apps 只依赖 packages 的公共导出（dist），不直接 import 内部源文件路径。
+
+`apps/docs` 和 `apps/website` 之间只有公开 URL，不互相导入源码。用户文档以主站已经落地的行为为事实源，主站通过可配置的外链进入帮助站。
 
 ## 横切关注点
 

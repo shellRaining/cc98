@@ -16,6 +16,7 @@ import UiSelect, { type UiSelectOption } from "./ui/Select.vue";
 
 type SearchKind = "topic" | "within" | "user" | "board";
 
+const docsUrl = import.meta.env.VITE_CC98_DOCS_URL || "https://cc98-docs.vercel.app";
 const user = useUserStore();
 const route = useRoute();
 const router = useRouter();
@@ -101,6 +102,7 @@ function updateSearchKind(value: string | number) {
             <RouterLink to="/newtopics">新帖</RouterLink>
             <RouterLink to="/focus">关注</RouterLink>
             <RouterLink to="/recommendedtopics">精选</RouterLink>
+            <a :href="docsUrl" target="_blank" rel="noopener noreferrer">帮助</a>
           </nav>
           <form class="header-search" role="search" @submit.prevent="submitSearch">
             <label class="sr-only" for="header-search-kind">搜索类型</label>
