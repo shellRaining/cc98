@@ -61,6 +61,7 @@ GitHub Actions 把 New API token 通过 `openai-api-key` 输入交给 Codex Resp
 - 2026-07-18：对照原工作区中尚未提交的每日文档巡检实现，复用收尾规则、生命周期定义、权限隔离和补丁白名单；Apifox 与开发环境计划等无关修改没有迁入当前分支。
 - 2026-07-18：核对 `openai/codex-action@v1` 的 action 定义，确认它支持自定义 `responses-api-endpoint` 和 `model`，且 bearer token 只进入本地 Responses API proxy。
 - 2026-07-18：完成本地 YAML、shell、标点和全量质量门禁验证。新 worktree 首次直接运行 `vp check` 时缺少内部包构建产物，`vp run ready` 按任务顺序先构建内部包后全部通过，GitHub workflow 使用相同顺序。
+- 2026-07-18：首次远端运行成功调用 New API 上的 Codex，生成的补丁通过 Markdown 白名单，正确更新 API README、归档开发环境计划并保留尚未完成的 Librarian 计划。质量门禁因索引表格尚未经过 Oxfmt 而失败，工作流改为只格式化候选 Markdown 后再执行 `vp run ready`，并把删除文件纳入路径白名单检查。
 
 ## 决策记录
 
