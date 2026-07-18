@@ -13,6 +13,7 @@ import { saveLoginRedirect } from "../lib/login-redirect";
 import { totalUnreadCount } from "../lib/messages";
 import { isSiteAdministrator } from "../lib/site-manage";
 import { useUserStore } from "../stores/user";
+import UiBadge from "./ui/Badge.vue";
 
 type SearchKind = "topic" | "within" | "user" | "board";
 
@@ -126,34 +127,33 @@ function submitSearch() {
                     <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
                   </svg>
                 </span>
-                <span v-if="unreadTotal > 0" class="site-header__message-total">
-                  {{ unreadTotal }}
-                </span>
+                <UiBadge class="site-header__message-total" :count="unreadTotal" />
               </RouterLink>
               <nav class="site-header__message-dropdown" aria-label="消息分类">
                 <RouterLink to="/messages/replies">
                   <span>回复我的</span>
-                  <span v-if="unreadCounts?.replyCount" class="site-header__message-count">
-                    {{ unreadCounts.replyCount }}
-                  </span>
+                  <UiBadge
+                    class="site-header__message-count"
+                    :count="unreadCounts?.replyCount ?? 0"
+                  />
                 </RouterLink>
                 <RouterLink to="/messages/mentions">
                   <span>@ 我的</span>
-                  <span v-if="unreadCounts?.atCount" class="site-header__message-count">
-                    {{ unreadCounts.atCount }}
-                  </span>
+                  <UiBadge class="site-header__message-count" :count="unreadCounts?.atCount ?? 0" />
                 </RouterLink>
                 <RouterLink to="/messages/system">
                   <span>系统通知</span>
-                  <span v-if="unreadCounts?.systemCount" class="site-header__message-count">
-                    {{ unreadCounts.systemCount }}
-                  </span>
+                  <UiBadge
+                    class="site-header__message-count"
+                    :count="unreadCounts?.systemCount ?? 0"
+                  />
                 </RouterLink>
                 <RouterLink to="/messages/private">
                   <span>我的私信</span>
-                  <span v-if="unreadCounts?.messageCount" class="site-header__message-count">
-                    {{ unreadCounts.messageCount }}
-                  </span>
+                  <UiBadge
+                    class="site-header__message-count"
+                    :count="unreadCounts?.messageCount ?? 0"
+                  />
                 </RouterLink>
               </nav>
             </div>
@@ -371,19 +371,9 @@ function submitSearch() {
 
 .site-header__message-total {
   position: absolute;
-  top: 0.75rem;
-  left: 1.5rem;
-  display: flex;
-  min-width: 1.5rem;
-  height: 1.5rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0 0.3rem;
-  border-radius: 0.75rem;
-  background: #fb6165;
-  color: #fff;
-  font-size: 0.75rem;
-  line-height: 1;
+  top: 0.35rem;
+  left: 1.65rem;
+  box-shadow: 0 0 0 2px var(--cc98-color-topbar);
 }
 
 .site-header__message-dropdown {
@@ -391,7 +381,7 @@ function submitSearch() {
   top: 3rem;
   right: 0;
   z-index: 100;
-  width: 8rem;
+  width: 9rem;
   max-height: 0;
   overflow: hidden;
   background: var(--cc98-color-primary);
@@ -419,37 +409,33 @@ function submitSearch() {
 }
 
 .site-header__message-dropdown > a {
-  position: relative;
-  display: flex;
+  display: grid;
+  width: 100%;
   height: 2rem;
   align-items: center;
-  justify-content: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  padding-inline: 0.75rem;
   color: #fff;
+  white-space: nowrap;
 }
 
 .site-header__message-dropdown > a:hover,
 .site-header__message-dropdown > a:focus-visible {
-  background: #fb6165;
+  background: var(--cc98-color-accent);
   color: #fff;
   text-decoration: none;
   outline: none;
 }
 
 .site-header__message-count {
-  position: absolute;
-  top: 0.75rem;
-  left: 6rem;
-  display: flex;
-  min-width: 1.25rem;
-  height: 0.75rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0 0.25rem;
-  border-radius: 0.5rem;
-  background: #fb6165;
-  color: #fff;
-  font-size: 0.625rem;
-  line-height: 1;
+  justify-self: end;
+}
+
+.site-header__message-dropdown > a:hover .site-header__message-count,
+.site-header__message-dropdown > a:focus-visible .site-header__message-count {
+  background: #fff;
+  color: var(--cc98-color-accent);
 }
 
 .site-header__user {
