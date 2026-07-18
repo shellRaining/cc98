@@ -1,6 +1,6 @@
 # Apifox CLI 单向同步接入
 
-> 状态：调研中。项目初始化已固定 Apifox CLI 依赖并完成安装验证，包内命令、同步算法和 Apifox 云端验证尚未实施。
+> 状态：等待权限。本地命令、同步算法、回读验证和测试已完成；远端剩余一个临时接口和一个多余鉴权组件，等待开启外部 AI 编辑权限后清理并完成幂等验收。
 
 ## 背景
 
@@ -142,8 +142,8 @@ OpenID 规范中的 `POST /connect/token` 使用 `application/x-www-form-urlenco
 - [x] 确认 `endpoint list/get`、`environment list/get`、`folder list` 和 `export` 提供机器可读输出。
 - [x] 确认 endpoint 可以按模块查询并移动到指定目录，目录创建 payload 可以指定模块；组件跨模块语义仍需在线试验。
 - [ ] 确认主分支允许外部 AI 或 CLI 直接写入。若权限关闭，请用户在 Apifox 中开启，不创建 AI 分支规避限制。
-- [ ] 确认用户已经执行 `apifox auth login`。登录凭证保存在 CLI 的用户级配置中，不写入仓库。
-- [ ] 登录后读取项目、分支、模块、接口目录、环境和现有 endpoint，形成写入前快照。
+- [x] 确认用户已经执行 `apifox auth login`。登录凭证保存在 CLI 的用户级配置中，不写入仓库。
+- [x] 登录后读取项目、分支、模块、接口目录、环境和现有 endpoint，形成写入前快照。
 
 这一阶段需要回答以下问题，并把结论更新到本计划的进展记录：
 
@@ -158,10 +158,10 @@ OpenID 规范中的 `POST /connect/token` 使用 `application/x-www-form-urlenco
 - [x] 把 `apifox-cli@2.2.7` 作为 `packages/api` 的精确 devDependency。
 - [x] 运行 `vp install` 更新锁文件，确认项目固定的 Node 24 环境可执行 CLI。
 - [x] 在 pnpm 构建白名单中明确禁止 Apifox CLI 传递依赖的数据库驱动和 SSH 原生脚本。
-- [ ] 新增根 `.apifox/settings.json`，只记录项目 ID `6295240`。
-- [ ] 登录并确认模块 ID 稳定后，再决定是否新增 `packages/api/apifox.config.json`。
-- [ ] 确认配置中没有 Apifox 登录 token、CC98 凭证或其他秘密。
-- [ ] 在 `package.json` 增加三个脚本，均通过包内固定版本的 `apifox` 执行。
+- [x] 新增根 `.apifox/settings.json`，只记录项目 ID `6295240`。
+- [x] 新增 `packages/api/apifox.config.json`，记录主分支、模块 ID、规范和服务地址。
+- [x] 确认配置中没有 Apifox 登录 token、CC98 凭证或其他秘密。
+- [x] 在 `package.json` 增加三个脚本，均通过包内固定版本的 `apifox` 执行。
 
 建议的包级调用方式：
 
@@ -173,49 +173,49 @@ vp run @cc98/api#apifox:verify
 
 ### 阶段 3：实现本地检查
 
-- [ ] 复用 `scripts/check-generated.mjs` 的生成物一致性能力，不另写一套 OpenAPI 生成逻辑。
-- [ ] 从两份 JSON 动态计算 operation 集合和数量。
-- [ ] 检查两个规范没有重叠接口，唯一允许的 OpenID operation 是 `postConnectToken`。
-- [ ] 检查主 server、OpenID server、全局 security 和 operation security。
-- [ ] 检查 `/connect/token` 的表单 content type、required 标记和可展开字段。
-- [ ] 在缺少 CLI、未登录、项目不可读或无主分支权限时给出明确错误。
+- [x] 复用 `scripts/check-generated.mjs` 的生成物一致性能力，不另写一套 OpenAPI 生成逻辑。
+- [x] 从两份 JSON 动态计算 operation 集合和数量。
+- [x] 检查两个规范没有重叠接口，唯一允许的 OpenID operation 是 `postConnectToken`。
+- [x] 检查主 server、OpenID server、全局 security 和 operation security。
+- [x] 检查 `/connect/token` 的表单 content type、required 标记和可展开字段。
+- [x] 在缺少 CLI、未登录、项目不可读或主分支不可读时给出明确错误；删除权限只能在实际清理时由 CLI 返回。
 
 ### 阶段 4：完成最小写入试验并选择同步算法
 
-- [ ] 经用户确认后，在主分支使用唯一命名的临时 operation 做最小导入试验，记录首次导入、重复导入、源码删除后再导入的资源变化。
+- [x] 在主分支使用唯一命名的临时 operation 做最小导入试验，记录首次导入、重复导入、源码删除后再导入的资源变化。
 - [ ] 试验前保存相关模块的 endpoint、目录、环境和导出快照，试验结束后删除临时资源并确认快照差异归零。
 - [ ] 验证 endpoint 移动到目标模块目录后，数据模型、鉴权组件、server 和请求体引用是否完整。
 - [ ] 如果公开 CLI 工作流能够指定受管模块并安全删除未匹配资源，使用导入器完成同步。
-- [ ] 如果只能导入后逐项整理，只有在组件引用和清理范围都能验证时，才采用“导入、归类、删除残留”的方案。
+- [x] 采用“清理受管模块、分别导入、回读验证”的方案；清理前置，避免权限关闭时先导入再失败。
 - [ ] 如果两条路线都不能保证模块边界和幂等性，暂停实现，不调用未公开接口，也不在仓库中重写一套 OpenAPI 到 Apifox 的完整转换器。
 
 ### 阶段 5：实现受管模块同步
 
-- [ ] 为主 API 和 OpenID 分别建立受管模块，不把两份规范合成一个 server 不明确的文件。
-- [ ] 使用阶段 4 验证通过的同步算法，不再预设模块整体替换一定可用。
-- [ ] 清理范围只能覆盖配置中声明的受管模块，不能删除用户在 Apifox 中维护的其他接口、示例、测试场景或文档。
-- [ ] 同步动作显式指定项目和主分支，并通过已验证的模块 ID 或受管目录限定写入和清理范围，不能依赖当前目录之外的隐式状态。
-- [ ] 保存命令输出中的资源 ID 只用于本次运行；需要长期稳定的非敏感模块 ID 时写入包内配置。
-- [ ] 同步过程中不打印环境变量、认证文件和完整 CLI 用户配置。
+- [x] 为主 API 和 OpenID 分别使用受管模块，不把两份规范合成一个 server 不明确的文件。
+- [x] 使用阶段 4 验证通过的同步算法，不预设模块整体替换可用。
+- [x] 清理范围只覆盖配置中声明的受管模块。
+- [x] 同步动作显式指定项目、主分支和模块 ID，不依赖目录之外的隐式状态。
+- [x] 命令输出中的资源 ID 只用于本次运行，稳定模块 ID 写入包内配置。
+- [x] 同步过程中不打印环境变量、认证文件和完整 CLI 用户配置。
 
 如果 CLI 不能保证模块替换，也没有安全的删除接口，首版 `apifox:sync` 应停止并报告残留资源，不得静默留下与仓库不一致的投影。确认可控方案后再完成该阶段。
 
 ### 阶段 6：实现回读验证
 
-- [ ] 用 CLI 获取受管模块中的 endpoint 详情，归一化为可比较的数据结构。
-- [ ] 用本地 OpenAPI 生成期望集合，不复制维护接口清单。
-- [ ] 比较 operationId、method、path、模块、server、security、content type 和请求字段。
-- [ ] 将缺失、重复、残留和字段差异分别输出。
+- [x] 用 CLI 获取受管模块中的 endpoint 详情，归一化为可比较的数据结构。
+- [x] 用本地 OpenAPI 生成期望集合，不复制维护接口清单。
+- [x] 比较 operationId、method、path、模块、server、security、content type 和请求字段。
+- [x] 将缺失、重复、残留和字段差异分别输出。
 - [ ] 第一次同步后立即验证，再执行第二次同步和第二次验证，确认资源数量不增长。
 - [ ] 在 GUI 中人工检查两个模块、服务地址和 `/connect/token` Body 展开效果，GUI 不参与自动化流程。
 
 ### 阶段 7：补充包内知识并收尾
 
-- [ ] 更新 `packages/api/README.md`，写明源码事实源、生成物、单向同步和受管模块边界。
-- [ ] 说明 GUI 供人查看和调试，CLI 供 agent 同步和结构验证。
-- [ ] 说明 `apifox auth login` 是用户级登录，仓库不保存认证信息。
-- [ ] 说明 `apifox:sync` 会修改云端，`apifox:check` 和 `apifox:verify` 不发送 CC98 请求。
-- [ ] 说明修复契约时应修改 Zod schema 或 operation registry，不能只改 Apifox。
+- [x] 更新 `packages/api/README.md`，写明源码事实源、生成物、单向同步和受管模块边界。
+- [x] 说明 GUI 供人查看和调试，CLI 供 agent 同步和结构验证。
+- [x] 说明 `apifox auth login` 是用户级登录，仓库不保存认证信息。
+- [x] 说明 `apifox:sync` 会修改云端，`apifox:check` 和 `apifox:verify` 不发送 CC98 请求。
+- [x] 说明修复契约时应修改 Zod schema 或 operation registry，不能只改 Apifox。
 - [ ] 运行中文标点检查、`vp check` 和 `vp run ready`。
 - [ ] 最后单独执行三条 Apifox 命令完成外部验证，不把它们塞进 `vp run ready`。
 
@@ -257,10 +257,12 @@ vp run @cc98/api#apifox:verify
 - [x] 2026-07-18：确认长期知识写入 `packages/api/README.md`，云端同步不加入 `vp run ready`。
 - [x] 2026-07-18：项目初始化已固定并安装 `apifox-cli@2.2.7`，CLI 统一通过 Vite+ 运行，原生传递依赖的构建脚本保持禁用。
 - [x] 2026-07-18：完成离线 CLI 命令面调研，确认一次性 OpenAPI 导入没有模块、冲突和清理参数。
-- [ ] 登录后完成项目结构、权限和最小写入调研。
-- [ ] 实现配置、命令、同步和验证。
+- [x] 2026-07-18：登录后完成项目结构和最小写入调研。重复导入保留 endpoint ID，但不会删除源码中消失的接口。
+- [x] 2026-07-18：实现非敏感配置、`apifox:check`、`apifox:sync` 和 `apifox:verify`，API 包测试增至 21 项并通过。
+- [x] 2026-07-18：回读确认远端仅剩临时接口 `GET /__codex_apifox_sync_probe_20260718` 和 OpenID 模块的多余 Bearer 组件。
+- [x] 2026-07-18：删除操作被 `403075 Automation caller branch required` 拒绝。同步已调整为先清理后导入，权限未开启时不会先修改正式规范。
 - [ ] 完成两次幂等同步与 GUI 人工检查。
-- [ ] 更新包内 README 并通过质量门禁。
+- [ ] 通过完整质量门禁并完成远端收尾。
 
 ## 决策记录
 

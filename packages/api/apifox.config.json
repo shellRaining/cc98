@@ -1,0 +1,18 @@
+{
+  "projectId": 6295240,
+  "branch": "main",
+  "modules": {
+    "main": {
+      "id": 3750594,
+      "name": "默认模块",
+      "spec": "generated/openapi.json",
+      "server": "https://api-v2.cc98.org"
+    },
+    "openid": {
+      "id": 8217423,
+      "name": "CC98 OpenID",
+      "spec": "generated/openid.openapi.json",
+      "server": "https://openid.cc98.org"
+    }
+  }
+}

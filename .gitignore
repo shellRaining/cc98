@@ -31,3 +31,4 @@ apps/docs/.vitepress/cache/
 .artifacts/
 auth-state.json
 /.obsidian
+/packages/api/.apifox/

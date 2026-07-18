@@ -33,3 +33,25 @@ vp run @cc98/api#probe:authenticated
 API 探测每次运行时向 OpenID 服务换取短期 access token，不持久化 access token 或 refresh token。bearer token 只写入权限为 `0600` 的临时 header 文件，并通过 `finally` 在正常结束或异常退出时统一删除。普通环境检查不读取或打印凭证。
 
 历史写探测结果保留在 `generated/probe-write.json`。普通注册用户无法删除似水流年版面的测试内容，因此不再提供可重复执行的写探测脚本；获得可清理的测试环境后再重新设计。
+
+## 同步到 Apifox
+
+Apifox 是仓库契约的只读投影，修改接口时仍应编辑 `src/schemas/` 或 `src/operations/`，再重新生成规范。不要只在 Apifox 中修改接口定义。
+
+```bash
+vp run @cc98/api#apifox:check
+vp run @cc98/api#apifox:sync
+vp run @cc98/api#apifox:verify
+```
+
+`apifox:check` 检查生成物、CLI 版本、登录状态、项目、主分支和模块配置，不修改云端。`apifox:verify` 回读两个受管模块，比较接口集合、operationId、认证、服务地址和 token 表单。两条命令都不会请求真实 CC98 API。
+
+`apifox:sync` 会修改 Apifox 主分支。它先清理受管模块中的残留和重复资源，再导入主 API 与 OpenID 规范，最后自动回读验证。清理范围只包括 `apifox.config.json` 声明的两个模块。
+
+首次使用前运行：
+
+```bash
+vp exec -F @cc98/api apifox auth login
+```
+
+登录信息由 Apifox CLI 保存到用户配置，仓库不保存 token。若同步提示外部 AI 无权删除资源，请在 Apifox 项目设置中开启外部 AI 编辑权限，再重新执行完整同步。

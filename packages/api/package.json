@@ -15,6 +15,9 @@
   },
   "scripts": {
     "build": "vp pack",
+    "apifox:check": "node scripts/apifox.mjs check",
+    "apifox:sync": "node scripts/apifox.mjs sync",
+    "apifox:verify": "node scripts/apifox.mjs verify",
     "generate": "node scripts/generate.mjs && vp fmt generated --write",
     "probe:anonymous": "node scripts/probe.mjs",
     "probe:authenticated": "node --env-file-if-exists=../../.cc98-credentials.local scripts/probe.mjs --authenticated --auth-blocked",
