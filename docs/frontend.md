@@ -122,7 +122,7 @@ UnoCSS 负责语义 token、简单原子样式和基础组件变体。组件专�
 - `universe/` 放 UBB 和 Markdown 共用的图片、链接、代码块、引用、媒体和公式组件，不读取源格式 AST。
 - `security.ts` 是链接、图片和媒体 URL 的统一安全入口，语法适配层负责决定校验失败后的降级形式。
 
-写作组件使用按需组装的 Milkdown Kit。Milkdown 管理编辑态 ProseMirror document，并通过 listener 向表单同步 Markdown 字符串；父组件恢复草稿或重置正文时，通过编辑器 action 更新内容。图片拖放、粘贴和按钮上传走同一上传回调，附件仍插入普通 Markdown 链接。编辑器依赖必须留在写作路由懒加载 chunk，阅读入口不导入 Milkdown。
+写作组件使用 Crepe Builder 按需组合 Milkdown 能力。常驻工具栏、选区菜单、斜杠菜单、链接浮层、表格、基础 CodeMirror 与 LaTeX 交互由 Crepe feature 提供；CodeMirror 不加载完整语言数据包，AI 和会改写图片 alt 语义的 ImageBlock 不进入当前组合。Milkdown 管理编辑态 ProseMirror document，并通过 listener 向表单同步 Markdown 字符串；父组件恢复草稿或重置正文时，通过编辑器 action 更新内容。图片拖放、粘贴和按钮上传走同一上传回调，附件仍插入普通 Markdown 链接。编辑器依赖必须留在写作路由懒加载 chunk，阅读入口不导入 Milkdown 或 Crepe。
 
 静态标签和正则标签族由 `packages/ubb` 导出稳定契约。网站不能复制解析器正则，新增解析标签时必须同步注册 renderer，并由完整性测试兜底。
 

@@ -101,4 +101,4 @@ flowchart LR
 
 ## 遗留项
 
-没有阻塞遗留。未来升级 Milkdown 或 remark 时，按 ADR 0002 重新检查 Markdown 往返、MDAST 节点覆盖和写作路由体积。
+没有阻塞遗留。未来升级 Milkdown 或 remark 时，按 ADR 0003 重新检查 Markdown 往返、MDAST 节点覆盖和写作路由体积。

@@ -17,7 +17,7 @@
 
 ## 编号
 
-按顺序编号：`0001-kebab-case-title.md`。一旦写入不再改号，被推翻时标 Status: Superseded 并新建一条指向后继。
+按顺序编号：`0001-kebab-case-title.md`。新建 ADR 前先列出现有文件，使用当前最大编号加一，不按主题复用编号。一旦写入不再改号，被推翻时标 Status: Superseded 并新建一条指向后继。
 
 ## 模板
 
