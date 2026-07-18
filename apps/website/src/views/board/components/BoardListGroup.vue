@@ -102,10 +102,6 @@ const compact = isCompactBoardGroup(props.group.id);
   color: #fff;
 }
 
-.board-list-group__masters a:hover {
-  text-decoration: underline;
-}
-
 .board-list-group__toggle {
   flex: none;
   width: 2.5rem;

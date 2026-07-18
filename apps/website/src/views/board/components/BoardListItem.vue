@@ -49,7 +49,6 @@ defineProps<{
 
 .board-list-item:hover .board-list-item__name {
   color: var(--cc98-color-primary-hover);
-  text-decoration: underline;
 }
 
 .board-list-item__icon {
@@ -107,6 +106,5 @@ defineProps<{
 
 .board-list-item--compact:hover {
   color: var(--cc98-color-primary-hover);
-  text-decoration: underline;
 }
 </style>

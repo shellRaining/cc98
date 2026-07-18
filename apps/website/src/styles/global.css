@@ -18,7 +18,6 @@
   --cc98-red: #e5484d;
   --cc98-green: #2f9e6d;
   --cc98-amber: #b8770a;
-  --cc98-purple: #7a3d6b;
 
   --cc98-ink: #1a1d21;
   --cc98-ink-muted: #5c6570;
@@ -53,7 +52,6 @@
   --cc98-color-text-caption: var(--cc98-ink-caption);
 
   --cc98-color-link: var(--cc98-blue-strong);
-  --cc98-color-link-visited: var(--cc98-purple);
 
   --cc98-color-success: var(--cc98-green);
   --cc98-color-warning: var(--cc98-amber);
@@ -92,7 +90,6 @@
   --cc98-red: #e04248;
   --cc98-green: #4ec08a;
   --cc98-amber: #d99a3a;
-  --cc98-purple: #c9a0bd;
 
   --cc98-ink: #e8eaed;
   --cc98-ink-muted: #9aa3ad;
@@ -130,10 +127,6 @@ body {
 a {
   color: var(--cc98-color-link);
   text-decoration: none;
-}
-
-a:visited {
-  color: var(--cc98-color-link-visited);
 }
 
 a:hover {

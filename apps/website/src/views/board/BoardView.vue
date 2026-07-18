@@ -583,8 +583,7 @@ function completeBatchModeration() {
   color: #fff;
 }
 
-.board-list-panel__head a.is-active,
-.board-list-panel__head a:hover {
+.board-list-panel__head a.is-active {
   text-decoration: underline;
   text-underline-offset: 0.25rem;
 }

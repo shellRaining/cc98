@@ -37,8 +37,10 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@iconify-json/fa": "catalog:",
     "@types/markdown-it": "catalog:",
     "@unocss/preset-attributify": "catalog:",
+    "@unocss/preset-icons": "catalog:",
     "@unocss/preset-typography": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "typescript": "~6.0.2",
