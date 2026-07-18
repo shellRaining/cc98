@@ -109,7 +109,7 @@ jobs:
         id: candidate
         run: |
           git add -N .
-          changed_paths="$(git diff --name-only --diff-filter=ACMRTUXB HEAD)"
+          changed_paths="$(git diff --name-only --diff-filter=ACDMRTUXB HEAD)"
 
           if [[ -z "$changed_paths" ]]; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
@@ -138,6 +138,22 @@ jobs:
           git diff --check
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
 
+      - name: 格式化候选文档
+        if: steps.candidate.outputs.has_changes == 'true'
+        run: |
+          mapfile -t changed_paths < <(git diff --name-only --diff-filter=ACMRTUXB HEAD)
+          format_paths=()
+
+          for path in "${changed_paths[@]}"; do
+            if [[ -f "$path" ]]; then
+              format_paths+=("$path")
+            fi
+          done
+
+          if (( ${#format_paths[@]} > 0 )); then
+            vp fmt --write "${format_paths[@]}"
+          fi
+
       - name: 运行项目质量门禁
         if: steps.candidate.outputs.has_changes == 'true'
         run: vp run ready
@@ -146,7 +162,7 @@ jobs:
         id: patch
         run: |
           git add -N .
-          changed_paths="$(git diff --name-only --diff-filter=ACMRTUXB HEAD)"
+          changed_paths="$(git diff --name-only --diff-filter=ACDMRTUXB HEAD)"
 
           if [[ -z "$changed_paths" ]]; then
             echo "has_patch=false" >> "$GITHUB_OUTPUT"
