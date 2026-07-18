@@ -10,9 +10,9 @@ export type ThemeMode = "light" | "dark";
 export type ThemeStyle = "solid" | "elegant" | "fluent";
 
 /**
- * skin 标识。老论坛 30 个皮肤编号（0-29）归约到 21 个 skin：
- * 9 对亮暗配对皮肤（如春节亮/暗）合并成一个 skin，亮暗交给 mode 维度；
- * 12 个单色皮肤各自独立。编号互转见 {@link legacyThemeToSkin} / {@link skinToLegacyTheme}。
+ * skin 标识。老论坛 30 个皮肤编号（0-29）归约到 20 个 skin：
+ * 10 对亮暗配对皮肤（如秋季、春节）合并成一个 skin，亮暗交给 mode 维度；
+ * 10 个单色皮肤各自独立。编号互转见 {@link legacyThemeToSkin} / {@link skinToLegacyTheme}。
  */
 export type SkinId =
   | "default"
@@ -20,8 +20,7 @@ export type SkinId =
   | "spring"
   | "spring-deep"
   | "summer"
-  | "autumn-orange"
-  | "autumn-red"
+  | "autumn"
   | "singles-day"
   | "mid-autumn"
   | "light-snow"
@@ -92,18 +91,12 @@ const SKINS: readonly SkinMeta[] = [
     legacyLight: 4,
   },
   {
-    id: "autumn-orange",
-    name: "秋季（橙）",
+    id: "autumn",
+    name: "秋季",
     previewColor: "#f4a460",
-    previewImage: "/skins/autumn-orange/banner-card.jpg",
+    previewImage: "/skins/autumn/banner-card.jpg",
     legacyLight: 5,
-  },
-  {
-    id: "autumn-red",
-    name: "秋季（红）",
-    previewColor: "#b22222",
-    previewImage: "/skins/autumn-red/banner-card.jpg",
-    legacyLight: 6,
+    legacyDark: 6,
   },
   {
     id: "singles-day",

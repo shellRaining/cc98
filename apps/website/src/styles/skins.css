@@ -40,22 +40,13 @@
   --cc98-banner-card-image: url("/skins/summer/banner-card.jpg");
 }
 
-:root[data-skin="autumn-orange"] {
+:root[data-skin="autumn"] {
   --cc98-blue-strong: #e1975a;
   --cc98-blue-strong-hover: color-mix(in srgb, #e1975a 84%, #000000);
   --cc98-blue-sub: #6b7178;
   --cc98-topbar: rgb(225 151 90 / 0.8);
-  --cc98-banner-image: url("/skins/autumn-orange/banner.jpg");
-  --cc98-banner-card-image: url("/skins/autumn-orange/banner-card.jpg");
-}
-
-:root[data-skin="autumn-red"] {
-  --cc98-blue-strong: #b22222;
-  --cc98-blue-strong-hover: color-mix(in srgb, #b22222 84%, #000000);
-  --cc98-blue-sub: #6b7178;
-  --cc98-topbar: rgb(178 34 34 / 0.8);
-  --cc98-banner-image: url("/skins/autumn-red/banner.jpg");
-  --cc98-banner-card-image: url("/skins/autumn-red/banner-card.jpg");
+  --cc98-banner-image: url("/skins/autumn/banner.jpg");
+  --cc98-banner-card-image: url("/skins/autumn/banner-card.jpg");
 }
 
 :root[data-skin="singles-day"] {
@@ -189,6 +180,22 @@
 }
 
 /* 亮暗配对皮肤的暗色编号恢复旧站底色和正文卡片色。 */
+:root[data-theme="dark"][data-skin="autumn"] {
+  --cc98-blue-strong: rgb(190 119 55);
+  --cc98-blue-strong-hover: color-mix(in srgb, rgb(190 119 55) 84%, #000000);
+  --cc98-blue-sub: rgb(137 128 88);
+  --cc98-topbar: rgb(94 59 38 / 0.86);
+  --cc98-page: rgb(48 45 42);
+  --cc98-paper: rgb(195 185 170);
+  --cc98-paper-subtle: rgb(195 185 170);
+  --cc98-line: rgb(137 128 88);
+  --cc98-ink: #000000;
+  --cc98-ink-muted: #505050;
+  --cc98-ink-caption: #6b7178;
+  --cc98-banner-image: url("/skins/autumn/banner-dark.jpg");
+  --cc98-banner-card-image: url("/skins/autumn/banner-card-dark.jpg");
+}
+
 :root[data-theme="dark"][data-skin="mid-autumn"],
 :root[data-theme="dark"][data-skin="light-snow"],
 :root[data-theme="dark"][data-skin="spring-festival"],

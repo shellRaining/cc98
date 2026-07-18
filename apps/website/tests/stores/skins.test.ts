@@ -24,11 +24,13 @@ describe("legacyThemeToSkin - 编号转 skin", () => {
     [9, "mid-autumn", "light"],
     [18, "autumn-sky", "light"],
     [24, "chongyang", "light"],
+    [5, "autumn", "light"],
     // 配对皮肤：暗色编号带出 dark
     [12, "spring-festival", "dark"],
     [8, "mid-autumn", "dark"],
     [17, "autumn-sky", "dark"],
     [23, "chongyang", "dark"],
+    [6, "autumn", "dark"],
     // 非配对皮肤：唯一编号，mode 为 undefined
     [4, "summer", undefined],
     [1, "winter", undefined],
@@ -52,6 +54,8 @@ describe("skinToLegacyTheme - skin 转编号", () => {
     ["mid-autumn", "dark", 8],
     ["chongyang", "light", 24],
     ["chongyang", "dark", 23],
+    ["autumn", "light", 5],
+    ["autumn", "dark", 6],
     // 非配对皮肤无论 mode 都返回唯一编号
     ["summer", "light", 4],
     ["summer", "dark", 4],
@@ -101,6 +105,7 @@ describe("isPairedSkin", () => {
     "golden-spring",
     "new-year-flower",
     "light-snow",
+    "autumn",
   ])("配对皮肤 %s → true", (skin) => {
     expect(isPairedSkin(skin)).toBe(true);
   });
@@ -256,14 +261,14 @@ describe("resolveAutoMode", () => {
 });
 
 describe("皮肤注册表", () => {
-  it("ALL_SKINS 覆盖全部 21 个 skin（老论坛 30 个编号归约）", () => {
-    expect(ALL_SKINS).toHaveLength(21);
+  it("ALL_SKINS 覆盖全部 20 个 skin（老论坛 30 个编号归约）", () => {
+    expect(ALL_SKINS).toHaveLength(20);
     // id 唯一
     const ids = ALL_SKINS.map((s) => s.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("全部 21 套皮肤均已迁移", () => {
+  it("全部 20 套皮肤均已迁移", () => {
     expect(IMPLEMENTED_SKINS.size).toBe(ALL_SKINS.length);
     expect(ALL_SKINS.every((skin) => IMPLEMENTED_SKINS.has(skin.id))).toBe(true);
   });
