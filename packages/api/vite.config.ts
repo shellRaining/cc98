@@ -9,7 +9,7 @@ const tsgoPath = resolve(
 
 export default defineConfig({
   pack: {
-    dts: { tsgo: { path: tsgoPath } },
+    dts: { sourcemap: true, tsgo: { path: tsgoPath } },
     exports: true,
   },
   lint: {

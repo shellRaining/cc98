@@ -1,12 +1,13 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 import VueVirtualScroller from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
 import App from "./App.vue";
 import { router } from "./router";
-import { createQueryClient, installQueryClient } from "./lib/query-client";
+import { createQueryClient } from "./lib/query-client";
 import { useThemeStore } from "./stores/theme";
 
 import "virtual:uno.css";
@@ -19,7 +20,7 @@ pinia.use(piniaPluginPersistedstate);
 
 app.use(pinia);
 app.use(router);
-installQueryClient(app, createQueryClient());
+app.use(VueQueryPlugin, { queryClient: createQueryClient() });
 app.use(VueVirtualScroller);
 
 useThemeStore().apply();

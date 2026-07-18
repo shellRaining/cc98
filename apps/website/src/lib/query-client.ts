@@ -1,5 +1,4 @@
-import { QueryClient, VueQueryPlugin, type VueQueryPluginOptions } from "@tanstack/vue-query";
-import type { App } from "vue";
+import { QueryClient } from "@tanstack/vue-query";
 
 export function createQueryClient(): QueryClient {
   return new QueryClient({
@@ -15,9 +14,4 @@ export function createQueryClient(): QueryClient {
       },
     },
   });
-}
-
-export function installQueryClient(app: App, client?: QueryClient): void {
-  const options: VueQueryPluginOptions = client ? { queryClient: client } : {};
-  app.use(VueQueryPlugin, options);
 }

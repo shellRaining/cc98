@@ -8,6 +8,7 @@ import {
   type ThemeStyle,
 } from "./skins";
 import type { MeUser, ThemeSetting } from "@cc98/api";
+import { useIntervalFn, useNow } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { typedPut } from "../lib/http";
@@ -35,16 +36,14 @@ export const useThemeStore = defineStore(
 
     // 浏览器 prefers-color-scheme 的实时状态，null 表示浏览器不支持
     const browserDark = ref<boolean | null>(null);
-    // 时间段模式下的分钟级心跳，触发 effectiveMode 重算
-    const clockTick = ref(0);
+    const now = useNow({ scheduler: (update) => useIntervalFn(update, 60_000) });
 
     /**
      * 实际生效的明暗。日夜规则开启时优先按规则推断，否则用用户手动 mode。
      */
-    const effectiveMode = computed<ThemeMode>(() => {
-      void clockTick.value;
-      return resolveAutoMode(dayNight.value, browserDark.value) ?? mode.value;
-    });
+    const effectiveMode = computed<ThemeMode>(
+      () => resolveAutoMode(dayNight.value, browserDark.value, now.value) ?? mode.value,
+    );
 
     /** 当前是否处于日夜自动切换 */
     const isAutoMode = computed(() => dayNight.value?.enableDayNightSwitch === true);
@@ -74,11 +73,6 @@ export const useThemeStore = defineStore(
           browserDark.value = e.matches;
         });
       }
-
-      // 时间段模式每分钟重新判定一次，接近整点切换的误差可接受
-      window.setInterval(() => {
-        clockTick.value = (clockTick.value + 1) % 1_000_000;
-      }, 60_000);
     }
 
     startDayNightWatcher();
