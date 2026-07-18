@@ -43,6 +43,14 @@ graph TD
 - `api/queries/`：vue-query queryOptions。`core.ts` 负责站点配置与阅读，`discovery.ts` 负责发现入口，`user.ts` 负责公开用户，`me.ts` 负责当前用户，统一从 `index.ts` 导出
 - `api/mutations/`：用户中心等写操作与缓存同步，依赖 http 和 query key
 
+## 日志与错误诊断
+
+业务模块通过 `createLogger(scope)` 创建日志实例，不直接 import Pino。日志消息描述发生了什么，结构化字段提供定位问题所需的上下文。捕获到的异常统一放在 `err` 字段，不只记录 `error.message`。
+
+查询和写操作由 vue-query 的全局缓存记录失败信息。查询日志包含 query key 和重试次数；Vue 运行时、路由、浏览器全局错误和未处理的 Promise 拒绝由应用入口兜底。业务代码只在需要补充领域上下文或错误已经被消费时主动记录，重复传递的同一 Error 对象不会反复输出。
+
+浏览器日志会输出一段可直接搜索、复制的文本，并附带一个可展开的结构化对象。Zod 错误使用内置格式化能力显示字段路径、期望类型和实际类型，同时保留原始 issues。
+
 ## 组件（Reka UI 与 components/ui）
 
 基础约定：计划编写任何组件前，先检查 Reka UI 是否有对应的无头组件，积极复用，不重复造轮子。

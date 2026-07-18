@@ -1,6 +1,6 @@
 import { FetchError } from "ofetch";
 import { ZodError } from "zod";
-import { createLogger } from "./logger";
+import { createLogger, logErrorOnce } from "./logger";
 
 const errorLogger = createLogger("api-error");
 
@@ -35,7 +35,7 @@ export function normalizeApiError(
   options?: { forbiddenMessage?: string },
 ): NormalizedApiError {
   if (error instanceof ZodError) {
-    errorLogger.error({ issues: error.issues }, "响应数据校验失败");
+    logErrorOnce(errorLogger, error, "响应数据校验失败");
     return {
       kind: "validation",
       message: "服务器返回的数据格式异常",
