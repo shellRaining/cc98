@@ -7906,10 +7906,17 @@
                 "type": "object",
                 "properties": {
                   "thumbnail": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "video": {
                     "type": "string"

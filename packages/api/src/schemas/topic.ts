@@ -11,7 +11,7 @@ export const topicContentTypeSchema = z.union([
 export type TopicContentType = z.infer<typeof topicContentTypeSchema>;
 
 export const mediaTopicContentSchema = z.looseObject({
-  thumbnail: z.array(z.string()).optional(),
+  thumbnail: z.array(z.string()).nullable().optional(),
   video: z.string().optional(),
   audio: z.string().optional(),
   width: z.number().optional(),

@@ -36,7 +36,7 @@
     "favoriteCount": 0,
     "topicAuthorPermissions": [],
     "mediaContent": {
-      "thumbnail": ["https://example.com/redacted"]
+      "thumbnail": null
     },
     "specialStyle": 0,
     "notifyAllReplierCountByLZ": 0,
