@@ -1,5 +1,7 @@
 # Milkdown 选型调研
 
+> 状态：调研已完成，生产编辑器迁移待实施。当前网站继续使用 `md-editor-v3`，正式迁移需要单独的实施计划。
+
 ## 背景
 
 网站当前使用 `md-editor-v3` 编写 Markdown，阅读侧通过 `markdown-it.parse()` 生成 token，再由 Vue 渲染器转换成 `Universe*` 组件。编辑器仍以源码编辑和独立预览为主，距离 Typora 一类所见即所得体验有明显差距。
@@ -65,7 +67,7 @@ flowchart TD
 - [x] 在临时入口验证 Crepe 的挂载和销毁。
 - [x] 确认图片上传回调和附件 Markdown 的集成边界。
 - [x] 记录 Markdown 载入后直接导出的变化，以及编辑后的序列化结果。
-- [ ] 补充粘贴和只读状态验证；中文 IME、撤销重做、代码块和表格已验证。
+- [x] 验证中文 IME、撤销重做、代码块和表格；粘贴与只读状态移入正式 workspace 集成计划。
 - [x] 构建 Milkdown、Crepe、remark 和 markdown-it 的隔离入口，记录 gzip 体积。
 - [x] 给出当前选型建议，正式替换生产编辑器前再做 workspace 集成 spike。
 
@@ -96,6 +98,10 @@ flowchart TD
 Milkdown 值得进入正式 workspace spike，但不直接采用 Crepe 默认完整入口。优先用 `@milkdown/kit` 按需组装 CommonMark、GFM 和 history，并在写作路由懒加载。正式 spike 需要补齐 Vue peer dependency、图片上传、粘贴、只读状态、样式警告和现有表单状态同步验证。
 
 第一阶段保留阅读侧 `markdown-it`。原因是现有 token renderer、安全策略和测试已经完整，立即迁移 remark 不会直接改善编辑体验。remark parse-only 更小，因此后续不能再用“remark 太重”否决统一 parser；等 Milkdown 集成稳定后，再用真实 workspace chunk、语法差异和 renderer 维护成本决定是否迁移到 MDAST。
+
+## 后续实施入口
+
+- [ ] 新建生产编辑器迁移计划，完成 workspace 集成 spike 后再替换 `md-editor-v3`。
 
 ## 决策记录
 

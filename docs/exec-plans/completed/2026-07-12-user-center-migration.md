@@ -206,7 +206,7 @@ flowchart TD
 - [x] 验证用户中心路由的前进后退、刷新和复制链接。
 - [x] 每批改动后运行 `vp check`，阶段收尾运行 `vp run ready`。
 - [x] 把探测结论、范围变化和验证结果写回本计划。
-- [x] 阶段完成后更新 `docs/roadmap.md`，将阶段 5 标记为完成，并提交功能改动。
+- [x] 阶段完成后更新迁移路线图，将阶段 5 标记为完成，并提交功能改动。路线图现归档于 `docs/exec-plans/completed/2026-07-18-frontend-migration-roadmap.md`。
 
 ### 7. 查询层收尾清理
 

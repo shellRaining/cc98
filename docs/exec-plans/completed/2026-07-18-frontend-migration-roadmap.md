@@ -1,6 +1,8 @@
-# CC98 前端迁移路线图
+# CC98 前端迁移路线图（已完成）
 
 > 本文件仅由 agent 进行维护
+
+> 状态：阶段 0 至阶段 8 已于 2026-07-18 完成。本文件是迁移历史，当前计划以 `docs/exec-plans/README.md` 为准。
 
 ## 公共 API 基础设施
 
@@ -39,12 +41,21 @@
 
 相关执行计划：
 
-- `docs/exec-plans/2026-07-11-discovery-list-migration.md`
-- `docs/exec-plans/2026-07-12-user-center-migration.md`
-- `docs/exec-plans/2026-07-12-writing-flow-migration.md`
-- `docs/exec-plans/2026-07-12-realtime-message-migration.md`
-- `docs/exec-plans/2026-07-13-style-system.md`
-- `docs/exec-plans/2026-07-16-full-fidelity-migration.md`
+- `docs/exec-plans/completed/2026-07-11-discovery-list-migration.md`
+- `docs/exec-plans/completed/2026-07-12-user-center-migration.md`
+- `docs/exec-plans/completed/2026-07-12-writing-flow-migration.md`
+- `docs/exec-plans/completed/2026-07-12-realtime-message-migration.md`
+- `docs/exec-plans/completed/2026-07-13-style-system.md`
+- `docs/exec-plans/completed/2026-07-16-full-fidelity-migration.md`
+
+## 迁移结束时的后续计划
+
+以下是 2026-07-18 完成审计时确认的后续工作，当前状态以 `docs/exec-plans/README.md` 为准：
+
+- Milkdown 生产编辑器迁移：调研已经完成，正式集成仍需单独推进，见 `docs/exec-plans/active/2026-07-13-milkdown-evaluation.md`。
+- 用户文档站：优先验证 VitePress，随后建立 `apps/docs`、首批内容和发布流程，见 `docs/exec-plans/active/2026-07-17-user-documentation.md`。
+- API 公共文档与发布：契约主体已经完成，静态文档、使用示例和公共包发布仍待实施，见 `docs/exec-plans/active/2026-07-11-openapi-public-infrastructure.md`。
+- Apifox CLI 同步：接入包内命令，完成单向同步、幂等检查和远端结构验证，见 `docs/exec-plans/active/2026-07-18-apifox-cli-integration.md`。
 
 ## 阶段依赖
 
@@ -76,17 +87,17 @@ flowchart LR
 
 ## 阶段总览
 
-| 阶段 | 名称              | 状态   | 依赖    | 完成定义摘要                               |
-| ---- | ----------------- | ------ | ------- | ------------------------------------------ |
-| 0    | 脚手架与 API 地基 | 完成   | -       | 基础页面、路由、API 层和状态管理可用       |
-| 1    | 富内容渲染        | 完成   | 0       | 历史 UBB 和 Markdown 帖子可安全渲染        |
-| 2    | 登录与认证        | 完成   | 0       | 登录、续期、登出和鉴权请求可用             |
-| 3    | 核心阅读闭环      | 完成   | 1、2    | 可进入版面和主题并完整翻页阅读             |
-| 4    | 发现与列表        | 完成   | 1、2    | 热门、新帖、推荐和搜索页面可用             |
-| 5    | 用户中心          | 完成   | 2       | 个人内容和关系数据可查看、管理             |
-| 6    | 写流程            | 完成   | 1、2、3 | 发帖、回帖、编辑和楼层互动可用             |
-| 7    | 实时交互与消息    | 完成   | 2       | 私信、通知、关注和签到可用                 |
-| 8    | 主题、活动与收尾  | 进行中 | 2       | 设计系统、主题皮肤、边缘功能和整体回归完成 |
+| 阶段 | 名称              | 状态 | 依赖    | 完成定义摘要                               |
+| ---- | ----------------- | ---- | ------- | ------------------------------------------ |
+| 0    | 脚手架与 API 地基 | 完成 | -       | 基础页面、路由、API 层和状态管理可用       |
+| 1    | 富内容渲染        | 完成 | 0       | 历史 UBB 和 Markdown 帖子可安全渲染        |
+| 2    | 登录与认证        | 完成 | 0       | 登录、续期、登出和鉴权请求可用             |
+| 3    | 核心阅读闭环      | 完成 | 1、2    | 可进入版面和主题并完整翻页阅读             |
+| 4    | 发现与列表        | 完成 | 1、2    | 热门、新帖、推荐和搜索页面可用             |
+| 5    | 用户中心          | 完成 | 2       | 个人内容和关系数据可查看、管理             |
+| 6    | 写流程            | 完成 | 1、2、3 | 发帖、回帖、编辑和楼层互动可用             |
+| 7    | 实时交互与消息    | 完成 | 2       | 私信、通知、关注和签到可用                 |
+| 8    | 主题、活动与收尾  | 完成 | 2       | 设计系统、主题皮肤、边缘功能和整体回归完成 |
 
 ## 阶段说明
 
@@ -104,9 +115,9 @@ flowchart LR
 
 相关执行计划：
 
-- `docs/exec-plans/2026-07-08-ubb-migration.md`
-- `docs/exec-plans/2026-07-08-ubb-test-and-logger-foundation.md`
-- `docs/exec-plans/2026-07-10-ubb-vue-renderer.md`
+- `docs/exec-plans/completed/2026-07-08-ubb-migration.md`
+- `docs/exec-plans/completed/2026-07-08-ubb-test-and-logger-foundation.md`
+- `docs/exec-plans/completed/2026-07-10-ubb-vue-renderer.md`
 
 ### 阶段 2：登录与认证
 
@@ -116,7 +127,7 @@ flowchart LR
 
 完成定义：用户可以登录和退出；access token 过期后可以续期；鉴权失效会清理本地登录态；认证核心行为有自动测试覆盖；`vp run ready` 通过。
 
-相关执行计划：`docs/exec-plans/2026-07-09-login-migration.md`。
+相关执行计划：`docs/exec-plans/completed/2026-07-09-login-migration.md`。
 
 ### 阶段 3：核心阅读闭环
 
@@ -126,7 +137,7 @@ flowchart LR
 
 完成定义：用户可以从首页进入版面，再进入主题；版面和主题均能正确翻页；主题标题、作者、回复信息和楼层内容完整显示；历史 UBB 与新 Markdown 帖子阅读正常；受限内容会引导登录并能返回原页面。阶段 3 不要求视觉还原，结构清晰、可阅读、可翻页即可。
 
-相关执行计划：`docs/exec-plans/2026-07-11-core-reading-loop.md`。
+相关执行计划：`docs/exec-plans/completed/2026-07-11-core-reading-loop.md`。
 
 ### 阶段 4：发现与列表
 
@@ -134,7 +145,7 @@ flowchart LR
 
 完成定义：匿名和登录状态下允许访问的发现类入口均可用，筛选条件与 URL 同步，列表可以翻页并进入对应主题或用户页面。
 
-相关执行计划：`docs/exec-plans/2026-07-11-discovery-list-migration.md`。
+相关执行计划：`docs/exec-plans/completed/2026-07-11-discovery-list-migration.md`。
 
 ### 阶段 5：用户中心
 
@@ -142,7 +153,7 @@ flowchart LR
 
 完成定义：登录用户可以查看和管理自己的主要个人数据；直接访问受限页面时能够完成登录跳转和来源页恢复。
 
-相关执行计划：`docs/exec-plans/2026-07-12-user-center-migration.md`。
+相关执行计划：`docs/exec-plans/completed/2026-07-12-user-center-migration.md`。
 
 ### 阶段 6：写流程
 
@@ -152,7 +163,7 @@ flowchart LR
 
 完成定义：用户可以发主题、回帖和编辑帖子；图片与附件上传正常；主要楼层互动可用；失败状态不会造成重复提交或内容丢失。
 
-相关执行计划：`docs/exec-plans/2026-07-12-writing-flow-migration.md`。
+相关执行计划：`docs/exec-plans/completed/2026-07-12-writing-flow-migration.md`。
 
 ### 阶段 7：实时交互与消息
 
@@ -160,22 +171,22 @@ flowchart LR
 
 完成定义：私信可以收发；通知列表和未读数量一致；实时事件到达后页面状态正确更新；签到和关注操作可用。
 
-相关执行计划：`docs/exec-plans/2026-07-12-realtime-message-migration.md`。
+相关执行计划：`docs/exec-plans/completed/2026-07-12-realtime-message-migration.md`。
 
 ### 阶段 8：主题、活动与收尾
 
 建立 CC98 设计规范和主题系统，迁移节日主题、年度总结、版主管理、首页后续版本、错误页和 IP 查询等边缘功能，并完成全站回归、无障碍检查和体验收尾。
 
-设计 token、主题状态和基础 UI 组件只构成阶段 8 的地基。全站高保真迁移继续按 `docs/exec-plans/2026-07-16-full-fidelity-migration.md` 推进，范围包含首页信息架构、页面壳、版面与主题布局、用户中心、管理入口、活动页和完整皮肤回归。
+设计 token、主题状态和基础 UI 组件构成阶段 8 的地基。全站高保真迁移已按 `docs/exec-plans/completed/2026-07-16-full-fidelity-migration.md` 完成，范围包含首页信息架构、页面壳、版面与主题布局、用户中心、管理入口、活动页和完整皮肤回归。
 
-主题级版务已经恢复锁定、热门控制、删除、移动、提升、两级固顶、精华、高亮、管理记录和 IP 分组，并按完整管理权限与主题作者权限区分入口。楼层管理恢复奖励财富、奖励威望、扣除财富、扣除威望、删除、TP 和解除 TP；版面页恢复主题勾选、批量锁沉和批量删除。用户管理只对管理员开放，已恢复全站锁定、屏蔽、TP、解除处罚、删除近期内容和查看近期发言。2025 年度总结已恢复原站竖版卡片、条件分页和活动图片。旧 `/annual-review-2022` 线上为 404，`/index` 是空页面，两者不迁移。旧站 30 个主题编号已经归约为 20 套可选皮肤，颜色和横幅资源全部恢复。高风险写入只在本地 mock 验证。阶段 8 还需完成全站回归。
+主题级版务已经恢复锁定、热门控制、删除、移动、提升、两级固顶、精华、高亮、管理记录和 IP 分组，并按完整管理权限与主题作者权限区分入口。楼层管理恢复奖励财富、奖励威望、扣除财富、扣除威望、删除、TP 和解除 TP；版面页恢复主题勾选、批量锁沉和批量删除。用户管理只对管理员开放，已恢复全站锁定、屏蔽、TP、解除处罚、删除近期内容和查看近期发言。2025 年度总结已恢复原站竖版卡片、条件分页和活动图片。旧 `/annual-review-2022` 线上为 404，`/index` 是空页面，两者不迁移。旧站 30 个主题编号已经归约为 20 套可选皮肤，颜色和横幅资源全部恢复。高风险写入只在本地 mock 验证。全站浏览器矩阵与阶段 8 完成审计已经通过。
 
 完成定义：计划范围内的旧前端入口均已迁移或明确废弃；主要阅读和写入路径通过浏览器回归；剩余差异有文档记录。
 
 ## 风险与待确认事项
 
 - 论坛主体版面的匿名访问策略可能变化，受限内容必须按真实 401 和权限字段处理
-- 写操作的 OpenAPI 描述与线上行为可能存在偏差，阶段 6 开始前需要重新探测
+- 写操作的 OpenAPI 描述与线上行为可能继续漂移，新增或修改写入能力时需要重新核对真实接口
 - 历史 UBB 内容存在大量方言和异常嵌套，新增兼容规则应先补解析或渲染测试
 - 旧项目包含长期累积的边缘功能，迁移前需要区分仍在使用的能力和可直接废弃的历史入口
 

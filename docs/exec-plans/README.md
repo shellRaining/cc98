@@ -2,6 +2,40 @@
 
 执行计划记录一次复杂改动准备怎么推进，以及实施过程中发生了什么。它是工作中的活文档，不要求在开工时预见所有细节。
 
+## 目录约定
+
+- `active/`：正在调研、实施或仍有明确交付物的计划。
+- `completed/`：已经验收的计划和历史迁移记录。
+- `template.md`：新建复杂计划时使用的起点。
+
+计划完成后，先补齐结果、遗留项和验证记录，再从 `active/` 移入 `completed/`。归档文件只在追溯背景或复用决策时读取，不进入默认开工上下文。
+
+## 进行中的计划
+
+| 执行计划                                             | 状态     | 说明                                         |
+| ---------------------------------------------------- | -------- | -------------------------------------------- |
+| `active/2026-07-11-openapi-public-infrastructure.md` | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
+| `active/2026-07-13-milkdown-evaluation.md`           | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
+| `active/2026-07-17-user-documentation.md`            | 待实施   | 优先验证 VitePress，尚未创建文档应用         |
+| `active/2026-07-18-apifox-cli-integration.md`        | 待实施   | 尚未接入 CLI、同步命令和远端结构验证         |
+
+## 已完成的计划
+
+| 执行计划                                                 | 说明                                           |
+| -------------------------------------------------------- | ---------------------------------------------- |
+| `completed/2026-07-08-ubb-migration.md`                  | UBB 解析与导出迁移完成                         |
+| `completed/2026-07-08-ubb-test-and-logger-foundation.md` | UBB 测试和前端日志入口均已落地                 |
+| `completed/2026-07-09-login-migration.md`                | 登录、续期、登出和鉴权链路已验收               |
+| `completed/2026-07-10-ubb-vue-renderer.md`               | UBB 与 Markdown 共享富内容渲染已落地           |
+| `completed/2026-07-11-core-reading-loop.md`              | 版面、主题、分页和权限链路已验收               |
+| `completed/2026-07-11-discovery-list-migration.md`       | 热门、新帖、推荐和搜索已迁移                   |
+| `completed/2026-07-12-realtime-message-migration.md`     | 消息、实时更新、关注和签到已迁移               |
+| `completed/2026-07-12-user-center-migration.md`          | 用户中心主要页面和管理操作已迁移               |
+| `completed/2026-07-12-writing-flow-migration.md`         | 发主题、回帖、编辑、上传和楼层互动已验收       |
+| `completed/2026-07-13-style-system.md`                   | 设计系统与换肤地基已完成，基础组件后续按需扩展 |
+| `completed/2026-07-16-full-fidelity-migration.md`        | 阶段 8 与最终浏览器矩阵已验收                  |
+| `completed/2026-07-18-frontend-migration-roadmap.md`     | 阶段 0 至阶段 8 的迁移历史与完成审计           |
+
 ## 何时写
 
 适合写执行计划的情况：
@@ -15,11 +49,11 @@
 
 ## 怎么写
 
-文件名使用 `YYYY-MM-DD-kebab-case.md`。可以复制 `template.md` 开始，也可以根据任务重新组织结构。
+文件名使用 `YYYY-MM-DD-kebab-case.md`，新计划放入 `active/`。可以复制 `template.md` 开始，也可以根据任务重新组织结构。
 
 模板只提供常见内容的提示，不是必须填满的表单。保留对当前任务有用的章节，删掉无关内容；需要时可以加入调研结论、原型、接口草图、迁移清单或其他更合适的表达。涉及架构图时使用 Mermaid。
 
-计划应随着实施更新：完成阶段、范围变化、验证结果和未解决问题都写回原文。执行结束后保留计划，方便理解当时的推进方式和取舍。
+计划应随着实施更新：完成阶段、范围变化、验证结果和未解决问题都写回原文。状态变化时同步更新本页；执行结束后勾选已经完成的步骤，记录结果与遗留项，再把文件移入 `completed/`。
 
 ## 与 ADR 的边界
 

@@ -2,7 +2,7 @@
  * ubbToMarkdown 导出器单元测试。
  *
  * 转换规则设计依据：
- * - docs/exec-plans/2026-07-08-ubb-migration.md 阶段 2 标签迁移清单。
+ * - docs/exec-plans/completed/2026-07-08-ubb-migration.md 阶段 2 标签迁移清单。
  * - src/tags.ts 的标签模式表（recursive / text / empty / autoclose）。
  * - src/types.ts 的 AST 结构（positionals / named / children）。
  *
