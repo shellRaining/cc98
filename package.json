@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp run -r build && vp check && knip --include exports,types && vp run -r test",
+    "ready": "vp run -r build && vp check && knip --include files,exports,types && vp run -r test",
     "prepare": "vp config"
   },
   "devDependencies": {

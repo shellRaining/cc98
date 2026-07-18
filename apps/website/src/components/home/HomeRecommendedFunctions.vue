@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IndexColumn } from "@cc98/api";
-import { isExternalHomepageUrl, normalizeHomepageAssetUrl } from "../../lib/home";
+import { isExternalHomepageUrl, normalizeHomepageAssetUrl } from "./model";
 import HomeSectionHeader from "./HomeSectionHeader.vue";
 
 defineProps<{ items: IndexColumn[] }>();

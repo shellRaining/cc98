@@ -12,27 +12,15 @@ export function parsePageNumber(raw: string | undefined | null, fallback = 1): n
   return value ?? fallback;
 }
 
-/**
- * 版面路由 `/list/:boardId/:type?/:page?` 在只有一段可选参数时，
- * Vue Router 会把它填进 type。阶段 3 不做 type 筛选，因此单独数字段按页码解释。
- */
-export function resolveBoardPage(type?: string, page?: string): number {
-  if (page != null && page !== "") return parsePageNumber(page);
-  if (type != null && /^\d+$/.test(type)) return parsePageNumber(type);
-  return 1;
-}
-
-/** 生成版面页路径，避免可选参数把页码写进 type 槽位。 */
-export function boardPagePath(boardId: string | number, page: number): string {
-  const id = String(boardId);
-  return page > 1 ? `/list/${id}/${page}` : `/list/${id}`;
-}
-
 /** 页码（从 1 开始）转接口 from（从 0 开始）。 */
 export function pageToFrom(page: number, pageSize: number): number {
   const safePage = Math.max(1, page);
   const safeSize = Math.max(1, pageSize);
   return (safePage - 1) * safeSize;
+}
+
+export function pageCount(count: number | undefined, pageSize: number): number {
+  return Math.max(1, Math.ceil(Math.max(0, count ?? 0) / Math.max(1, pageSize)));
 }
 
 /** 楼层（从 1 开始）转页码（从 1 开始）。 */

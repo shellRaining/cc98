@@ -3,15 +3,15 @@ import {
   putHomepageCacheRefresh,
   putSiteAnnouncement,
   saveSiteManageColumn,
+  siteManageColumnPayload,
 } from "../src/api/mutations/site-manage.ts";
 import { typedPost, typedPut } from "../src/lib/http.ts";
+import { isSiteAdministrator } from "../src/stores/user.ts";
 import {
   createSiteManageColumnDraft,
-  isSiteAdministrator,
   normalizeSiteManageColumn,
-  siteManageColumnPayload,
   validateSiteManageColumn,
-} from "../src/lib/site-manage.ts";
+} from "../src/views/site-manage/form.ts";
 
 vi.mock("../src/lib/http.ts", () => ({
   typedPost: vi.fn(),

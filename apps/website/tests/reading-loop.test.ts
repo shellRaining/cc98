@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
 import {
-  boardPagePath,
   boardTotalPages,
   clampPage,
   floorToPage,
@@ -9,7 +8,6 @@ import {
   paginationWindow,
   parsePageNumber,
   parsePositiveInt,
-  resolveBoardPage,
   topicTotalPages,
 } from "../src/lib/route-params.ts";
 import {
@@ -39,14 +37,6 @@ describe("route-params", () => {
     expect(parsePageNumber("0")).toBe(1);
     expect(parsePageNumber("-3")).toBe(1);
     expect(parsePageNumber("4")).toBe(4);
-  });
-
-  test("版面路由把单独数字段当作页码", () => {
-    expect(resolveBoardPage(undefined, undefined)).toBe(1);
-    expect(resolveBoardPage("2", undefined)).toBe(2);
-    expect(resolveBoardPage("best", "3")).toBe(3);
-    expect(boardPagePath(758, 1)).toBe("/list/758");
-    expect(boardPagePath(758, 2)).toBe("/list/758/2");
   });
 
   test("page 与 from 换算", () => {

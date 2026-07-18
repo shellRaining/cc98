@@ -1,21 +1,21 @@
 import { describe, expect, test } from "vite-plus/test";
 import { withoutCustomBoard, withoutId, withoutTopic } from "../src/api/mutations/index.ts";
 import { queryKeys } from "../src/api/queries/index.ts";
-import { getAvatarFrame } from "../src/lib/avatar-frame.ts";
+import { postExcerpt } from "../src/components/post-summary.ts";
+import { getAvatarFrame } from "../src/components/user/avatar-frame.ts";
+import { pageCount } from "../src/lib/route-params.ts";
 import {
   normalizeFavoriteGroup,
   normalizeFavoriteKeyword,
   normalizeFavoriteOrder,
-  normalizeMePostKind,
-  orderByIds,
-  pageCount,
-  parseUserCenterPage,
-  postExcerpt,
+} from "../src/views/user-center/favorites.ts";
+import { parseUserCenterPage, userCenterPagePath } from "../src/views/user-center/navigation.ts";
+import { normalizeMePostKind } from "../src/views/user-center/posts.ts";
+import {
   joinBirthday,
   splitBirthday,
-  userCenterPagePath,
   validateProfileSettings,
-} from "../src/lib/user-center.ts";
+} from "../src/views/user-center/settings.ts";
 
 describe("用户中心 URL 状态", () => {
   test("规范化页码与筛选条件", () => {
@@ -45,10 +45,9 @@ describe("用户中心 URL 状态", () => {
 });
 
 describe("用户中心列表工具", () => {
-  test("计算总页数并按 ID 恢复批量查询顺序", () => {
+  test("计算总页数", () => {
     expect(pageCount(0, 10)).toBe(1);
     expect(pageCount(21, 10)).toBe(3);
-    expect(orderByIds([3, 1, 2], [{ id: 1 }, { id: 3 }])).toEqual([{ id: 3 }, { id: 1 }]);
   });
 
   test("帖子摘要转换 UBB 并限制长度", () => {

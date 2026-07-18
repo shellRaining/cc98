@@ -8,11 +8,9 @@ import {
   searchBoardsPath,
   searchTopicsPath,
   userNamePath,
-} from "../lib/discovery";
+} from "../router/links";
 import { saveLoginRedirect } from "../lib/login-redirect";
-import { totalUnreadCount } from "../lib/messages";
-import { isSiteAdministrator } from "../lib/site-manage";
-import { useUserStore } from "../stores/user";
+import { isSiteAdministrator, useUserStore } from "../stores/user";
 import UiBadge from "./ui/Badge.vue";
 
 type SearchKind = "topic" | "within" | "user" | "board";
@@ -45,7 +43,10 @@ const hasBoardContext = computed(() => contextBoardId.value != null);
 const { data: unreadCounts } = useQuery(
   computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
 );
-const unreadTotal = computed(() => totalUnreadCount(unreadCounts.value));
+const unreadTotal = computed(() => {
+  const counts = unreadCounts.value;
+  return counts ? counts.systemCount + counts.atCount + counts.replyCount + counts.messageCount : 0;
+});
 const isAdministrator = computed(() => isSiteAdministrator(user.user?.privilege));
 
 watch(

@@ -2,7 +2,7 @@
 import type { IndexColumn } from "@cc98/api";
 import { computed } from "vue";
 import { useCarouselIndex } from "../../composables/useCarouselIndex";
-import { isExternalHomepageUrl, normalizeHomepageAssetUrl } from "../../lib/home";
+import { isExternalHomepageUrl, normalizeHomepageAssetUrl } from "./model";
 
 const props = defineProps<{ items: IndexColumn[] }>();
 const { index, select, setPaused } = useCarouselIndex(() => props.items.length);

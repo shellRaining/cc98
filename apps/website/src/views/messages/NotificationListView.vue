@@ -13,13 +13,8 @@ import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
-import {
-  notificationCount,
-  notificationDescription,
-  notificationTopicPath,
-} from "../../lib/messages";
-import { pageToFrom, parsePageNumber } from "../../lib/route-params";
-import { pageCount } from "../../lib/user-center";
+import { notificationCount, notificationDescription, notificationTopicPath } from "./notifications";
+import { pageCount, pageToFrom, parsePageNumber } from "../../lib/route-params";
 import { useUserStore } from "../../stores/user";
 
 const PAGE_SIZE = 10;

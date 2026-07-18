@@ -5,7 +5,7 @@ import { typedDelete, typedPut } from "../src/lib/http.ts";
 import {
   validateUserContentDays,
   validateUserManagementOperation,
-} from "../src/lib/user-management.ts";
+} from "../src/views/user-manage/form.ts";
 
 vi.mock("../src/lib/http.ts", () => ({
   typedDelete: vi.fn(),

@@ -11,6 +11,10 @@ export interface AuthUser {
   privilege: string;
 }
 
+export function isSiteAdministrator(privilege: string | null | undefined): boolean {
+  return privilege === "管理员";
+}
+
 const USER_STORAGE_KEY = "cc98:user";
 
 function loadUser(): AuthUser | null {

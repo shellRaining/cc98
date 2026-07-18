@@ -5,18 +5,16 @@ import {
   fileUploadResponseSchema,
   voteInfoSchema,
   type CreateVoteInfo,
-  type RatingReason,
 } from "@cc98/api";
 import { favoriteCacheQueryKeys } from "../src/api/mutations/me.ts";
-import { clearDraft, createDraftKey, readDraft, writeDraft } from "../src/lib/drafts.ts";
+import { nextLikeState } from "../src/api/mutations/post.ts";
 import {
-  availableRatingReasons,
   appendMarkdownBlock,
   createAttachmentMarkdown,
-  createVotePayload,
-  nextLikeState,
-  validateCreateVote,
-} from "../src/lib/interactions.ts";
+} from "../src/components/markdown-editor.ts";
+import { clearDraft, createDraftKey, readDraft, writeDraft } from "../src/stores/drafts.ts";
+import { createVotePayload } from "../src/views/topic/topic-vote.ts";
+import { validateCreateVote } from "../src/views/writing/create-topic.ts";
 
 function createStorage(): Storage {
   const values = new Map<string, string>();
@@ -132,18 +130,6 @@ describe("楼层点赞状态", () => {
       dislikeCount: 0,
       likeState: 1,
     });
-  });
-});
-
-describe("评分理由", () => {
-  test("只保留当前评分方向中启用的理由", () => {
-    const reasons: RatingReason[] = [
-      { id: 1, reason: "有帮助", type: 1, enabled: true },
-      { id: 2, reason: "已停用", type: 1, enabled: false },
-      { id: 3, reason: "不友善", type: 2, enabled: true },
-    ];
-    expect(availableRatingReasons(reasons, 1).map((reason) => reason.id)).toEqual([1]);
-    expect(availableRatingReasons(reasons, 2).map((reason) => reason.id)).toEqual([3]);
   });
 });
 

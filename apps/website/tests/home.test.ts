@@ -4,7 +4,7 @@ import {
   normalizeHomepageAssetUrl,
   normalizeHomepageTopic,
   visibleHomepageColumns,
-} from "../src/lib/home.ts";
+} from "../src/components/home/model.ts";
 
 describe("首页数据辅助函数", () => {
   it("把远程图片升级为 HTTPS", () => {

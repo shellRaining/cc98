@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FullPageStatus from "../components/FullPageStatus.vue";
-import { type FullPageStatusKind } from "../lib/full-page-status";
+import { type FullPageStatusKind } from "../components/full-page-status";
 import { isSafeInternalPath, saveLoginRedirect } from "../lib/login-redirect";
 
 const route = useRoute();

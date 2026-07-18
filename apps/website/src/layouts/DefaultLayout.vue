@@ -4,7 +4,7 @@ import { useRoute } from "vue-router";
 import { useThemeStore } from "../stores/theme";
 import AppHeader from "../components/AppHeader.vue";
 import AppFooter from "../components/AppFooter.vue";
-import MessageRealtimeController from "../components/MessageRealtimeController.vue";
+import MessageRealtimeController from "../components/messages/MessageRealtimeController.vue";
 
 const theme = useThemeStore();
 const route = useRoute();

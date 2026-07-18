@@ -6,16 +6,12 @@ import { useRoute, useRouter } from "vue-router";
 import { boardsByIdsQuery, mePostsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
+import { postExcerpt } from "../../components/post-summary";
 import { normalizeApiError } from "../../lib/api-error";
-import { pageToFrom } from "../../lib/route-params";
-import {
-  normalizeMePostKind,
-  pageCount,
-  parseUserCenterPage,
-  postExcerpt,
-  userCenterPagePath,
-} from "../../lib/user-center";
+import { pageCount, pageToFrom } from "../../lib/route-params";
 import { useUserStore } from "../../stores/user";
+import { parseUserCenterPage, userCenterPagePath } from "./navigation";
+import { normalizeMePostKind } from "./posts";
 
 const PAGE_SIZE = 10;
 const route = useRoute();

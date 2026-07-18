@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from "vue";
-import { getAvatarFrame, type AvatarFrameVariant } from "../../lib/avatar-frame";
+import { getAvatarFrame, type AvatarFrameVariant } from "./avatar-frame";
 
 const props = withDefaults(
   defineProps<{

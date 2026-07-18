@@ -1,5 +1,5 @@
-import type { HotPeriod } from "../../lib/discovery";
-import type { SiteManageColumnKind } from "../../lib/site-manage";
+import type { HotPeriod } from "../discovery";
+import type { SiteManageColumnKind } from "../site-manage";
 
 export type AuthScope = number | "anonymous";
 

@@ -3,8 +3,8 @@ import { computed, ref } from "vue";
 import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { normalizeApiError } from "../lib/api-error";
-import { appendMarkdownBlock, createAttachmentMarkdown } from "../lib/interactions";
 import { useThemeStore } from "../stores/theme";
+import { appendMarkdownBlock, createAttachmentMarkdown } from "./markdown-editor";
 import UiButton from "./ui/Button.vue";
 
 const props = withDefaults(

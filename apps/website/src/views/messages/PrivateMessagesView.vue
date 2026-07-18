@@ -14,12 +14,12 @@ import {
   usersByIdsQuery,
 } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
+import { postExcerpt } from "../../components/post-summary";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
 import { normalizeApiError } from "../../lib/api-error";
-import { createConversationReadSynchronizer, mergeConversationPages } from "../../lib/messages";
 import { parsePositiveInt } from "../../lib/route-params";
-import { postExcerpt } from "../../lib/user-center";
 import { useUserStore } from "../../stores/user";
+import { createConversationReadSynchronizer, mergeConversationPages } from "./private-messages";
 
 const CONTACT_SIZE = 7;
 const MESSAGE_SIZE = 10;

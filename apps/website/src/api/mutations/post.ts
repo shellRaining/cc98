@@ -6,6 +6,7 @@ import {
   numericIdResponseSchema,
   type CreatePostRequest,
   type EditPostRequest,
+  type Like,
   type Post,
   type PostLikeAction,
   type PostRatingRequest,
@@ -13,7 +14,21 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedPost, typedPut } from "../../lib/http";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
-import { nextLikeState } from "../../lib/interactions";
+
+export function nextLikeState(current: Like, action: PostLikeAction): Like {
+  const target = Number(action) as 1 | 2;
+  const previous = current.likeState ?? 0;
+  const next = previous === target ? 0 : target;
+  let likeCount = current.likeCount ?? 0;
+  let dislikeCount = current.dislikeCount ?? 0;
+
+  if (previous === 1) likeCount = Math.max(0, likeCount - 1);
+  if (previous === 2) dislikeCount = Math.max(0, dislikeCount - 1);
+  if (next === 1) likeCount += 1;
+  if (next === 2) dislikeCount += 1;
+
+  return { likeCount, dislikeCount, likeState: next };
+}
 
 interface CreatePostVariables {
   topicId: number;

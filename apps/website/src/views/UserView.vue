@@ -14,11 +14,10 @@ import {
 import PageState from "../components/PageState.vue";
 import UserProfileOverview from "../components/user/UserProfileOverview.vue";
 import { normalizeApiError } from "../lib/api-error";
-import { userIdPath } from "../lib/discovery";
 import { saveLoginRedirect } from "../lib/login-redirect";
-import { isSiteAdministrator } from "../lib/site-manage";
 import { parsePositiveInt } from "../lib/route-params";
-import { useUserStore } from "../stores/user";
+import { userIdPath } from "../router/links";
+import { isSiteAdministrator, useUserStore } from "../stores/user";
 
 const props = defineProps<{
   userId?: string;

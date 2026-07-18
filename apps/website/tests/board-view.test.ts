@@ -4,7 +4,7 @@ import {
   resolveBoardTag,
   resolveBoardViewMode,
   resolveBoardViewPage,
-} from "../src/lib/board-view.ts";
+} from "../src/views/board/navigation.ts";
 
 describe("版面页路由", () => {
   it("兼容旧的纯数字页码和新的筛选段", () => {

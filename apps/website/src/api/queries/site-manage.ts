@@ -1,6 +1,6 @@
 import { globalConfigSchema, indexColumnSchema } from "@cc98/api";
 import { queryOptions } from "@tanstack/vue-query";
-import { SITE_MANAGE_COLUMN_DEFINITIONS, type SiteManageColumnKind } from "../../lib/site-manage";
+import { SITE_MANAGE_COLUMN_API, type SiteManageColumnKind } from "../site-manage";
 import { typedGet } from "../../lib/http";
 import { queryKeys } from "./keys.ts";
 
@@ -18,7 +18,7 @@ export const siteManageColumnsQuery = (kind: SiteManageColumnKind, enabled = tru
   queryOptions({
     queryKey: queryKeys.siteManageColumns(kind),
     queryFn: async () => {
-      const data = await typedGet<unknown>(SITE_MANAGE_COLUMN_DEFINITIONS[kind].path);
+      const data = await typedGet<unknown>(SITE_MANAGE_COLUMN_API[kind].path);
       return indexColumnSchema.array().parse(data);
     },
     enabled,

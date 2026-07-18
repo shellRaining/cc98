@@ -16,14 +16,13 @@ import Pagination from "../../components/Pagination.vue";
 import UiDialog from "../../components/ui/Dialog.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageToFrom } from "../../lib/route-params";
+import { useUserStore } from "../../stores/user";
 import {
   normalizeFavoriteGroup,
   normalizeFavoriteKeyword,
   normalizeFavoriteOrder,
-  parseUserCenterPage,
-  userCenterPagePath,
-} from "../../lib/user-center";
-import { useUserStore } from "../../stores/user";
+} from "./favorites";
+import { parseUserCenterPage, userCenterPagePath } from "./navigation";
 
 type GroupAction = "create" | "rename" | "delete";
 

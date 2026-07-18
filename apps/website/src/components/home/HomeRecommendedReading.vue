@@ -2,7 +2,7 @@
 import type { IndexColumn } from "@cc98/api";
 import { computed, onMounted } from "vue";
 import { useCarouselIndex } from "../../composables/useCarouselIndex";
-import { isExternalHomepageUrl, normalizeHomepageAssetUrl } from "../../lib/home";
+import { isExternalHomepageUrl, normalizeHomepageAssetUrl } from "./model";
 import HomeSectionHeader from "./HomeSectionHeader.vue";
 
 const props = defineProps<{ items: IndexColumn[] }>();

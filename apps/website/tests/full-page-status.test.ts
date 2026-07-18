@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vite-plus/test";
-import { FULL_PAGE_STATUS_CONFIG } from "../src/lib/full-page-status.ts";
+import { FULL_PAGE_STATUS_CONFIG } from "../src/components/full-page-status.ts";
 
 describe("完整错误页配置", () => {
   test("保留旧站四类状态插图", () => {

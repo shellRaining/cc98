@@ -5,7 +5,7 @@ import {
   loadMessageSettings,
   saveMessageSettings,
   type MessageSettings,
-} from "../../lib/message-settings";
+} from "../../stores/message-settings";
 
 const rows: Array<{ key: keyof MessageSettings; label: string }> = [
   { key: "response", label: "是否显示回复通知" },

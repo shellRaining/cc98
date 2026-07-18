@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HomepageTopicItem } from "../../lib/home";
+import type { HomepageTopicItem } from "./model";
 import HomeSectionHeader from "./HomeSectionHeader.vue";
 
 withDefaults(

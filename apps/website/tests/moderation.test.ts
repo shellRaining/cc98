@@ -4,19 +4,21 @@ import {
   batchModerateTopics,
   moderatePost,
   moderateTopic,
+  type TopicModerationRequest,
 } from "../src/api/mutations/moderation.ts";
-import { typedDelete, typedPost, typedPut } from "../src/lib/http.ts";
 import {
   canManagePost,
-  flattenModerationBoards,
   hasTopicAuthorManagement,
   isBoardManager,
   resolveTopicModerationAccess,
-  type TopicModerationRequest,
-  validatePostModerationRequest,
-  validateBatchTopicModerationRequest,
+} from "../src/components/moderation/access.ts";
+import { typedDelete, typedPost, typedPut } from "../src/lib/http.ts";
+import { validateBatchTopicModerationRequest } from "../src/views/board/components/board-batch-moderation.ts";
+import { validatePostModerationRequest } from "../src/views/topic/components/post-moderation.ts";
+import {
+  flattenModerationBoards,
   validateTopicModerationRequest,
-} from "../src/lib/moderation.ts";
+} from "../src/views/topic/components/topic-moderation.ts";
 
 vi.mock("../src/lib/http.ts", () => ({
   typedDelete: vi.fn(),

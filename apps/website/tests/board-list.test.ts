@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
-import {
-  BOARD_ICON_FALLBACK,
-  boardGroupAnchor,
-  boardIconUrl,
-  isCompactBoardGroup,
-} from "../src/lib/board-list.ts";
+import { BOARD_ICON_FALLBACK, boardIconUrl } from "../src/components/board/board-icon.ts";
+import { boardGroupAnchor, isCompactBoardGroup } from "../src/views/board/list.ts";
 
 describe("版面列表工具", () => {
   it("为大量文字版面的分区使用紧凑布局", () => {

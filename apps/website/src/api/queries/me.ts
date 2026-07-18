@@ -8,7 +8,7 @@ import {
   topicSchema,
 } from "@cc98/api";
 import { infiniteQueryOptions, queryOptions } from "@tanstack/vue-query";
-import type { FocusMode } from "../../lib/discovery";
+import type { FocusMode } from "../discovery";
 import { typedGet } from "../../lib/http";
 import { queryKeys, type AuthScope } from "./keys.ts";
 

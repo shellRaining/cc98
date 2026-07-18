@@ -4,7 +4,7 @@ import {
   resolveTopicPostFilter,
   topicViewQuery,
   uniquePostUserIds,
-} from "../src/lib/topic-view.ts";
+} from "../src/views/topic/navigation.ts";
 
 describe("主题阅读视图", () => {
   it("追踪楼层优先于只看用户", () => {

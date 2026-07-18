@@ -8,14 +8,9 @@ import { currentUserQuery, fullUsersByIdsQuery, meRelationIdsQuery } from "../..
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
 import { normalizeApiError } from "../../lib/api-error";
-import { pageToFrom } from "../../lib/route-params";
-import {
-  orderByIds,
-  pageCount,
-  parseUserCenterPage,
-  userCenterPagePath,
-} from "../../lib/user-center";
+import { pageCount, pageToFrom } from "../../lib/route-params";
 import { useUserStore } from "../../stores/user";
+import { parseUserCenterPage, userCenterPagePath } from "./navigation";
 
 const PAGE_SIZE = 10;
 const DEFAULT_AVATAR = "/static/images/default_avatar_boy.png";
@@ -37,9 +32,17 @@ const userOptions = computed(() =>
   ),
 );
 const usersQuery = useQuery(userOptions);
-const rows = computed<Array<User & { id: number }>>(() =>
-  orderByIds(relationQuery.data.value ?? [], usersQuery.data.value ?? []),
-);
+const rows = computed<Array<User & { id: number }>>(() => {
+  const usersById = new Map(
+    (usersQuery.data.value ?? []).flatMap((profile) =>
+      profile.id == null ? [] : [[profile.id, profile] as const],
+    ),
+  );
+  return (relationQuery.data.value ?? []).flatMap((id) => {
+    const profile = usersById.get(id);
+    return profile ? [profile] : [];
+  });
+});
 const totalPages = computed(() => pageCount(meQuery.data.value?.fanCount, PAGE_SIZE));
 
 const followUser = useFollowUserMutation();

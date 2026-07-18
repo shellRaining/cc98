@@ -2,19 +2,19 @@
 
 ## 目录布局
 
-| 目录           | 职责                                                                                    |
-| -------------- | --------------------------------------------------------------------------------------- |
-| `api/`         | 按领域组织 vue-query queryOptions 与 mutation，schema 直接来自 `@cc98/api`              |
-| `lib/`         | 基础设施：http、auth、oauth、token-store、logger、query-client、discovery、route-params |
-| `stores/`      | Pinia：user（登录态）、theme（主题）                                                    |
-| `router/`      | Vue Router 路由表                                                                       |
-| `layouts/`     | 页面壳（DefaultLayout）                                                                 |
-| `components/`  | 通用组件（AppHeader / TopicList / Pagination / PageState / LoadMore / rich-content/）   |
-| `views/`       | 路由级页面（HomeView / BoardView / 发现类列表页 / TopicView / ...）                     |
-| `composables/` | 组合式函数（占位，尚未使用）                                                            |
-| `styles/`      | 全局 CSS + CSS 变量（light/dark）                                                       |
+| 目录           | 职责                                                                                                                  |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `api/`         | 按领域组织 vue-query queryOptions、mutation 和跨查询共享的 API 域契约，schema 直接来自 `@cc98/api`                    |
+| `lib/`         | 跨页面基础设施，只包含请求、认证、错误、日志、查询客户端、登录跳转和通用路由参数                                      |
+| `stores/`      | 客户端状态与浏览器持久化状态，包括 user、theme、skins、drafts 和 message-settings                                     |
+| `router/`      | Vue Router 路由表，以及被多个路由域和顶层组件共同使用的稳定链接构造                                                   |
+| `layouts/`     | 页面壳（DefaultLayout）                                                                                               |
+| `components/`  | 跨路由稳定复用的组件和基础 UI 原语；单一路由族私有的业务组件不放在这里                                                |
+| `views/`       | 路由入口。复杂路由族使用 `views/<domain>/`，页面私有组件放入同域 `components/`，辅助逻辑使用职责明确的 sibling module |
+| `composables/` | 组合式函数（占位，尚未使用）                                                                                          |
+| `styles/`      | 全局 CSS + CSS 变量（light/dark）                                                                                     |
 
-`lib/` 内部依赖方向（单向无环）：
+`lib/` 与业务层的依赖方向保持单向：
 
 ```mermaid
 graph TD
@@ -22,26 +22,46 @@ graph TD
   oauth["oauth.ts"]
   auth["auth.ts"]
   http["http.ts"]
+  lib_other["api-error / logger / login-redirect<br/>query-client / route-params"]
+  api_contracts["api/discovery.ts<br/>api/site-manage.ts"]
   queries["api/queries/"]
   mutations["api/mutations/"]
   stores_user["stores/user.ts"]
+  views["views 路由域"]
+  components["跨路由 components"]
 
   auth --> oauth
   auth --> token_store
   http --> auth
+  queries --> api_contracts
   queries --> http
+  mutations --> api_contracts
   mutations --> http
   mutations --> queries
   stores_user --> auth
   stores_user --> http
+  views --> queries
+  views --> mutations
+  views --> components
+  components --> queries
+  views --> lib_other
+  components --> lib_other
 ```
 
+- `lib/` 固定保留 `api-error.ts`、`auth.ts`、`http.ts`、`logger.ts`、`login-redirect.ts`、`oauth.ts`、`query-client.ts`、`route-params.ts` 和 `token-store.ts`
 - `token-store.ts`：纯存储 + 过期判定，不依赖任何内部模块
 - `oauth.ts`：OAuth 协议（password/refresh grant），仅依赖 zod
 - `auth.ts`：认证编排（登录、懒刷新、登出），依赖 oauth + token-store
 - `http.ts`：业务请求客户端（ofetch），依赖 auth 注入 token
+- `api/discovery.ts` 和 `api/site-manage.ts`：查询、缓存键、mutation 和 UI 共同使用的窄 API 域契约，不依赖 UI 目录
 - `api/queries/`：vue-query queryOptions。`core.ts` 负责站点配置与阅读，`discovery.ts` 负责发现入口，`user.ts` 负责公开用户，`me.ts` 负责当前用户，统一从 `index.ts` 导出
 - `api/mutations/`：用户中心等写操作与缓存同步，依赖 http 和 query key
+
+## 路由域与组件所有权
+
+`annual-review/`、`board/`、`discovery/`、`messages/`、`site-manage/`、`topic/`、`user-center/`、`user-manage/` 和 `writing/` 按路由族组织。路由入口放在域目录根部，只被该路由族使用的 SFC 放入域内 `components/`。导航解析、表单校验和展示模型使用 `navigation.ts`、`form.ts`、`time.ts` 等职责名称，不新建宽泛的 `helpers.ts` 或 `utils.ts`。
+
+顶层 `components/` 只保留跨路由稳定复用的组件，例如 `AppHeader`、`Pagination`、`PageState`、`MarkdownEditor`、版面图标、消息实时连接、用户头像、`ui/` 和 `rich-content/`。是否留在顶层按现有消费关系和稳定语义判断，不按未来可能复用判断。不同 `views/<domain>/` 之间不能 import 对方的页面私有模块；需要跨域复用时，应把稳定契约上移到 `api/`、`router/`、`stores/` 或顶层 `components/`。
 
 ## 日志与错误诊断
 

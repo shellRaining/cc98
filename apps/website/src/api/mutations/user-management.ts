@@ -1,11 +1,24 @@
 import type { UserOperationRequest } from "@cc98/api";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedDelete, typedPut } from "../../lib/http";
-import type {
-  DeleteUserContentRequest,
-  UserManagementOperationRequest,
-} from "../../lib/user-management";
 import { queryKeys } from "../queries";
+
+export type UserPunishmentType = 1 | 2 | 3;
+export type UserOperationType = 0 | 1;
+
+export interface UserManagementOperationRequest {
+  userId: number;
+  punishmentType: UserPunishmentType;
+  operationType: UserOperationType;
+  reason: string;
+  days?: number;
+}
+
+export interface DeleteUserContentRequest {
+  userId: number;
+  kind: "topic" | "post";
+  days: number;
+}
 
 export function manageUser(request: UserManagementOperationRequest) {
   const body: UserOperationRequest = {

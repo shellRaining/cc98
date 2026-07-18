@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HomepageTopicItem } from "../lib/home";
+import type { HomepageTopicItem } from "../components/home/model";
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { homepageAdvertisementsQuery, homepageIndexQuery } from "../api/queries";
@@ -13,7 +13,7 @@ import HomeSpecialOffers from "../components/home/HomeSpecialOffers.vue";
 import HomeTopicPanel from "../components/home/HomeTopicPanel.vue";
 import PageState from "../components/PageState.vue";
 import { normalizeApiError } from "../lib/api-error";
-import { normalizeHomepageTopic, visibleHomepageColumns } from "../lib/home";
+import { normalizeHomepageTopic, visibleHomepageColumns } from "../components/home/model";
 import { useUserStore } from "../stores/user";
 
 const user = useUserStore();

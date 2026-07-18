@@ -8,7 +8,7 @@
 vp run ready # 全量构建 + vp check + Knip + 全量测试。任一失败就不能提交。
 ```
 
-`vp check` 负责 format、lint 和类型检查。`apps/website` 使用 TypeScript 6，`packages/api`、`packages/ubb` 和 `packages/utils` 使用 TypeScript 7；版本边界和升级条件见 `docs/frontend.md` 的“TypeScript 工具链”。`vp run ready` 还会执行全量构建、Knip 和全量测试。
+`vp check` 负责 format、lint 和类型检查。`apps/website` 使用 TypeScript 6，`packages/api`、`packages/ubb` 和 `packages/utils` 使用 TypeScript 7；版本边界和升级条件见 `docs/frontend.md` 的“TypeScript 工具链”。`vp run ready` 还会执行全量构建、Knip 和全量测试。Knip 检查未使用文件、导出和类型，未被入口引用的 Vue SFC 也会阻断提交。
 
 ## 动态测试
 

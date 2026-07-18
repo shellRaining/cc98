@@ -9,9 +9,9 @@ import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
 import UiDialog from "../../components/ui/Dialog.vue";
 import { normalizeApiError } from "../../lib/api-error";
-import { pageToFrom } from "../../lib/route-params";
-import { pageCount, parseUserCenterPage, userCenterPagePath } from "../../lib/user-center";
+import { pageCount, pageToFrom } from "../../lib/route-params";
 import { useUserStore } from "../../stores/user";
+import { parseUserCenterPage, userCenterPagePath } from "./navigation";
 
 const PAGE_SIZE = 10;
 const route = useRoute();

@@ -22,21 +22,22 @@
 
 ## 已完成的计划
 
-| 执行计划                                                 | 说明                                           |
-| -------------------------------------------------------- | ---------------------------------------------- |
-| `completed/2026-07-08-ubb-migration.md`                  | UBB 解析与导出迁移完成                         |
-| `completed/2026-07-08-ubb-test-and-logger-foundation.md` | UBB 测试和前端日志入口均已落地                 |
-| `completed/2026-07-09-login-migration.md`                | 登录、续期、登出和鉴权链路已验收               |
-| `completed/2026-07-10-ubb-vue-renderer.md`               | UBB 与 Markdown 共享富内容渲染已落地           |
-| `completed/2026-07-11-core-reading-loop.md`              | 版面、主题、分页和权限链路已验收               |
-| `completed/2026-07-11-discovery-list-migration.md`       | 热门、新帖、推荐和搜索已迁移                   |
-| `completed/2026-07-12-realtime-message-migration.md`     | 消息、实时更新、关注和签到已迁移               |
-| `completed/2026-07-12-user-center-migration.md`          | 用户中心主要页面和管理操作已迁移               |
-| `completed/2026-07-12-writing-flow-migration.md`         | 发主题、回帖、编辑、上传和楼层互动已验收       |
-| `completed/2026-07-13-style-system.md`                   | 设计系统与换肤地基已完成，基础组件后续按需扩展 |
-| `completed/2026-07-16-full-fidelity-migration.md`        | 阶段 8 与最终浏览器矩阵已验收                  |
-| `completed/2026-07-18-css-ownership-migration.md`        | 业务 CSS 已迁回对应 SFC，全站对照通过          |
-| `completed/2026-07-18-frontend-migration-roadmap.md`     | 阶段 0 至阶段 8 的迁移历史与完成审计           |
+| 执行计划                                                  | 说明                                           |
+| --------------------------------------------------------- | ---------------------------------------------- |
+| `completed/2026-07-08-ubb-migration.md`                   | UBB 解析与导出迁移完成                         |
+| `completed/2026-07-08-ubb-test-and-logger-foundation.md`  | UBB 测试和前端日志入口均已落地                 |
+| `completed/2026-07-09-login-migration.md`                 | 登录、续期、登出和鉴权链路已验收               |
+| `completed/2026-07-10-ubb-vue-renderer.md`                | UBB 与 Markdown 共享富内容渲染已落地           |
+| `completed/2026-07-11-core-reading-loop.md`               | 版面、主题、分页和权限链路已验收               |
+| `completed/2026-07-11-discovery-list-migration.md`        | 热门、新帖、推荐和搜索已迁移                   |
+| `completed/2026-07-12-realtime-message-migration.md`      | 消息、实时更新、关注和签到已迁移               |
+| `completed/2026-07-12-user-center-migration.md`           | 用户中心主要页面和管理操作已迁移               |
+| `completed/2026-07-12-writing-flow-migration.md`          | 发主题、回帖、编辑、上传和楼层互动已验收       |
+| `completed/2026-07-13-style-system.md`                    | 设计系统与换肤地基已完成，基础组件后续按需扩展 |
+| `completed/2026-07-16-full-fidelity-migration.md`         | 阶段 8 与最终浏览器矩阵已验收                  |
+| `completed/2026-07-18-css-ownership-migration.md`         | 业务 CSS 已迁回对应 SFC，全站对照通过          |
+| `completed/2026-07-18-frontend-migration-roadmap.md`      | 阶段 0 至阶段 8 的迁移历史与完成审计           |
+| `completed/2026-07-18-website-lib-ownership-migration.md` | 业务 `lib` 已收敛，路由页和私有组件按域归位    |
 
 ## 何时写
 

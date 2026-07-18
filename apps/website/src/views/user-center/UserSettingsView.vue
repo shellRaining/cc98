@@ -7,8 +7,8 @@ import { useUpdatePortraitMutation, useUpdateProfileMutation } from "../../api/m
 import { currentUserQuery, displayTitlesQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import { normalizeApiError } from "../../lib/api-error";
-import { joinBirthday, splitBirthday, validateProfileSettings } from "../../lib/user-center";
 import { useUserStore } from "../../stores/user";
+import { joinBirthday, splitBirthday, validateProfileSettings } from "./settings";
 
 const meQuery = useQuery(currentUserQuery);
 const titlesQuery = useQuery(displayTitlesQuery);

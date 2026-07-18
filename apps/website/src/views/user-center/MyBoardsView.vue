@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/vue-query";
 import { computed, ref, watch } from "vue";
 import { useFollowBoardMutation, useUnfollowBoardMutation } from "../../api/mutations";
 import { boardsByIdsQuery, currentUserQuery } from "../../api/queries";
+import BoardIcon from "../../components/board/BoardIcon.vue";
 import PageState from "../../components/PageState.vue";
 import { normalizeApiError } from "../../lib/api-error";
-import { BOARD_ICON_FALLBACK, boardIconUrl } from "../../lib/board-list";
 
 const {
   data: me,
@@ -106,11 +106,6 @@ async function toggleBoard(board: Board & { id: number }) {
   }
   pendingBoardId.value = 0;
 }
-
-function useFallbackIcon(event: Event) {
-  const image = event.currentTarget as HTMLImageElement;
-  if (!image.src.endsWith(BOARD_ICON_FALLBACK)) image.src = BOARD_ICON_FALLBACK;
-}
 </script>
 
 <template>
@@ -130,10 +125,11 @@ function useFallbackIcon(event: Event) {
     <ul v-else class="user-followed-board-list">
       <li v-for="board in rows" :key="board.id">
         <RouterLink :to="`/list/${board.id}`" class="user-followed-board__icon">
-          <img
-            :src="board.logoUri || boardIconUrl(board.name)"
+          <BoardIcon
+            class="user-followed-board__image"
+            :src="board.logoUri"
+            :name="board.name"
             :alt="board.name || `版面 ${board.id}`"
-            @error="useFallbackIcon"
           />
         </RouterLink>
         <div class="user-followed-board__info">
@@ -197,7 +193,7 @@ function useFallbackIcon(event: Event) {
   background: var(--cc98-color-primary);
 }
 
-.user-followed-board__icon img {
+.user-followed-board__image {
   width: 7rem;
   height: 7rem;
   object-fit: cover;

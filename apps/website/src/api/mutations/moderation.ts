@@ -1,11 +1,60 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedDelete, typedPost, typedPut } from "../../lib/http";
-import type {
-  BatchTopicModerationRequest,
-  PostModerationRequest,
-  TopicModerationRequest,
-} from "../../lib/moderation";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
+
+export type TopicModerationAction =
+  | "lock"
+  | "unlock"
+  | "disable-hot"
+  | "enable-hot"
+  | "delete"
+  | "move"
+  | "bump"
+  | "set-board-top"
+  | "set-global-top"
+  | "remove-top"
+  | "set-best"
+  | "remove-best"
+  | "highlight";
+
+export type PostModerationAction =
+  | "reward-wealth"
+  | "reward-prestige"
+  | "deduct-wealth"
+  | "deduct-prestige"
+  | "delete"
+  | "mute"
+  | "unmute";
+
+export interface PostModerationRequest {
+  action: PostModerationAction;
+  postId: number;
+  boardId: number;
+  userId?: number | null;
+  reason: string;
+  value?: number;
+  days?: number;
+}
+
+export type BatchTopicModerationAction = "lock" | "delete";
+
+export interface BatchTopicModerationRequest {
+  action: BatchTopicModerationAction;
+  topicIds: number[];
+  reason: string;
+  days?: number;
+}
+
+export interface TopicModerationRequest {
+  action: TopicModerationAction;
+  topicId: number;
+  reason: string;
+  days?: number;
+  targetBoardId?: number;
+  isBold?: boolean;
+  isItalic?: boolean;
+  color?: string;
+}
 
 export function moderateTopic(request: TopicModerationRequest): Promise<void> {
   const reasonBody = { reason: request.reason.trim() };

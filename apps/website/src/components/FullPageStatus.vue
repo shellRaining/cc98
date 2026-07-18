@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTitle } from "@vueuse/core";
 import { computed } from "vue";
-import { FULL_PAGE_STATUS_CONFIG, type FullPageStatusKind } from "../lib/full-page-status";
+import { FULL_PAGE_STATUS_CONFIG, type FullPageStatusKind } from "./full-page-status";
 
 const props = defineProps<{
   kind: FullPageStatusKind;

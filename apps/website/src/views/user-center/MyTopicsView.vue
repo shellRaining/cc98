@@ -8,7 +8,7 @@ import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageToFrom } from "../../lib/route-params";
-import { parseUserCenterPage, userCenterPagePath } from "../../lib/user-center";
+import { parseUserCenterPage, userCenterPagePath } from "./navigation";
 import { useUserStore } from "../../stores/user";
 
 const PAGE_SIZE = 10;

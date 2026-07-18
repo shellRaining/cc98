@@ -5,7 +5,7 @@ import {
   annualReviewPages,
   annualReviewWinRate,
   resolveFavoritePostPeriod,
-} from "../src/lib/annual-review.ts";
+} from "../src/views/annual-review/pages.ts";
 
 describe("年度总结页面序列", () => {
   test("按抽卡和竞猜数据跳过不存在的页面", () => {

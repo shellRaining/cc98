@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import { normalizeFloorHash } from "../lib/route-params";
 import { saveLoginRedirect } from "../lib/login-redirect";
-import { isSiteAdministrator } from "../lib/site-manage";
-import { useUserStore } from "../stores/user";
+import { isSiteAdministrator, useUserStore } from "../stores/user";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -13,95 +12,95 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/topic/hot-weekly",
     name: "hot-weekly",
-    component: () => import("../views/HotTopicsView.vue"),
+    component: () => import("../views/discovery/HotTopicsView.vue"),
     meta: { hotPeriod: "weekly" },
   },
   {
     path: "/topic/hot-monthly",
     name: "hot-monthly",
-    component: () => import("../views/HotTopicsView.vue"),
+    component: () => import("../views/discovery/HotTopicsView.vue"),
     meta: { hotPeriod: "monthly" },
   },
   {
     path: "/topic/hot-history",
     name: "hot-history",
-    component: () => import("../views/HotTopicsView.vue"),
+    component: () => import("../views/discovery/HotTopicsView.vue"),
     meta: { hotPeriod: "history" },
   },
   {
     path: "/boards/:boardId/topics/new",
     name: "create-topic",
-    component: () => import("../views/CreateTopicView.vue"),
+    component: () => import("../views/writing/CreateTopicView.vue"),
     props: true,
     meta: { requiresAuth: true },
   },
   {
     path: "/posts/:postId/edit",
     name: "edit-post",
-    component: () => import("../views/EditPostView.vue"),
+    component: () => import("../views/writing/EditPostView.vue"),
     props: true,
     meta: { requiresAuth: true },
   },
   {
     path: "/topic/:topicId/:page?",
     name: "topic",
-    component: () => import("../views/TopicView.vue"),
+    component: () => import("../views/topic/TopicView.vue"),
     props: true,
   },
   {
     path: "/list/:boardId/:type?/:page?",
     name: "board",
-    component: () => import("../views/BoardView.vue"),
+    component: () => import("../views/board/BoardView.vue"),
     props: true,
   },
   {
     path: "/boardlist",
     name: "board-list",
-    component: () => import("../views/BoardListView.vue"),
+    component: () => import("../views/board/BoardListView.vue"),
   },
   {
     path: "/newtopics",
     name: "new-topics",
-    component: () => import("../views/NewTopicsView.vue"),
+    component: () => import("../views/discovery/NewTopicsView.vue"),
   },
   {
     path: "/focus",
     name: "focus",
-    component: () => import("../views/FocusView.vue"),
+    component: () => import("../views/discovery/FocusView.vue"),
     meta: { focusMode: "board" },
   },
   {
     path: "/focus/board",
     name: "focus-board",
-    component: () => import("../views/FocusView.vue"),
+    component: () => import("../views/discovery/FocusView.vue"),
     meta: { focusMode: "board" },
   },
   {
     path: "/focus/user",
     name: "focus-user",
-    component: () => import("../views/FocusView.vue"),
+    component: () => import("../views/discovery/FocusView.vue"),
     meta: { focusMode: "user" },
   },
   {
     path: "/focus/favorite",
     name: "focus-favorite",
-    component: () => import("../views/FocusView.vue"),
+    component: () => import("../views/discovery/FocusView.vue"),
     meta: { focusMode: "favorite" },
   },
   {
     path: "/recommendedtopics",
     name: "recommended-topics",
-    component: () => import("../views/RecommendedTopicsView.vue"),
+    component: () => import("../views/discovery/RecommendedTopicsView.vue"),
   },
   {
     path: "/search",
     name: "search-topics",
-    component: () => import("../views/SearchTopicsView.vue"),
+    component: () => import("../views/discovery/SearchTopicsView.vue"),
   },
   {
     path: "/searchBoard",
     name: "search-boards",
-    component: () => import("../views/SearchBoardsView.vue"),
+    component: () => import("../views/discovery/SearchBoardsView.vue"),
   },
   {
     path: "/search/boards",
@@ -113,7 +112,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/user/id/:userId/manage",
     name: "user-manage",
-    component: () => import("../views/UserManageView.vue"),
+    component: () => import("../views/user-manage/UserManageView.vue"),
     props: true,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
@@ -235,12 +234,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/annual-review-2025",
     name: "annual-review-2025",
-    component: () => import("../views/AnnualReviewView.vue"),
+    component: () => import("../views/annual-review/AnnualReviewView.vue"),
   },
   {
     path: "/sitemanage",
     name: "site-manage",
-    component: () => import("../views/SiteManageView.vue"),
+    component: () => import("../views/site-manage/SiteManageView.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
