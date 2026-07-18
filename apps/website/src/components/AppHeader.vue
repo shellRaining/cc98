@@ -12,6 +12,7 @@ import {
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { isSiteAdministrator, useUserStore } from "../stores/user";
 import UiBadge from "./ui/Badge.vue";
+import UiSelect, { type UiSelectOption } from "./ui/Select.vue";
 
 type SearchKind = "topic" | "within" | "user" | "board";
 
@@ -40,6 +41,12 @@ const contextBoardId = computed(() => {
   return null;
 });
 const hasBoardContext = computed(() => contextBoardId.value != null);
+const searchOptions = computed<UiSelectOption[]>(() => [
+  ...(hasBoardContext.value ? [{ value: "within", label: "版内" }] : []),
+  { value: "topic", label: hasBoardContext.value ? "全站" : "主题" },
+  { value: "user", label: "用户" },
+  { value: "board", label: "版面" },
+]);
 const { data: unreadCounts } = useQuery(
   computed(() => unreadCountsQuery(authScope.value, user.isLoggedIn)),
 );
@@ -73,6 +80,10 @@ function submitSearch() {
     void router.push(searchTopicsPath(value, contextBoardId.value));
   } else void router.push(searchTopicsPath(value));
 }
+
+function updateSearchKind(value: string | number) {
+  searchKind.value = value as SearchKind;
+}
 </script>
 
 <template>
@@ -93,12 +104,14 @@ function submitSearch() {
           </nav>
           <form class="header-search" role="search" @submit.prevent="submitSearch">
             <label class="sr-only" for="header-search-kind">搜索类型</label>
-            <select id="header-search-kind" v-model="searchKind">
-              <option v-if="hasBoardContext" value="within">版内</option>
-              <option value="topic">{{ hasBoardContext ? "全站" : "主题" }}</option>
-              <option value="user">用户</option>
-              <option value="board">版面</option>
-            </select>
+            <UiSelect
+              id="header-search-kind"
+              :model-value="searchKind"
+              :options="searchOptions"
+              aria-label="搜索类型"
+              variant="header"
+              @update:model-value="updateSearchKind"
+            />
             <input
               v-model="keyword"
               type="search"
@@ -106,11 +119,7 @@ function submitSearch() {
               aria-label="搜索内容"
             />
             <button type="submit" aria-label="搜索">
-              <svg aria-hidden="true" viewBox="0 0 24 24">
-                <path
-                  d="m21 20-4.4-4.4a7.5 7.5 0 1 0-1.4 1.4l4.4 4.4L21 20ZM5 11.5a6.5 6.5 0 1 1 13 0 6.5 6.5 0 0 1-13 0Z"
-                />
-              </svg>
+              <span class="i-fa-search" aria-hidden="true" />
             </button>
           </form>
         </div>
@@ -260,25 +269,23 @@ function submitSearch() {
 .site-header a:hover,
 .site-header button:hover {
   color: #fff;
-  text-decoration: underline;
 }
 
 .header-search {
   display: flex;
   align-items: center;
-  width: 30rem;
+  width: 32rem;
   height: 1.5rem;
-  margin-left: 0.25rem;
+  margin-left: 1rem;
   overflow: hidden;
+  padding-inline: 1rem;
   border-radius: 0.625rem;
   background: #fff;
   color: var(--cc98-color-primary);
 }
 
-.header-search select,
 .header-search input,
 .header-search button {
-  height: 100%;
   border: 0;
   background: transparent;
   color: var(--cc98-color-primary);
@@ -287,21 +294,20 @@ function submitSearch() {
   outline: none;
 }
 
-.header-search select {
-  width: 4.25rem;
-  padding-left: 0.75rem;
-  cursor: pointer;
-}
-
 .header-search input {
   min-width: 0;
+  height: 1.125rem;
   flex: 1;
-  padding-inline: 0.5rem;
+  padding: 0;
+  line-height: 1.125rem;
 }
 
 .header-search button {
   display: grid;
-  width: 2.25rem;
+  width: 0.7rem;
+  height: 100%;
+  padding: 0;
+  flex: none;
   place-items: center;
   cursor: pointer;
 }
@@ -311,10 +317,11 @@ function submitSearch() {
   text-decoration: none;
 }
 
-.header-search svg {
-  width: 1rem;
-  height: 1rem;
-  fill: currentcolor;
+.header-search .i-fa-search {
+  width: 0.7rem;
+  min-width: 0.7rem;
+  max-width: 0.7rem;
+  height: 0.75rem;
 }
 
 .site-header__account {
@@ -382,7 +389,7 @@ function submitSearch() {
   top: 3rem;
   right: 0;
   z-index: 100;
-  width: 9rem;
+  width: 8rem;
   max-height: 0;
   overflow: hidden;
   background: var(--cc98-color-primary);
@@ -410,13 +417,13 @@ function submitSearch() {
 }
 
 .site-header__message-dropdown > a {
-  display: grid;
+  position: relative;
+  display: flex;
   width: 100%;
   height: 2rem;
   align-items: center;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.5rem;
-  padding-inline: 0.75rem;
+  justify-content: center;
+  padding-inline: 2.25rem;
   color: #fff;
   white-space: nowrap;
 }
@@ -430,7 +437,8 @@ function submitSearch() {
 }
 
 .site-header__message-count {
-  justify-self: end;
+  position: absolute;
+  right: 0.75rem;
 }
 
 .site-header__message-dropdown > a:hover .site-header__message-count,

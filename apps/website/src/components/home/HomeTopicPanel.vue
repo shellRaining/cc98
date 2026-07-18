@@ -95,8 +95,4 @@ withDefaults(
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.home-topic-panel a:hover {
-  text-decoration: underline;
-}
 </style>

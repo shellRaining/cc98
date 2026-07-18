@@ -61,7 +61,6 @@ defineProps<{ items: IndexColumn[] }>();
 
 .home-function-link:hover {
   color: #fff;
-  text-decoration: underline;
 }
 
 .home-function-link img {

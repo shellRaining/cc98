@@ -563,10 +563,6 @@ function formatTime(value?: string | null) {
   color: #ff69b4;
 }
 
-.annual-review-copy a:hover {
-  text-decoration: underline;
-}
-
 .annual-review-greeting {
   font-weight: 700;
 }

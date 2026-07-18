@@ -1,6 +1,7 @@
 import {
   defineConfig,
   presetAttributify,
+  presetIcons,
   presetTypography,
   presetWebFonts,
   presetWind3,
@@ -12,6 +13,7 @@ export default defineConfig({
   presets: [
     presetWind3(),
     presetAttributify(),
+    presetIcons(),
     presetTypography(),
     presetWebFonts({
       provider: "none",
