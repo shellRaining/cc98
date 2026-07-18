@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { EmotionDescriptor } from "./resolveEmotionTag";
+import type { UbbEmotionDescriptor } from "@cc98/ubb";
 
 defineProps<{
-  emotion: EmotionDescriptor;
+  emotion: UbbEmotionDescriptor;
 }>();
 </script>
 

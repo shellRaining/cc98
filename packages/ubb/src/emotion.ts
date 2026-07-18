@@ -1,4 +1,4 @@
-export interface EmotionDescriptor {
+export interface UbbEmotionDescriptor {
   family:
     | "em"
     | "ac"
@@ -19,14 +19,14 @@ const FACE_GIFS = new Set([4, 9, 56, 61, 62, 87, 115, 120, 137, 168, 169, 175, 2
 const EMOTION_ASSET_BASE = "https://www.cc98.org/static/images";
 
 function descriptor(
-  family: EmotionDescriptor["family"],
+  family: UbbEmotionDescriptor["family"],
   code: string,
   src: string,
-): EmotionDescriptor {
+): UbbEmotionDescriptor {
   return { family, code, src, alt: `[${family}:${code}]` };
 }
 
-export function resolveEmotionTag(tag: string): EmotionDescriptor | null {
+export function resolveUbbEmotionTag(tag: string): UbbEmotionDescriptor | null {
   let match = tag.match(/^em(\d{2})$/);
   if (match) {
     const value = Number(match[1]);

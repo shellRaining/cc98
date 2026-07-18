@@ -1,5 +1,5 @@
+import { resolveUbbEmotionTag } from "@cc98/ubb";
 import { describe, expect, test } from "vite-plus/test";
-import { resolveEmotionTag } from "../../src/components/rich-content/ubb/emotion/index.ts";
 
 describe("UBB 表情标签族", () => {
   test.each([
@@ -16,13 +16,13 @@ describe("UBB 表情标签族", () => {
     ["f:004", "https://www.cc98.org/static/images/mahjong/face2017/004.gif"],
     ["f:208", "https://www.cc98.org/static/images/mahjong/face2017/208.png"],
   ])("解析 %s", (tag, src) => {
-    expect(resolveEmotionTag(tag)?.src).toBe(src);
+    expect(resolveUbbEmotionTag(tag)?.src).toBe(src);
   });
 
   test.each(["em92", "ac00", "ac1041", "ms00", "cc9800", "tb34", "a:017", "c:020", "f:209"])(
     "拒绝非法编号 %s",
     (tag) => {
-      expect(resolveEmotionTag(tag)).toBeNull();
+      expect(resolveUbbEmotionTag(tag)).toBeNull();
     },
   );
 });

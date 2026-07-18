@@ -18,6 +18,7 @@ describe("UBB 导出端到端组合", () => {
     expect(markdown).toContain("[相关帖子](/topic/123)");
     expect(markdown).toContain("| 姓名 | 分数 |");
     expect(markdown).toContain("`const answer = 42;`");
+    expect(markdown).toContain("![经典表情 01](https://www.cc98.org/static/images/em/em01.gif)");
     expect(markdown).not.toContain("[em01]");
   });
 

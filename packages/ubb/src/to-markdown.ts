@@ -7,12 +7,13 @@
  * - Markdown 能表达的：b/i/del/url/img/quote/code/line → 对应 Markdown 语法。
  * - Markdown 无法表达的：u/size/color/font/align 等 → 剥除样式保留内容。
  * - 富媒体/站内语义：audio/video/bili → 链接；user/topic/board → @提及/站内链接。
- * - 表情/权限标签：剥除为空字符串。
+ * - 表情标签：转为 CC98 官方资源的标准 Markdown 图片；权限标签剥除为空字符串。
  * - math/m/noubb/md：保留原文或转义后输出。
  */
-import type { UbbNode } from "./types.ts";
+import { resolveUbbEmotionTag, type UbbEmotionDescriptor } from "./emotion.ts";
 import { parseUbb } from "./parser.ts";
-import { getTagMode } from "./tags.ts";
+import { getTagMode, matchUbbRegexTagFamily } from "./tags.ts";
+import type { UbbNode } from "./types.ts";
 
 /**
  * 把 UBB 文本转成 Markdown 字符串。
@@ -114,12 +115,43 @@ function nodeToMarkdown(node: UbbNode): string {
   // 表格
   if (tag === "table") return tableToMarkdown(children);
 
-  // 表情 / 权限标签（Empty 模式）剥除为空字符串
+  const emotion = resolveUbbEmotionTag(tag);
+  if (emotion) return markdownImage(emotionMarkdownAlt(emotion), emotion.src);
+
+  // 能识别标签族但编号无效时保留原始 UBB，避免迁移时静默丢内容
+  if (matchUbbRegexTagFamily(tag)) return `[${tag}]`;
+
+  // 权限标签（Empty 模式）剥除为空字符串
   if (getTagMode(tag) === "empty") return "";
 
   // 其他已知标签（u/size/color/font/align/left/center/right/english/cursor/tr/td/th）：
   // 剥除样式保留内容
   return inner;
+}
+
+function markdownImage(alt: string, source: string): string {
+  return `![${alt}](${source})`;
+}
+
+function emotionMarkdownAlt(emotion: UbbEmotionDescriptor): string {
+  switch (emotion.family) {
+    case "em":
+      return `经典表情 ${emotion.code}`;
+    case "ac":
+      return `AC娘 ${emotion.code}`;
+    case "ms":
+      return `雀魂 ${emotion.code}`;
+    case "cc98":
+      return `CC98 ${emotion.code}`;
+    case "tb":
+      return `贴吧 ${emotion.code}`;
+    case "mahjong-animal":
+      return `麻将脸 动物 ${emotion.code}`;
+    case "mahjong-cartoon":
+      return `麻将脸 卡通 ${emotion.code}`;
+    case "mahjong-face":
+      return `麻将脸 ${emotion.code}`;
+  }
 }
 
 /**

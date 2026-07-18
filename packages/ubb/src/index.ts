@@ -2,6 +2,8 @@ export const UBB_VERSION = "0.0.0";
 
 export type { UbbNode, UbbTextNode, UbbTagNode, UbbAttrs } from "./types.ts";
 
+export { resolveUbbEmotionTag } from "./emotion.ts";
+export type { UbbEmotionDescriptor } from "./emotion.ts";
 export { parseUbb } from "./parser.ts";
 export {
   UBB_REGEX_TAG_FAMILIES,

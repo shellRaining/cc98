@@ -9,9 +9,10 @@
  * 分三类转换：
  * 1. Markdown 能直接表达的：b/i/del/url/img/quote/code/line。
  * 2. Markdown 无法表达的：剥除样式保留内容（u/size/color/font/align/left/
- *    center/right/english/cursor），表情和权限标签剥除为空字符串。
+ *    center/right/english/cursor），权限标签剥除为空字符串。
  * 3. 富媒体/站内语义降级：audio/mp3/video/bili/upload 降级为链接或地址，
- *    user/topic/board/pm 降级为 @提及或站内链接，math/m 保留 LaTeX 原文。
+ *    user/topic/board/pm 降级为 @提及或站内链接，表情转标准 Markdown 图片，
+ *    math/m 保留 LaTeX 原文。
  *
  * 测试基于 AST 版正确行为编写，会先失败（当前 src/index.ts 是旧正则 PoC，
  * 无法处理嵌套与多数标签），等 AST 版实现后通过。
@@ -200,20 +201,46 @@ describe("Text 模式标签", () => {
 });
 
 describe("表情和权限标签", () => {
-  test("[ac01] 表情剥除为空字符串", () => {
-    expect(ubbToMarkdown("[ac01]")).toBe("");
+  test("AC娘、雀魂和经典表情转为官方资源图片", () => {
+    expect(ubbToMarkdown("[ac01]")).toBe(
+      "![AC娘 01](https://www.cc98.org/static/images/ac/01.png)",
+    );
+    expect(ubbToMarkdown("[ms01]")).toBe(
+      "![雀魂 01](https://www.cc98.org/static/images/ms/ms01.png)",
+    );
+    expect(ubbToMarkdown("[em01]")).toBe(
+      "![经典表情 01](https://www.cc98.org/static/images/em/em01.gif)",
+    );
   });
 
-  test("[ms01]/[em01] 表情剥除为空字符串", () => {
-    expect(ubbToMarkdown("[ms01]")).toBe("");
-    expect(ubbToMarkdown("[em01]")).toBe("");
+  test("CC98 表情按编号选择 PNG 或 GIF", () => {
+    expect(ubbToMarkdown("[cc9814]")).toBe(
+      "![CC98 14](https://www.cc98.org/static/images/CC98/CC9814.gif)",
+    );
+    expect(ubbToMarkdown("[cc9815]")).toBe(
+      "![CC98 15](https://www.cc98.org/static/images/CC98/CC9815.png)",
+    );
   });
 
-  test("[cc9801]/[tb01]/[a:001]/[c:003] 表情剥除为空字符串", () => {
-    expect(ubbToMarkdown("[cc9801]")).toBe("");
-    expect(ubbToMarkdown("[tb01]")).toBe("");
-    expect(ubbToMarkdown("[a:001]")).toBe("");
-    expect(ubbToMarkdown("[c:003]")).toBe("");
+  test("贴吧和麻将脸转为对应格式的官方资源图片", () => {
+    expect(ubbToMarkdown("[tb01]")).toBe(
+      "![贴吧 01](https://www.cc98.org/static/images/tb/tb01.png)",
+    );
+    expect(ubbToMarkdown("[a:001]")).toBe(
+      "![麻将脸 动物 001](https://www.cc98.org/static/images/mahjong/animal2017/001.png)",
+    );
+    expect(ubbToMarkdown("[c:018]")).toBe(
+      "![麻将脸 卡通 018](https://www.cc98.org/static/images/mahjong/carton2017/018.gif)",
+    );
+    expect(ubbToMarkdown("[f:004]")).toBe(
+      "![麻将脸 004](https://www.cc98.org/static/images/mahjong/face2017/004.gif)",
+    );
+  });
+
+  test("非法表情编号保留原始标签", () => {
+    expect(ubbToMarkdown("[ac00]")).toBe("[ac00]");
+    expect(ubbToMarkdown("[em92]")).toBe("[em92]");
+    expect(ubbToMarkdown("[c:020]")).toBe("[c:020]");
   });
 
   test("[needreply]/[posteronly]/[allowviewer] 权限标签剥除为空字符串", () => {
@@ -222,9 +249,14 @@ describe("表情和权限标签", () => {
     expect(ubbToMarkdown("[allowviewer]")).toBe("");
   });
 
-  test("表情嵌入文本与连续表情剥除", () => {
-    expect(ubbToMarkdown("a[ac01]b")).toBe("ab");
-    expect(ubbToMarkdown("[ac01][ac02][em01]")).toBe("");
+  test("表情嵌入文本与连续表情保持标准图片语法", () => {
+    expect(ubbToMarkdown("a[ac01]b")).toBe(
+      "a![AC娘 01](https://www.cc98.org/static/images/ac/01.png)b",
+    );
+    expect(ubbToMarkdown("[ac01][em01]")).toBe(
+      "![AC娘 01](https://www.cc98.org/static/images/ac/01.png)" +
+        "![经典表情 01](https://www.cc98.org/static/images/em/em01.gif)",
+    );
   });
 });
 
@@ -283,13 +315,19 @@ describe("混合场景与容错", () => {
       ubbToMarkdown(
         "[b]大家好[/b]，分享 [url=https://cc98.org]主页[/url] 和 [img]http://x.com/a.png[/img][ac01]",
       ),
-    ).toBe("**大家好**，分享 [主页](https://cc98.org) 和 ![](http://x.com/a.png)");
+    ).toBe(
+      "**大家好**，分享 [主页](https://cc98.org) 和 ![](http://x.com/a.png)" +
+        "![AC娘 01](https://www.cc98.org/static/images/ac/01.png)",
+    );
   });
 
   test("完整段落：样式 + 站内链接 + 分割线 + 表情", () => {
     expect(
       ubbToMarkdown("[b]标题[/b]\n\n[i]正文[/i]，详见 [topic=99]这里[/topic]。[line][ac01]"),
-    ).toBe("**标题**\n\n_正文_，详见 [这里](/topic/99)。\n---");
+    ).toBe(
+      "**标题**\n\n_正文_，详见 [这里](/topic/99)。\n---\n" +
+        "![AC娘 01](https://www.cc98.org/static/images/ac/01.png)",
+    );
   });
 
   test("未闭合标签容错：[b] 降级为字面量", () => {
