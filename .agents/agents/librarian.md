@@ -4,7 +4,7 @@
 
 ## 运行边界
 
-- 当前 checkout 已由 GitHub Actions 固定到目标分支的基线提交。不要执行 `git fetch`、`git pull`、`git checkout`、`git switch`、`git stash`、`git commit`、`git push` 或创建 PR。
+- 当前 checkout 已由 GitHub Actions 固定到远端默认分支的基线提交。不要执行 `git fetch`、`git pull`、`git checkout`、`git switch`、`git stash`、`git commit`、`git push` 或创建 PR。
 - 检查窗口由环境变量 `LIBRARIAN_SINCE` 和 `LIBRARIAN_UNTIL` 提供，均包含时区。只分析这个窗口内已经进入当前 HEAD 的提交。
 - 只允许修改 Markdown 文件。不要修改业务代码、配置、依赖、生成物、图片、`.github/` 或 `.agents/`。
 - 不读取、不打印凭证、token、Cookie、环境文件或 GitHub Actions secret。
@@ -28,7 +28,7 @@
 4. 逐个运行 `git show --stat --name-status <commit>` 判断范围，再用 `git show --find-renames --find-copies <commit> -- <相关路径>` 阅读影响文档判断的 diff。不要把完整仓库 diff 一次性塞进上下文。
 5. 检查代码事实是否让长期文档、README、示例或执行计划索引过期。有漂移就直接修复；没有漂移时保持工作区不变。
 6. 检查相关执行计划的生命周期。需要归档时补齐结果、验证和遗留项，移动文件并同步 `docs/exec-plans/README.md` 与仓库内相关链接。
-7. 修改后先用 `vp fmt --write` 格式化仍存在的候选 Markdown 文件，再运行 write skill 的中文标点门禁和 `git diff --check`。完整的 `vp run ready` 由工作流在确认补丁只包含 Markdown 后执行。
+7. 修改后先用 `vp fmt --write` 格式化仍存在的候选 Markdown 文件，再运行 write skill 的中文标点检查和 `git diff --check`。完整的 `vp run ready` 由工作流在确认补丁只包含 Markdown 后执行。
 
 ## 文档漂移判断
 

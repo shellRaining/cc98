@@ -10,13 +10,9 @@ on:
         description: 要检查的北京时间日期，格式为 YYYY-MM-DD；留空时检查前一天
         required: false
         type: string
-  # 仅用于当前分支的首次远端验证，验证通过后删除。
-  push:
-    branches:
-      - codex/librarian-new-api-ci
 
 concurrency:
-  group: daily-librarian-${{ github.ref }}
+  group: daily-librarian
   cancel-in-progress: false
 
 jobs:
@@ -36,17 +32,16 @@ jobs:
       target_date: ${{ steps.window.outputs.target_date }}
       until: ${{ steps.window.outputs.until }}
     steps:
-      - name: Checkout 目标分支
+      - name: Checkout 默认分支
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event_name == 'push' && github.ref_name || github.event.repository.default_branch }}
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
           persist-credentials: false
 
       - name: 计算检查窗口
         id: window
         env:
-          EVENT_NAME: ${{ github.event_name }}
           MANUAL_DATE: ${{ inputs.date }}
         run: |
           if [[ -n "$MANUAL_DATE" ]]; then
@@ -56,8 +51,6 @@ jobs:
               exit 1
             fi
             target_date="$MANUAL_DATE"
-          elif [[ "$EVENT_NAME" == "push" ]]; then
-            target_date="2026-07-18"
           else
             target_date="$(date --date=yesterday +%F)"
           fi
@@ -76,7 +69,7 @@ jobs:
       - name: 记录无提交结果
         if: steps.window.outputs.commit_count == '0'
         run: |
-          echo "目标日期没有进入目标分支的提交，无需调用 Codex。" >> "$GITHUB_STEP_SUMMARY"
+          echo "目标日期没有进入默认分支的提交，无需调用 Codex。" >> "$GITHUB_STEP_SUMMARY"
           echo "HEAD: ${{ steps.window.outputs.base_sha }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: 配置 Vite+
@@ -241,7 +234,7 @@ jobs:
           git push origin "$branch"
 
           body="$(printf '%s\n\n%s\n%s\n%s\n%s' \
-            '每日 Librarian 根据目标分支提交生成了这份文档同步。' \
+            '每日 Librarian 根据默认分支提交生成了这份文档同步。' \
             "- 检查日期：$TARGET_DATE（Asia/Shanghai）" \
             "- 检查窗口：$LIBRARIAN_SINCE 至 $LIBRARIAN_UNTIL" \
             "- 基线提交：$BASE_SHA" \
