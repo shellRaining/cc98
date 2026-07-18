@@ -7,9 +7,9 @@ catalogMode: prefer
 catalog:
   "@types/node": ^24
   typescript: ^7
-  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vitest: 4.1.10
-  vite-plus: latest
+  vite-plus: 0.2.4
   vue: 3.6.0-beta.17
   vue-router: 5.2.0
   pinia: 3.0.4
@@ -51,6 +51,12 @@ peerDependencyRules:
     vite: "*"
     vitest: "*"
 allowBuilds:
+  agent-browser: true
+  cpu-features: false
+  ibm_db: false
+  kerberos: false
+  oracledb: false
+  ssh2: false
   vue-demi: true
 minimumReleaseAgeExclude:
   - "@unocss/cli@66.7.5"
@@ -75,3 +81,4 @@ minimumReleaseAgeExclude:
   - "@unocss/transformer-variant-group@66.7.5"
   - "@unocss/vite@66.7.5"
   - unocss@66.7.5
+  - agent-browser@0.32.2

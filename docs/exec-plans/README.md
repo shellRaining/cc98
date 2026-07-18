@@ -12,12 +12,13 @@
 
 ## 进行中的计划
 
-| 执行计划                                             | 状态     | 说明                                         |
-| ---------------------------------------------------- | -------- | -------------------------------------------- |
-| `active/2026-07-11-openapi-public-infrastructure.md` | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
-| `active/2026-07-13-milkdown-evaluation.md`           | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
-| `active/2026-07-17-user-documentation.md`            | 待实施   | 优先验证 VitePress，尚未创建文档应用         |
-| `active/2026-07-18-apifox-cli-integration.md`        | 待实施   | 尚未接入 CLI、同步命令和远端结构验证         |
+| 执行计划                                                         | 状态     | 说明                                         |
+| ---------------------------------------------------------------- | -------- | -------------------------------------------- |
+| `active/2026-07-11-openapi-public-infrastructure.md`             | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
+| `active/2026-07-13-milkdown-evaluation.md`                       | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
+| `active/2026-07-17-user-documentation.md`                        | 待实施   | 优先验证 VitePress，尚未创建文档应用         |
+| `active/2026-07-18-apifox-cli-integration.md`                    | 待实施   | 尚未接入 CLI、同步命令和远端结构验证         |
+| `active/2026-07-18-development-environment-worktree-contract.md` | 已实施   | 外部分支 worktree、稳定域名和启动契约已验证  |
 
 ## 已完成的计划
 

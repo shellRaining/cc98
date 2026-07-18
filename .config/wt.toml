@@ -1,0 +1,5 @@
+[[pre-start]]
+copy-local = "wt step copy-ignored --require-include"
+
+[[pre-start]]
+install = "vp install --frozen-lockfile --prefer-offline"

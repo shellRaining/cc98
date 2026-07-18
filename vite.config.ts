@@ -12,5 +12,13 @@ export default defineConfig({
   },
   run: {
     cache: true,
+    tasks: {
+      dev: {
+        command:
+          "PORTLESS_PORT=1355 PORTLESS_HTTPS=0 PORTLESS_SYNC_HOSTS=0 vp exec portless run --name cc98 vp run website#dev",
+        dependsOn: ["@cc98/api#build", "@cc98/ubb#build"],
+        cache: false,
+      },
+    },
   },
 });

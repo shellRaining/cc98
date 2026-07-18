@@ -4,17 +4,18 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { operationRegistry } from "../src/operations/index.ts";
+import { tokenResponseSchema } from "../src/schemas/auth.ts";
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const generatedDir = resolve(packageDir, "generated");
+const connectTokenUrl = "https://openid.cc98.org/connect/token";
+const oauthClientId = "9a1fd200-8687-44b1-4c20-08d50a96e5cd";
+const oauthClientSecret = "8b53f727-08e2-4509-8857-e34bf92b27f2";
+const oauthScope = "cc98-api openid offline_access";
 const mode = process.argv.includes("--authenticated") ? "authenticated" : "anonymous";
 const onlyOperation = process.argv.find((argument) => argument.startsWith("--only="))?.slice(7);
 const authRequiredOnly = process.argv.includes("--auth-required");
 const authBlockedOnly = process.argv.includes("--auth-blocked");
-let token = process.env.CC98_ACCESS_TOKEN;
-if (!token && process.env.CC98_ACCESS_TOKEN_FILE) {
-  token = (await readFile(resolve(process.env.CC98_ACCESS_TOKEN_FILE), "utf8")).trim();
-}
 let anonymousProbe = [];
 try {
   anonymousProbe = JSON.parse(
@@ -146,10 +147,35 @@ function requestWithCurl(url, headerPath) {
   });
 }
 
-try {
-  if (mode === "authenticated" && !token) {
-    throw new Error("authenticated 模式需要 CC98_ACCESS_TOKEN 或 CC98_ACCESS_TOKEN_FILE");
+async function requestAccessToken() {
+  const username = process.env.CC98_USERNAME;
+  const password = process.env.CC98_PASSWORD;
+  if (!username || !password) {
+    throw new Error("authenticated 模式需要 CC98_USERNAME 和 CC98_PASSWORD");
   }
+
+  const response = await fetch(connectTokenUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    signal: AbortSignal.timeout(20_000),
+    body: new URLSearchParams({
+      client_id: oauthClientId,
+      client_secret: oauthClientSecret,
+      grant_type: "password",
+      username,
+      password,
+      scope: oauthScope,
+    }),
+  });
+  if (!response.ok) throw new Error(`CC98 登录失败：${response.status}`);
+
+  const result = tokenResponseSchema.safeParse(await response.json());
+  if (!result.success) throw new Error("CC98 登录响应不符合 token 契约");
+  return result.data.access_token;
+}
+
+try {
+  const token = mode === "authenticated" ? await requestAccessToken() : undefined;
   if (token) {
     authHeaderDir = await mkdtemp(join(tmpdir(), "cc98-api-probe-"));
     authHeaderPath = resolve(authHeaderDir, "authorization-header");

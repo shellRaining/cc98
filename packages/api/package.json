@@ -17,7 +17,7 @@
     "build": "vp pack",
     "generate": "node scripts/generate.mjs && vp fmt generated --write",
     "probe:anonymous": "node scripts/probe.mjs",
-    "probe:authenticated": "CC98_ACCESS_TOKEN_FILE=../../.cc98-token.local node scripts/probe.mjs --authenticated --auth-blocked",
+    "probe:authenticated": "node --env-file-if-exists=../../.cc98-credentials.local scripts/probe.mjs --authenticated --auth-blocked",
     "test": "node scripts/check-generated.mjs && vp test",
     "check": "vp check"
   },
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "apifox-cli": "2.2.7",
     "typescript": "catalog:",
     "vite-plus": "catalog:"
   }

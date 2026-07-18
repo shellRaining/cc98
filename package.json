@@ -4,21 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:packages": "pnpm --filter @cc98/api run build && pnpm --filter @cc98/ubb run build",
-    "ready": "vp run -r build && vp check && pnpm run check:unused && vp run -r test",
-    "check:unused": "node scripts/check-unused.mjs",
-    "predev": "pnpm run build:packages",
-    "dev": "vp run website#dev",
+    "ready": "vp run -r build && vp check && knip --include exports,types && vp run -r test",
     "prepare": "vp config"
   },
   "devDependencies": {
+    "agent-browser": "0.32.2",
     "knip": "catalog:",
+    "portless": "0.15.4",
     "vite-plus": "catalog:"
   },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
       "version": "11.10.0",
+      "onFail": "download"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "24.18.0",
       "onFail": "download"
     }
   },

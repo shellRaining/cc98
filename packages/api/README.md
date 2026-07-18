@@ -18,8 +18,12 @@ CC98 API 的公共契约包，提供：
 
 旧 OpenAPI 已在迁移完成后删除。新增或修正契约时直接维护领域 Zod schema 和 operation registry，不再保留平行的历史规范。
 
-登录接口验证默认从仓库根目录的 `.cc98-token.local` 读取 bearer token。该文件已被 `*.local` 规则忽略，不会进入版本库；脚本不会打印或保存 token。
+登录接口验证从仓库根目录的 `.cc98-credentials.local` 读取 `CC98_USERNAME` 和 `CC98_PASSWORD`。该文件已被 `*.local` 规则忽略，不会进入版本库；Worktrunk 会按根目录 `.worktreeinclude` 把它复制到新 worktree。浏览器登录自动化也可以使用同一份凭证。
 
-探测时 bearer token 只写入权限为 `0600` 的临时 header 文件，并通过 `finally` 在正常结束或异常退出时统一删除。
+```bash
+vp run @cc98/api#probe:authenticated
+```
+
+API 探测每次运行时向 OpenID 服务换取短期 access token，不持久化 access token 或 refresh token。bearer token 只写入权限为 `0600` 的临时 header 文件，并通过 `finally` 在正常结束或异常退出时统一删除。普通环境检查不读取或打印凭证。
 
 历史写探测结果保留在 `generated/probe-write.json`。普通注册用户无法删除似水流年版面的测试内容，因此不再提供可重复执行的写探测脚本；获得可清理的测试环境后再重新设计。

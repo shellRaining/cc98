@@ -122,7 +122,7 @@ OpenID 规范中的 `POST /connect/token` 使用 `application/x-www-form-urlenco
 
 ### 阶段 1：确认 CLI 能力和权限
 
-- [ ] 使用 `pnpm exec apifox --help`、各子命令的 `--help` 和 `cli-schema` 查询当前 CLI 的真实参数，不按博客示例猜测。
+- [ ] 使用 `vp exec -F @cc98/api apifox --help`、各子命令的 `--help` 和 `cli-schema` 查询当前 CLI 的真实参数，不按博客示例猜测。
 - [ ] 确认 `import` 能否指定目标模块、导入策略和主分支。
 - [ ] 确认 `endpoint list/get`、`environment list/get` 的机器可读输出格式。
 - [ ] 确认 `folder` 或 endpoint 更新命令能否完成模块归类和受管资源清理。
@@ -148,9 +148,9 @@ OpenID 规范中的 `POST /connect/token` 使用 `application/x-www-form-urlenco
 建议的包级调用方式：
 
 ```bash
-pnpm --filter @cc98/api run apifox:check
-pnpm --filter @cc98/api run apifox:sync
-pnpm --filter @cc98/api run apifox:verify
+vp run @cc98/api#apifox:check
+vp run @cc98/api#apifox:sync
+vp run @cc98/api#apifox:verify
 ```
 
 ### 阶段 3：实现本地检查
@@ -194,17 +194,17 @@ pnpm --filter @cc98/api run apifox:verify
 
 ## 失败处理
 
-| 情况                           | 处理                                                                                |
-| ------------------------------ | ----------------------------------------------------------------------------------- |
-| CLI 未安装或版本不符           | `apifox:check` 失败，并提示运行 `vp install`                                        |
-| CLI 未登录                     | 提示用户执行 `pnpm --filter @cc98/api exec apifox auth login`，不接收用户粘贴 token |
-| 项目或主分支无权限             | 停止同步，提示用户调整 Apifox 权限                                                  |
-| 生成物过期                     | 停止同步，先修复源码并重新生成                                                      |
-| 主 API 导入失败                | 不继续导入 OpenID，保留 CLI 错误摘要                                                |
-| OpenID 导入失败                | 标记主 API 已变更，要求修复后重新运行完整同步                                       |
-| 回读发现重复或残留             | 同步失败，输出具体 endpoint 和模块，不忽略差异                                      |
-| Apifox 与 OpenAPI 表达能力不同 | 优先修正导入映射；若属于 CLI 限制，在计划中记录并暂停                               |
-| OpenAPI 本身有问题             | 修改 `src/schemas/` 或 `src/operations/`，重新生成、测试、同步                      |
+| 情况                           | 处理                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------- |
+| CLI 未安装或版本不符           | `apifox:check` 失败，并提示运行 `vp install`                                |
+| CLI 未登录                     | 提示用户执行 `vp exec -F @cc98/api apifox auth login`，不接收用户粘贴 token |
+| 项目或主分支无权限             | 停止同步，提示用户调整 Apifox 权限                                          |
+| 生成物过期                     | 停止同步，先修复源码并重新生成                                              |
+| 主 API 导入失败                | 不继续导入 OpenID，保留 CLI 错误摘要                                        |
+| OpenID 导入失败                | 标记主 API 已变更，要求修复后重新运行完整同步                               |
+| 回读发现重复或残留             | 同步失败，输出具体 endpoint 和模块，不忽略差异                              |
+| Apifox 与 OpenAPI 表达能力不同 | 优先修正导入映射；若属于 CLI 限制，在计划中记录并暂停                       |
+| OpenAPI 本身有问题             | 修改 `src/schemas/` 或 `src/operations/`，重新生成、测试、同步              |
 
 ## 验收标准
 
