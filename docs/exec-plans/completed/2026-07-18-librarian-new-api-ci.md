@@ -1,6 +1,6 @@
 # Librarian New API CI 接入
 
-> 状态：实施中。需要把执行计划收尾规则和每日文档巡检迁入独立分支，使用现有 New API Responses 服务完成 GitHub Actions 真实验证。
+> 状态：已完成。执行计划收尾规则、每日文档巡检和 New API 自动 PR 链路已经落地，并通过本地与远端验证。
 
 ## 背景
 
@@ -36,9 +36,9 @@ GitHub Actions 把 New API token 通过 `openai-api-key` 输入交给 Codex Resp
 - [x] 编写 Librarian 提示词与质量文档。
 - [x] 新增使用 New API Responses endpoint 的 GitHub Actions 工作流。
 - [x] 通过本地 YAML、shell、标点和 `vp run ready` 验证。
-- [ ] 配置 GitHub Actions secret，推送测试分支并观察真实运行。
-- [ ] 修复远端问题，确认 Librarian 能生成补丁和 PR。
-- [ ] 删除临时测试触发，完成最终验证并归档本计划。
+- [x] 配置 GitHub Actions secret，推送测试分支并观察真实运行。
+- [x] 修复远端问题，确认 Librarian 能生成补丁和 PR。
+- [x] 删除临时测试触发，完成最终验证并归档本计划。
 
 ## 验证
 
@@ -50,9 +50,15 @@ GitHub Actions 把 New API token 通过 `openai-api-key` 输入交给 Codex Resp
 
 本地验证结果：
 
-- Ruby Psych 成功解析 workflow YAML，7 个 `run` shell block 均通过 `bash -n`。
+- Ruby Psych 成功解析 workflow YAML，8 个 `run` shell block 均通过 `bash -n`。
 - `AGENTS.md`、执行计划规则、质量文档、Librarian 提示词和本计划通过 write skill 中文标点门禁。
 - `git diff --check` 和 `vp run ready` 通过，覆盖构建、format、lint、类型检查、Knip 与 484 个测试。
+
+远端验证结果：
+
+- Actions 运行 `29643808528` 通过，自定义 New API endpoint 上的 `gpt-5.6-sol-fast` 成功完成文档审计。
+- Codex 生成的补丁只包含 Markdown，路径白名单、Oxfmt 和 `vp run ready` 均通过。
+- 工作流创建测试 PR `#2`，基于测试分支更新 API README、归档开发环境计划并同步索引；检查完成后已关闭测试 PR 并删除它的远端分支。
 
 ## 进展与调整
 
@@ -62,6 +68,18 @@ GitHub Actions 把 New API token 通过 `openai-api-key` 输入交给 Codex Resp
 - 2026-07-18：核对 `openai/codex-action@v1` 的 action 定义，确认它支持自定义 `responses-api-endpoint` 和 `model`，且 bearer token 只进入本地 Responses API proxy。
 - 2026-07-18：完成本地 YAML、shell、标点和全量质量门禁验证。新 worktree 首次直接运行 `vp check` 时缺少内部包构建产物，`vp run ready` 按任务顺序先构建内部包后全部通过，GitHub workflow 使用相同顺序。
 - 2026-07-18：首次远端运行成功调用 New API 上的 Codex，生成的补丁通过 Markdown 白名单，正确更新 API README、归档开发环境计划并保留尚未完成的 Librarian 计划。质量门禁因索引表格尚未经过 Oxfmt 而失败，工作流改为只格式化候选 Markdown 后再执行 `vp run ready`，并把删除文件纳入路径白名单检查。
+- 2026-07-18：第二次远端运行完成 Codex、补丁白名单、格式化、全量质量门禁、artifact 传递、bot 分支推送和 PR 创建，随后删除临时 push 触发并恢复默认分支 checkout。
+
+## 结果
+
+- Agent 收尾规则现在会逐项核对关联执行计划，完成时必须补齐记录、归档文件并同步索引。
+- 每日 Librarian 在北京时间 00:30 检查前一个完整自然日，也支持手动指定日期；没有提交或没有漂移时不创建 PR。
+- Codex 使用仓库 Secret 中的专用 New API token，通过 Action 的 Responses API proxy 访问自定义 provider。
+- 模型任务只有仓库读权限，PR 任务不接收模型凭据；补丁只允许 Markdown，并通过格式化和 `vp run ready` 后才会创建 PR。
+
+## 遗留项
+
+- GitHub Actions 使用独立的 New API token，后续由仓库管理员按常规凭证周期轮换，不与本机 Codex 配置共用。
 
 ## 决策记录
 

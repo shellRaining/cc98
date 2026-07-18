@@ -34,7 +34,6 @@
 | `active/2026-07-17-user-documentation.md`                        | 待实施   | 优先验证 VitePress，尚未创建文档应用         |
 | `active/2026-07-18-apifox-cli-integration.md`                    | 待实施   | 尚未接入 CLI、同步命令和远端结构验证         |
 | `active/2026-07-18-development-environment-worktree-contract.md` | 已实施   | 外部分支 worktree、稳定域名和启动契约已验证  |
-| `active/2026-07-18-librarian-new-api-ci.md`                      | 实施中   | 配置每日文档巡检并验证 New API 远端链路      |
 
 ## 已完成的计划
 
@@ -52,6 +51,7 @@
 | `completed/2026-07-13-style-system.md`                    | 设计系统与换肤地基已完成，基础组件后续按需扩展 |
 | `completed/2026-07-16-full-fidelity-migration.md`         | 阶段 8 与最终浏览器矩阵已验收                  |
 | `completed/2026-07-18-css-ownership-migration.md`         | 业务 CSS 已迁回对应 SFC，全站对照通过          |
+| `completed/2026-07-18-librarian-new-api-ci.md`            | New API 每日文档巡检和自动 PR 链路已验证       |
 | `completed/2026-07-18-frontend-migration-roadmap.md`      | 阶段 0 至阶段 8 的迁移历史与完成审计           |
 | `completed/2026-07-18-website-lib-ownership-migration.md` | 业务 `lib` 已收敛，路由页和私有组件按域归位    |
 
