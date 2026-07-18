@@ -1,0 +1,43 @@
+name: 反馈问题
+description: 页面出错、功能异常或显示不对，都可以从这里反馈
+title: "[问题] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请简单描述你遇到的问题，不确定的信息可以留空。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 发生了什么？
+      placeholder: 请描述你看到了什么，以及你原本希望发生什么。
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎么出现的？
+      description: 写下操作步骤，方便我们复现问题。
+      placeholder: |
+        1. 进入个人中心
+        2. 点击修改头像
+        3. 点击选择论坛头像
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图或录屏
+      description: 可以直接把图片或视频拖进输入框，不方便提供时留空即可。
+
+  - type: input
+    id: environment
+    attributes:
+      label: 使用环境
+      description: 不清楚时可以留空。
+      placeholder: 比如 Chrome、Safari，电脑或手机
