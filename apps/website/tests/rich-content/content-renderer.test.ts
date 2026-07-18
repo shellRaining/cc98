@@ -90,6 +90,15 @@ describe("ContentRenderer", () => {
     expect(html).toContain("脚注");
   });
 
+  test("Markdown 行内公式和块公式使用 KaTeX 渲染", async () => {
+    const html = await renderContent("行内 $E=mc^2$\n\n$$\na^2+b^2=c^2\n$$", "markdown");
+
+    expect(html).toContain("katex");
+    expect(html).toContain("katex-display");
+    expect(html).toContain("E=mc");
+    expect(html).not.toContain("$$");
+  });
+
   test("UBB 代码保留旧站行号并去掉首尾空行", async () => {
     const html = await renderContent("[code]\n第一行\n\n第三行\n[/code]");
     expect(html).toContain("ubb-code-block");

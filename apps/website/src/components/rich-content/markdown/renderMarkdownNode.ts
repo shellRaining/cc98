@@ -14,6 +14,7 @@ import type { RichContentOptions } from "../types";
 import UniverseCodeBlock from "../universe/UniverseCodeBlock.vue";
 import UniverseImage from "../universe/UniverseImage.vue";
 import UniverseLink from "../universe/UniverseLink.vue";
+import UniverseMath from "../universe/UniverseMath.vue";
 import UniverseQuote from "../universe/UniverseQuote.vue";
 
 interface MarkdownRenderContext {
@@ -169,6 +170,10 @@ function renderMarkdownNode(node: Nodes, context: MarkdownRenderContext): VNodeC
         { class: "rounded bg-cc98-surface px-1 py-0.5 font-mono text-sm" },
         node.value,
       );
+    case "inlineMath":
+      return h(UniverseMath, { content: node.value, inline: true });
+    case "math":
+      return h(UniverseMath, { content: node.value });
     case "code":
       return h(UniverseCodeBlock, {
         code: node.value,

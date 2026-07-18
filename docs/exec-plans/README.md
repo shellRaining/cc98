@@ -55,6 +55,7 @@
 | `completed/2026-07-18-development-environment-worktree-contract.md` | Worktree、Vite+ 和稳定域名开发契约已验收           |
 | `completed/2026-07-18-librarian-new-api-ci.md`                      | New API 每日文档巡检和自动 PR 链路已验证           |
 | `completed/2026-07-18-milkdown-remark-migration.md`                 | 编辑器与阅读解析已统一迁移到 Milkdown 和 remark    |
+| `completed/2026-07-18-crepe-editor-experiment.md`                   | Crepe 按需组合与编辑体验验收完成                   |
 | `completed/2026-07-18-frontend-migration-roadmap.md`                | 阶段 0 至阶段 8 的迁移历史与完成审计               |
 | `completed/2026-07-18-website-lib-ownership-migration.md`           | 业务 `lib` 已收敛，路由页和私有组件按域归位        |
 | `completed/2026-07-22-image-asset-organization.md`                  | 图片按业务所有权归档，`public` 收敛为固定 URL 资源 |
