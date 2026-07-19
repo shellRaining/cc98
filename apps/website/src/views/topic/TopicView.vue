@@ -16,10 +16,10 @@ import {
   boardTagsQuery,
   fullUsersByIdsQuery,
   homepageAdvertisementsQuery,
-  topicFilteredPostsQuery,
   topicHotPostsQuery,
   topicPostsQuery,
   topicQuery,
+  topicTracedPostsQuery,
 } from "../../api/queries";
 import FullPageStatus from "../../components/FullPageStatus.vue";
 import HomeAdvertisement from "../../components/home/HomeAdvertisement.vue";
@@ -180,11 +180,9 @@ const postsOptions = computed(() =>
 );
 const regularPostsQuery = useQuery(postsOptions);
 
-const filteredMode = computed(() => (filter.value.mode === "all" ? "user" : filter.value.mode));
 const filteredPostsOptions = computed(() =>
-  topicFilteredPostsQuery(
+  topicTracedPostsQuery(
     numericTopicId.value ?? 0,
-    filteredMode.value,
     filter.value.targetId ?? 0,
     authScope.value,
     from.value,
@@ -194,9 +192,8 @@ const filteredPostsOptions = computed(() =>
 );
 const filteredPostsQuery = useQuery(filteredPostsOptions);
 const filteredCountOptions = computed(() =>
-  topicFilteredPostsQuery(
+  topicTracedPostsQuery(
     numericTopicId.value ?? 0,
-    filteredMode.value,
     filter.value.targetId ?? 0,
     authScope.value,
     0,
@@ -236,7 +233,7 @@ watch(
       });
     }
   },
-  { flush: "post" },
+  { flush: "post", immediate: true },
 );
 
 const hotPostsOptions = computed(() =>
@@ -274,14 +271,22 @@ const postUserMap = computed(
 
 const advertisementsQuery = useQuery(homepageAdvertisementsQuery);
 const advertisements = computed(() => visibleHomepageColumns(advertisementsQuery.data.value ?? []));
+const locatedFloorHash = ref<string | null>(null);
 
 watch(
-  [() => route.hash, displayedPosts, hotPosts],
+  [() => route.hash, () => displayedPosts.value.length, () => hotPosts.value.length],
   async ([hash]) => {
     const target = normalizeFloorHash(hash);
-    if (!target) return;
+    if (!target) {
+      locatedFloorHash.value = null;
+      return;
+    }
+    if (locatedFloorHash.value === target) return;
     await nextTick();
-    document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const element = document.getElementById(target);
+    if (!element) return;
+    element.scrollIntoView({ block: "center" });
+    locatedFloorHash.value = target;
   },
   { flush: "post" },
 );
@@ -340,7 +345,6 @@ const replyTarget = computed(() => {
 });
 const filterDescription = computed(() => {
   if (filter.value.mode === "trace") return "正在追踪与该楼层相关的回复";
-  if (filter.value.mode === "user") return "当前只显示此人的回复";
   return "";
 });
 
@@ -377,15 +381,6 @@ function quotePost(post: Post) {
   void nextTick(() =>
     document.getElementById("reply-editor")?.scrollIntoView({ behavior: "smooth" }),
   );
-}
-
-function showOnlyUser(post: Post) {
-  if (post.isAnonymous || post.userId == null) return;
-  void router.push({
-    name: "topic",
-    params: { topicId: props.topicId },
-    query: topicViewQuery("user", post.userId),
-  });
 }
 
 function tracePost(post: Post) {
@@ -601,7 +596,6 @@ onBeforeUnmount(() => {
             :user="post.userId ? postUserMap.get(post.userId) : undefined"
             :can-manage="canModeratePosts"
             @reply="quotePost"
-            @filter-user="showOnlyUser"
             @trace="tracePost"
             @manage="openPostModeration"
           >
@@ -623,7 +617,6 @@ onBeforeUnmount(() => {
               :can-manage="canModeratePosts"
               hot
               @reply="quotePost"
-              @filter-user="showOnlyUser"
               @trace="tracePost"
               @manage="openPostModeration"
             />

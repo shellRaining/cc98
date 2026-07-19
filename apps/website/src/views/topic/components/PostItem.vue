@@ -17,7 +17,6 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{
   reply: [post: Post];
-  filterUser: [post: Post];
   trace: [post: Post];
   manage: [post: Post];
 }>();
@@ -122,14 +121,6 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
         <div class="topic-post__operations">
           <PostActions :post="post" />
           <UiButton variant="text" type="button" @click="emit('reply', post)">引用</UiButton>
-          <UiButton
-            v-if="!post.isAnonymous && post.userId"
-            variant="text"
-            type="button"
-            @click="emit('filterUser', post)"
-          >
-            只看此人
-          </UiButton>
           <UiButton variant="text" type="button" @click="emit('trace', post)">追踪</UiButton>
           <RouterLink
             v-if="post.isMe"
@@ -155,7 +146,9 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
       :class="{ 'topic-post__floor--hot': hot }"
       :title="hot ? '最热回复' : `第 ${floor} 楼`"
     >
-      {{ hot ? "热" : floor }}
+      <span v-if="hot" class="i-heroicons-fire-solid topic-post__hot-icon" aria-hidden="true" />
+      <span v-if="hot" class="sr-only">最热回复</span>
+      <template v-else>{{ floor }}</template>
     </a>
     <span v-if="post.isLZ && floor > 1 && !hot" class="topic-post__floor topic-post__floor--lz">
       楼主
@@ -176,8 +169,10 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   scroll-margin-top: 4rem;
 }
 
-.topic-post--hot {
-  border-color: #ff4040;
+.topic-post:target {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--cc98-color-primary) 45%, transparent),
+    0 0.5rem 1.5rem rgb(0 0 0 / 18%);
 }
 
 .topic-post__user {
@@ -188,10 +183,6 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   background: var(--cc98-color-primary);
   color: #fff;
   font-size: 0.75rem;
-}
-
-.topic-post--hot .topic-post__user {
-  background: #ff4040;
 }
 
 .topic-post__user-copy {
@@ -432,14 +423,14 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 }
 
 .topic-post__operations,
-.topic-post__operations > div {
+.topic-post__operations > div:not(.post-reactions) {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
   gap: 0.5rem;
 }
 
-.topic-post__operations :deep(button),
+.topic-post__operations :deep(button:not(.post-reaction)),
 .topic-post__operation-link,
 .topic-post__operation-link:visited {
   display: inline-grid;
@@ -457,7 +448,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   white-space: nowrap;
 }
 
-.topic-post__operations :deep(button:hover),
+.topic-post__operations :deep(button:not(.post-reaction):hover),
 .topic-post__operation-link:hover {
   background: var(--cc98-color-primary);
   color: #fff;
@@ -481,7 +472,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 .topic-post__floor {
   position: absolute;
   top: 4.375rem;
-  right: -0.8rem;
+  right: calc(-1.25rem - 1px);
   display: grid;
   width: 2.5rem;
   height: 2.5rem;
@@ -499,6 +490,10 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 
 .topic-post__floor--hot {
   background: #ff4040;
+}
+
+.topic-post__hot-icon {
+  font-size: 1.2rem;
 }
 
 .topic-post__floor--lz {

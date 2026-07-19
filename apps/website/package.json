@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@iconify-json/fa": "catalog:",
+    "@iconify-json/heroicons": "catalog:",
     "@types/markdown-it": "catalog:",
     "@unocss/preset-attributify": "catalog:",
     "@unocss/preset-icons": "catalog:",

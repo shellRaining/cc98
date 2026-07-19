@@ -1,6 +1,6 @@
 import { parsePositiveInt } from "../../lib/route-params.ts";
 
-export type TopicPostMode = "all" | "user" | "trace";
+export type TopicPostMode = "all" | "trace";
 
 export function resolveTopicPostFilter(query: Record<string, unknown>): {
   mode: TopicPostMode;
@@ -8,14 +8,11 @@ export function resolveTopicPostFilter(query: Record<string, unknown>): {
 } {
   const traceId = parsePositiveInt(typeof query.postId === "string" ? query.postId : null);
   if (traceId != null) return { mode: "trace", targetId: traceId };
-  const userId = parsePositiveInt(typeof query.userId === "string" ? query.userId : null);
-  if (userId != null) return { mode: "user", targetId: userId };
   return { mode: "all" };
 }
 
 export function topicViewQuery(mode: TopicPostMode, targetId?: number) {
   if (mode === "trace" && targetId) return { postId: String(targetId) };
-  if (mode === "user" && targetId) return { userId: String(targetId) };
   return {};
 }
 

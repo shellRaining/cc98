@@ -178,27 +178,23 @@ export const topicPostsQuery = (
     enabled: enabled && topicId > 0,
   });
 
-export const topicFilteredPostsQuery = (
+export const topicTracedPostsQuery = (
   topicId: number,
-  mode: "user" | "trace",
-  targetId: number,
+  postId: number,
   authScope: AuthScope,
   from = 0,
   size = 10,
   enabled = true,
 ) =>
   queryOptions({
-    queryKey: queryKeys.topicFilteredPosts(topicId, mode, targetId, from, size, authScope),
+    queryKey: queryKeys.topicTracedPosts(topicId, postId, from, size, authScope),
     queryFn: async () => {
-      const url = mode === "user" ? "/post/topic/user" : "/post/topic/specific-user";
-      const query =
-        mode === "user"
-          ? { topicid: topicId, userid: targetId, from, size }
-          : { topicid: topicId, postid: targetId, from, size };
-      const data = await typedGet<unknown[]>(url, { query });
+      const data = await typedGet<unknown[]>("/post/topic/specific-user", {
+        query: { topicid: topicId, postid: postId, from, size },
+      });
       return postSchema.array().parse(data);
     },
-    enabled: enabled && topicId > 0 && targetId > 0,
+    enabled: enabled && topicId > 0 && postId > 0,
   });
 
 export const topicHotPostsQuery = (topicId: number, authScope: AuthScope, enabled = true) =>

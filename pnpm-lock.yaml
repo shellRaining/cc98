@@ -208,6 +208,9 @@ catalogs:
     '@iconify-json/fa':
       specifier: 1.2.2
       version: 1.2.2
+    '@iconify-json/heroicons':
+      specifier: ^1.2.3
+      version: 1.2.3
     '@microsoft/signalr':
       specifier: 10.0.0
       version: 10.0.0
@@ -410,6 +413,9 @@ importers:
       '@iconify-json/fa':
         specifier: 'catalog:'
         version: 1.2.2
+      '@iconify-json/heroicons':
+        specifier: 'catalog:'
+        version: 1.2.3
       '@types/markdown-it':
         specifier: 'catalog:'
         version: 14.1.2
@@ -699,6 +705,9 @@ packages:
 
   '@iconify-json/fa@1.2.2':
     resolution: {integrity: sha512-Rw0L97uO3W0Gy2rq4cM/TH3QjzuPuRca1F2steumZ57zOeheGQdiqo50O6KHjm+WgImmV92IFPUTU6eiaJsrTw==}
+
+  '@iconify-json/heroicons@1.2.3':
+    resolution: {integrity: sha512-n+vmCEgTesRsOpp5AB5ILB6srsgsYK+bieoQBNlafvoEhjVXLq8nIGN4B0v/s4DUfa0dOrjwE/cKJgIKdJXOEg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -4809,6 +4818,10 @@ snapshots:
       - vue
 
   '@iconify-json/fa@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/heroicons@1.2.3':
     dependencies:
       '@iconify/types': 2.0.0
 
