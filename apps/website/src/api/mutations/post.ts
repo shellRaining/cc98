@@ -1,6 +1,7 @@
 import {
   createPostRequestSchema,
   editPostRequestSchema,
+  likeSchema,
   postLikeActionSchema,
   postRatingRequestSchema,
   numericIdResponseSchema,
@@ -11,8 +12,8 @@ import {
   type PostLikeAction,
   type PostRatingRequest,
 } from "@cc98/api";
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { typedPost, typedPut } from "../../lib/http";
+import { type QueryClient, type QueryKey, useMutation, useQueryClient } from "@tanstack/vue-query";
+import { typedGet, typedPost, typedPut } from "../../lib/http";
 import { queryKeys, type AuthScope } from "../queries/index.ts";
 
 export function nextLikeState(current: Like, action: PostLikeAction): Like {
@@ -50,11 +51,32 @@ interface LikePostVariables {
   action: PostLikeAction;
 }
 
+interface LikePostMutationContext {
+  previousQueries: Array<[QueryKey, Post[] | undefined]>;
+}
+
 interface RatePostVariables {
   postId: number;
   topicId: number;
   authScope: AuthScope;
   payload: PostRatingRequest;
+}
+
+function topicPostQueryRoots(topicId: number) {
+  return [queryKeys.topicPostsRoot(topicId), queryKeys.topicHotPostsRoot(topicId)];
+}
+
+function setCachedPostLikeState(
+  queryClient: QueryClient,
+  topicId: number,
+  postId: number,
+  state: Like,
+) {
+  for (const queryKey of topicPostQueryRoots(topicId)) {
+    queryClient.setQueriesData<Post[]>({ queryKey }, (posts) =>
+      posts?.map((post) => (post.id === postId ? { ...post, ...state } : post)),
+    );
+  }
 }
 
 export function useCreatePostMutation() {
@@ -102,34 +124,49 @@ export function useEditPostMutation() {
   });
 }
 
-export function useLikePostMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
+export function createLikePostMutationOptions(queryClient: QueryClient) {
+  return {
     retry: 0,
     mutationFn: async ({ postId, action }: LikePostVariables) => {
       const body = postLikeActionSchema.parse(action);
       await typedPut<void>(`/post/${postId}/like`, body);
     },
-    onMutate: async ({ postId, topicId, action }) => {
-      const queryKey = queryKeys.topicPostsRoot(topicId);
-      await queryClient.cancelQueries({ queryKey });
-      const previousQueries = queryClient.getQueriesData<Post[]>({ queryKey });
-      queryClient.setQueriesData<Post[]>({ queryKey }, (posts) =>
-        posts?.map((post) =>
-          post.id === postId ? { ...post, ...nextLikeState(post, action) } : post,
-        ),
+    onMutate: async ({ postId, topicId, action }: LikePostVariables) => {
+      const queryRoots = topicPostQueryRoots(topicId);
+      await Promise.all(queryRoots.map((queryKey) => queryClient.cancelQueries({ queryKey })));
+      const previousQueries = queryRoots.flatMap((queryKey) =>
+        queryClient.getQueriesData<Post[]>({ queryKey }),
       );
+      const current = previousQueries
+        .flatMap(([, posts]) => posts ?? [])
+        .find((post) => post.id === postId);
+      if (current) {
+        setCachedPostLikeState(queryClient, topicId, postId, nextLikeState(current, action));
+      }
       return { previousQueries };
     },
-    onError: (_error, _variables, context) => {
+    onError: (
+      _error: Error,
+      _variables: LikePostVariables,
+      context: LikePostMutationContext | undefined,
+    ) => {
       for (const [queryKey, posts] of context?.previousQueries ?? []) {
         queryClient.setQueryData(queryKey, posts);
       }
     },
-    onSettled: async (_data, _error, { topicId }) => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.topicPostsRoot(topicId) });
+    onSuccess: async (_data: void, { postId, topicId }: LikePostVariables) => {
+      try {
+        const data = await typedGet<unknown>(`/post/${postId}/like`);
+        setCachedPostLikeState(queryClient, topicId, postId, likeSchema.parse(data));
+      } catch {
+        // PUT 已成功时保留乐观状态，单独状态接口会在下次交互时再次校正。
+      }
     },
-  });
+  };
+}
+
+export function useLikePostMutation() {
+  return useMutation(createLikePostMutationOptions(useQueryClient()));
 }
 
 export function useRatePostMutation() {

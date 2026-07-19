@@ -37,16 +37,16 @@ export const queryKeys = {
   topicIpGroups: (id: number, authScope: AuthScope) => ["topic", id, "ip", authScope] as const,
   topicPosts: (topicId: number, from: number, size: number, authScope: AuthScope) =>
     ["topic", topicId, "posts", from, size, authScope] as const,
-  topicFilteredPosts: (
+  topicTracedPosts: (
     topicId: number,
-    mode: "user" | "trace",
-    targetId: number,
+    postId: number,
     from: number,
     size: number,
     authScope: AuthScope,
-  ) => ["topic", topicId, "posts", mode, targetId, from, size, authScope] as const,
+  ) => ["topic", topicId, "posts", "trace", postId, from, size, authScope] as const,
   topicHotPosts: (topicId: number, authScope: AuthScope) =>
     ["topic", topicId, "hot-posts", authScope] as const,
+  topicHotPostsRoot: (topicId: number) => ["topic", topicId, "hot-posts"] as const,
   topicPostsRoot: (topicId: number) => ["topic", topicId, "posts"] as const,
   postRewardDailyRecord: (boardId: number, authScope: AuthScope) =>
     ["post", "reward-daily-record", boardId, authScope] as const,

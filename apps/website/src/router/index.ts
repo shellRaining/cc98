@@ -297,8 +297,8 @@ export const router = createRouter({
     if (savedPosition) return savedPosition;
     if (_to.hash) {
       const floorHash = normalizeFloorHash(_to.hash);
-      const el = floorHash ? `#${floorHash}` : _to.hash;
-      return { el, behavior: "smooth" };
+      if (floorHash) return false;
+      return { el: _to.hash };
     }
     return { top: 0 };
   },

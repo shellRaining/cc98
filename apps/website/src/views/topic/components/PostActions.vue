@@ -38,6 +38,7 @@ function goLogin() {
 }
 
 async function react(action: PostLikeAction) {
+  if (likePost.isPending.value) return;
   errorMessage.value = "";
   if (!user.isLoggedIn) {
     goLogin();
@@ -62,28 +63,91 @@ async function react(action: PostLikeAction) {
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+  <div class="post-reactions">
     <UiButton
       variant="text"
       size="sm"
-      :class="{ 'font-semibold text-cc98-primary': state === 1 }"
-      :disabled="likePost.isPending.value"
+      class="post-reaction"
+      :class="{ 'post-reaction--active': state === 1 }"
+      :aria-disabled="likePost.isPending.value"
       :aria-pressed="state === 1"
+      :aria-label="state === 1 ? `取消赞，当前 ${likeCount} 个赞` : `赞，当前 ${likeCount} 个赞`"
       @click="react('1')"
     >
-      赞 {{ likeCount }}
+      <span
+        v-if="state === 1"
+        class="i-heroicons-hand-thumb-up-solid post-reaction__icon"
+        aria-hidden="true"
+      />
+      <span v-else class="i-heroicons-hand-thumb-up post-reaction__icon" aria-hidden="true" />
+      <span>{{ likeCount }}</span>
     </UiButton>
     <UiButton
       variant="text"
       size="sm"
-      :class="{ 'font-semibold text-cc98-primary': state === 2 }"
-      :disabled="likePost.isPending.value"
+      class="post-reaction"
+      :class="{ 'post-reaction--active': state === 2 }"
+      :aria-disabled="likePost.isPending.value"
       :aria-pressed="state === 2"
+      :aria-label="
+        state === 2 ? `取消踩，当前 ${dislikeCount} 个踩` : `踩，当前 ${dislikeCount} 个踩`
+      "
       @click="react('2')"
     >
-      踩 {{ dislikeCount }}
+      <span
+        v-if="state === 2"
+        class="i-heroicons-hand-thumb-down-solid post-reaction__icon"
+        aria-hidden="true"
+      />
+      <span v-else class="i-heroicons-hand-thumb-down post-reaction__icon" aria-hidden="true" />
+      <span>{{ dislikeCount }}</span>
     </UiButton>
     <PostRatingDialog v-if="topicId > 0" :post-id="postId" :topic-id="topicId" :is-own="isOwn" />
-    <span v-if="errorMessage" role="status" class="text-cc98-accent">{{ errorMessage }}</span>
+    <span v-if="errorMessage" role="status" class="post-reactions__error">{{ errorMessage }}</span>
   </div>
 </template>
+
+<style scoped>
+.post-reactions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post-reaction {
+  min-width: 0;
+  height: auto;
+  gap: 0.2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--cc98-color-primary);
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: none;
+}
+
+.post-reaction:first-child {
+  margin-right: 0.2rem;
+}
+
+.post-reaction:hover {
+  background: transparent;
+  color: var(--cc98-color-primary);
+}
+
+.post-reaction--active,
+.post-reaction--active:hover {
+  color: red;
+}
+
+.post-reaction__icon {
+  flex: none;
+  font-size: 1rem;
+}
+
+.post-reactions__error {
+  color: var(--cc98-color-accent);
+}
+</style>
