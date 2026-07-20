@@ -4,7 +4,11 @@
 
 `main` 是可发布主线。feature 分支命名 `feature/<short-desc>`，修复 `fix/<issue-or-desc>`
 
-分支合入统一使用 rebase，不创建 merge commit。功能分支先 rebase 到最新 `main`，验收后以 fast-forward 更新 `main`，保持提交历史线性。
+远端 `main` 是线上状态的唯一置信源。Agent 不直接向 `main` 推送或合入代码；所有改动都必须先进入独立分支并创建 PR，由开发者完成 review 并明确决定是否合入。
+
+分支合入统一使用 squash，不保留任务实施过程中产生的探索、修复和整理提交。同一任务在进入 `main` 时只保留一个逻辑提交，由开发者在 review 后执行合入。
+
+实施过程中发现但不属于当前交付范围的问题，Agent 只向开发者反馈，不擅自扩展提交，也不自行写入项目文档；是否修复、记录或另开任务由开发者决定。
 
 ## 提交
 

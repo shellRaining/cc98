@@ -1,10 +1,13 @@
+import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite-plus";
 
+const typescriptNativePackage = `@typescript/typescript-${process.platform}-${process.arch}`;
+const require = createRequire(import.meta.resolve("typescript/package.json"));
 const tsgoPath = resolve(
-  dirname(fileURLToPath(import.meta.resolve("typescript/package.json"))),
-  "bin/tsc",
+  dirname(require.resolve(`${typescriptNativePackage}/package.json`)),
+  "lib",
+  process.platform === "win32" ? "tsc.exe" : "tsc",
 );
 
 export default defineConfig({

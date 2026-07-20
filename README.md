@@ -55,6 +55,14 @@ vp run preview # 构建并预览生产产物
 vp run ready   # format + lint + typecheck + test + build
 ```
 
+## 测试部署
+
+测试站部署在 Vercel，项目根目录保持为仓库根目录。Vercel 会按 `vercel.json` 执行全量 workspace 构建，并发布 `apps/website/dist`。Vue Router 使用 history 模式，所有未命中静态文件的请求都会回退到 `index.html`。
+
+Vercel CLI、skill 和账号授权是维护者本地工具，不属于 workspace 依赖。普通协作者只需使用仓库中的 `vercel.json`；有项目权限的维护者可以自行使用 Vercel CLI、MCP 或控制台管理部署和域名。CLI 生成的 `.vercel/` 只保存本地项目关联，不提交到仓库。
+
+生产域名为 `cc98.shellraining.xyz`。在 Vercel 项目中添加该域名后，按控制台给出的目标值配置 CNAME。项目会从浏览器直接访问 CC98 API、OpenID 和 SignalR 服务，测试用户仍需具备相应的校园网访问条件，相关服务也需要允许该域名发起跨域请求。
+
 查询当前 worktree 的稳定地址：
 
 ```bash

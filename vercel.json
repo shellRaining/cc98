@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "export VP_VERSION=0.2.4 VP_NODE_MANAGER=no && curl -fsSL https://vite.plus | bash && . \"$HOME/.vite-plus/env\" && vp install --frozen-lockfile",
+  "buildCommand": "vp run -r --concurrency-limit 2 build",
+  "outputDirectory": "apps/website/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
