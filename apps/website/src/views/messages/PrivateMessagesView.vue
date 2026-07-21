@@ -16,6 +16,7 @@ import {
 import PageState from "../../components/PageState.vue";
 import { postExcerpt } from "../../components/post-summary";
 import ContentRenderer from "../../components/rich-content/ContentRenderer.vue";
+import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import { parsePositiveInt } from "../../lib/route-params";
 import { useUserStore } from "../../stores/user";
@@ -23,7 +24,7 @@ import { createConversationReadSynchronizer, mergeConversationPages } from "./pr
 
 const CONTACT_SIZE = 7;
 const MESSAGE_SIZE = 10;
-const DEFAULT_AVATAR = "/static/images/default_avatar_boy.png";
+const DEFAULT_AVATAR = DEFAULT_AVATAR_URL;
 
 const route = useRoute();
 const router = useRouter();
@@ -153,7 +154,7 @@ watch(
 function avatarOf(
   profile: { portraitUrl?: string | null; photourl?: string | null } | null | undefined,
 ) {
-  return profile?.portraitUrl || profile?.photourl || DEFAULT_AVATAR;
+  return resolveAvatarUrl(profile?.portraitUrl, profile?.photourl);
 }
 
 function onAvatarError(event: Event) {
@@ -190,7 +191,7 @@ function isOwnMessage(message: PrivateMessage) {
 
 function messageAvatar(message: PrivateMessage) {
   return isOwnMessage(message)
-    ? user.user?.avatarUrl || DEFAULT_AVATAR
+    ? resolveAvatarUrl(user.user?.avatarUrl)
     : avatarOf(targetProfile.value);
 }
 

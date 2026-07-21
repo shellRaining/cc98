@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { BasicUser, Board, Topic } from "@cc98/api";
 import { computed } from "vue";
+import { resolveAvatarUrl } from "../../../components/user/avatar";
 import { floorAnchorId, floorToPage } from "../../../lib/route-params";
 import { formatDiscoveryDateTime, formatDiscoveryTime } from "../time";
 
@@ -25,9 +26,7 @@ const authorUrl = computed(() =>
   anonymous.value || props.topic.userId == null ? null : `/user/id/${props.topic.userId}`,
 );
 const avatar = computed(() =>
-  anonymous.value
-    ? "/static/images/_心灵之约.png"
-    : props.author?.portraitUrl || "/static/images/default_avatar_boy.png",
+  anonymous.value ? "/static/images/_心灵之约.png" : resolveAvatarUrl(props.author?.portraitUrl),
 );
 const floor = computed(() => Math.max(1, (props.topic.replyCount ?? 0) + 1));
 const lastPostUrl = computed(() => ({

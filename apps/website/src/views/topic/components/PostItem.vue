@@ -8,6 +8,7 @@ import ContentRenderer from "../../../components/rich-content/ContentRenderer.vu
 import type { RichContentType } from "../../../components/rich-content/types";
 import { floorAnchorId } from "../../../lib/route-params";
 import FramedAvatar from "../../../components/user/FramedAvatar.vue";
+import { resolveAvatarUrl } from "../../../components/user/avatar";
 
 const props = defineProps<{
   post: Post;
@@ -37,7 +38,11 @@ const authorLink = computed(() => {
 });
 const avatar = computed(() => {
   if (props.post.isAnonymous) return "/static/images/心灵头像.gif";
-  return props.user?.portraitUrl || props.user?.photourl || "/static/images/_CC98.png";
+  return resolveAvatarUrl(
+    props.user?.portraitUrl,
+    props.user?.photourl,
+    "/static/images/_CC98.png",
+  );
 });
 const timeText = computed(() => formatTime(props.post.time));
 const lastUpdateText = computed(() => {
