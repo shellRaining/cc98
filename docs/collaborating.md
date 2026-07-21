@@ -2,7 +2,7 @@
 
 ## 分支模型
 
-`main` 是可发布主线。feature 分支命名 `feature/<short-desc>`，修复 `fix/<issue-or-desc>`
+`main` 是可发布主线。分支名使用 `<type>/<short-desc>`，前缀按任务意图选择：功能使用 `feature/`，修复使用 `fix/`，文档使用 `docs/`，重构使用 `refactor/`，性能优化使用 `perf/`，测试使用 `test/`，工程维护使用 `chore/`，CI 使用 `ci/`。`short-desc` 使用简短的英文短横线命名，例如 `fix/avatar-mixed-content`、`docs/worktree-branch-naming`。不要用 Agent、开发者或工具名称作为固定前缀。
 
 远端 `main` 是线上状态的唯一置信源。Agent 不直接向 `main` 推送或合入代码；所有改动都必须先进入独立分支并创建 PR，由开发者完成 review 并明确决定是否合入。
 

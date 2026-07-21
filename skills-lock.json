@@ -11,13 +11,13 @@
       "source": "tw93/Waza",
       "sourceType": "github",
       "skillPath": "skills/read/SKILL.md",
-      "computedHash": "ce350872d358b2f1a2966a4712274aa7143ec354e85ba4c5a3fcec157765a525"
+      "computedHash": "8781e38f5cc16b0a6fc2f878187e74c16a29958a8e96774a373371e96c4132c1"
     },
     "write": {
       "source": "tw93/Waza",
       "sourceType": "github",
       "skillPath": "skills/write/SKILL.md",
-      "computedHash": "a538c13b96ad16894514356618e7248c9f9df061f069e2c2149516146ca066ae"
+      "computedHash": "322017742a87420656dacbd0bde1bdbac2c8a20590ba6bd7ef548376a7d5f6c5"
     }
   }
 }

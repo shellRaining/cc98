@@ -98,10 +98,10 @@ vp exec -F @cc98/api apifox --help
 当前 Agent 创建 worktree：
 
 ```bash
-wt switch --create codex/<task-name> --base=@ --no-cd --format json
+wt switch --create <type>/<short-desc> --base=@ --no-cd --format json
 ```
 
-`--format json` 返回 worktree 的绝对路径，`--no-cd` 避免误以为子进程能够修改当前 Agent 的工作目录。Agent 读取 `path` 后，后续 shell 命令使用该目录作为工作目录，文件编辑使用该目录下的绝对路径。进入后先运行：
+分支名遵循 `docs/collaborating.md` 的语义化前缀规范。`--format json` 返回 worktree 的绝对路径，`--no-cd` 避免误以为子进程能够修改当前 Agent 的工作目录。Agent 读取 `path` 后，后续 shell 命令使用该目录作为工作目录，文件编辑使用该目录下的绝对路径。进入后先运行：
 
 ```bash
 git branch --show-current
@@ -218,6 +218,7 @@ CC98_PASSWORD=example
 - 2026-07-18：当前 Agent 通过 Worktrunk 的 JSON 输出获取 worktree 路径，再显式定向后续工具；不使用 `-x codex` 启动第二个 Agent。
 - 2026-07-18：单 worktree 和多 worktree 统一运行 `vp run dev`，不再提供绕过 portless 的 5173 入口。
 - 2026-07-18：增加 `vp run preview`，构建后通过独立 portless 路由预览生产产物。
+- 2026-07-21：Worktree 分支名改用任务语义前缀，不再固定使用 Agent 或工具名称。
 
 ## 参考资料
 
