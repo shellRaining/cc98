@@ -17,6 +17,7 @@ import NewTopicClassicItem from "./components/NewTopicClassicItem.vue";
 import FullPageStatus from "../../components/FullPageStatus.vue";
 import LoadMore from "../../components/LoadMore.vue";
 import PageState from "../../components/PageState.vue";
+import { resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import {
   newTopicsPath,
@@ -200,9 +201,7 @@ function formatCount(value: number | undefined) {
             <div class="new-topic-profile-card__identity">
               <img
                 :src="
-                  showProfile
-                    ? me?.portraitUrl || '/static/images/default_avatar_boy.png'
-                    : '/static/images/_心灵之约.png'
+                  showProfile ? resolveAvatarUrl(me?.portraitUrl) : '/static/images/_心灵之约.png'
                 "
                 alt=""
               />

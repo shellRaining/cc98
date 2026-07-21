@@ -6,6 +6,7 @@ import { computed } from "vue";
 import { displayTitlesQuery } from "../../api/queries";
 import ContentRenderer from "../rich-content/ContentRenderer.vue";
 import FramedAvatar from "./FramedAvatar.vue";
+import { resolveAvatarUrl } from "./avatar";
 
 const props = withDefaults(
   defineProps<{
@@ -16,10 +17,7 @@ const props = withDefaults(
 );
 const titlesQuery = useQuery(displayTitlesQuery);
 
-const avatar = computed(
-  () =>
-    props.profile.portraitUrl || props.profile.photourl || "/static/images/default_avatar_boy.png",
-);
+const avatar = computed(() => resolveAvatarUrl(props.profile.portraitUrl, props.profile.photourl));
 
 const statusMessage = computed(() => {
   if (props.profile.lockState === 1 || props.profile.lockState === 2) return "该账号处于锁定状态";

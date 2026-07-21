@@ -7,13 +7,14 @@ import { useFollowUserMutation, useUnfollowUserMutation } from "../../api/mutati
 import { currentUserQuery, fullUsersByIdsQuery, meRelationIdsQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
+import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import { pageCount, pageToFrom } from "../../lib/route-params";
 import { useUserStore } from "../../stores/user";
 import { parseUserCenterPage, userCenterPagePath } from "./navigation";
 
 const PAGE_SIZE = 10;
-const DEFAULT_AVATAR = "/static/images/default_avatar_boy.png";
+const DEFAULT_AVATAR = DEFAULT_AVATAR_URL;
 const route = useRoute();
 const user = useUserStore();
 const page = computed(() => parseUserCenterPage(route.query.page));
@@ -151,7 +152,7 @@ function replaceBrokenAvatar(event: Event) {
         <li v-for="profile in rows" :key="profile.id">
           <RouterLink :to="`/user/id/${profile.id}`" class="user-relation__avatar">
             <img
-              :src="profile.portraitUrl || profile.photourl || DEFAULT_AVATAR"
+              :src="resolveAvatarUrl(profile.portraitUrl, profile.photourl)"
               :alt="`${profile.name} 的头像`"
               @error="replaceBrokenAvatar"
             />

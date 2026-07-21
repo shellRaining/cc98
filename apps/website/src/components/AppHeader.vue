@@ -11,6 +11,7 @@ import {
 } from "../router/links";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { isSiteAdministrator, useUserStore } from "../stores/user";
+import { resolveAvatarUrl } from "./user/avatar";
 import UiBadge from "./ui/Badge.vue";
 import UiSelect, { type UiSelectOption } from "./ui/Select.vue";
 
@@ -171,7 +172,11 @@ function updateSearchKind(value: string | number) {
             </div>
             <div class="site-header__user-menu">
               <RouterLink to="/usercenter" class="site-header__user">
-                <img v-if="user.user?.avatarUrl" :src="user.user.avatarUrl" alt="" />
+                <img
+                  v-if="user.user?.avatarUrl"
+                  :src="resolveAvatarUrl(user.user.avatarUrl)"
+                  alt=""
+                />
                 <span>{{ user.user?.name }}</span>
               </RouterLink>
               <nav class="site-header__user-dropdown" aria-label="用户菜单">

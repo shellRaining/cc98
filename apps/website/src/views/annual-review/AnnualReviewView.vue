@@ -7,6 +7,7 @@ import { useRoute, useRouter } from "vue-router";
 import { annualReviewQuery, boardsByIdsQuery, currentUserQuery } from "../../api/queries";
 import FullPageStatus from "../../components/FullPageStatus.vue";
 import PageState from "../../components/PageState.vue";
+import { resolveAvatarUrl } from "../../components/user/avatar";
 import {
   annualReviewAchievements,
   annualReviewPages,
@@ -19,7 +20,6 @@ import { saveLoginRedirect } from "../../lib/login-redirect";
 import { useUserStore } from "../../stores/user";
 
 const YEAR = 2025;
-const DEFAULT_AVATAR = "/static/images/default_avatar_boy.png";
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
@@ -134,7 +134,7 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 function avatarUrl(value?: string | null) {
-  return value?.trim() || DEFAULT_AVATAR;
+  return resolveAvatarUrl(value);
 }
 
 function formatDate(value?: string | null) {

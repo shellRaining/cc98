@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { BasicUser, Board, RecommendedTopic } from "@cc98/api";
 import { computed } from "vue";
+import { resolveAvatarUrl } from "../../../components/user/avatar";
 import { formatDiscoveryTime } from "../time";
 
 const props = defineProps<{
@@ -18,9 +19,7 @@ const authorUrl = computed(() =>
   anonymous.value || topic.value.userId == null ? null : `/user/id/${topic.value.userId}`,
 );
 const avatar = computed(() =>
-  anonymous.value
-    ? "/static/images/_心灵之约.png"
-    : props.author?.portraitUrl || "/static/images/default_avatar_boy.png",
+  anonymous.value ? "/static/images/_心灵之约.png" : resolveAvatarUrl(props.author?.portraitUrl),
 );
 const summary = computed(() => props.item.content?.replace(/\s+/g, " ").trim() || "暂无推荐语");
 

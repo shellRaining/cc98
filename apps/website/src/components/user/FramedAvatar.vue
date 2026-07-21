@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, type CSSProperties } from "vue";
 import { getAvatarFrame, type AvatarFrameVariant } from "./avatar-frame";
+import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from "./avatar";
 
 const props = withDefaults(
   defineProps<{
@@ -15,11 +16,13 @@ const props = withDefaults(
     displayTitleId: null,
     to: null,
     variant: "post",
-    fallback: "/static/images/default_avatar_boy.png",
+    fallback: DEFAULT_AVATAR_URL,
   },
 );
 
 const frame = computed(() => getAvatarFrame(props.displayTitleId));
+const avatarUrl = computed(() => resolveAvatarUrl(props.src, props.fallback));
+const fallbackUrl = computed(() => resolveAvatarUrl(props.fallback));
 const frameStyle = computed<CSSProperties | undefined>(() => {
   const definition = frame.value;
   if (!definition) return undefined;
@@ -33,8 +36,8 @@ const frameStyle = computed<CSSProperties | undefined>(() => {
 
 function replaceBrokenAvatar(event: Event) {
   const image = event.currentTarget as HTMLImageElement;
-  if (image.src.endsWith(props.fallback)) return;
-  image.src = props.fallback;
+  if (image.src.endsWith(fallbackUrl.value)) return;
+  image.src = fallbackUrl.value;
 }
 </script>
 
@@ -50,10 +53,20 @@ function replaceBrokenAvatar(event: Event) {
     ]"
   >
     <RouterLink v-if="to" :to="to" class="framed-avatar__link">
-      <img class="framed-avatar__portrait" :src="src" :alt="alt" @error="replaceBrokenAvatar" />
+      <img
+        class="framed-avatar__portrait"
+        :src="avatarUrl"
+        :alt="alt"
+        @error="replaceBrokenAvatar"
+      />
     </RouterLink>
     <span v-else class="framed-avatar__link">
-      <img class="framed-avatar__portrait" :src="src" :alt="alt" @error="replaceBrokenAvatar" />
+      <img
+        class="framed-avatar__portrait"
+        :src="avatarUrl"
+        :alt="alt"
+        @error="replaceBrokenAvatar"
+      />
     </span>
     <span v-if="frame" class="framed-avatar__frame" aria-hidden="true">
       <img :src="frame.imageUrl" alt="" :style="frameStyle" />

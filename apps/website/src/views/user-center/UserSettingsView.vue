@@ -6,6 +6,7 @@ import { computed, reactive, ref, watch } from "vue";
 import { useUpdatePortraitMutation, useUpdateProfileMutation } from "../../api/mutations";
 import { currentUserQuery, displayTitlesQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
+import { resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import { useUserStore } from "../../stores/user";
 import { joinBirthday, splitBirthday, validateProfileSettings } from "./settings";
@@ -35,12 +36,12 @@ const avatarPreview = useObjectUrl(selectedAvatar);
 const years = Array.from({ length: new Date().getFullYear() - 1919 }, (_, index) => 1920 + index);
 const months = Array.from({ length: 12 }, (_, index) => index + 1);
 const days = Array.from({ length: 31 }, (_, index) => index + 1);
-const currentAvatar = computed(
-  () =>
-    avatarPreview.value ||
-    meQuery.data.value?.portraitUrl ||
-    meQuery.data.value?.photourl ||
-    "/static/images/default_avatar_boy.png",
+const currentAvatar = computed(() =>
+  resolveAvatarUrl(
+    avatarPreview.value,
+    meQuery.data.value?.portraitUrl,
+    meQuery.data.value?.photourl,
+  ),
 );
 const availableTitles = computed(() => {
   const ids = new Set(meQuery.data.value?.userTitleIds ?? []);
