@@ -61,7 +61,7 @@ onMounted(() => {
 
 <style scoped>
 .home-block {
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 .home-panel {

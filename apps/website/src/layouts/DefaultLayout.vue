@@ -25,16 +25,12 @@ theme.apply();
 
 <style scoped>
 .site-main--home {
+  width: min(calc(100% - 2rem), 90rem);
+  max-width: 90rem;
   padding: 0;
 }
 
 .site-main--inner {
   padding-top: 1.5rem;
-}
-
-@media (min-width: 71.25rem) {
-  .site-main--home {
-    max-width: 100%;
-  }
 }
 </style>

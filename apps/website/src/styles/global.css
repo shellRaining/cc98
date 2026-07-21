@@ -120,16 +120,6 @@ body {
   min-height: 100vh;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
 #app {
   min-height: 100vh;
 }
@@ -141,6 +131,11 @@ a {
 
 a:hover {
   color: var(--cc98-color-primary-hover);
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--cc98-color-primary);
+  outline-offset: 2px;
 }
 
 *,
