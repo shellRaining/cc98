@@ -59,9 +59,11 @@ vp run ready   # format + lint + typecheck + test + build
 
 ## 测试部署
 
-测试站部署在 Vercel，项目根目录保持为仓库根目录。Vercel 会按 `vercel.json` 执行全量 workspace 构建，并发布 `apps/website/dist`。Vue Router 使用 history 模式，所有未命中静态文件的请求都会回退到 `index.html`。
+测试站部署在 Vercel，项目根目录保持为仓库根目录。Vercel 会按 `vercel.json` 构建主站及其传递依赖，并发布 `apps/website/dist`。主站源码、静态资源、API 契约源码、UBB 或相关构建配置发生变化时才会部署；测试、探测数据、生成文档和 README 等非构建输入不会触发主站部署。Vue Router 使用 history 模式，所有未命中静态文件的请求都会回退到 `index.html`。
 
-用户文档使用独立的 Vercel 项目 `cc98-docs`，根目录是 `apps/docs`。PR 会生成文档预览，`main` 分支发布到 `https://cc98-docs.vercel.app`。
+用户文档使用独立的 Vercel 项目 `cc98-docs`，根目录是 `apps/docs`。只有文档内容、文档站配置、静态资源或相关依赖发生变化时才部署文档站。PR 会生成文档预览，`main` 分支发布到 `https://cc98-docs.vercel.app`。
+
+两个项目都通过 `ignoreCommand` 对比当前提交和该分支上一次成功部署的提交，跳过无关变更。共享 lockfile 或 workspace 依赖配置发生变化时，会分别比较主站和文档站的依赖图，只部署实际受影响的项目。
 
 Vercel CLI、skill 和账号授权是维护者本地工具，不属于 workspace 依赖。普通协作者只需使用仓库中的 `vercel.json`；有项目权限的维护者可以自行使用 Vercel CLI、MCP 或控制台管理部署和域名。CLI 生成的 `.vercel/` 只保存本地项目关联，不提交到仓库。
 
