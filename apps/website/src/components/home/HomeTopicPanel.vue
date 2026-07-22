@@ -62,6 +62,7 @@ withDefaults(
   height: 20rem;
   padding: 1rem 1.25rem;
   font-size: 0.75rem;
+  --home-topic-row-count: 10;
 }
 
 .home-topic-panel ul {
@@ -73,7 +74,7 @@ withDefaults(
 
 .home-topic-panel ul {
   display: grid;
-  grid-template-rows: repeat(10, minmax(0, 1fr));
+  grid-template-rows: repeat(var(--home-topic-row-count), minmax(0, 1fr));
 }
 
 .home-topic-panel li {

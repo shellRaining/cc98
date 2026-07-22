@@ -278,6 +278,11 @@ function updateSearchKind(value: string | number) {
   color: #fff;
 }
 
+.site-header a:focus-visible,
+.site-header button:focus-visible {
+  outline-color: #fff;
+}
+
 .header-search {
   display: flex;
   align-items: center;
@@ -289,6 +294,16 @@ function updateSearchKind(value: string | number) {
   border-radius: 0.625rem;
   background: #fff;
   color: var(--cc98-color-primary);
+}
+
+.header-search:focus-within {
+  box-shadow:
+    0 0 0 2px var(--cc98-color-primary),
+    0 0 0 4px rgb(255 255 255 / 0.9);
+}
+
+.header-search :focus-visible {
+  outline: none;
 }
 
 .header-search input,
