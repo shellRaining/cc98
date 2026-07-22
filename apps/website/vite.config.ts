@@ -4,6 +4,9 @@ import UnoCSS from "unocss/vite";
 
 export default defineConfig({
   plugins: [UnoCSS(), vue()],
+  build: {
+    reportCompressedSize: false,
+  },
   server: {
     port: 5173,
   },
