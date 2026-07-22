@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vite-plus/test";
-import { FULL_PAGE_STATUS_CONFIG } from "../src/components/full-page-status.ts";
+import {
+  FULL_PAGE_STATUS_CONFIG,
+  parseServiceStatusKind,
+} from "../src/components/full-page-status.ts";
 
 describe("完整错误页配置", () => {
   test("四类状态插图进入构建依赖图", () => {
@@ -23,5 +26,12 @@ describe("完整错误页配置", () => {
     expect(FULL_PAGE_STATUS_CONFIG.server.showRetry).toBe(true);
     expect(FULL_PAGE_STATUS_CONFIG.maintenance.showRetry).toBe(true);
     expect(FULL_PAGE_STATUS_CONFIG.network.showRetry).toBe(true);
+  });
+
+  test("只有应用级服务状态使用共享路由页面", () => {
+    expect(parseServiceStatusKind("maintenance")).toBe("maintenance");
+    expect(parseServiceStatusKind("network")).toBe("network");
+    expect(parseServiceStatusKind("403")).toBeNull();
+    expect(parseServiceStatusKind("server")).toBeNull();
   });
 });

@@ -11,6 +11,12 @@ export type FullPageStatusKind =
   | "maintenance"
   | "network";
 
+export type ServiceStatusKind = Extract<FullPageStatusKind, "maintenance" | "network">;
+
+export function parseServiceStatusKind(value: unknown): ServiceStatusKind | null {
+  return value === "maintenance" || value === "network" ? value : null;
+}
+
 export interface FullPageStatusConfig {
   documentTitle: string;
   image: string;

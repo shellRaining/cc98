@@ -2,12 +2,16 @@
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FullPageStatus from "../components/FullPageStatus.vue";
-import { type FullPageStatusKind } from "../components/full-page-status";
-import { isSafeInternalPath, saveLoginRedirect } from "../lib/login-redirect";
+import { parseServiceStatusKind } from "../components/full-page-status";
+import { isSafeInternalPath } from "../lib/login-redirect";
 
 const route = useRoute();
 const router = useRouter();
-const kind = computed(() => route.meta.statusKind as FullPageStatusKind);
+const kind = computed(() => {
+  const value = parseServiceStatusKind(route.params.status);
+  if (!value) throw new Error("无效的服务状态路由");
+  return value;
+});
 const sourcePath = computed(() => {
   const value = route.query.from;
   return typeof value === "string" && isSafeInternalPath(value) ? value : "";
@@ -20,13 +24,8 @@ function retry() {
   }
   window.location.reload();
 }
-
-function login() {
-  saveLoginRedirect(sourcePath.value || "/");
-  void router.push({ name: "logon" });
-}
 </script>
 
 <template>
-  <FullPageStatus :kind="kind" @login="login" @retry="retry" />
+  <FullPageStatus :kind="kind" @retry="retry" />
 </template>
