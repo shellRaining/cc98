@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 import { normalizeFloorHash } from "../lib/route-params";
 import { saveLoginRedirect } from "../lib/login-redirect";
-import { isSiteAdministrator, useUserStore } from "../stores/user";
+import { useUserStore } from "../stores/user";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -114,7 +114,7 @@ const routes: RouteRecordRaw[] = [
     name: "user-manage",
     component: () => import("../views/user-manage/UserManageView.vue"),
     props: true,
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/user/id/:userId",
@@ -240,48 +240,12 @@ const routes: RouteRecordRaw[] = [
     path: "/sitemanage",
     name: "site-manage",
     component: () => import("../views/site-manage/SiteManageView.vue"),
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/logon",
     name: "logon",
     component: () => import("../views/LogOnView.vue"),
-  },
-  {
-    path: "/error/401",
-    name: "error-401",
-    component: () => import("../views/StatusView.vue"),
-    meta: { statusKind: "unauthorized" },
-  },
-  {
-    path: "/error/403",
-    name: "error-403",
-    component: () => import("../views/StatusView.vue"),
-    meta: { statusKind: "forbidden" },
-  },
-  {
-    path: "/error/404",
-    name: "error-404",
-    component: () => import("../views/StatusView.vue"),
-    meta: { statusKind: "not-found" },
-  },
-  {
-    path: "/error/500",
-    name: "error-500",
-    component: () => import("../views/StatusView.vue"),
-    meta: { statusKind: "server" },
-  },
-  {
-    path: "/error/maintenance",
-    name: "error-maintenance",
-    component: () => import("../views/StatusView.vue"),
-    meta: { statusKind: "maintenance" },
-  },
-  {
-    path: "/error/network",
-    name: "error-network",
-    component: () => import("../views/StatusView.vue"),
-    meta: { statusKind: "network" },
   },
   {
     path: "/:pathMatch(.*)*",
@@ -309,9 +273,6 @@ router.beforeEach((to) => {
   if (to.meta.requiresAuth && !user.isLoggedIn) {
     saveLoginRedirect(to.fullPath);
     return { name: "logon" };
-  }
-  if (to.meta.requiresAdmin && !isSiteAdministrator(user.user?.privilege)) {
-    return { name: "error-403" };
   }
   return true;
 });

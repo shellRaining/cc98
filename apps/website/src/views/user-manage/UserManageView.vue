@@ -13,17 +13,22 @@ import { boardsByIdsQuery, userByIdQuery, userModerationPostsQuery } from "../..
 import PageState from "../../components/PageState.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { parsePositiveInt } from "../../lib/route-params";
-import { useUserStore } from "../../stores/user";
+import { isSiteAdministrator, useUserStore } from "../../stores/user";
 import { validateUserContentDays, validateUserManagementOperation } from "./form";
 
 const props = defineProps<{ userId: string }>();
 const PAGE_SIZE = 10;
 const user = useUserStore();
+const canManage = computed(() => isSiteAdministrator(user.user?.privilege));
 const numericUserId = computed(() => parsePositiveInt(props.userId));
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const profileQuery = useQuery(
   computed(() =>
-    userByIdQuery(numericUserId.value ?? 0, authScope.value, numericUserId.value != null),
+    userByIdQuery(
+      numericUserId.value ?? 0,
+      authScope.value,
+      canManage.value && numericUserId.value != null,
+    ),
   ),
 );
 const profile = computed(() => profileQuery.data.value ?? null);
@@ -50,7 +55,7 @@ const postsOptions = computed(() =>
     (inspectPage.value - 1) * PAGE_SIZE,
     PAGE_SIZE,
     authScope.value,
-    inspectDays.value != null,
+    canManage.value && inspectDays.value != null,
   ),
 );
 const postsQuery = useQuery(postsOptions);
@@ -60,16 +65,22 @@ const totalPages = computed(() =>
 );
 const boardIds = computed(() => posts.value.map((post) => post.boardId));
 const boardQuery = useQuery(
-  computed(() => boardsByIdsQuery(boardIds.value, posts.value.length > 0)),
+  computed(() => boardsByIdsQuery(boardIds.value, canManage.value && posts.value.length > 0)),
 );
 const boardMap = computed(
   () => new Map((boardQuery.data.value ?? []).map((board) => [board.id, board])),
 );
 
+const profileError = computed(() =>
+  profileQuery.error.value ? normalizeApiError(profileQuery.error.value) : null,
+);
 const pageState = computed(() => {
+  if (!canManage.value) return "forbidden" as const;
   if (numericUserId.value == null) return "not-found" as const;
   if (profileQuery.isPending.value) return "loading" as const;
-  if (profileQuery.error.value) return normalizeApiError(profileQuery.error.value).kind;
+  if (profileError.value?.kind === "forbidden") return "forbidden" as const;
+  if (profileError.value?.kind === "not-found") return "not-found" as const;
+  if (profileError.value) return "error" as const;
   if (!profile.value) return "not-found" as const;
   return null;
 });
@@ -136,9 +147,7 @@ function formatTime(value: string) {
     <PageState
       v-if="pageState"
       :kind="pageState"
-      :message="
-        profileQuery.error.value ? normalizeApiError(profileQuery.error.value).message : undefined
-      "
+      :message="pageState === 'forbidden' ? '只有论坛管理员可以管理用户。' : profileError?.message"
       :show-retry="pageState === 'error'"
       @retry="profileQuery.refetch()"
     />
