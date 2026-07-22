@@ -248,6 +248,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("../views/LogOnView.vue"),
   },
   {
+    path: "/error/:status(maintenance|network)",
+    name: "service-status",
+    component: () => import("../views/StatusView.vue"),
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: () => import("../views/NotFoundView.vue"),
