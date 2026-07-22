@@ -179,10 +179,6 @@ function updateValue(value: string | number) {
   transform: rotate(180deg);
 }
 
-.ui-select__trigger--header[data-state="open"] .ui-select__chevron {
-  transform: none;
-}
-
 .ui-select__content {
   z-index: 200;
   min-width: var(--reka-select-trigger-width);
@@ -203,6 +199,38 @@ function updateValue(value: string | number) {
   color: var(--cc98-color-on-primary);
   font-size: 0.75rem;
   box-shadow: none;
+}
+
+.ui-select__content--header[data-state="open"] {
+  animation: ui-select-header-open 0.15s ease-out;
+}
+
+.ui-select__content--header[data-state="closed"] {
+  animation: ui-select-header-close 0.1s ease-in;
+}
+
+@keyframes ui-select-header-open {
+  from {
+    clip-path: inset(0 0 100%);
+    opacity: 0;
+  }
+
+  to {
+    clip-path: inset(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ui-select-header-close {
+  from {
+    clip-path: inset(0);
+    opacity: 1;
+  }
+
+  to {
+    clip-path: inset(0 0 100%);
+    opacity: 0;
+  }
 }
 
 .ui-select__viewport {
@@ -257,5 +285,15 @@ function updateValue(value: string | number) {
 .ui-select__content--header .ui-select__item:hover,
 .ui-select__content--header .ui-select__item[data-highlighted]:not([data-state="checked"]) {
   background: var(--cc98-color-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-select__trigger--header .ui-select__chevron {
+    transition: none;
+  }
+
+  .ui-select__content--header[data-state] {
+    animation: none;
+  }
 }
 </style>
