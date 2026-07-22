@@ -3,7 +3,11 @@ import type { BasicUser, Board, Topic } from "@cc98/api";
 import { computed, ref } from "vue";
 import { defaultRichContentOptions } from "../../../components/rich-content/options";
 import { sanitizeImageUrl, sanitizeMediaUrl } from "../../../components/rich-content/security";
-import { resolveAvatarUrl } from "../../../components/user/avatar";
+import {
+  ANONYMOUS_TOPIC_AVATAR_URL,
+  DEFAULT_AVATAR_URL,
+  resolveAvatarUrl,
+} from "../../../components/user/avatar";
 import { formatDiscoveryTime } from "../time";
 
 const props = defineProps<{
@@ -22,7 +26,7 @@ const authorUrl = computed(() =>
   anonymous.value || props.topic.userId == null ? null : `/user/id/${props.topic.userId}`,
 );
 const avatar = computed(() =>
-  anonymous.value ? "/static/images/_心灵之约.png" : resolveAvatarUrl(props.author?.portraitUrl),
+  anonymous.value ? ANONYMOUS_TOPIC_AVATAR_URL : resolveAvatarUrl(props.author?.portraitUrl),
 );
 const thumbnails = computed(() =>
   (props.topic.mediaContent?.thumbnail ?? [])
@@ -47,9 +51,7 @@ function toggleImage(url: string) {
 
 function replaceBrokenAvatar(event: Event) {
   const image = event.currentTarget as HTMLImageElement;
-  image.src = anonymous.value
-    ? "/static/images/_心灵之约.png"
-    : "/static/images/default_avatar_boy.png";
+  image.src = anonymous.value ? ANONYMOUS_TOPIC_AVATAR_URL : DEFAULT_AVATAR_URL;
 }
 </script>
 

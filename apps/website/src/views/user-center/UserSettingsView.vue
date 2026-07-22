@@ -6,7 +6,7 @@ import { computed, reactive, ref, watch } from "vue";
 import { useUpdatePortraitMutation, useUpdateProfileMutation } from "../../api/mutations";
 import { currentUserQuery, displayTitlesQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
-import { resolveAvatarUrl } from "../../components/user/avatar";
+import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import { useUserStore } from "../../stores/user";
 import { joinBirthday, splitBirthday, validateProfileSettings } from "./settings";
@@ -96,7 +96,7 @@ async function submitAvatar() {
 async function useDefaultAvatar() {
   avatarMessage.value = "";
   try {
-    const url = await updatePortrait.mutateAsync({ url: "/static/images/default_avatar_boy.png" });
+    const url = await updatePortrait.mutateAsync({ url: DEFAULT_AVATAR_URL });
     selectedAvatar.value = null;
     user.setUser(user.user ? { ...user.user, avatarUrl: url } : null);
     avatarMessage.value = "头像修改成功";

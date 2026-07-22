@@ -17,7 +17,7 @@ import NewTopicClassicItem from "./components/NewTopicClassicItem.vue";
 import FullPageStatus from "../../components/FullPageStatus.vue";
 import LoadMore from "../../components/LoadMore.vue";
 import PageState from "../../components/PageState.vue";
-import { resolveAvatarUrl } from "../../components/user/avatar";
+import { ANONYMOUS_TOPIC_AVATAR_URL, resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import {
   newTopicsPath,
@@ -200,9 +200,7 @@ function formatCount(value: number | undefined) {
             <div class="new-topic-profile-card__background" />
             <div class="new-topic-profile-card__identity">
               <img
-                :src="
-                  showProfile ? resolveAvatarUrl(me?.portraitUrl) : '/static/images/_心灵之约.png'
-                "
+                :src="showProfile ? resolveAvatarUrl(me?.portraitUrl) : ANONYMOUS_TOPIC_AVATAR_URL"
                 alt=""
               />
               <RouterLink to="/usercenter">{{ showProfile ? me?.name : "隐私模式" }}</RouterLink>

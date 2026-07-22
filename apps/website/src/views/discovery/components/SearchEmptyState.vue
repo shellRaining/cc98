@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import searchEmptyUrl from "../../../assets/discovery/search-empty.png";
 
 const props = defineProps<{
   target: "版面" | "帖子";
@@ -15,7 +16,7 @@ const message = computed(() =>
 
 <template>
   <div class="search-empty" role="status">
-    <img src="/static/images/searchNone.png" alt="" aria-hidden="true" />
+    <img :src="searchEmptyUrl" alt="" aria-hidden="true" />
     <p>{{ message }}</p>
   </div>
 </template>

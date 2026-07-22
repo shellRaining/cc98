@@ -14,8 +14,10 @@ describe("版面列表工具", () => {
     expect(boardGroupAnchor(undefined)).toBe("board-group-unknown");
   });
 
-  it("按旧站规则生成版面图标与回退地址", () => {
-    expect(boardIconUrl("学习天地")).toBe("/static/images/_学习天地.png");
+  it("从构建时注册表解析版面图标并提供回退", () => {
+    expect(boardIconUrl("学习天地")).not.toBe(BOARD_ICON_FALLBACK);
+    expect(boardIconUrl("似水流年·寒假")).not.toBe(BOARD_ICON_FALLBACK);
+    expect(boardIconUrl("不存在的版面")).toBe(BOARD_ICON_FALLBACK);
     expect(boardIconUrl(undefined)).toBe(BOARD_ICON_FALLBACK);
   });
 });

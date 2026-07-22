@@ -13,8 +13,19 @@
 | `views/`       | 路由入口。复杂路由族使用 `views/<domain>/`，页面私有组件放入同域 `components/`，辅助逻辑使用职责明确的 sibling module |
 | `composables/` | 组合式函数（占位，尚未使用）                                                                                          |
 | `styles/`      | 全局 CSS + CSS 变量（light/dark）                                                                                     |
+| `assets/`      | 由 Vue、TypeScript 或 CSS 引用的模块资源，按业务所有者分目录，由 Vite 处理路径和构建指纹                              |
 
 公共包已经导出的函数、类型和常量由应用直接从包入口导入。不要在应用内增加只做重命名或重新导出的转发文件；只有需要组合逻辑、转换参数或封装副作用时才新增模块。
+
+## 静态资源
+
+普通图片放在 `src/assets/`，按业务域命名目录，例如 `board-icons/`、`themes/` 和 `user/avatar-frames/`。Vue 和 TypeScript 使用静态 import；CSS 使用相对路径。文件进入 Vite 依赖图后，生产构建会生成带指纹的 URL，移动或删除资源也能在检查或构建阶段暴露断链。
+
+可枚举的动态资源不能在页面中拼接任意路径。版面图标、皮肤预览等资源族使用范围明确的 `import.meta.glob` 或显式 import 建立注册表，再由所属组件或模块提供名称到 URL 的映射。注册表保持精确匹配，并提供明确的缺失资源处理方式。
+
+`public/` 只保留必须使用固定 URL 的资源，包括浏览器约定的站点根文件，以及会被 API、用户数据或历史内容持久化的兼容地址。当前仅有 `favicon.ico` 和 `/static/images/default_avatar_boy.png`。新增文件前必须说明固定 URL 契约；没有这类契约时，应放入 `src/assets/`。
+
+目录使用英文 kebab-case，并以业务所有者命名，不建立宽泛的 `images/` 或 `misc/`。只有文件名本身参与运行时映射时才保留中文，例如版面名称和头像框名称。
 
 `lib/` 与业务层的依赖方向保持单向：
 

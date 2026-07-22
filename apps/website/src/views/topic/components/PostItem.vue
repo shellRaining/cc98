@@ -8,7 +8,12 @@ import ContentRenderer from "../../../components/rich-content/ContentRenderer.vu
 import type { RichContentType } from "../../../components/rich-content/types";
 import { floorAnchorId } from "../../../lib/route-params";
 import FramedAvatar from "../../../components/user/FramedAvatar.vue";
-import { resolveAvatarUrl } from "../../../components/user/avatar";
+import {
+  ANONYMOUS_POST_AVATAR_URL,
+  DEFAULT_AVATAR_URL,
+  DELETED_USER_AVATAR_URL,
+  resolveAvatarUrl,
+} from "../../../components/user/avatar";
 
 const props = defineProps<{
   post: Post;
@@ -37,12 +42,8 @@ const authorLink = computed(() => {
   return `/user/id/${props.post.userId}`;
 });
 const avatar = computed(() => {
-  if (props.post.isAnonymous) return "/static/images/心灵头像.gif";
-  return resolveAvatarUrl(
-    props.user?.portraitUrl,
-    props.user?.photourl,
-    "/static/images/_CC98.png",
-  );
+  if (props.post.isAnonymous) return ANONYMOUS_POST_AVATAR_URL;
+  return resolveAvatarUrl(props.user?.portraitUrl, props.user?.photourl, DELETED_USER_AVATAR_URL);
 });
 const timeText = computed(() => formatTime(props.post.time));
 const lastUpdateText = computed(() => {
@@ -91,11 +92,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
           :alt="post.isAnonymous ? '匿名用户头像' : `${author} 的头像`"
           :display-title-id="post.isAnonymous ? null : user?.displayTitleId"
           :to="authorLink"
-          :fallback="
-            post.isAnonymous
-              ? '/static/images/心灵头像.gif'
-              : '/static/images/default_avatar_boy.png'
-          "
+          :fallback="post.isAnonymous ? ANONYMOUS_POST_AVATAR_URL : DEFAULT_AVATAR_URL"
         />
         <div v-if="authorLink" class="topic-post__user-actions">
           <RouterLink :to="authorLink">资料</RouterLink>

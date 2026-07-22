@@ -36,6 +36,25 @@ export type SkinId =
   | "new-year-flower"
   | "vast-sea";
 
+const previewModules = import.meta.glob("../assets/themes/*/banner-card.jpg", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const previewBySkin = new Map(
+  Object.entries(previewModules).flatMap(([path, url]) => {
+    const skin = path.match(/\/themes\/([^/]+)\/banner-card\.jpg$/)?.[1] as SkinId | undefined;
+    return skin ? [[skin, url] as const] : [];
+  }),
+);
+
+function previewImage(skin: SkinId): string {
+  const image = previewBySkin.get(skin);
+  if (!image) throw new Error(`皮肤 ${skin} 缺少 banner-card.jpg`);
+  return image;
+}
+
 interface SkinMeta {
   id: SkinId;
   /** 中文展示名 */
@@ -59,42 +78,42 @@ const SKINS: readonly SkinMeta[] = [
     id: "default",
     name: "系统默认",
     previewColor: "#ffffff",
-    previewImage: "/skins/summer/banner-card.jpg",
+    previewImage: previewImage("summer"),
     legacyLight: 0,
   },
   {
     id: "winter",
     name: "冬季",
     previewColor: "#79b8ca",
-    previewImage: "/skins/winter/banner-card.jpg",
+    previewImage: previewImage("winter"),
     legacyLight: 1,
   },
   {
     id: "spring",
     name: "春季（浅）",
     previewColor: "#b1d396",
-    previewImage: "/skins/spring/banner-card.jpg",
+    previewImage: previewImage("spring"),
     legacyLight: 2,
   },
   {
     id: "spring-deep",
     name: "春季（深）",
     previewColor: "#95b675",
-    previewImage: "/skins/spring-deep/banner-card.jpg",
+    previewImage: previewImage("spring-deep"),
     legacyLight: 3,
   },
   {
     id: "summer",
     name: "夏季",
     previewColor: "#5198d8",
-    previewImage: "/skins/summer/banner-card.jpg",
+    previewImage: previewImage("summer"),
     legacyLight: 4,
   },
   {
     id: "autumn",
     name: "秋季",
     previewColor: "#f4a460",
-    previewImage: "/skins/autumn/banner-card.jpg",
+    previewImage: previewImage("autumn"),
     legacyLight: 5,
     legacyDark: 6,
   },
@@ -102,14 +121,14 @@ const SKINS: readonly SkinMeta[] = [
     id: "singles-day",
     name: "双十一交友",
     previewColor: "#f07d91",
-    previewImage: "/skins/singles-day/banner-card.jpg",
+    previewImage: previewImage("singles-day"),
     legacyLight: 7,
   },
   {
     id: "mid-autumn",
     name: "中秋",
     previewColor: "#34969f",
-    previewImage: "/skins/mid-autumn/banner-card.jpg",
+    previewImage: previewImage("mid-autumn"),
     legacyLight: 9,
     legacyDark: 8,
   },
@@ -117,7 +136,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "light-snow",
     name: "小雪",
     previewColor: "#7a92c2",
-    previewImage: "/skins/light-snow/banner-card.jpg",
+    previewImage: previewImage("light-snow"),
     legacyLight: 11,
     legacyDark: 10,
   },
@@ -125,7 +144,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "spring-festival",
     name: "春节",
     previewColor: "#d60e24",
-    previewImage: "/skins/spring-festival/banner-card.jpg",
+    previewImage: previewImage("spring-festival"),
     legacyLight: 13,
     legacyDark: 12,
   },
@@ -133,28 +152,28 @@ const SKINS: readonly SkinMeta[] = [
     id: "mid-spring",
     name: "仲春",
     previewColor: "#468d39",
-    previewImage: "/skins/mid-spring/banner-card.jpg",
+    previewImage: previewImage("mid-spring"),
     legacyLight: 14,
   },
   {
     id: "dragon-boat",
     name: "端午",
     previewColor: "#3578bc",
-    previewImage: "/skins/dragon-boat/banner-card.jpg",
+    previewImage: previewImage("dragon-boat"),
     legacyLight: 15,
   },
   {
     id: "qingming",
     name: "清明",
     previewColor: "#6a8471",
-    previewImage: "/skins/qingming/banner-card.jpg",
+    previewImage: previewImage("qingming"),
     legacyLight: 16,
   },
   {
     id: "autumn-sky",
     name: "秋色之空",
     previewColor: "#eb8e55",
-    previewImage: "/skins/autumn-sky/banner-card.jpg",
+    previewImage: previewImage("autumn-sky"),
     legacyLight: 18,
     legacyDark: 17,
   },
@@ -162,7 +181,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "warm-snow",
     name: "冬日暖雪",
     previewColor: "#b57fa3",
-    previewImage: "/skins/warm-snow/banner-card.jpg",
+    previewImage: previewImage("warm-snow"),
     legacyLight: 20,
     legacyDark: 19,
   },
@@ -170,7 +189,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "spring-blossom",
     name: "春樱日和",
     previewColor: "#abc349",
-    previewImage: "/skins/spring-blossom/banner-card.jpg",
+    previewImage: previewImage("spring-blossom"),
     legacyLight: 22,
     legacyDark: 21,
   },
@@ -178,7 +197,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "chongyang",
     name: "重阳",
     previewColor: "#7a6d99",
-    previewImage: "/skins/chongyang/banner-card.jpg",
+    previewImage: previewImage("chongyang"),
     legacyLight: 24,
     legacyDark: 23,
   },
@@ -186,7 +205,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "golden-spring",
     name: "金舞迎春",
     previewColor: "#ff6754",
-    previewImage: "/skins/golden-spring/banner-card.jpg",
+    previewImage: previewImage("golden-spring"),
     legacyLight: 26,
     legacyDark: 25,
   },
@@ -194,7 +213,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "new-year-flower",
     name: "新岁花朝",
     previewColor: "#df6c5d",
-    previewImage: "/skins/new-year-flower/banner-card.jpg",
+    previewImage: previewImage("new-year-flower"),
     legacyLight: 28,
     legacyDark: 27,
   },
@@ -202,7 +221,7 @@ const SKINS: readonly SkinMeta[] = [
     id: "vast-sea",
     name: "沧海启明",
     previewColor: "#394676",
-    previewImage: "/skins/vast-sea/banner-card.jpg",
+    previewImage: previewImage("vast-sea"),
     legacyLight: 29,
   },
 ];

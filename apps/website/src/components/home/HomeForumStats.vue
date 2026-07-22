@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import mascotUrl from "../../assets/home/forum-stats-mascot.webp";
+
 defineProps<{
   todayPosts?: number;
   todayTopics?: number;
@@ -17,7 +19,7 @@ function formatCount(value: number | undefined): string {
 <template>
   <div class="home-forum-stats">
     <button class="home-forum-stats__trigger" type="button" aria-label="查看论坛统计">
-      <img src="/home/forum-stats-mascot.webp" alt="" />
+      <img :src="mascotUrl" alt="" />
       <span class="home-forum-stats__status" aria-hidden="true" />
     </button>
 
@@ -25,7 +27,7 @@ function formatCount(value: number | undefined): string {
       <header class="home-forum-stats__header">
         <div class="home-forum-stats__identity">
           <span class="home-forum-stats__mark" aria-hidden="true">
-            <img src="/home/forum-stats-mascot.webp" alt="" />
+            <img :src="mascotUrl" alt="" />
           </span>
           <div>
             <h2>论坛统计</h2>

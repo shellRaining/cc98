@@ -504,15 +504,15 @@ function formatTime(value?: string | null) {
 
 .annual-review-page--cover {
   position: relative;
-  background-image: url("/static/images/annual-review/cover2025.jpg");
+  background-image: url("../../assets/annual-review/cover2025.jpg");
 }
 
 .annual-review-page--cat {
-  background-image: url("/static/images/annual-review/bg-cat.jpg");
+  background-image: url("../../assets/annual-review/bg-cat.jpg");
 }
 
 .annual-review-page--rabbit {
-  background-image: url("/static/images/annual-review/bg-rabbit.jpg");
+  background-image: url("../../assets/annual-review/bg-rabbit.jpg");
 }
 
 .annual-review-copy {

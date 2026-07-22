@@ -276,14 +276,12 @@ describe("皮肤注册表", () => {
   it("全部皮肤都有旧站主色和真实缩略图", () => {
     expect(ALL_SKINS.every((skin) => /^#[0-9a-f]{6}$/i.test(skin.previewColor))).toBe(true);
     expect(ALL_SKINS.find((skin) => skin.id === "default")?.previewImage).toBe(
-      "/skins/summer/banner-card.jpg",
+      ALL_SKINS.find((skin) => skin.id === "summer")?.previewImage,
     );
-    expect(ALL_SKINS.find((skin) => skin.id === "summer")?.previewImage).toBe(
-      "/skins/summer/banner-card.jpg",
+    expect(ALL_SKINS.find((skin) => skin.id === "spring-festival")?.previewImage).not.toBe(
+      ALL_SKINS.find((skin) => skin.id === "summer")?.previewImage,
     );
-    expect(ALL_SKINS.find((skin) => skin.id === "spring-festival")?.previewImage).toBe(
-      "/skins/spring-festival/banner-card.jpg",
-    );
+    expect(ALL_SKINS.every((skin) => !skin.previewImage.startsWith("/skins/"))).toBe(true);
     expect(ALL_SKINS.every((skin) => skin.previewImage.endsWith("/banner-card.jpg"))).toBe(true);
   });
 });

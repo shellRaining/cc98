@@ -2,11 +2,17 @@ import { describe, expect, test } from "vite-plus/test";
 import { FULL_PAGE_STATUS_CONFIG } from "../src/components/full-page-status.ts";
 
 describe("完整错误页配置", () => {
-  test("保留旧站四类状态插图", () => {
-    expect(FULL_PAGE_STATUS_CONFIG.unauthorized.image).toBe("/static/images/401.webp");
-    expect(FULL_PAGE_STATUS_CONFIG.forbidden.image).toBe("/static/images/403.webp");
-    expect(FULL_PAGE_STATUS_CONFIG["not-found"].image).toBe("/static/images/404.webp");
-    expect(FULL_PAGE_STATUS_CONFIG.server.image).toBe("/static/images/500.webp");
+  test("四类状态插图进入构建依赖图", () => {
+    const statusImages = [
+      FULL_PAGE_STATUS_CONFIG.unauthorized.image,
+      FULL_PAGE_STATUS_CONFIG.forbidden.image,
+      FULL_PAGE_STATUS_CONFIG["not-found"].image,
+      FULL_PAGE_STATUS_CONFIG.server.image,
+    ];
+    expect(statusImages.every(Boolean)).toBe(true);
+    expect(new Set(statusImages).size).toBe(4);
+    expect(statusImages.every((image) => !image.startsWith("/static/images/"))).toBe(true);
+    expect(FULL_PAGE_STATUS_CONFIG.network.image).toBe(FULL_PAGE_STATUS_CONFIG.server.image);
   });
 
   test("需要恢复的状态提供登录或重试入口", () => {
