@@ -29,8 +29,8 @@
   --cc98-on-accent: #ffffff;
 
   /* 线上系统默认当前为夏季皮肤 */
-  --cc98-banner-image: url("/skins/summer/banner.jpg");
-  --cc98-banner-card-image: url("/skins/summer/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/summer/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/summer/banner-card.jpg");
   --cc98-banner-height: 12rem;
 
   /* 语义 token */

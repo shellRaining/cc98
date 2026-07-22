@@ -114,10 +114,11 @@ describe("用户中心列表工具", () => {
 describe("用户头像框", () => {
   test("按旧站头衔编号映射共享资源与尺寸", () => {
     expect(getAvatarFrame(18)).toMatchObject({
-      imageUrl: "/static/images/相框/版主.png",
       post: { width: "7.64rem", left: "-3.5rem", top: "-3.5rem" },
       profile: { width: "15rem", left: "-1.75rem", top: "-2rem" },
     });
+    expect(getAvatarFrame(18)?.imageUrl).toBeTruthy();
+    expect(getAvatarFrame(18)?.imageUrl).not.toContain("/static/images/");
     expect(getAvatarFrame(22)).toEqual(getAvatarFrame(18));
     expect(getAvatarFrame(104)?.keepPostShadow).toBe(true);
     expect(getAvatarFrame(7)).toBeNull();

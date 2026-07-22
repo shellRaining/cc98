@@ -9,8 +9,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #79b8ca 84%, #000000);
   --cc98-blue-sub: #6b7178;
   --cc98-topbar: rgb(121 184 202 / 0.8);
-  --cc98-banner-image: url("/skins/winter/banner.jpg");
-  --cc98-banner-card-image: url("/skins/winter/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/winter/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/winter/banner-card.jpg");
 }
 
 :root[data-skin="spring"] {
@@ -18,8 +18,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #b1d396 84%, #000000);
   --cc98-blue-sub: #f595a9;
   --cc98-topbar: rgb(177 211 150 / 0.8);
-  --cc98-banner-image: url("/skins/spring/banner.jpg");
-  --cc98-banner-card-image: url("/skins/spring/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/spring/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/spring/banner-card.jpg");
 }
 
 :root[data-skin="spring-deep"] {
@@ -27,8 +27,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #95b675 84%, #000000);
   --cc98-blue-sub: #c490bf;
   --cc98-topbar: rgb(149 182 117 / 0.8);
-  --cc98-banner-image: url("/skins/spring-deep/banner.jpg");
-  --cc98-banner-card-image: url("/skins/spring-deep/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/spring-deep/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/spring-deep/banner-card.jpg");
 }
 
 :root[data-skin="summer"] {
@@ -36,8 +36,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #5198d8 84%, #000000);
   --cc98-blue-sub: #6b7178;
   --cc98-topbar: rgb(81 153 216 / 0.8);
-  --cc98-banner-image: url("/skins/summer/banner.jpg");
-  --cc98-banner-card-image: url("/skins/summer/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/summer/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/summer/banner-card.jpg");
 }
 
 :root[data-skin="autumn"] {
@@ -45,8 +45,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #e1975a 84%, #000000);
   --cc98-blue-sub: #6b7178;
   --cc98-topbar: rgb(225 151 90 / 0.8);
-  --cc98-banner-image: url("/skins/autumn/banner.jpg");
-  --cc98-banner-card-image: url("/skins/autumn/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/autumn/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/autumn/banner-card.jpg");
 }
 
 :root[data-skin="singles-day"] {
@@ -54,8 +54,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #f07d91 84%, #000000);
   --cc98-blue-sub: #79b8ca;
   --cc98-topbar: rgb(240 125 145 / 0.8);
-  --cc98-banner-image: url("/skins/singles-day/banner.jpg");
-  --cc98-banner-card-image: url("/skins/singles-day/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/singles-day/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/singles-day/banner-card.jpg");
 }
 
 :root[data-skin="mid-autumn"] {
@@ -63,8 +63,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #34969f 84%, #000000);
   --cc98-blue-sub: #a45b86;
   --cc98-topbar: rgb(52 150 159 / 0.8);
-  --cc98-banner-image: url("/skins/mid-autumn/banner.jpg");
-  --cc98-banner-card-image: url("/skins/mid-autumn/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/mid-autumn/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/mid-autumn/banner-card.jpg");
 }
 
 :root[data-skin="light-snow"] {
@@ -72,8 +72,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #7a92c2 84%, #000000);
   --cc98-blue-sub: #c46bb5;
   --cc98-topbar: rgb(122 146 194 / 0.8);
-  --cc98-banner-image: url("/skins/light-snow/banner.jpg");
-  --cc98-banner-card-image: url("/skins/light-snow/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/light-snow/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/light-snow/banner-card.jpg");
 }
 
 :root[data-skin="spring-festival"] {
@@ -81,8 +81,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #cd5555 84%, #000000);
   --cc98-blue-sub: #e1820a;
   --cc98-topbar: rgb(205 85 85 / 0.8);
-  --cc98-banner-image: url("/skins/spring-festival/banner.jpg");
-  --cc98-banner-card-image: url("/skins/spring-festival/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/spring-festival/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/spring-festival/banner-card.jpg");
 }
 
 :root[data-skin="mid-spring"] {
@@ -90,8 +90,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #468d39 84%, #000000);
   --cc98-blue-sub: #29758a;
   --cc98-topbar: rgb(70 141 57 / 0.8);
-  --cc98-banner-image: url("/skins/mid-spring/banner.jpg");
-  --cc98-banner-card-image: url("/skins/mid-spring/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/mid-spring/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/mid-spring/banner-card.jpg");
 }
 
 :root[data-skin="dragon-boat"] {
@@ -99,8 +99,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #3578bc 84%, #000000);
   --cc98-blue-sub: #b15752;
   --cc98-topbar: rgb(53 120 188 / 0.8);
-  --cc98-banner-image: url("/skins/dragon-boat/banner.jpg");
-  --cc98-banner-card-image: url("/skins/dragon-boat/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/dragon-boat/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/dragon-boat/banner-card.jpg");
 }
 
 :root[data-skin="qingming"] {
@@ -108,8 +108,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #6a8471 84%, #000000);
   --cc98-blue-sub: #b39b83;
   --cc98-topbar: rgb(106 132 113 / 0.8);
-  --cc98-banner-image: url("/skins/qingming/banner.jpg");
-  --cc98-banner-card-image: url("/skins/qingming/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/qingming/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/qingming/banner-card.jpg");
 }
 
 :root[data-skin="autumn-sky"] {
@@ -117,8 +117,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #eb8e55 84%, #000000);
   --cc98-blue-sub: #83bacc;
   --cc98-topbar: rgb(225 151 90 / 0.8);
-  --cc98-banner-image: url("/skins/autumn-sky/banner.jpg");
-  --cc98-banner-card-image: url("/skins/autumn-sky/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/autumn-sky/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/autumn-sky/banner-card.jpg");
 }
 
 :root[data-skin="warm-snow"] {
@@ -126,8 +126,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #b57fa3 84%, #000000);
   --cc98-blue-sub: #7c62a3;
   --cc98-topbar: rgb(181 127 163 / 0.8);
-  --cc98-banner-image: url("/skins/warm-snow/banner.jpg");
-  --cc98-banner-card-image: url("/skins/warm-snow/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/warm-snow/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/warm-snow/banner-card.jpg");
 }
 
 :root[data-skin="spring-blossom"] {
@@ -135,8 +135,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #abc349 84%, #000000);
   --cc98-blue-sub: #4189a1;
   --cc98-topbar: rgb(171 195 73 / 0.8);
-  --cc98-banner-image: url("/skins/spring-blossom/banner.jpg");
-  --cc98-banner-card-image: url("/skins/spring-blossom/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/spring-blossom/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/spring-blossom/banner-card.jpg");
 }
 
 :root[data-skin="chongyang"] {
@@ -144,8 +144,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #7a6d99 84%, #000000);
   --cc98-blue-sub: #e2bf74;
   --cc98-topbar: rgb(122 109 153 / 0.8);
-  --cc98-banner-image: url("/skins/chongyang/banner.jpg");
-  --cc98-banner-card-image: url("/skins/chongyang/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/chongyang/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/chongyang/banner-card.jpg");
 }
 
 :root[data-skin="golden-spring"] {
@@ -153,8 +153,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #fb8071 84%, #000000);
   --cc98-blue-sub: #fa8a09;
   --cc98-topbar: rgb(251 128 113 / 0.8);
-  --cc98-banner-image: url("/skins/golden-spring/banner.jpg");
-  --cc98-banner-card-image: url("/skins/golden-spring/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/golden-spring/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/golden-spring/banner-card.jpg");
 }
 
 :root[data-skin="new-year-flower"] {
@@ -162,8 +162,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #e08585 84%, #000000);
   --cc98-blue-sub: #72c0ec;
   --cc98-topbar: rgb(205 87 87 / 0.8);
-  --cc98-banner-image: url("/skins/new-year-flower/banner.jpg");
-  --cc98-banner-card-image: url("/skins/new-year-flower/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/new-year-flower/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/new-year-flower/banner-card.jpg");
 }
 
 :root[data-skin="vast-sea"] {
@@ -171,8 +171,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #394676 84%, #000000);
   --cc98-blue-sub: #dab44d;
   --cc98-topbar: rgb(57 70 118 / 0.82);
-  --cc98-banner-image: url("/skins/vast-sea/banner.jpg");
-  --cc98-banner-card-image: url("/skins/vast-sea/banner-card.jpg");
+  --cc98-banner-image: url("../assets/themes/vast-sea/banner.jpg");
+  --cc98-banner-card-image: url("../assets/themes/vast-sea/banner-card.jpg");
 }
 
 :root[data-skin="vast-sea"][data-theme="light"] {
@@ -192,8 +192,8 @@
   --cc98-ink: #000000;
   --cc98-ink-muted: #505050;
   --cc98-ink-caption: #6b7178;
-  --cc98-banner-image: url("/skins/autumn/banner-dark.jpg");
-  --cc98-banner-card-image: url("/skins/autumn/banner-card-dark.jpg");
+  --cc98-banner-image: url("../assets/themes/autumn/banner-dark.jpg");
+  --cc98-banner-card-image: url("../assets/themes/autumn/banner-card-dark.jpg");
 }
 
 :root[data-theme="dark"][data-skin="mid-autumn"],
@@ -240,8 +240,8 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #a02222 84%, #000000);
   --cc98-blue-sub: #f09600;
   --cc98-topbar: rgb(160 34 34 / 0.8);
-  --cc98-banner-image: url("/skins/spring-festival/banner-dark.jpg");
-  --cc98-banner-card-image: url("/skins/spring-festival/banner-card-dark.jpg");
+  --cc98-banner-image: url("../assets/themes/spring-festival/banner-dark.jpg");
+  --cc98-banner-card-image: url("../assets/themes/spring-festival/banner-card-dark.jpg");
 }
 
 :root[data-theme="dark"][data-skin="autumn-sky"] {
@@ -255,8 +255,8 @@
   --cc98-blue-strong: #7d5577;
   --cc98-blue-strong-hover: color-mix(in srgb, #7d5577 84%, #000000);
   --cc98-topbar: rgb(125 85 119 / 0.8);
-  --cc98-banner-image: url("/skins/warm-snow/banner-dark.jpg");
-  --cc98-banner-card-image: url("/skins/warm-snow/banner-card-dark.jpg");
+  --cc98-banner-image: url("../assets/themes/warm-snow/banner-dark.jpg");
+  --cc98-banner-card-image: url("../assets/themes/warm-snow/banner-card-dark.jpg");
 }
 
 :root[data-theme="dark"][data-skin="spring-blossom"] {
@@ -281,6 +281,6 @@
   --cc98-blue-strong-hover: color-mix(in srgb, #e25d5d 84%, #000000);
   --cc98-blue-sub: #4c8eb4;
   --cc98-topbar: rgb(205 87 87 / 0.8);
-  --cc98-banner-image: url("/skins/new-year-flower/banner-dark.jpg");
-  --cc98-banner-card-image: url("/skins/new-year-flower/banner-card-dark.jpg");
+  --cc98-banner-image: url("../assets/themes/new-year-flower/banner-dark.jpg");
+  --cc98-banner-card-image: url("../assets/themes/new-year-flower/banner-card-dark.jpg");
 }

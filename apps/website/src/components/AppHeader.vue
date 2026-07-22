@@ -11,6 +11,7 @@ import {
 } from "../router/links";
 import { saveLoginRedirect } from "../lib/login-redirect";
 import { isSiteAdministrator, useUserStore } from "../stores/user";
+import logoUrl from "../assets/brand/logo.ico";
 import { resolveAvatarUrl } from "./user/avatar";
 import UiBadge from "./ui/Badge.vue";
 import UiSelect, { type UiSelectOption } from "./ui/Select.vue";
@@ -94,7 +95,7 @@ function updateSearchKind(value: string | number) {
       <div class="cc98-content site-header__row">
         <div class="site-header__left">
           <RouterLink to="/" class="site-header__brand" aria-label="CC98 论坛首页">
-            <img src="/static/images/98LOGO.ico" alt="" />
+            <img :src="logoUrl" alt="" />
             <span>CC98论坛</span>
           </RouterLink>
           <span class="site-header__separator" aria-hidden="true">|</span>

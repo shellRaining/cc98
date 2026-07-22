@@ -5,6 +5,8 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 import { AccountLockedError, LoginError } from "../stores/user";
 import { takeLoginRedirect } from "../lib/login-redirect";
+import illustrationUrl from "../assets/login/illustration.png";
+import welcomeUrl from "../assets/login/welcome.png";
 
 useTitle("登录 - CC98 论坛");
 
@@ -72,11 +74,11 @@ async function handleLogin() {
 
     <div class="login-card">
       <div class="login-card__illustration">
-        <img src="/login/illustration.png" alt="欢迎回家，等你好久了" />
+        <img :src="illustrationUrl" alt="欢迎回家，等你好久了" />
       </div>
 
       <div class="login-card__panel">
-        <img class="login-card__welcome" src="/login/welcome.png" alt="登录论坛" />
+        <img class="login-card__welcome" :src="welcomeUrl" alt="登录论坛" />
         <h1 class="sr-only">登录</h1>
         <form class="login-form" autocomplete="on" @submit.prevent="handleLogin">
           <label class="login-form__row" for="login-name">

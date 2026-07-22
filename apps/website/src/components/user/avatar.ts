@@ -1,4 +1,11 @@
+import deletedUserAvatarUrl from "../../assets/brand/cc98.png";
+import anonymousPostAvatarUrl from "../../assets/user/anonymous/post.gif";
+import anonymousTopicAvatarUrl from "../../assets/user/anonymous/topic.png";
+
 export const DEFAULT_AVATAR_URL = "/static/images/default_avatar_boy.png";
+export const ANONYMOUS_POST_AVATAR_URL = anonymousPostAvatarUrl;
+export const ANONYMOUS_TOPIC_AVATAR_URL = anonymousTopicAvatarUrl;
+export const DELETED_USER_AVATAR_URL = deletedUserAvatarUrl;
 
 const INSECURE_HTTP_PROTOCOL = /^http:\/\//i;
 
