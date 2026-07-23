@@ -1,4 +1,5 @@
 import type { ThemeSetting } from "@cc98/api";
+import forumStatsMascotFallback from "../assets/home/forum-stats-mascot.webp";
 
 /**
  * 主题三个正交维度：
@@ -45,6 +46,21 @@ const previewModules = import.meta.glob("../assets/themes/*/banner-card.jpg", {
 const previewBySkin = new Map(
   Object.entries(previewModules).flatMap(([path, url]) => {
     const skin = path.match(/\/themes\/([^/]+)\/banner-card\.jpg$/)?.[1] as SkinId | undefined;
+    return skin ? [[skin, url] as const] : [];
+  }),
+);
+
+const forumStatsMascotModules = import.meta.glob("../assets/themes/*/forum-stats-mascot.webp", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const forumStatsMascotBySkin = new Map(
+  Object.entries(forumStatsMascotModules).flatMap(([path, url]) => {
+    const skin = path.match(/\/themes\/([^/]+)\/forum-stats-mascot\.webp$/)?.[1] as
+      | SkinId
+      | undefined;
     return skin ? [[skin, url] as const] : [];
   }),
 );
@@ -252,6 +268,12 @@ export const ALL_SKINS: readonly {
 
 /** 已落地旧站颜色变量和横幅资源的全部皮肤。 */
 export const IMPLEMENTED_SKINS: ReadonlySet<SkinId> = new Set(SKINS.map((skin) => skin.id));
+
+/** 解析当前皮肤的论坛统计雪球君，默认皮肤复用夏季，未知资源回退到原图。 */
+export function resolveForumStatsMascot(skin: SkinId): string {
+  const resolvedSkin = skin === "default" ? "summer" : skin;
+  return forumStatsMascotBySkin.get(resolvedSkin) ?? forumStatsMascotFallback;
+}
 
 /** 该 skin 是否带亮暗配对（老论坛成对皮肤） */
 export function isPairedSkin(skin: SkinId): boolean {

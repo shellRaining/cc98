@@ -32,7 +32,6 @@
 | `active/2026-07-11-openapi-public-infrastructure.md` | 部分完成 | API 契约主体已完成，静态文档与公共发布待实施 |
 | `active/2026-07-13-milkdown-evaluation.md`           | 待实施   | 选型调研已完成，生产编辑器迁移尚未开始       |
 | `active/2026-07-18-apifox-cli-integration.md`        | 调研中   | CLI 依赖已固定，待登录验证同步算法和远端结构 |
-| `active/2026-07-23-themed-forum-stats-mascots.md`    | 进行中   | 19 套候选已生成，等待人工确认后接入          |
 
 ## 已完成的计划
 
@@ -56,6 +55,7 @@
 | `completed/2026-07-18-frontend-migration-roadmap.md`                | 阶段 0 至阶段 8 的迁移历史与完成审计               |
 | `completed/2026-07-18-website-lib-ownership-migration.md`           | 业务 `lib` 已收敛，路由页和私有组件按域归位        |
 | `completed/2026-07-22-image-asset-organization.md`                  | 图片按业务所有权归档，`public` 收敛为固定 URL 资源 |
+| `completed/2026-07-23-themed-forum-stats-mascots.md`                | 19 套论坛统计雪球君皮肤已接入并完成浏览器走查      |
 
 ## 何时写
 
