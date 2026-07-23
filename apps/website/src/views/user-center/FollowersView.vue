@@ -273,7 +273,7 @@ function replaceBrokenAvatar(event: Event) {
 
 .user-relation__message,
 .user-relation__follow.is-unfollowed {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

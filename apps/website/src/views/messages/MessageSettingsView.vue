@@ -112,7 +112,7 @@ onBeforeUnmount(() => {
 
 .message-setting > button:hover {
   border-color: var(--cc98-color-primary);
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

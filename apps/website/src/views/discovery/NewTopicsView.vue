@@ -332,7 +332,7 @@ function formatCount(value: number | undefined) {
 .new-topics-toolbar__modes button:hover,
 .new-topics-toolbar__modes button.is-active,
 .new-topics-refresh:hover {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 
@@ -382,7 +382,7 @@ function formatCount(value: number | undefined) {
 
 .new-topic-profile-card__background {
   height: 4.0625rem;
-  background-color: var(--cc98-color-primary);
+  background-color: var(--cc98-color-primary-fill);
   background-image: var(--cc98-banner-card-image);
   background-position: center;
   background-size: cover;
@@ -402,7 +402,7 @@ function formatCount(value: number | undefined) {
   height: 5rem;
   margin-top: -2.5rem;
   border-radius: 50%;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   object-fit: cover;
 }
 
@@ -496,7 +496,7 @@ function formatCount(value: number | undefined) {
   height: 2rem;
   border: 0;
   border-radius: 999px;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   cursor: pointer;

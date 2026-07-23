@@ -190,7 +190,7 @@ async function toggleBoard(board: Board & { id: number }) {
   flex: 0 0 7rem;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
 }
 
 .user-followed-board__image {
@@ -231,7 +231,7 @@ async function toggleBoard(board: Board & { id: number }) {
 }
 
 .user-followed-board-list li > button.is-unfollowed {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

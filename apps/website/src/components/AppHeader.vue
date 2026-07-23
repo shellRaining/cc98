@@ -203,14 +203,14 @@ function updateSearchKind(value: string | number) {
   position: relative;
   height: 3rem;
   margin-bottom: 1.25rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
 }
 
 .site-header--home {
   isolation: isolate;
   height: var(--cc98-banner-height);
   overflow: hidden;
-  background-color: var(--cc98-color-primary);
+  background-color: var(--cc98-color-primary-fill);
 }
 
 .site-header--home::before,
@@ -224,10 +224,10 @@ function updateSearchKind(value: string | number) {
   display: none;
   z-index: 0;
   inset: -1rem;
-  background-image: var(--cc98-banner-image);
-  background-repeat: no-repeat;
+  background-image: var(--cc98-banner-overlay), var(--cc98-banner-image);
+  background-repeat: no-repeat, no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: cover, cover;
   filter: blur(1rem) saturate(0.9);
   opacity: 0.72;
 }
@@ -235,10 +235,12 @@ function updateSearchKind(value: string | number) {
 .site-header--home::after {
   z-index: 1;
   inset: 0;
-  background-image: var(--cc98-banner-image);
-  background-repeat: no-repeat;
+  background-image: var(--cc98-banner-overlay), var(--cc98-banner-image);
+  background-repeat: no-repeat, no-repeat;
   background-position: center;
-  background-size: auto var(--cc98-banner-height);
+  background-size:
+    cover,
+    auto var(--cc98-banner-height);
 }
 
 @media (min-width: 120.0625rem) {
@@ -334,15 +336,16 @@ function updateSearchKind(value: string | number) {
   margin-left: 1rem;
   overflow: hidden;
   padding-inline: 1rem;
+  border: 1px solid var(--cc98-color-header-search-border);
   border-radius: 0.625rem;
-  background: #fff;
-  color: var(--cc98-color-primary);
+  background: var(--cc98-color-header-search);
+  color: var(--cc98-color-header-search-text);
 }
 
 .header-search:focus-within {
   box-shadow:
     0 0 0 2px var(--cc98-color-primary),
-    0 0 0 4px rgb(255 255 255 / 0.9);
+    0 0 0 4px var(--cc98-color-header-search-halo);
 }
 
 .header-search :focus-visible {
@@ -353,10 +356,14 @@ function updateSearchKind(value: string | number) {
 .header-search button {
   border: 0;
   background: transparent;
-  color: var(--cc98-color-primary);
+  color: var(--cc98-color-header-search-text);
   font: inherit;
   font-size: 0.75rem;
   outline: none;
+}
+
+.header-search input::placeholder {
+  color: var(--cc98-color-text-caption);
 }
 
 .header-search input {
@@ -457,7 +464,7 @@ function updateSearchKind(value: string | number) {
   width: 8rem;
   max-height: 0;
   overflow: hidden;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   font-size: 0.875rem;
   opacity: 0;
   pointer-events: none;
@@ -540,7 +547,7 @@ function updateSearchKind(value: string | number) {
   width: 6rem;
   max-height: 0;
   overflow: hidden;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   font-size: 0.875rem;
   opacity: 0;
   pointer-events: none;

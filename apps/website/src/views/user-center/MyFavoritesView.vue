@@ -492,7 +492,7 @@ function formatTime(value: string | undefined): string {
 .favorite-manage-button {
   height: 2rem;
   border: 0;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   cursor: pointer;

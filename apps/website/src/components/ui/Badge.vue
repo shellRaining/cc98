@@ -28,7 +28,7 @@ const display = computed(() => (props.count > props.max ? `${props.max}+` : Stri
 const baseClass = "rounded-full text-center text-xs text-cc98-on-primary";
 const variantClass: Record<BadgeVariant, string> = {
   accent: "bg-cc98-accent",
-  primary: "bg-cc98-primary",
+  primary: "bg-cc98-primary-fill",
 };
 const shapeClass = computed(() => (props.dot ? "h-2 w-2 block" : "min-w-5 px-1 leading-5"));
 </script>

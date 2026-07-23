@@ -128,7 +128,7 @@ function formatTime(value?: string) {
 
 .topic-hero__meta :deep(button:hover),
 .topic-hero__meta a:hover {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

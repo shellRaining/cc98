@@ -113,7 +113,7 @@ const boardName = computed(() => props.board.name?.trim() || "未命名版面");
   height: 4rem;
   flex: none;
   border-radius: 50%;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   object-fit: contain;
 }
 

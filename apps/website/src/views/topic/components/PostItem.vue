@@ -182,7 +182,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   min-height: 100%;
   grid-template-columns: 8.3rem 7.2rem;
   padding: 1rem 0 1.25rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font-size: 0.75rem;
 }
@@ -452,7 +452,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 
 .topic-post__operations :deep(button:not(.post-reaction):hover),
 .topic-post__operation-link:hover {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 
@@ -479,7 +479,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font-size: 1rem;
   place-items: center;

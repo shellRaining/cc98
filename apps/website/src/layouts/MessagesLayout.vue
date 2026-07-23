@@ -89,7 +89,7 @@ function markAllRead() {
   margin-left: 8.25rem;
   border: 0;
   border-radius: 3px;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   font-size: 0.75rem;

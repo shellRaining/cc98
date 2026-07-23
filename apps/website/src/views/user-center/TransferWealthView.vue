@@ -194,7 +194,7 @@ async function submit() {
 }
 
 .user-transfer-wealth form > button:hover {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

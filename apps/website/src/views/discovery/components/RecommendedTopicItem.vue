@@ -79,7 +79,7 @@ function replaceBrokenAvatar(event: Event) {
   display: flex;
   min-width: 0;
   align-items: center;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

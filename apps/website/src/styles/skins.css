@@ -13,6 +13,33 @@
   --cc98-banner-card-image: url("../assets/themes/winter/banner-card.jpg");
 }
 
+:root[data-theme="dark"][data-skin="winter"] {
+  --cc98-blue-strong: #86b6c1;
+  --cc98-blue-strong-hover: #a0c8d0;
+  --cc98-blue-fill: #467983;
+  --cc98-blue-fill-hover: #4a7b85;
+  --cc98-blue-soft: #4c6870;
+  --cc98-blue-sub: #8d9aa0;
+  --cc98-blue-sub-soft: #4a5a60;
+  --cc98-topbar: rgb(20 33 38 / 0.92);
+
+  --cc98-page: #14191d;
+  --cc98-paper: #22292e;
+  --cc98-paper-subtle: #293238;
+  --cc98-line: #3b474f;
+  --cc98-ink: #d6dade;
+  --cc98-ink-muted: #a1a9af;
+  --cc98-ink-caption: #87939a;
+  --cc98-on-accent: #ffffff;
+
+  --cc98-banner-overlay: linear-gradient(rgb(8 17 21 / 0.24), rgb(8 17 21 / 0.34));
+  --cc98-header-search: rgb(34 41 46 / 0.94);
+  --cc98-header-search-text: #c7d0d4;
+  --cc98-header-search-line: #4c5b63;
+  --cc98-header-search-halo: rgb(20 33 38 / 0.72);
+  --cc98-home-panel-accent-width: 4px;
+}
+
 :root[data-skin="spring"] {
   --cc98-blue-strong: #b1d396;
   --cc98-blue-strong-hover: color-mix(in srgb, #b1d396 84%, #000000);

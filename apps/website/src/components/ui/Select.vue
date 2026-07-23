@@ -127,13 +127,13 @@ function updateValue(value: string | number) {
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--cc98-color-primary);
+  color: var(--cc98-color-header-search-text);
   font-size: 0.75rem;
 }
 
 .ui-select__trigger--header:focus-visible {
   border-color: transparent;
-  color: var(--cc98-color-primary);
+  color: var(--cc98-color-header-search-text);
   box-shadow: none;
 }
 
@@ -195,7 +195,7 @@ function updateValue(value: string | number) {
   width: 2rem;
   border: 0;
   border-radius: 0;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: var(--cc98-color-on-primary);
   font-size: 0.75rem;
   box-shadow: none;
@@ -253,7 +253,7 @@ function updateValue(value: string | number) {
 }
 
 .ui-select__item[data-highlighted] {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: var(--cc98-color-on-primary);
 }
 
@@ -279,7 +279,7 @@ function updateValue(value: string | number) {
 }
 
 .ui-select__content--header .ui-select__item[data-highlighted] {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
 }
 
 .ui-select__content--header .ui-select__item:hover,
