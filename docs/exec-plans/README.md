@@ -56,6 +56,7 @@
 | `completed/2026-07-18-frontend-migration-roadmap.md`                | 阶段 0 至阶段 8 的迁移历史与完成审计               |
 | `completed/2026-07-18-website-lib-ownership-migration.md`           | 业务 `lib` 已收敛，路由页和私有组件按域归位        |
 | `completed/2026-07-22-image-asset-organization.md`                  | 图片按业务所有权归档，`public` 收敛为固定 URL 资源 |
+| `completed/2026-07-23-themed-forum-stats-mascots.md`                | 19 套论坛统计雪球君皮肤已接入并完成浏览器走查      |
 
 ## 何时写
 

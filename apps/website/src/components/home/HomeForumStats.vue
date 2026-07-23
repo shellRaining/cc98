@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import mascotUrl from "../../assets/home/forum-stats-mascot.webp";
+import fallbackMascotUrl from "../../assets/home/forum-stats-mascot.webp";
+import { resolveForumStatsMascot } from "../../stores/skins";
+import { useThemeStore } from "../../stores/theme";
+import { computed } from "vue";
+
+const themeStore = useThemeStore();
+const mascotUrl = computed(() => resolveForumStatsMascot(themeStore.skin));
 
 defineProps<{
   todayPosts?: number;
@@ -14,12 +20,19 @@ defineProps<{
 function formatCount(value: number | undefined): string {
   return (value ?? 0).toLocaleString("zh-CN");
 }
+
+function handleMascotError(event: Event) {
+  const image = event.currentTarget;
+  if (!(image instanceof HTMLImageElement)) return;
+  if (image.getAttribute("src") === fallbackMascotUrl) return;
+  image.src = fallbackMascotUrl;
+}
 </script>
 
 <template>
   <div class="home-forum-stats">
     <button class="home-forum-stats__trigger" type="button" aria-label="查看论坛统计">
-      <img :src="mascotUrl" alt="" />
+      <img :src="mascotUrl" alt="" @error="handleMascotError" />
       <span class="home-forum-stats__status" aria-hidden="true" />
     </button>
 
@@ -27,7 +40,7 @@ function formatCount(value: number | undefined): string {
       <header class="home-forum-stats__header">
         <div class="home-forum-stats__identity">
           <span class="home-forum-stats__mark" aria-hidden="true">
-            <img :src="mascotUrl" alt="" />
+            <img :src="mascotUrl" alt="" @error="handleMascotError" />
           </span>
           <div>
             <h2>论坛统计</h2>

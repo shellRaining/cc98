@@ -5,10 +5,12 @@ import {
   isPairedSkin,
   legacyThemeToSkin,
   resolveAutoMode,
+  resolveForumStatsMascot,
   skinToLegacyTheme,
   type SkinId,
   type ThemeMode,
 } from "../../src/stores/skins.ts";
+import forumStatsMascotFallback from "../../src/assets/home/forum-stats-mascot.webp";
 import type { ThemeSetting } from "@cc98/api";
 
 // 固定一个日期，避免测试 flaky：2026-01-15 是个普通的星期四
@@ -283,5 +285,18 @@ describe("皮肤注册表", () => {
     );
     expect(ALL_SKINS.every((skin) => !skin.previewImage.startsWith("/skins/"))).toBe(true);
     expect(ALL_SKINS.every((skin) => skin.previewImage.endsWith("/banner-card.jpg"))).toBe(true);
+  });
+
+  it("论坛统计雪球君覆盖全部皮肤，default 复用 summer", () => {
+    expect(resolveForumStatsMascot("default")).toBe(resolveForumStatsMascot("summer"));
+    expect(
+      ALL_SKINS.filter((skin) => skin.id !== "default").every((skin) =>
+        resolveForumStatsMascot(skin.id).includes(`/themes/${skin.id}/forum-stats-mascot.webp`),
+      ),
+    ).toBe(true);
+  });
+
+  it("论坛统计雪球君遇到未知资源时回退原图", () => {
+    expect(resolveForumStatsMascot("missing" as SkinId)).toBe(forumStatsMascotFallback);
   });
 });
