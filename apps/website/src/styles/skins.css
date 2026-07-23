@@ -1,7 +1,7 @@
 /*
  * 旧站皮肤变量来自 Forum/Themes/*.scss，横幅来自旧站构建产物。
- * 单编号皮肤在深色模式下保留标识色和横幅，页面底色继续使用全局深色方案；
- * 亮暗配对皮肤则完整恢复对应旧编号的主色、页面底色和卡片底色。
+ * 亮色模式保留旧站变量；暗色模式以旧站主色和横幅为依据，
+ * 再按统一的暗色表面、文字和填充色规则调整。
  */
 
 :root[data-skin="winter"] {
@@ -49,6 +49,37 @@
   --cc98-banner-card-image: url("../assets/themes/spring/banner-card.jpg");
 }
 
+:root[data-theme="dark"][data-skin="spring"],
+:root[data-theme="dark"][data-skin="spring-deep"] {
+  --cc98-topbar: rgb(20 31 24 / 0.92);
+
+  --cc98-page: #141916;
+  --cc98-paper: #222a25;
+  --cc98-paper-subtle: #29322d;
+  --cc98-line: #3b4940;
+  --cc98-ink: #d8ddd9;
+  --cc98-ink-muted: #a3aca6;
+  --cc98-ink-caption: #89968e;
+  --cc98-on-accent: #ffffff;
+
+  --cc98-banner-overlay: linear-gradient(rgb(9 18 12 / 0.28), rgb(9 18 12 / 0.38));
+  --cc98-header-search: rgb(34 42 37 / 0.94);
+  --cc98-header-search-text: #cad4cc;
+  --cc98-header-search-line: #4c5d51;
+  --cc98-header-search-halo: rgb(20 31 24 / 0.72);
+  --cc98-home-panel-accent-width: 4px;
+}
+
+:root[data-theme="dark"][data-skin="spring"] {
+  --cc98-blue-strong: #a8c99a;
+  --cc98-blue-strong-hover: #bad7ae;
+  --cc98-blue-fill: #527b59;
+  --cc98-blue-fill-hover: #557e5b;
+  --cc98-blue-soft: #536859;
+  --cc98-blue-sub: #d4a0ad;
+  --cc98-blue-sub-soft: #66515a;
+}
+
 :root[data-skin="spring-deep"] {
   --cc98-blue-strong: #95b675;
   --cc98-blue-strong-hover: color-mix(in srgb, #95b675 84%, #000000);
@@ -58,6 +89,16 @@
   --cc98-banner-card-image: url("../assets/themes/spring-deep/banner-card.jpg");
 }
 
+:root[data-theme="dark"][data-skin="spring-deep"] {
+  --cc98-blue-strong: #9fbd84;
+  --cc98-blue-strong-hover: #b1cb99;
+  --cc98-blue-fill: #5a794f;
+  --cc98-blue-fill-hover: #5c7b51;
+  --cc98-blue-soft: #566747;
+  --cc98-blue-sub: #c9a0c6;
+  --cc98-blue-sub-soft: #635362;
+}
+
 :root[data-skin="summer"] {
   --cc98-blue-strong: #5198d8;
   --cc98-blue-strong-hover: color-mix(in srgb, #5198d8 84%, #000000);
@@ -65,6 +106,34 @@
   --cc98-topbar: rgb(81 153 216 / 0.8);
   --cc98-banner-image: url("../assets/themes/summer/banner.jpg");
   --cc98-banner-card-image: url("../assets/themes/summer/banner-card.jpg");
+}
+
+:root[data-theme="dark"][data-skin="default"],
+:root[data-theme="dark"][data-skin="summer"] {
+  --cc98-blue-strong: #7fb3df;
+  --cc98-blue-strong-hover: #98c2e4;
+  --cc98-blue-fill: #41779e;
+  --cc98-blue-fill-hover: #43799f;
+  --cc98-blue-soft: #4a667d;
+  --cc98-blue-sub: #9ba5ae;
+  --cc98-blue-sub-soft: #4b5966;
+  --cc98-topbar: rgb(20 35 47 / 0.92);
+
+  --cc98-page: #121820;
+  --cc98-paper: #202933;
+  --cc98-paper-subtle: #27323d;
+  --cc98-line: #394856;
+  --cc98-ink: #d8dde3;
+  --cc98-ink-muted: #a2abb5;
+  --cc98-ink-caption: #87939f;
+  --cc98-on-accent: #ffffff;
+
+  --cc98-banner-overlay: linear-gradient(rgb(7 17 26 / 0.22), rgb(7 17 26 / 0.34));
+  --cc98-header-search: rgb(32 41 51 / 0.94);
+  --cc98-header-search-text: #cbd5df;
+  --cc98-header-search-line: #4b5c6d;
+  --cc98-header-search-halo: rgb(20 35 47 / 0.72);
+  --cc98-home-panel-accent-width: 4px;
 }
 
 :root[data-skin="autumn"] {
@@ -206,22 +275,36 @@
   --cc98-page: #eef3f7;
 }
 
-/* 亮暗配对皮肤的暗色编号恢复旧站底色和正文卡片色。 */
 :root[data-theme="dark"][data-skin="autumn"] {
-  --cc98-blue-strong: rgb(190 119 55);
-  --cc98-blue-strong-hover: color-mix(in srgb, rgb(190 119 55) 84%, #000000);
-  --cc98-blue-sub: rgb(137 128 88);
-  --cc98-topbar: rgb(94 59 38 / 0.86);
-  --cc98-page: rgb(48 45 42);
-  --cc98-paper: rgb(195 185 170);
-  --cc98-paper-subtle: rgb(195 185 170);
-  --cc98-line: rgb(137 128 88);
-  --cc98-ink: #000000;
-  --cc98-ink-muted: #505050;
-  --cc98-ink-caption: #6b7178;
+  --cc98-blue-strong: #d7a071;
+  --cc98-blue-strong-hover: #e4b58e;
+  --cc98-blue-fill: #96663e;
+  --cc98-blue-fill-hover: #98683f;
+  --cc98-blue-soft: #715844;
+  --cc98-blue-sub: #aaa27b;
+  --cc98-blue-sub-soft: #5e5946;
+  --cc98-topbar: rgb(42 30 23 / 0.92);
+
+  --cc98-page: #191613;
+  --cc98-paper: #29231f;
+  --cc98-paper-subtle: #322b26;
+  --cc98-line: #4b4038;
+  --cc98-ink: #ddd8d3;
+  --cc98-ink-muted: #ada49c;
+  --cc98-ink-caption: #958a81;
+  --cc98-on-accent: #ffffff;
+
   --cc98-banner-image: url("../assets/themes/autumn/banner-dark.jpg");
   --cc98-banner-card-image: url("../assets/themes/autumn/banner-card-dark.jpg");
+  --cc98-banner-overlay: linear-gradient(rgb(18 13 9 / 0.06), rgb(18 13 9 / 0.14));
+  --cc98-header-search: rgb(41 35 31 / 0.94);
+  --cc98-header-search-text: #d6cec7;
+  --cc98-header-search-line: #5a4b41;
+  --cc98-header-search-halo: rgb(42 30 23 / 0.72);
+  --cc98-home-panel-accent-width: 4px;
 }
+
+/* 其余亮暗配对皮肤暂时保留旧站底色，后续按皮肤逐组适配。 */
 
 :root[data-theme="dark"][data-skin="mid-autumn"],
 :root[data-theme="dark"][data-skin="light-snow"],
