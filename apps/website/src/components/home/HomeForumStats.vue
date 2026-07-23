@@ -86,7 +86,7 @@ function formatCount(value: number | undefined): string {
   z-index: -1;
   inset: 0.4rem;
   border-radius: 50%;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   content: "";
   filter: blur(1rem);
   opacity: 0.38;

@@ -292,7 +292,7 @@ async function submitSetting() {
 .user-theme-mode button.is-active,
 .user-theme-submit button {
   border-color: var(--cc98-color-primary);
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

@@ -13,7 +13,11 @@
   --cc98-blue: #3399ff;
   --cc98-blue-strong: #5198d8;
   --cc98-blue-strong-hover: #3f82bf;
+  --cc98-blue-fill: var(--cc98-blue-strong);
+  --cc98-blue-fill-hover: var(--cc98-blue-strong-hover);
+  --cc98-blue-soft: var(--cc98-blue-strong);
   --cc98-blue-sub: #6b7178;
+  --cc98-blue-sub-soft: var(--cc98-blue-sub);
   --cc98-topbar: rgb(81 152 216 / 0.8);
   --cc98-red: #e5484d;
   --cc98-green: #2f9e6d;
@@ -31,13 +35,25 @@
   /* 线上系统默认当前为夏季皮肤 */
   --cc98-banner-image: url("../assets/themes/summer/banner.jpg");
   --cc98-banner-card-image: url("../assets/themes/summer/banner-card.jpg");
+  --cc98-banner-overlay: linear-gradient(transparent, transparent);
   --cc98-banner-height: 12rem;
+
+  --cc98-header-search: #ffffff;
+  --cc98-header-search-text: var(--cc98-blue-strong);
+  --cc98-header-search-line: transparent;
+  --cc98-header-search-halo: rgb(255 255 255 / 0.9);
+
+  --cc98-home-panel-accent-width: 8px;
 
   /* 语义 token */
   --cc98-color-brand: var(--cc98-blue);
   --cc98-color-primary: var(--cc98-blue-strong);
   --cc98-color-primary-hover: var(--cc98-blue-strong-hover);
+  --cc98-color-primary-fill: var(--cc98-blue-fill);
+  --cc98-color-primary-fill-hover: var(--cc98-blue-fill-hover);
+  --cc98-color-primary-soft: var(--cc98-blue-soft);
   --cc98-color-secondary: var(--cc98-blue-sub);
+  --cc98-color-secondary-soft: var(--cc98-blue-sub-soft);
   --cc98-color-topbar: var(--cc98-topbar);
   --cc98-color-accent: var(--cc98-red);
   --cc98-color-on-primary: var(--cc98-on-accent);
@@ -59,6 +75,11 @@
 
   /* 遮罩层 */
   --cc98-color-overlay: rgb(0 0 0 / 0.5);
+
+  --cc98-color-header-search: var(--cc98-header-search);
+  --cc98-color-header-search-text: var(--cc98-header-search-text);
+  --cc98-color-header-search-border: var(--cc98-header-search-line);
+  --cc98-color-header-search-halo: var(--cc98-header-search-halo);
 
   /* 尺度 token（不随主题变化） */
   --cc98-radius-sm: 4px;

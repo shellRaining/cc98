@@ -58,7 +58,7 @@ defineProps<{
   flex: none;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   place-items: center;
 }
 

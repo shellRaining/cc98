@@ -6,6 +6,9 @@ colors:
   brand: "#3399ff"
   primary: "#5198d8"
   primary-hover: "#3f82bf"
+  primary-fill: "#5198d8"
+  primary-fill-hover: "#3f82bf"
+  primary-soft: "#5198d8"
   accent: "#e5484d"
   background: "#e6e7ec"
   surface: "#ffffff"
@@ -91,16 +94,16 @@ spacing:
   content-width: 1140px
 components:
   topbar:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.primary-fill}"
     textColor: "{colors.on-primary}"
   button-primary:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.primary-fill}"
     textColor: "{colors.on-primary}"
     rounded: "{rounded.md}"
     padding: 12px
     typography: "{typography.label}"
   button-primary-hover:
-    backgroundColor: "{colors.primary-hover}"
+    backgroundColor: "{colors.primary-fill-hover}"
     textColor: "{colors.on-primary}"
   button-secondary:
     backgroundColor: "{colors.surface}"
@@ -166,7 +169,7 @@ CC98 是浙江大学的校园论坛，用户是熟悉它十几年的师生。界
 调色板围绕一个标识蓝、一个中性面板体系和少量状态色。
 
 - **Brand（#3399ff）**：来自老论坛板块色的蔚蓝，做身份标识。用在 Logo、皮肤标识和装饰，不铺在白字文本下（白字在它上面对比只有 2.9:1）。
-- **Primary（#5198d8）**：当前线上默认夏季皮肤的主色，用于顶栏、栏目色条、统计面板和皮肤身份。需要承载小号白字的主按钮可以使用经过对比度修正的操作色，不要求与皮肤主色共用同一个具体值。
+- **Primary（#5198d8）**：当前线上默认夏季皮肤的主色，用于标题、链接、图标和皮肤身份。`primary-fill` 是承载文字的填充色，供按钮、选中状态和实色面板使用；`primary-soft` 用于栏目色条和装饰边框。浅色模式下三者可以相同，暗色模式下分别调整亮度和饱和度。
 - **Accent（#e5484d）**：警示红。未读红点、删除、错误徽标这类强提示用，一屏只出现在最需要拉注意力的地方。作纯色块加白字时属大字/UI 元素，按 3:1 判定。
 - **Background（#e6e7ec）**：当前夏季皮肤的页面底色，与原站保持一致。
 - **Surface（#ffffff）**：卡片、主题项、楼层、弹窗的承载面。`surface-subtle`（#f6f8fa）用于卡片内的次级分区和代码块底。
@@ -175,7 +178,9 @@ CC98 是浙江大学的校园论坛，用户是熟悉它十几年的师生。界
 - **Link（#0b5394）**：沿用老论坛的链接颜色，访问前后保持同色，悬停时不加下划线。
 - **状态色**：`success` 绿、`warning` 橙、`error` 红，用于反馈。作图标、描边、色块用（3:1 足够）；需要当正文读的错误提示，配 `text` 或加深变体，不靠状态色本身承载 4.5:1。
 
-深色模式各语义色单独定义，不做机械反色。没有旧站暗色配对的皮肤沿用统一深色底色，只保留该皮肤的主色、次色、顶栏色和横幅。带亮暗配对的皮肤恢复旧站暗色编号对应的页面底色、正文底色和标识色。具体取值由主题 token 层维护，语义名保持不变。
+深色模式各语义色单独定义，不做机械反色。页面、内容面板和浮层使用逐级变亮的深灰表面，主要层级靠表面明度和中性边框表达。皮肤色保留在标题、链接、焦点和少量装饰上，不用高亮皮肤色包围大面积内容。
+
+暗色顶栏使用带皮肤色调的深色表面，避免直接铺满亮色主色。亮色横幅需要增加暗色遮罩或提供独立资源，压低雪地、灯光和白底插画在深色页面上的发光感。带旧站暗色编号的皮肤可以保留色相、横幅和编号关系，但正文面板仍需符合统一的暗色表面层级。
 
 ## Typography
 
@@ -213,8 +218,8 @@ CC98 是浙江大学的校园论坛，用户是熟悉它十几年的师生。界
 
 组件只消费语义 token，不写死颜色和尺寸。基础组件基于 Reka UI 无头能力二次封装，放在 `components/ui`。
 
-- **Topbar**：顶栏用 `primary` 底配白字（运行时随皮肤主色变），白字在 `primary` 上过 AA。换皮肤时皮肤主色要自行保证白字对比，见 Do/Don't。
-- **Button**：`primary` 蓝底白字做主操作，一屏一个；`secondary` 白底蓝字带 `primary` 描边做次操作；`ghost` 无底色、`text` 色做低强度操作（分页、图标按钮）。悬停、按下、禁用、加载都要有明确状态。
+- **Topbar**：浅色模式跟随皮肤顶栏色，暗色模式使用深色表面并带少量皮肤色调。顶栏文字和搜索控件需要在横幅各区域保持可读。
+- **Button**：`primary-fill` 底配 `on-primary` 文字做主操作，一屏一个；`secondary` 面板底配 `primary` 文字和描边做次操作；`ghost` 无底色、`text` 色做低强度操作（分页、图标按钮）。悬停、按下、禁用、加载都要有明确状态。
 - **Input / Textarea**：白底、`border` 描边，聚焦时描边转 `primary`，错误态转 `error` 描边并配辅助文字。
 - **Card**：内容承载面。首页栏目、版面列表和主题列表优先使用直角白底面板、细描边或顶部色条；用户工具卡和弹窗可以使用小圆角。
 - **Badge**：计数和状态标记，`full` 圆角。红色 `accent` 只给未读和警示，普通计数用中性色。
@@ -225,7 +230,9 @@ CC98 是浙江大学的校园论坛，用户是熟悉它十几年的师生。界
 
 - 主操作按钮一屏只用一个 `primary`，其余降级到 secondary 或 ghost。
 - 用 `brand` 做 Logo 和标识装饰，别拿它铺在白字文本下，对比不够。
-- 顶栏和按钮的白字底色守 3:1 以上；按钮在皮肤主色不足以承载文字时使用单独的操作色变体。
+- 顶栏和按钮的文字与填充色守 4.5:1；皮肤主色不直接承担填充职责，改用 `primary-fill` 和对应的 `on-primary`。
+- 暗色页面用表面明度和中性边框表达层级，别用高亮皮肤色包围每张卡片。
+- 亮色横幅进入暗色模式时加遮罩或替换资源，别让大面积白色和灯光紧贴深色正文。
 - 红色 `accent` 只留给未读和警示，别当普通强调色铺开。
 - 时间、楼层、计数这类要被读到的元信息用 `text-muted`，别用更浅的 `text-caption`。
 - 状态色作正文提示时配 `text` 或加深变体，别指望状态色本身达到 4.5:1。

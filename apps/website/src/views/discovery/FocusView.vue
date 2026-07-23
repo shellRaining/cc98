@@ -220,7 +220,7 @@ useIntersectionObserver(
   height: 2rem;
   border: 0;
   border-radius: 999px;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   cursor: pointer;
@@ -266,7 +266,7 @@ useIntersectionObserver(
   padding: 0.375rem 0.75rem;
   border: 1px solid var(--cc98-color-primary);
   border-radius: 0.25rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   cursor: pointer;
@@ -302,7 +302,7 @@ useIntersectionObserver(
 
 .focus-board-picker button:hover,
 .focus-board-picker button.is-active {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

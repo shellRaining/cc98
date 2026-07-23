@@ -144,7 +144,7 @@ async function submit() {
   bottom: -1px;
   left: 0.4rem;
   height: 2px;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   content: "";
 }
 

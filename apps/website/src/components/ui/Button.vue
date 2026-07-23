@@ -30,7 +30,7 @@ const baseClass =
   "inline-flex items-center justify-center gap-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
 const variantClass: Record<ButtonVariant, string> = {
-  primary: "bg-cc98-primary text-cc98-on-primary hover:bg-cc98-primary-hover",
+  primary: "bg-cc98-primary-fill text-cc98-on-primary hover:bg-cc98-primary-fill-hover",
   ghost: "border border-cc98-border bg-cc98-surface text-cc98-text hover:bg-cc98-surface-subtle",
   danger: "bg-cc98-error text-cc98-on-primary hover:opacity-90",
   text: "text-cc98-link hover:text-cc98-primary-hover",

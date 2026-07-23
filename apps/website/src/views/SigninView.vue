@@ -395,7 +395,7 @@ function makeUpMissedSignin() {
   border: 0;
   border-radius: 3px;
   margin: 1.25rem 0;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -502,7 +502,7 @@ function makeUpMissedSignin() {
   border: 0;
   border-radius: 4px;
   margin-left: 0.25rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   cursor: pointer;
   font: inherit;

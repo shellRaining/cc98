@@ -437,7 +437,7 @@ function toggleFollow() {
   padding: 0 0.75rem;
   border: 0;
   border-radius: 0.2rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   text-decoration: none;

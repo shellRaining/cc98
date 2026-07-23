@@ -69,7 +69,7 @@ const compact = isCompactBoardGroup(props.group.id);
   justify-content: space-between;
   gap: 1rem;
   padding: 0.5rem 1rem 0.5rem 1.1rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

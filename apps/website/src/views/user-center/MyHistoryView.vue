@@ -216,7 +216,7 @@ function formatTime(value: string | undefined): string {
 
 .user-history-toggle[aria-checked="true"] > span {
   border-color: var(--cc98-color-primary);
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
 }
 
 .user-history-toggle:disabled {

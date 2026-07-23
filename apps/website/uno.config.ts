@@ -25,7 +25,11 @@ export default defineConfig({
       "cc98-brand": "var(--cc98-color-brand)",
       "cc98-primary": "var(--cc98-color-primary)",
       "cc98-primary-hover": "var(--cc98-color-primary-hover)",
+      "cc98-primary-fill": "var(--cc98-color-primary-fill)",
+      "cc98-primary-fill-hover": "var(--cc98-color-primary-fill-hover)",
+      "cc98-primary-soft": "var(--cc98-color-primary-soft)",
       "cc98-secondary": "var(--cc98-color-secondary)",
+      "cc98-secondary-soft": "var(--cc98-color-secondary-soft)",
       "cc98-accent": "var(--cc98-color-accent)",
       "cc98-on-primary": "var(--cc98-color-on-primary)",
       "cc98-background": "var(--cc98-color-background)",
@@ -56,7 +60,7 @@ export default defineConfig({
     "cc98-link": "text-cc98-link hover:text-cc98-primary-hover transition-colors",
     "cc98-card": "bg-cc98-surface border border-cc98-border rounded-lg",
     "cc98-btn":
-      "inline-flex items-center justify-center gap-1 rounded bg-cc98-primary px-4 py-2 text-cc98-on-primary transition-colors hover:bg-cc98-primary-hover disabled:opacity-50",
+      "inline-flex items-center justify-center gap-1 rounded bg-cc98-primary-fill px-4 py-2 text-cc98-on-primary transition-colors hover:bg-cc98-primary-fill-hover disabled:opacity-50",
     "cc98-input":
       "rounded border border-cc98-border bg-cc98-surface-subtle px-3 py-2 text-cc98-text outline-none transition-colors focus:border-cc98-primary",
     "cc98-overlay": "fixed inset-0 z-40 bg-cc98-overlay",

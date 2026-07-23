@@ -326,7 +326,7 @@ function resetProfile() {
 }
 
 .user-settings button.is-primary {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

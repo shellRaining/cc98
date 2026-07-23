@@ -162,14 +162,14 @@ function postLink(post: (typeof posts.value)[number]): string {
   margin: -1rem 0 2rem;
   border: 0;
   border-radius: 0.25rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   cursor: pointer;
 }
 
 .user-content-toggle:hover {
-  background: var(--cc98-color-primary-hover);
+  background: var(--cc98-color-primary-fill-hover);
 }
 
 .user-content-list__meta--post {

@@ -496,14 +496,14 @@ function completeBatchModeration() {
   width: 7rem;
   height: 4rem;
   border-radius: 1rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font-size: 1.25rem;
   place-items: center;
 }
 
 .board-action-row__buttons a:hover {
-  background: var(--cc98-color-primary-hover);
+  background: var(--cc98-color-primary-fill-hover);
 }
 
 .board-action-row :deep(.home-advertisement) {
@@ -566,7 +566,7 @@ function completeBatchModeration() {
   display: grid;
   min-height: 3rem;
   align-items: center;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   grid-template-columns: minmax(0, 1fr) 28rem;
 }
@@ -615,7 +615,7 @@ function completeBatchModeration() {
   padding: 0.35rem 0.8rem;
   border: 1px solid var(--cc98-color-primary);
   border-radius: 0.2rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   cursor: pointer;
 }
@@ -641,7 +641,7 @@ function completeBatchModeration() {
 .board-page__bottom > div a,
 .board-page__bottom > div a:visited {
   padding: 0.4rem 0.75rem;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font-size: 0.875rem;
 }

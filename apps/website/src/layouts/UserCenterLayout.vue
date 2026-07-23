@@ -102,7 +102,7 @@ const links = [
   height: 2rem;
   border: 0;
   border-radius: 999px;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   font: inherit;
   cursor: pointer;

@@ -376,7 +376,7 @@ function formatExpiredTime(value: string | null): string {
   padding: 0.25rem 0.9rem;
   border: 1px solid var(--cc98-color-primary);
   border-radius: var(--cc98-radius-sm);
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: var(--cc98-color-on-primary);
   font: inherit;
   font-size: 0.875rem;
@@ -384,7 +384,7 @@ function formatExpiredTime(value: string | null): string {
 }
 
 .site-manage-page button:hover:not(:disabled) {
-  background: var(--cc98-color-primary-hover);
+  background: var(--cc98-color-primary-fill-hover);
 }
 
 .site-manage-page button:disabled,

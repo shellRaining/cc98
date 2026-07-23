@@ -67,13 +67,13 @@ onMounted(() => {
 .home-panel {
   margin-top: 0.75rem;
   border: 1px solid currentcolor;
-  border-top-width: 8px;
+  border-top-width: var(--cc98-home-panel-accent-width);
   background: var(--cc98-color-surface);
   color: var(--cc98-color-text);
 }
 
 .home-panel--secondary {
-  border-color: var(--cc98-color-secondary);
+  border-color: var(--cc98-color-secondary-soft);
 }
 
 .home-reading {

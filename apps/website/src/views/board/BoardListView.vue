@@ -84,7 +84,7 @@ const boardGroups = computed(() =>
 
 .board-list-guide a:hover,
 .board-list-guide a:focus-visible {
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
 }
 

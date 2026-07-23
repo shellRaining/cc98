@@ -743,7 +743,7 @@ async function handleDrop(event: DragEvent) {
   height: 1.875rem;
   border: 0;
   border-radius: 3px;
-  background: var(--cc98-color-primary);
+  background: var(--cc98-color-primary-fill);
   color: #fff;
   cursor: pointer;
   font: inherit;
