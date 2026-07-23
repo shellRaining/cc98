@@ -207,12 +207,54 @@ function updateSearchKind(value: string | number) {
 }
 
 .site-header--home {
+  isolation: isolate;
   height: var(--cc98-banner-height);
+  overflow: hidden;
   background-color: var(--cc98-color-primary);
+}
+
+.site-header--home::before,
+.site-header--home::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.site-header--home::before {
+  display: none;
+  z-index: 0;
+  inset: -1rem;
   background-image: var(--cc98-banner-image);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: auto 12rem;
+  background-size: cover;
+  filter: blur(1rem) saturate(0.9);
+  opacity: 0.72;
+}
+
+.site-header--home::after {
+  z-index: 1;
+  inset: 0;
+  background-image: var(--cc98-banner-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto var(--cc98-banner-height);
+}
+
+@media (min-width: 120.0625rem) {
+  .site-header--home::before {
+    display: block;
+  }
+
+  .site-header--home::after {
+    mask-image: linear-gradient(
+      to right,
+      transparent calc(50% - 60rem),
+      #000 calc(50% - 54rem),
+      #000 calc(50% + 54rem),
+      transparent calc(50% + 60rem)
+    );
+  }
 }
 
 .site-header__topbar {

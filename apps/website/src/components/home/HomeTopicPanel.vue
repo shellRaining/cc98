@@ -60,7 +60,7 @@ withDefaults(
 
 .home-topic-panel {
   height: 20rem;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1.25rem 1.25rem;
   font-size: 0.75rem;
   --home-topic-row-count: 10;
 }

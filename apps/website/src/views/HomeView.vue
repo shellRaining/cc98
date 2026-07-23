@@ -42,7 +42,6 @@ const study = computed(() => normalizeTopics(index.value?.study));
 const emotion = computed(() => normalizeTopics(index.value?.emotion));
 const fleaMarket = computed(() => normalizeTopics(index.value?.fleaMarket));
 const fullTimeJobs = computed(() => normalizeTopics(index.value?.fullTimeJob));
-const partTimeJobs = computed(() => normalizeTopics(index.value?.partTimeJob));
 const pageError = computed(() => (error.value ? normalizeApiError(error.value) : null));
 </script>
 
@@ -74,15 +73,10 @@ const pageError = computed(() => (error.value ? normalizeApiError(error.value) :
     </div>
 
     <div class="home-topic-grid">
-      <HomeTopicPanel title="校园活动" :items="schoolEvents" />
       <HomeTopicPanel title="学术通知" :items="academics" tone="secondary" />
-      <HomeTopicPanel title="学习园地" :items="study" tone="secondary">
-        <template #actions>
-          <RouterLink to="/list/68">学习</RouterLink>
-          <RouterLink to="/list/304">外语</RouterLink>
-          <RouterLink to="/list/263">考研</RouterLink>
-          <RouterLink to="/list/102">出国</RouterLink>
-        </template>
+      <HomeTopicPanel title="校园活动" :items="schoolEvents" />
+      <HomeTopicPanel title="求职广场" :items="fullTimeJobs" tone="secondary">
+        <template #actions><RouterLink to="/list/235">更多</RouterLink></template>
       </HomeTopicPanel>
       <HomeTopicPanel title="感性·情感" :items="emotion">
         <template #actions>
@@ -91,18 +85,20 @@ const pageError = computed(() => (error.value ? normalizeApiError(error.value) :
           <RouterLink to="/list/81">感性</RouterLink>
         </template>
       </HomeTopicPanel>
+      <HomeTopicPanel title="学习园地" :items="study" tone="secondary">
+        <template #actions>
+          <RouterLink to="/list/68">学习</RouterLink>
+          <RouterLink to="/list/304">外语</RouterLink>
+          <RouterLink to="/list/263">考研</RouterLink>
+          <RouterLink to="/list/102">出国</RouterLink>
+        </template>
+      </HomeTopicPanel>
       <HomeTopicPanel title="跳蚤市场" :items="fleaMarket">
         <template #actions>
           <RouterLink to="/list/562">数码</RouterLink>
           <RouterLink to="/list/80">日用</RouterLink>
           <RouterLink to="/list/563">服饰</RouterLink>
         </template>
-      </HomeTopicPanel>
-      <HomeTopicPanel title="求职广场" :items="fullTimeJobs" tone="secondary">
-        <template #actions><RouterLink to="/list/235">更多</RouterLink></template>
-      </HomeTopicPanel>
-      <HomeTopicPanel title="实习兼职" :items="partTimeJobs" tone="secondary">
-        <template #actions><RouterLink to="/list/459">更多</RouterLink></template>
       </HomeTopicPanel>
     </div>
 
