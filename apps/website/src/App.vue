@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
 import { watch } from "vue";
+import PwaStatusBanner from "./components/PwaStatusBanner.vue";
 import DefaultLayout from "./layouts/DefaultLayout.vue";
 import { currentUserQuery } from "./api/queries";
 import { useUserStore } from "./stores/user";
@@ -22,4 +23,5 @@ watch(me, (next) => {
 
 <template>
   <DefaultLayout />
+  <PwaStatusBanner />
 </template>

@@ -33,7 +33,7 @@
       ]
     },
     {
-      "source": "/registerSW.js",
+      "source": "/manifest.webmanifest",
       "headers": [
         {
           "key": "Cache-Control",
