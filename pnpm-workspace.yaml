@@ -32,6 +32,7 @@ catalog:
   "@unocss/preset-typography": 66.7.5
   "@types/markdown-it": ^14.1.2
   "@vitejs/plugin-vue": 6.0.8
+  vite-plugin-pwa: 1.3.0
   "@vueuse/core": 14.3.0
   "@vueuse/integrations": 14.3.0
   dayjs: 1.11.21
