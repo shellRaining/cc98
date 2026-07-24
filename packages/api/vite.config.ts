@@ -16,8 +16,4 @@ export default defineConfig({
     exports: true,
     suppressWarnings: "TypeScript 7.0 does not yet have a stable API and is experimental.",
   },
-  lint: {
-    options: { typeAware: true, typeCheck: true },
-  },
-  fmt: {},
 });
