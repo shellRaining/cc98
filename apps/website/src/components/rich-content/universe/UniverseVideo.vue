@@ -7,6 +7,7 @@ const props = defineProps<{
 
 const container = ref<HTMLDivElement>();
 let player: { destroy: () => void } | null = null;
+let hls: { destroy: () => void } | null = null;
 
 onMounted(async () => {
   const DPlayer = (await import("dplayer")).default;
@@ -26,7 +27,8 @@ onMounted(async () => {
         ? {
             hls: (video: HTMLVideoElement) => {
               if (!Hls.isSupported()) return;
-              const hls = new Hls();
+              hls?.destroy();
+              hls = new Hls();
               hls.loadSource(video.src);
               hls.attachMedia(video);
             },
@@ -37,6 +39,8 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  hls?.destroy();
+  hls = null;
   player?.destroy();
   player = null;
 });
