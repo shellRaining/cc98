@@ -4,17 +4,18 @@ import {
   type UbbRegexTagFamily,
   type UbbStaticTagName,
 } from "@cc98/ubb";
+import { createPinia } from "pinia";
 import { createSSRApp, h } from "vue";
 import { describe, expect, test } from "vite-plus/test";
 import { renderToString } from "vue/server-renderer";
 import ContentRenderer from "../../src/components/rich-content/ContentRenderer.vue";
 
 async function renderContent(content: string) {
-  return renderToString(
-    createSSRApp({
-      render: () => h(ContentRenderer, { content, type: "ubb" }),
-    }),
-  );
+  const app = createSSRApp({
+    render: () => h(ContentRenderer, { content, type: "ubb" }),
+  });
+  app.use(createPinia());
+  return renderToString(app);
 }
 
 type StaticCase = {
