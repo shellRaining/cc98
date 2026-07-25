@@ -86,7 +86,7 @@ const boardName = computed(() => props.board.name?.trim() || "未命名版面");
   display: grid;
   min-height: 6rem;
   overflow: hidden;
-  border: 2px solid #6b7178;
+  border: 2px solid var(--cc98-color-secondary-fill);
   grid-template-columns: 15rem minmax(0, 1fr);
   transition: min-height 0.3s ease;
 }
@@ -97,8 +97,8 @@ const boardName = computed(() => props.board.name?.trim() || "未命名版面");
 
 .board-hero__summary {
   min-width: 0;
-  background: #6b7178;
-  color: #fff;
+  background: var(--cc98-color-secondary-fill);
+  color: var(--cc98-color-on-primary);
 }
 
 .board-hero__identity {
@@ -145,8 +145,8 @@ const boardName = computed(() => props.board.name?.trim() || "未命名版面");
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: #fb6165;
-  color: #fff;
+  background: var(--cc98-color-accent);
+  color: var(--cc98-color-on-primary);
   font: inherit;
   font-size: 0.875rem;
   line-height: 1.3rem;
@@ -179,7 +179,7 @@ const boardName = computed(() => props.board.name?.trim() || "未命名版面");
 
 .board-hero__masters a,
 .board-hero__masters a:visited {
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .board-hero__paper {

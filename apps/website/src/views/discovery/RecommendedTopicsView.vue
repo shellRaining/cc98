@@ -175,7 +175,7 @@ function restorePreviousBatch() {
   border: 1px solid var(--cc98-color-primary);
   border-radius: 0.25rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   cursor: pointer;
 }

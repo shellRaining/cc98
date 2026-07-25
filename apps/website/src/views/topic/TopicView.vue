@@ -811,7 +811,7 @@ onBeforeUnmount(() => {
   padding: 1rem;
   border: 1px solid var(--cc98-color-border);
   background: var(--cc98-color-surface);
-  box-shadow: 0 0 10px 1px rgb(0 0 0 / 0.15);
+  box-shadow: 0 0 10px 1px var(--cc98-color-shadow);
 }
 
 .topic-moderation-toolbar {

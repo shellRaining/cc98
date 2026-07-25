@@ -90,7 +90,7 @@ function markAllRead() {
   border: 0;
   border-radius: 3px;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   font-size: 0.75rem;
   cursor: pointer;
@@ -157,8 +157,8 @@ function markAllRead() {
   justify-content: center;
   padding: 0 0.25rem;
   border-radius: 0.5rem;
-  background: #fb6165;
-  color: #fff;
+  background: var(--cc98-color-accent);
+  color: var(--cc98-color-on-primary);
   font-size: 0.625rem;
   line-height: 1;
 }

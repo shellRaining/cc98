@@ -252,8 +252,8 @@ function updateSearchKind(value: string | number) {
     mask-image: linear-gradient(
       to right,
       transparent calc(50% - 60rem),
-      #000 calc(50% - 54rem),
-      #000 calc(50% + 54rem),
+      var(--cc98-mask-opaque) calc(50% - 54rem),
+      var(--cc98-mask-opaque) calc(50% + 54rem),
       transparent calc(50% + 60rem)
     );
   }
@@ -265,7 +265,7 @@ function updateSearchKind(value: string | number) {
   z-index: 10;
   height: 3rem;
   background: var(--cc98-color-topbar);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .site-header__row,
@@ -315,17 +315,17 @@ function updateSearchKind(value: string | number) {
 .site-header a,
 .site-header a:visited,
 .site-header button {
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .site-header a:hover,
 .site-header button:hover {
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .site-header a:focus-visible,
 .site-header button:focus-visible {
-  outline-color: #fff;
+  outline-color: var(--cc98-color-on-primary);
 }
 
 .header-search {
@@ -436,7 +436,7 @@ function updateSearchKind(value: string | number) {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #6b7178;
+  background: var(--cc98-color-secondary-fill);
 }
 
 .site-header__message-bell svg {
@@ -496,14 +496,14 @@ function updateSearchKind(value: string | number) {
   align-items: center;
   justify-content: center;
   padding-inline: 2.25rem;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   white-space: nowrap;
 }
 
 .site-header__message-dropdown > a:hover,
 .site-header__message-dropdown > a:focus-visible {
   background: var(--cc98-color-accent);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   text-decoration: none;
   outline: none;
 }
@@ -515,7 +515,7 @@ function updateSearchKind(value: string | number) {
 
 .site-header__message-dropdown > a:hover .site-header__message-count,
 .site-header__message-dropdown > a:focus-visible .site-header__message-count {
-  background: #fff;
+  background: var(--cc98-color-on-primary);
   color: var(--cc98-color-accent);
 }
 
@@ -580,7 +580,7 @@ function updateSearchKind(value: string | number) {
   justify-content: center;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   cursor: pointer;
 }
@@ -589,8 +589,8 @@ function updateSearchKind(value: string | number) {
 .site-header__user-dropdown > a:focus-visible,
 .site-header__user-dropdown > button:hover,
 .site-header__user-dropdown > button:focus-visible {
-  background: #fb6165;
-  color: #fff;
+  background: var(--cc98-color-accent);
+  color: var(--cc98-color-on-primary);
   text-decoration: none;
   outline: none;
 }

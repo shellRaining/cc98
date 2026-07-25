@@ -85,7 +85,7 @@ const boardGroups = computed(() =>
 .board-list-guide a:hover,
 .board-list-guide a:focus-visible {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 @media (max-width: 1180px) {

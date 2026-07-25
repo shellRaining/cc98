@@ -18,6 +18,8 @@ import {
 import UiButton from "../../../components/ui/Button.vue";
 import UiDialog from "../../../components/ui/Dialog.vue";
 
+const DEFAULT_HIGHLIGHT_COLOR = "#ff0000"; // color-literal-allowed：服务端颜色字段需要具体值
+
 const props = defineProps<{
   open: boolean;
   topic: Topic;
@@ -43,7 +45,7 @@ const days = ref<number>(7);
 const targetBoardId = ref<number | undefined>();
 const isBold = ref(false);
 const isItalic = ref(false);
-const color = ref("#ff0000");
+const color = ref(DEFAULT_HIGHLIGHT_COLOR);
 const errorMessage = ref("");
 const moderateTopic = useModerateTopicMutation();
 
@@ -90,7 +92,7 @@ function resetForm() {
   targetBoardId.value = availableBoards.value[0]?.id;
   isBold.value = false;
   isItalic.value = false;
-  color.value = "#ff0000";
+  color.value = DEFAULT_HIGHLIGHT_COLOR;
   errorMessage.value = "";
 }
 

@@ -242,13 +242,13 @@ function replaceBrokenAvatar(event: Event) {
 .user-relation__posts {
   min-width: 2rem;
   margin: 0 0.88rem 0 0.75rem;
-  color: #35a7ff;
+  color: var(--cc98-color-primary);
 }
 
 .user-relation__fans {
   min-width: 2rem;
   margin: 0 0.88rem 0 0.75rem;
-  color: #ff3636;
+  color: var(--cc98-color-error);
 }
 
 .user-relation__follow,
@@ -262,8 +262,8 @@ function replaceBrokenAvatar(event: Event) {
   margin: 0 1rem;
   border: 0;
   border-radius: 3px;
-  background: #e6e6e6;
-  color: #a0a0a0;
+  background: var(--cc98-color-surface-subtle);
+  color: var(--cc98-color-text-caption);
   font: inherit;
   font-size: 0.75rem;
   line-height: 1;
@@ -274,7 +274,7 @@ function replaceBrokenAvatar(event: Event) {
 .user-relation__message,
 .user-relation__follow.is-unfollowed {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .user-relation__follow:hover,

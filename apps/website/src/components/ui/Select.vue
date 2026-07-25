@@ -187,7 +187,7 @@ function updateValue(value: string | number) {
   border-radius: 4px;
   background: var(--cc98-color-surface);
   color: var(--cc98-color-text);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.16);
+  box-shadow: 0 4px 12px var(--cc98-color-shadow);
 }
 
 .ui-select__content--header {
@@ -284,7 +284,7 @@ function updateValue(value: string | number) {
 
 .ui-select__content--header .ui-select__item:hover,
 .ui-select__content--header .ui-select__item[data-highlighted]:not([data-state="checked"]) {
-  background: var(--cc98-color-secondary);
+  background: var(--cc98-color-primary-fill-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -474,7 +474,7 @@ function formatTime(value: string) {
   border: 1px solid var(--cc98-color-primary);
   border-radius: 0.2rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   cursor: pointer;
 }

@@ -113,15 +113,25 @@ function handleMascotError(event: Event) {
   width: 100%;
   height: 100%;
   padding: 0;
-  border: 1px solid rgb(255 255 255 / 0.8);
+  border: 1px solid color-mix(in srgb, var(--cc98-color-on-primary) 80%, transparent);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 18%, rgb(255 255 255 / 0.75), transparent 27%),
-    linear-gradient(145deg, #79d5ff 0%, var(--cc98-color-primary) 52%, #287bbd 100%);
+    radial-gradient(
+      circle at 30% 18%,
+      color-mix(in srgb, var(--cc98-color-on-primary) 75%, transparent),
+      transparent 27%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--cc98-color-primary) 55%, var(--cc98-color-on-primary)) 0%,
+      var(--cc98-color-primary) 52%,
+      color-mix(in srgb, var(--cc98-color-primary) 78%, var(--cc98-color-inverse-surface)) 100%
+    );
   box-shadow:
-    0 0.75rem 2rem rgb(22 101 154 / 0.3),
-    inset 0 0 0 1px rgb(255 255 255 / 0.24),
-    inset 0 -0.5rem 1rem rgb(15 80 132 / 0.18);
+    0 0.75rem 2rem color-mix(in srgb, var(--cc98-color-primary) 30%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--cc98-color-on-primary) 24%, transparent),
+    inset 0 -0.5rem 1rem
+      color-mix(in srgb, var(--cc98-color-primary) 18%, var(--cc98-color-inverse-surface));
   cursor: pointer;
   isolation: isolate;
   place-items: center;
@@ -135,7 +145,11 @@ function handleMascotError(event: Event) {
   z-index: 1;
   inset: 0.2rem 0.65rem 2.15rem;
   border-radius: 50%;
-  background: linear-gradient(to bottom, rgb(255 255 255 / 0.55), transparent);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--cc98-color-on-primary) 55%, transparent),
+    transparent
+  );
   content: "";
   filter: blur(0.18rem);
   transform: rotate(-18deg);
@@ -154,10 +168,10 @@ function handleMascotError(event: Event) {
   bottom: 0.35rem;
   width: 0.72rem;
   height: 0.72rem;
-  border: 2px solid #fff;
+  border: 2px solid var(--cc98-color-on-primary);
   border-radius: 50%;
-  background: #34c982;
-  box-shadow: 0 0 0 0.2rem rgb(52 201 130 / 0.18);
+  background: var(--cc98-color-success);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--cc98-color-success) 18%, transparent);
 }
 
 .home-forum-stats__panel {
@@ -167,13 +181,13 @@ function handleMascotError(event: Event) {
   width: min(20rem, calc(100vw - 5.5rem));
   padding: 1rem;
   visibility: hidden;
-  border: 1px solid rgb(255 255 255 / 0.72);
+  border: 1px solid color-mix(in srgb, var(--cc98-color-on-primary) 72%, transparent);
   border-radius: 1rem;
   background: color-mix(in srgb, var(--cc98-color-surface) 94%, transparent);
   box-shadow:
-    0 1.5rem 4rem rgb(20 69 104 / 0.22),
-    0 0.25rem 1rem rgb(20 69 104 / 0.1),
-    inset 0 0 0 1px rgb(255 255 255 / 0.35);
+    0 1.5rem 4rem var(--cc98-color-shadow),
+    0 0.25rem 1rem color-mix(in srgb, var(--cc98-color-shadow) 62%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--cc98-color-on-primary) 35%, transparent);
   opacity: 0;
   pointer-events: none;
   transform: translate(1rem, -50%) scale(0.96);
@@ -197,9 +211,10 @@ function handleMascotError(event: Event) {
 .home-forum-stats:hover .home-forum-stats__trigger,
 .home-forum-stats:focus-within .home-forum-stats__trigger {
   box-shadow:
-    0 1rem 2.5rem rgb(22 101 154 / 0.38),
-    inset 0 0 0 1px rgb(255 255 255 / 0.3),
-    inset 0 -0.5rem 1rem rgb(15 80 132 / 0.2);
+    0 1rem 2.5rem color-mix(in srgb, var(--cc98-color-primary) 38%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--cc98-color-on-primary) 30%, transparent),
+    inset 0 -0.5rem 1rem
+      color-mix(in srgb, var(--cc98-color-primary) 20%, var(--cc98-color-inverse-surface));
   transform: translateY(-0.12rem) scale(1.045);
 }
 
@@ -237,8 +252,12 @@ function handleMascotError(event: Event) {
   flex: none;
   justify-content: center;
   border-radius: 0.8rem;
-  background: linear-gradient(145deg, #79d5ff, var(--cc98-color-primary));
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.45);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--cc98-color-primary) 55%, var(--cc98-color-on-primary)),
+    var(--cc98-color-primary)
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cc98-color-on-primary) 45%, transparent);
 }
 
 .home-forum-stats__mark img {
@@ -270,8 +289,8 @@ function handleMascotError(event: Event) {
   padding: 0.3rem 0.55rem;
   flex: none;
   border-radius: 999px;
-  background: color-mix(in srgb, #34c982 12%, transparent);
-  color: #20875a;
+  background: color-mix(in srgb, var(--cc98-color-success) 12%, transparent);
+  color: var(--cc98-color-success);
   font-size: 0.72rem;
   font-weight: 600;
 }
@@ -280,8 +299,8 @@ function handleMascotError(event: Event) {
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 50%;
-  background: #34c982;
-  box-shadow: 0 0 0 0.18rem rgb(52 201 130 / 0.15);
+  background: var(--cc98-color-success);
+  box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--cc98-color-success) 15%, transparent);
 }
 
 .home-forum-stats__list {

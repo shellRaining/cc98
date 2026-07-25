@@ -174,7 +174,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 .topic-post:target {
   box-shadow:
     0 0 0 2px color-mix(in srgb, var(--cc98-color-primary) 45%, transparent),
-    0 0.5rem 1.5rem rgb(0 0 0 / 18%);
+    0 0.5rem 1.5rem var(--cc98-color-shadow);
 }
 
 .topic-post__user {
@@ -183,7 +183,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   grid-template-columns: 8.3rem 7.2rem;
   padding: 1rem 0 1.25rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 0.75rem;
 }
 
@@ -201,7 +201,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   max-width: 6.5rem;
   margin-bottom: 0.75rem;
   overflow: hidden;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 1rem;
   font-weight: 700;
   text-overflow: ellipsis;
@@ -216,7 +216,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 .topic-post__anonymous {
   width: 6rem;
   margin-top: 0.5rem;
-  border: 1px solid #fff;
+  border: 1px solid var(--cc98-color-on-primary);
   border-radius: 999px;
   line-height: 1.5rem;
   text-align: center;
@@ -249,9 +249,9 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   display: grid;
   width: 2.6rem;
   height: 1.4rem;
-  border: 1px solid #fff;
+  border: 1px solid var(--cc98-color-on-primary);
   border-radius: 999px;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 0.65rem;
   place-items: center;
 }
@@ -453,7 +453,7 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
 .topic-post__operations :deep(button:not(.post-reaction):hover),
 .topic-post__operation-link:hover {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .topic-post__signature {
@@ -480,18 +480,18 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
   height: 2.5rem;
   border-radius: 50%;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 1rem;
   place-items: center;
 }
 
 .topic-post__floor:visited,
 .topic-post__floor:hover {
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .topic-post__floor--hot {
-  background: #ff4040;
+  background: var(--cc98-color-error);
 }
 
 .topic-post__hot-icon {

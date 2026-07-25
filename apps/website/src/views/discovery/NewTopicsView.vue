@@ -333,7 +333,7 @@ function formatCount(value: number | undefined) {
 .new-topics-toolbar__modes button.is-active,
 .new-topics-refresh:hover {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .new-topics-refresh:disabled {
@@ -497,7 +497,7 @@ function formatCount(value: number | undefined) {
   border: 0;
   border-radius: 999px;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   cursor: pointer;
   opacity: 0.55;

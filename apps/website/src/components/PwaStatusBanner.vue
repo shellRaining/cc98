@@ -59,7 +59,7 @@ async function update(): Promise<void> {
   background: var(--cc98-color-surface);
   padding: var(--cc98-space-md) var(--cc98-space-lg);
   color: var(--cc98-color-text);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+  box-shadow: 0 8px 24px var(--cc98-color-shadow);
   font-size: 0.875rem;
 }
 
