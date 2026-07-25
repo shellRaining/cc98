@@ -184,4 +184,28 @@ function retry() {
   margin-top: 1rem;
   text-align: center;
 }
+
+@media (max-width: 640px) {
+  .user-center-profile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .user-center-activities {
+    margin-top: 2rem;
+  }
+
+  .user-center-topic-list__meta {
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+  }
+
+  .user-center-topic-list__meta a,
+  .user-center-topic-list__meta a:visited {
+    min-width: 0;
+  }
+
+  .user-center-activities__empty {
+    margin-left: 0;
+  }
+}
 </style>

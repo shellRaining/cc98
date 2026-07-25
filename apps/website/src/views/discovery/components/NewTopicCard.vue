@@ -253,4 +253,37 @@ function replaceBrokenAvatar(event: Event) {
   color: var(--cc98-color-text-muted);
   white-space: nowrap;
 }
+
+@media (max-width: 640px) {
+  .new-topic-card {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+  }
+
+  .new-topic-card__avatar {
+    padding-top: 0.75rem;
+  }
+
+  .new-topic-card__avatar img {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .new-topic-card__body {
+    padding: 0.65rem 0.65rem 0.75rem 0;
+  }
+
+  .new-topic-card__author-line,
+  .new-topic-card__board-line,
+  .new-topic-card__meta {
+    flex-wrap: wrap;
+    gap: 0.35rem 0.65rem;
+    white-space: normal;
+  }
+
+  .new-topic-card__title,
+  .new-topic-card__title:visited {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
 </style>

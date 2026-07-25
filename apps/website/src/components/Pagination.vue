@@ -131,4 +131,29 @@ const canNext = computed(() => {
   background: transparent;
   color: var(--cc98-color-text-muted);
 }
+
+@media (max-width: 640px) {
+  nav:not(.user-center-pagination) {
+    gap: 0.35rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  nav:not(.user-center-pagination) > a {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    padding-inline: 0.25rem;
+  }
+
+  .user-center-pagination {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .user-center-pagination > a,
+  .user-center-pagination > span {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
 </style>

@@ -202,4 +202,26 @@ function formatTime(value: string) {
   color: var(--cc98-color-text-muted);
   font-size: 0.75rem;
 }
+
+@media (max-width: 640px) {
+  .topic-history-list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .topic-history-list__main strong,
+  .topic-history-list__operator span {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .topic-dialog-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .topic-dialog-pagination {
+    justify-content: space-between;
+  }
+}
 </style>

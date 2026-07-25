@@ -196,4 +196,23 @@ function restorePreviousBatch() {
   gap: 0.75rem;
   margin-top: 0.45rem;
 }
+
+@media (max-width: 640px) {
+  .new-topics-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .recommended-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .recommended-actions button {
+    min-height: 2.75rem;
+  }
+}
 </style>

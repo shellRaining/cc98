@@ -207,4 +207,42 @@ async function submit() {
   margin: 1rem !important;
   color: var(--cc98-color-accent);
 }
+
+@media (max-width: 640px) {
+  .user-transfer-wealth form {
+    margin-top: 1rem;
+  }
+
+  .user-transfer-wealth__field {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .user-transfer-wealth__field > span {
+    width: auto;
+    flex: none;
+    margin: 0;
+  }
+
+  .user-transfer-wealth__field input,
+  .user-transfer-wealth__field input.is-wide {
+    width: 100%;
+    height: 2.5rem;
+  }
+
+  .user-transfer-wealth__rules ul {
+    margin-left: 0;
+  }
+
+  .user-transfer-wealth__preview {
+    margin: 0.75rem 0 !important;
+  }
+
+  .user-transfer-wealth form > button {
+    min-width: 6rem;
+    height: 2.5rem;
+    margin-top: 1rem;
+  }
+}
 </style>

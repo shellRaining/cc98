@@ -126,4 +126,22 @@ function formatTime(value: string | undefined): string {
 .user-content-list__title:hover {
   color: var(--cc98-color-primary);
 }
+
+@media (max-width: 640px) {
+  .user-content-list__meta {
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .user-content-list__meta a,
+  .user-content-list__meta a:visited {
+    min-width: 0;
+  }
+
+  .user-content-list__title,
+  .user-content-list__title:visited {
+    padding-right: 0;
+  }
+}
 </style>

@@ -42,4 +42,15 @@ const message = computed(() =>
   margin: 1.25rem 0 0;
   font-size: 1rem;
 }
+
+@media (max-width: 640px) {
+  .search-empty {
+    min-height: 22rem;
+  }
+
+  .search-empty img {
+    width: 12rem;
+    max-width: 80%;
+  }
+}
 </style>

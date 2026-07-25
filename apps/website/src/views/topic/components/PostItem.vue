@@ -519,4 +519,140 @@ function getContentType(contentType: PostContentType | undefined): RichContentTy
     grid-template-columns: 7rem 6rem;
   }
 }
+
+@media (max-width: 640px) {
+  .topic-post {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 0.75rem;
+    border-width: 1px;
+  }
+
+  .topic-post__user {
+    min-height: 7rem;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    padding: 0.75rem;
+  }
+
+  .topic-post__user-copy {
+    gap: 0.15rem;
+    padding: 0;
+  }
+
+  .topic-post__username,
+  .topic-post__username:visited {
+    max-width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .topic-post__hot-label {
+    margin: 0 0 0.25rem;
+  }
+
+  .topic-post__anonymous {
+    margin-top: 0.25rem;
+  }
+
+  .topic-post__portrait {
+    padding: 0 2rem 0 0;
+  }
+
+  .topic-post__portrait :deep(.framed-avatar--post),
+  .topic-post__portrait :deep(.framed-avatar--post .framed-avatar__link) {
+    height: 3.75rem;
+  }
+
+  .topic-post__portrait :deep(.framed-avatar--post .framed-avatar__portrait) {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .topic-post__gender {
+    position: absolute;
+    top: 2.5rem;
+    right: 0.45rem;
+    width: auto;
+  }
+
+  .topic-post__user-actions {
+    gap: 0.25rem;
+    margin-top: 0.35rem;
+  }
+
+  .topic-post__user-actions a,
+  .topic-post__user-actions a:visited {
+    width: 2.4rem;
+    height: 1.75rem;
+  }
+
+  .topic-post__content {
+    min-height: 8rem;
+    padding: 1rem 0.75rem;
+  }
+
+  .topic-post__content :deep(.rich-content--ubb blockquote) {
+    padding-left: 1rem;
+  }
+
+  .topic-post__content :deep(.rich-content th),
+  .topic-post__content :deep(.rich-content td) {
+    padding: 0.3rem 0.5rem;
+  }
+
+  .topic-post__awards {
+    margin-inline: 0.75rem;
+  }
+
+  .topic-post__footer {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 0.75rem 0.75rem;
+  }
+
+  .topic-post__footer > div:first-child {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .topic-post__operations,
+  .topic-post__operations > div:not(.post-reactions) {
+    flex-wrap: wrap;
+  }
+
+  .topic-post__operations :deep(button:not(.post-reaction)),
+  .topic-post__operation-link,
+  .topic-post__operation-link:visited {
+    min-height: 2rem;
+    padding-inline: 0.65rem;
+  }
+
+  .topic-post__signature {
+    margin: 0.5rem 0.75rem 0.75rem;
+    padding: 0.75rem 0 0;
+  }
+
+  .topic-post__signature img {
+    max-width: 100%;
+  }
+
+  .topic-post__floor {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+  }
+
+  .topic-post__floor--lz {
+    top: 2.75rem;
+    font-size: 0.7rem;
+  }
+
+  .topic-post__content > :deep(.cc98-card) {
+    margin: 0 0 1rem;
+  }
+}
 </style>

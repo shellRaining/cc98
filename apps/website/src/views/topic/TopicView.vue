@@ -857,4 +857,57 @@ onBeforeUnmount(() => {
   color: var(--cc98-color-accent);
   font-size: 0.875rem;
 }
+
+@media (max-width: 640px) {
+  .topic-navigation-row {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .topic-navigation-row--bottom {
+    margin-top: 1rem;
+  }
+
+  .topic-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    font-size: 0.875rem;
+    white-space: normal;
+  }
+
+  .topic-breadcrumb a,
+  .topic-breadcrumb a:visited {
+    max-width: min(15rem, 100%);
+  }
+
+  .topic-filter-notice {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .topic-moderation-toolbar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .topic-reply-editor,
+  .topic-locked-card {
+    margin-top: 1rem;
+    padding: 0.75rem;
+  }
+
+  .topic-reply-editor__heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .topic-reply-editor__options {
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+}
 </style>

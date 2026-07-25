@@ -443,4 +443,83 @@ async function submit() {
   gap: 1rem;
   margin-top: 1.25rem;
 }
+
+@media (max-width: 640px) {
+  .new-topics-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .writing-page {
+    min-height: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .writing-row {
+    align-items: stretch;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+
+  .writing-row__label {
+    width: 100%;
+    min-height: 2.5rem;
+    flex-basis: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--cc98-color-border);
+  }
+
+  .writing-title-tags {
+    min-height: 2.5rem;
+  }
+
+  .writing-title-tags select {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .writing-title-input {
+    min-height: 2.75rem;
+  }
+
+  .writing-row--options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .writing-row--options .writing-row__label {
+    grid-column: 1 / -1;
+  }
+
+  .writing-row--options label,
+  .writing-row__warning {
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .writing-row__warning {
+    grid-column: 1 / -1;
+  }
+
+  .writing-row--content > span {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .writing-editor :deep(.md-editor) {
+    height: 24rem;
+  }
+
+  .writing-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .writing-actions :deep(button) {
+    min-height: 2.75rem;
+  }
+}
 </style>

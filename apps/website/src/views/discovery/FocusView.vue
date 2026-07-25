@@ -322,4 +322,36 @@ useIntersectionObserver(
 .focus-load-more-target {
   min-height: 3rem;
 }
+
+@media (max-width: 640px) {
+  .focus-tabs {
+    flex-wrap: wrap;
+    gap: 0 1rem;
+  }
+
+  .focus-tabs a,
+  .focus-tabs a:visited {
+    height: 2.75rem;
+    font-size: 1rem;
+    line-height: 2.75rem;
+  }
+
+  .focus-tabs button {
+    width: 100%;
+    min-height: 2.75rem;
+    margin: 0.5rem 0 0;
+  }
+
+  .focus-board-picker button {
+    min-height: 2.5rem;
+    margin: 0.75rem 0.5rem 0 0;
+  }
+
+  .new-topics-to-top {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: 5rem;
+    height: 2.5rem;
+  }
+}
 </style>

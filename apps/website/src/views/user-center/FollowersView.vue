@@ -290,4 +290,45 @@ function replaceBrokenAvatar(event: Event) {
 .user-relation__follow:disabled {
   cursor: wait;
 }
+
+@media (max-width: 640px) {
+  .user-relation-list {
+    min-height: 0;
+  }
+
+  .user-relation-list li {
+    display: grid;
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+  }
+
+  .user-relation__avatar {
+    margin-right: 0;
+  }
+
+  .user-relation__summary {
+    flex-wrap: wrap;
+    gap: 0.15rem 0.35rem;
+    white-space: normal;
+  }
+
+  .user-relation__name {
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
+  }
+
+  .user-relation__posts,
+  .user-relation__fans {
+    min-width: 0;
+    margin: 0 0.5rem 0 0;
+  }
+
+  .user-relation__follow,
+  .user-relation__message {
+    width: 100%;
+    height: 2.5rem;
+    margin: 0;
+  }
+}
 </style>

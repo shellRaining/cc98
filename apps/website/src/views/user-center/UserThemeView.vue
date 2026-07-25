@@ -459,4 +459,63 @@ async function submitSetting() {
     grid-template-columns: repeat(2, 14rem);
   }
 }
+
+@media (max-width: 640px) {
+  .user-theme-mode {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .user-theme-mode legend {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .user-theme-mode button,
+  .user-theme-submit button {
+    min-height: 2.5rem;
+    flex: 1;
+  }
+
+  .user-theme-mode > span {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .user-theme-help {
+    margin-left: 0;
+  }
+
+  .user-theme-time-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .user-theme-time-row label + input {
+    margin-right: 0;
+  }
+
+  .user-theme-time-row input {
+    min-height: 2.5rem;
+  }
+
+  .user-theme-submit {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .user-theme__message {
+    margin-inline: 0;
+  }
+
+  .user-theme-config {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .user-theme-config > button {
+    width: 100%;
+    height: 5.5rem;
+  }
+}
 </style>

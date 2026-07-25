@@ -217,4 +217,42 @@ const boardName = computed(() => props.board.name?.trim() || "未命名版面");
 .board-hero__paper :deep(.rich-content) {
   max-width: 53.25rem;
 }
+
+@media (max-width: 640px) {
+  .board-hero {
+    grid-template-columns: minmax(0, 1fr);
+    border-width: 1px;
+  }
+
+  .board-hero--expanded {
+    min-height: 0;
+  }
+
+  .board-hero__identity {
+    height: auto;
+    min-height: 5.5rem;
+    padding-inline: 1rem;
+  }
+
+  .board-hero__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .board-hero__name {
+    margin-left: 0.75rem;
+  }
+
+  .board-hero__description,
+  .board-hero__masters {
+    margin: 0 1rem 1rem;
+  }
+
+  .board-hero__paper {
+    min-height: 4.5rem;
+    padding: 1.75rem 1rem 1rem;
+    border-top: 1px solid #6b7178;
+    font-size: 0.875rem;
+  }
+}
 </style>

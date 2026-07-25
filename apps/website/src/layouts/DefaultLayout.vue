@@ -32,6 +32,12 @@ theme.apply();
   padding-top: 1.5rem;
 }
 
+@media (max-width: 640px) {
+  .site-main--inner {
+    padding-top: 0.75rem;
+  }
+}
+
 @media (min-width: 71.25rem) {
   .site-main--home {
     max-width: 100%;

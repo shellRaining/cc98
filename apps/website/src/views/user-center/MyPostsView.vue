@@ -180,4 +180,27 @@ function postLink(post: (typeof posts.value)[number]): string {
 .user-content-list__meta--post a:visited {
   min-width: 0;
 }
+
+@media (max-width: 640px) {
+  .user-content-toggle {
+    min-height: 2.5rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .user-content-list__meta {
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .user-content-list__meta a,
+  .user-content-list__meta a:visited {
+    min-width: 0;
+  }
+
+  .user-content-list__title,
+  .user-content-list__title:visited {
+    padding-right: 0;
+  }
+}
 </style>

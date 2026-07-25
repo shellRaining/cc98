@@ -111,4 +111,38 @@ const stateKind = computed(() => {
   background: var(--cc98-color-primary-fill);
   color: #fff;
 }
+
+@media (max-width: 640px) {
+  .search-page {
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .new-topics-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+
+  .search-board-results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .search-board-results a,
+  .search-board-results a:visited {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 0.875rem;
+    text-align: center;
+    white-space: normal;
+  }
+}
 </style>

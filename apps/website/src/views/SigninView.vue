@@ -654,4 +654,80 @@ function makeUpMissedSignin() {
     width: min(30rem, calc(100vw - 5rem));
   }
 }
+
+@media (max-width: 640px) {
+  .signin-page {
+    min-height: 0;
+    padding: 1rem 0.75rem;
+  }
+
+  .signin-page__rewards {
+    margin: 0.75rem 0 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .signin-calendar {
+    min-height: 0;
+    margin-top: 1.5rem;
+  }
+
+  .signin-calendar__toolbar {
+    flex-wrap: wrap;
+    padding: 0.75rem;
+  }
+
+  .signin-calendar__rules-popover {
+    left: -6rem;
+    width: calc(100vw - 3rem);
+    max-height: min(24rem, calc(100dvh - 8rem));
+    overflow-y: auto;
+  }
+
+  .signin-calendar__makeup {
+    min-height: 2.5rem;
+  }
+
+  .signin-calendar__picker {
+    padding: 0.75rem;
+  }
+
+  .signin-calendar__picker input {
+    width: 100%;
+    height: 2.5rem;
+  }
+
+  .signin-calendar__month-buttons {
+    width: 100%;
+  }
+
+  .signin-calendar__month-buttons button {
+    min-height: 2.5rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .signin-calendar__panel {
+    padding: 0.5rem;
+  }
+
+  .signin-calendar__weekdays {
+    font-size: 0.75rem;
+  }
+
+  .signin-calendar__grid-slot {
+    min-height: 3.25rem;
+  }
+
+  .signin-calendar__cell {
+    min-height: 3rem;
+    padding: 0.35rem 0;
+    font-size: 0.75rem;
+  }
+
+  .signin-calendar__tag {
+    min-width: 1.25rem;
+    margin-top: 0.1rem;
+    font-size: 0.65rem;
+  }
+}
 </style>

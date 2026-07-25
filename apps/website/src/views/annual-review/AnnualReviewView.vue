@@ -483,7 +483,8 @@ function formatTime(value?: string | null) {
 
 .annual-review-page {
   display: flex;
-  height: min(76.8vh, 48rem);
+  width: min(30rem, calc(100vw - 1.5rem), 48dvh);
+  height: auto;
   aspect-ratio: 5 / 8;
   flex-direction: column;
   align-items: center;
@@ -734,6 +735,44 @@ function formatTime(value?: string | null) {
   .annual-review-card-leave-active {
     animation: none;
     transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .annual-review-view {
+    min-height: 0;
+  }
+
+  .annual-review-copy {
+    padding: 1.5rem 1rem;
+  }
+
+  .annual-review-time {
+    padding-top: 2.5rem;
+  }
+
+  .annual-review-period {
+    margin-bottom: 1rem !important;
+  }
+
+  .annual-review-chart {
+    width: 90%;
+    height: 10rem;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-inline: 0.5rem;
+  }
+
+  .annual-review-bar-item {
+    min-width: 1.75rem;
+  }
+
+  .annual-review-bar {
+    width: 1.5rem;
+  }
+
+  .annual-review-achievements {
+    margin-inline: 0.5rem;
   }
 }
 </style>

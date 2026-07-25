@@ -132,4 +132,13 @@ function topicTags(topic: { tag1?: number | null; tag2?: number | null }) {
 .hot-topics-list {
   margin-top: 0;
 }
+
+@media (max-width: 640px) {
+  .hot-topics-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
 </style>

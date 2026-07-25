@@ -194,4 +194,51 @@ function formatTime(value?: string) {
     display: none;
   }
 }
+
+@media (max-width: 640px) {
+  .topic-hero {
+    border-width: 1px;
+  }
+
+  .topic-hero__main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .topic-hero__content {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .topic-hero__content h1 {
+    max-height: none;
+    font-size: 1.1rem;
+    line-height: 1.55;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+  }
+
+  .topic-hero__meta {
+    flex-wrap: wrap;
+    gap: 0.45rem 0.65rem;
+    white-space: normal;
+  }
+
+  .topic-hero__meta > span:first-child {
+    max-width: 100%;
+  }
+
+  .topic-hero__meta :deep(button),
+  .topic-hero__meta a {
+    min-height: 2rem;
+    padding-inline: 0.65rem;
+  }
+
+  .topic-hero__board,
+  .topic-hero__board:visited {
+    min-height: 3rem;
+    border-top: 1px solid #6b7178;
+    border-left: 0;
+    flex-direction: row;
+  }
+}
 </style>

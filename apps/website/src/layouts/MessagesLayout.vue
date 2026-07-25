@@ -167,4 +167,80 @@ function markAllRead() {
   min-width: 0;
   flex: 1 1 auto;
 }
+
+@media (max-width: 1000px) {
+  .messages-page__header {
+    height: auto;
+    min-height: 2.5rem;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .messages-page__header button {
+    width: auto;
+    min-height: 2.5rem;
+    margin-left: 0;
+    padding-inline: 0.75rem;
+  }
+
+  .messages-page__error {
+    position: static;
+    margin-top: 0.5rem;
+  }
+
+  .messages-shell {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .messages-nav {
+    width: 100%;
+    height: auto;
+    flex: none;
+    flex-direction: row;
+    margin-right: 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .messages-nav > a {
+    width: auto;
+    min-width: 7rem;
+    height: 3rem;
+    flex: 1 0 auto;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-left: 0;
+    padding: 0 0.75rem;
+    border-right: 1px dashed var(--cc98-color-border);
+    border-bottom: 0;
+  }
+
+  .messages-nav__count {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .messages-page__header h1 {
+    color: var(--cc98-color-text);
+  }
+
+  .messages-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .messages-nav > a {
+    width: auto;
+    min-width: 0;
+    height: 2.75rem;
+    padding-inline: 0.35rem;
+    border-right: 1px dashed var(--cc98-color-border);
+    border-bottom: 1px dashed var(--cc98-color-border);
+    font-size: 0.75rem;
+  }
+}
 </style>

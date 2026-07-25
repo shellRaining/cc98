@@ -65,6 +65,6 @@ export default defineConfig({
       "rounded border border-cc98-border bg-cc98-surface-subtle px-3 py-2 text-cc98-text outline-none transition-colors focus:border-cc98-primary",
     "cc98-overlay": "fixed inset-0 z-40 bg-cc98-overlay",
     "cc98-modal":
-      "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 rounded border border-cc98-border bg-cc98-surface p-5 shadow-xl",
+      "fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-1.5rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded border border-cc98-border bg-cc98-surface p-5 shadow-xl",
   },
 });

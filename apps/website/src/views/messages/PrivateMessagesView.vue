@@ -768,4 +768,121 @@ async function handleDrop(event: DragEvent) {
   color: var(--cc98-color-accent);
   font-size: 0.75rem;
 }
+
+@media (max-width: 1000px) {
+  .message-private {
+    height: 42rem;
+    flex-direction: column;
+  }
+
+  .message-private__contacts {
+    width: 100%;
+    height: 7.5rem;
+    flex: 0 0 7.5rem;
+  }
+
+  .message-private__contacts-title {
+    height: 2rem;
+    flex-basis: 2rem;
+    justify-content: flex-start;
+    padding-inline: 0.75rem;
+  }
+
+  .message-private__contact-list {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
+  .message-private__contact-list > button:not(.message-private__more-contacts) {
+    width: 10rem;
+    min-height: 5.5rem;
+    flex: 0 0 10rem;
+    border-right: 1px dashed var(--cc98-color-border);
+    border-bottom: 0;
+  }
+
+  .message-private__contact-list > button > img {
+    margin: 0.75rem 0.5rem;
+  }
+
+  .message-private__contact-info {
+    width: auto;
+    flex: 1;
+  }
+
+  .message-private__more-contacts {
+    width: 9rem;
+    min-height: 5.5rem;
+    flex: 0 0 9rem;
+  }
+
+  .message-private__contacts-end {
+    min-width: 9rem;
+    align-self: center;
+  }
+
+  .message-private__window {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .message-private {
+    height: min(42rem, calc(100dvh - 8.5rem));
+    min-height: 34rem;
+  }
+
+  .message-private__window > header {
+    padding-inline: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .message-private__message > div > a > img {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0.35rem 0.65rem;
+  }
+
+  .message-private__bubble {
+    max-width: calc(100% - 4rem);
+    margin-top: 0.35rem;
+  }
+
+  .message-private__bubble > * {
+    margin: 0.5rem !important;
+  }
+
+  .message-private__composer {
+    height: 9.5rem;
+    flex-basis: 9.5rem;
+  }
+
+  .message-private__composer textarea {
+    width: calc(100% - 1.5rem);
+    height: 4.75rem;
+    flex-basis: 4.75rem;
+    margin: 0.75rem 0.75rem 0.5rem;
+  }
+
+  .message-private__composer-actions {
+    gap: 0.5rem;
+    margin: 0 0.75rem;
+  }
+
+  .message-private__composer-actions button {
+    width: auto;
+    min-height: 2.5rem;
+    flex: 1;
+  }
+
+  .message-private__error {
+    position: static;
+    max-width: none;
+    margin: 0 0.75rem;
+  }
+}
 </style>

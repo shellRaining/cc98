@@ -53,4 +53,31 @@ function formatTime(value: string) {
 .board-event-list__item:hover {
   background: #eaeaea;
 }
+
+@media (max-width: 640px) {
+  .board-event-list__head {
+    min-height: 2.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 0.75rem;
+  }
+
+  .board-event-list__head span:not(:first-child) {
+    display: none;
+  }
+
+  .board-event-list__item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.35rem 0.75rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .board-event-list__item > span:first-child {
+    grid-column: 1 / -1;
+    color: var(--cc98-color-text);
+  }
+
+  .board-event-list__item time {
+    color: var(--cc98-color-text-muted);
+  }
+}
 </style>

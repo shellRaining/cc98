@@ -335,4 +335,63 @@ function formatDate(value: string | undefined): string {
   border: 1px solid var(--cc98-color-border);
   font-size: 0.75rem;
 }
+
+@media (max-width: 640px) {
+  .user-center-profile__avatar {
+    width: 10rem;
+    margin-inline: auto;
+  }
+
+  .user-center-profile__badges {
+    margin-top: 1rem;
+    padding-left: 0;
+  }
+
+  .user-center-profile__details {
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  .user-center-profile__identity {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .user-center-profile__name {
+    flex: none;
+    gap: 0.75rem;
+  }
+
+  .user-center-profile__tools {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .user-center-like-count {
+    width: 100%;
+  }
+
+  .user-center-like-count dt,
+  .user-center-like-count dd {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .user-center-profile__introduction {
+    margin-left: 0;
+  }
+
+  .user-center-profile__fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .user-center-profile__fields > div {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  .user-center-signature__content {
+    padding: 0.75rem;
+  }
+}
 </style>

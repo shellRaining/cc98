@@ -107,4 +107,16 @@ defineProps<{
 .board-list-item--compact:hover {
   color: var(--cc98-color-primary-hover);
 }
+
+@media (max-width: 640px) {
+  .board-list-item {
+    min-height: 6.5rem;
+    padding: 0.75rem;
+  }
+
+  .board-list-item__icon {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
+}
 </style>

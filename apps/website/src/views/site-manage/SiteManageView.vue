@@ -505,4 +505,50 @@ function formatExpiredTime(value: string | null): string {
     flex-wrap: wrap;
   }
 }
+
+@media (max-width: 640px) {
+  .site-manage-page {
+    width: calc(100vw - 1.5rem);
+    padding: 0.75rem 0.5rem 1rem;
+  }
+
+  .site-manage-page > h1 {
+    font-size: 1.25rem;
+  }
+
+  .site-manage-announcement > header,
+  .site-manage-columns > header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .site-manage-announcement h2,
+  .site-manage-columns h2 {
+    text-align: center;
+  }
+
+  .site-manage-page button {
+    min-height: 2.5rem;
+  }
+
+  .site-manage-announcement textarea {
+    min-height: 10rem;
+  }
+
+  .site-manage-table-wrap {
+    overscroll-behavior-inline: contain;
+  }
+
+  .site-manage-pagination {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .site-manage-pagination button {
+    min-width: 2.5rem;
+    flex: 0 0 auto;
+  }
+}
 </style>

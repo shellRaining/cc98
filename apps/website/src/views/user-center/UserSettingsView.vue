@@ -445,4 +445,95 @@ function resetProfile() {
 .user-settings__message {
   color: var(--cc98-color-accent) !important;
 }
+
+@media (max-width: 640px) {
+  .user-settings h2 {
+    margin-bottom: 1rem;
+  }
+
+  .user-settings-avatar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .user-settings-avatar > img {
+    width: 8rem;
+    height: 8rem;
+    flex-basis: 8rem;
+    align-self: center;
+  }
+
+  .user-settings-avatar__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0 0;
+  }
+
+  .user-settings button,
+  .user-settings-avatar__actions label {
+    min-height: 2.5rem;
+  }
+
+  .user-settings-avatar__actions p {
+    grid-column: 1 / -1;
+  }
+
+  .user-settings-signature {
+    min-height: 12rem;
+    padding: 0.75rem;
+  }
+
+  .user-settings-fields {
+    gap: 1.25rem;
+  }
+
+  .user-settings-fields > label {
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .user-settings-fields > label > span:first-child {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .user-settings-fields input,
+  .user-settings-fields select {
+    min-height: 2.5rem;
+  }
+
+  .user-settings-fields input,
+  .user-settings-introduction textarea {
+    width: 100%;
+  }
+
+  .user-settings-birthday select {
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 4rem;
+  }
+
+  .user-settings-birthday em {
+    align-self: center;
+    margin: 0;
+  }
+
+  .user-settings-introduction > span:last-child {
+    width: 100%;
+  }
+
+  .user-settings-introduction textarea {
+    height: 6rem;
+  }
+
+  .user-settings-submit > div {
+    gap: 0.75rem;
+  }
+
+  .user-settings-submit > div button {
+    flex: 1;
+  }
+}
 </style>

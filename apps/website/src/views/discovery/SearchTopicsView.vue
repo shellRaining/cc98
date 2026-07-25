@@ -224,4 +224,27 @@ function goLogin() {
   text-align: center;
   color: var(--cc98-color-text-muted);
 }
+
+@media (max-width: 640px) {
+  .search-page {
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .new-topics-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+
+  .new-topics-to-top {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: 5rem;
+    height: 2.5rem;
+  }
+}
 </style>

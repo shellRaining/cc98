@@ -170,3 +170,9 @@ a:hover {
   max-width: calc(100% - 2rem);
   margin-inline: auto;
 }
+
+@media (max-width: 640px) {
+  .cc98-content {
+    max-width: calc(100% - 1.5rem);
+  }
+}

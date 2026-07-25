@@ -192,12 +192,72 @@ const links = [
 
 @media (max-width: 1000px) {
   .user-center-shell {
-    grid-template-columns: 10rem minmax(0, 1fr);
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .user-center-nav {
+    min-height: 0;
+    overflow-x: auto;
+    padding: 0;
+    scrollbar-width: thin;
+  }
+
+  .user-center-nav ul {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .user-center-nav li {
+    flex: 1 0 auto;
+  }
+
+  .user-center-nav li + li {
+    border-top: 0;
+    border-left: 1px dashed var(--cc98-color-border);
+  }
+
+  .user-center-nav a,
+  .user-center-nav a:visited {
+    min-width: 7rem;
+    height: 3rem;
+    justify-content: center;
+    padding-inline: 0.75rem;
   }
 
   .user-center-main {
     padding: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .user-center-page {
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .user-center-page__title {
+    margin-bottom: 0.75rem;
+  }
+
+  .user-center-main {
+    min-height: 0;
+    padding: 1rem;
+  }
+
+  .user-center-nav a,
+  .user-center-nav a:visited {
+    min-width: 6.75rem;
+    height: 2.75rem;
+  }
+
+  .new-topics-to-top {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: 5rem;
+    height: 2.5rem;
   }
 }
 </style>

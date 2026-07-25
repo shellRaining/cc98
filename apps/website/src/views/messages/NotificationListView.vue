@@ -197,4 +197,35 @@ article.is-unread .message-notification__content:visited {
 .message-notification-page > :deep(.user-center-pagination) {
   margin-top: 0.625rem;
 }
+
+@media (max-width: 640px) {
+  .message-notification-list,
+  .message-system-list {
+    min-height: 0;
+  }
+
+  .message-notification-list article,
+  .message-system-list article {
+    padding: 0 0.75rem 1rem;
+  }
+
+  .message-notification__bar {
+    height: auto;
+    min-height: 3rem;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    padding-block: 0.5rem;
+  }
+
+  .message-notification__bar > a,
+  .message-notification__bar > span {
+    margin-right: 0;
+  }
+
+  .message-notification__content,
+  .message-notification__content:visited {
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+}
 </style>

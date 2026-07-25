@@ -277,4 +277,63 @@ function formatCount(value: number): string {
 .board-topic-row__last {
   padding-right: 0.75rem;
 }
+
+@media (max-width: 640px) {
+  .board-topic-row {
+    min-height: 0;
+    grid-template-areas:
+      "title title"
+      "author counts"
+      "last last";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .board-topic-row__title {
+    grid-area: title;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-left: 0;
+  }
+
+  .board-topic-row__checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .board-topic-row__title-content {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .board-topic-row__title-content > a {
+    display: -webkit-box;
+    overflow: hidden;
+    line-height: 1.4;
+    text-overflow: initial;
+    white-space: normal;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .board-topic-row__author {
+    grid-area: author;
+  }
+
+  .board-topic-row__counts {
+    grid-area: counts;
+    grid-template-columns: repeat(2, auto);
+    gap: 0.75rem;
+  }
+
+  .board-topic-row__last {
+    grid-area: last;
+    padding-right: 0;
+    color: var(--cc98-color-text-muted);
+    text-align: right;
+  }
+}
 </style>

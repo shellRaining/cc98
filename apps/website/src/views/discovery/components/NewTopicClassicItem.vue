@@ -176,11 +176,61 @@ function replaceBrokenAvatar(event: Event) {
 
 @media (max-width: 1000px) {
   .new-topic-classic-item {
-    grid-template-columns: 9rem minmax(0, 1fr);
+    grid-template-columns: 9rem minmax(0, 1fr) 5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .new-topic-classic-item {
+    grid-template-columns: minmax(0, 1fr);
+    border-radius: var(--cc98-radius-sm);
   }
 
-  .new-topic-classic-item__board {
-    display: none;
+  .new-topic-classic-item__author,
+  .new-topic-classic-item__author:visited {
+    min-height: 3.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .new-topic-classic-item__author img {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0 0.75rem 0 0;
+  }
+
+  .new-topic-classic-item__body {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .new-topic-classic-item__title,
+  .new-topic-classic-item__title:visited {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 1rem;
+    line-height: 1.5;
+    text-overflow: initial;
+    white-space: normal;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .new-topic-classic-item__meta {
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .new-topic-classic-item__board,
+  .new-topic-classic-item__board:visited {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid var(--cc98-color-border);
+    border-left: 0;
   }
 }
 </style>

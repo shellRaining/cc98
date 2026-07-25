@@ -24,6 +24,7 @@ const route = useRoute();
 const router = useRouter();
 const keyword = ref("");
 const searchKind = ref<SearchKind>("topic");
+const mobileMenuOpen = ref(false);
 const isHome = computed(() => route.name === "home");
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const routeTopicId = computed(() => {
@@ -60,6 +61,13 @@ const unreadTotal = computed(() => {
 const isAdministrator = computed(() => isSiteAdministrator(user.user?.privilege));
 
 watch(
+  () => route.fullPath,
+  () => {
+    mobileMenuOpen.value = false;
+  },
+);
+
+watch(
   hasBoardContext,
   (hasContext) => {
     if (hasContext && searchKind.value === "topic") searchKind.value = "within";
@@ -77,6 +85,7 @@ function goLogin(event?: Event) {
 function submitSearch() {
   const value = keyword.value.trim();
   if (!value) return;
+  mobileMenuOpen.value = false;
   if (searchKind.value === "board") void router.push(searchBoardsPath(value));
   else if (searchKind.value === "user") void router.push(userNamePath(value));
   else if (searchKind.value === "within" && contextBoardId.value != null) {
@@ -86,6 +95,15 @@ function submitSearch() {
 
 function updateSearchKind(value: string | number) {
   searchKind.value = value as SearchKind;
+}
+
+function closeMobileMenu() {
+  mobileMenuOpen.value = false;
+}
+
+function logoutFromMobileMenu() {
+  closeMobileMenu();
+  user.logout();
 }
 </script>
 
@@ -98,6 +116,19 @@ function updateSearchKind(value: string | number) {
             <img :src="logoUrl" alt="" />
             <span>CC98论坛</span>
           </RouterLink>
+          <button
+            type="button"
+            class="site-header__mobile-toggle"
+            :aria-label="mobileMenuOpen ? '关闭主菜单' : '打开主菜单'"
+            aria-controls="site-header-mobile-panel"
+            :aria-expanded="mobileMenuOpen"
+            @click="mobileMenuOpen = !mobileMenuOpen"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path v-if="mobileMenuOpen" d="m5 5 14 14M19 5 5 19" />
+              <path v-else d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
           <span class="site-header__separator" aria-hidden="true">|</span>
           <nav class="site-header__nav" aria-label="主导航">
             <RouterLink to="/boardlist">版面列表</RouterLink>
@@ -194,6 +225,59 @@ function updateSearchKind(value: string | number) {
           </template>
         </div>
       </div>
+
+      <div
+        v-if="mobileMenuOpen"
+        id="site-header-mobile-panel"
+        class="site-header__mobile-panel"
+        @keydown.esc="closeMobileMenu"
+      >
+        <div class="cc98-content site-header__mobile-panel-inner">
+          <form
+            class="header-search header-search--mobile"
+            role="search"
+            @submit.prevent="submitSearch"
+          >
+            <label class="sr-only" for="header-search-kind-mobile">搜索类型</label>
+            <UiSelect
+              id="header-search-kind-mobile"
+              :model-value="searchKind"
+              :options="searchOptions"
+              aria-label="搜索类型"
+              variant="header"
+              @update:model-value="updateSearchKind"
+            />
+            <input
+              v-model="keyword"
+              type="search"
+              placeholder="请输入搜索内容"
+              aria-label="搜索内容"
+            />
+            <button type="submit" aria-label="搜索">
+              <span class="i-fa-search" aria-hidden="true" />
+            </button>
+          </form>
+
+          <nav class="site-header__mobile-nav" aria-label="移动端主导航">
+            <RouterLink to="/boardlist" @click="closeMobileMenu">版面列表</RouterLink>
+            <RouterLink to="/newtopics" @click="closeMobileMenu">新帖</RouterLink>
+            <RouterLink to="/focus" @click="closeMobileMenu">关注</RouterLink>
+            <RouterLink to="/recommendedtopics" @click="closeMobileMenu">精选</RouterLink>
+            <a :href="docsUrl" target="_blank" rel="noopener noreferrer" @click="closeMobileMenu">
+              帮助
+            </a>
+          </nav>
+
+          <nav v-if="user.isLoggedIn" class="site-header__mobile-user-nav" aria-label="用户菜单">
+            <RouterLink to="/usercenter" @click="closeMobileMenu">个人中心</RouterLink>
+            <RouterLink v-if="isAdministrator" to="/sitemanage" @click="closeMobileMenu">
+              全站管理
+            </RouterLink>
+            <RouterLink to="/signin" @click="closeMobileMenu">签到</RouterLink>
+            <button type="button" @click="logoutFromMobileMenu">退出登录</button>
+          </nav>
+        </div>
+      </div>
     </div>
   </header>
 </template>
@@ -276,6 +360,11 @@ function updateSearchKind(value: string | number) {
 .site-header__user {
   display: flex;
   align-items: center;
+}
+
+.site-header__mobile-toggle,
+.site-header__mobile-panel {
+  display: none;
 }
 
 .site-header__row {
@@ -612,6 +701,139 @@ function updateSearchKind(value: string | number) {
   .header-search,
   .site-header__separator {
     display: none;
+  }
+
+  .site-header__left {
+    gap: 0.5rem;
+  }
+
+  .site-header__mobile-toggle {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    padding: 0;
+    border: 0;
+    border-radius: var(--cc98-radius-sm);
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    place-items: center;
+  }
+
+  .site-header__mobile-toggle:hover,
+  .site-header__mobile-toggle:focus-visible {
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .site-header__mobile-toggle svg {
+    width: 1.4rem;
+    height: 1.4rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-width: 2;
+  }
+
+  .site-header__mobile-panel {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    z-index: 90;
+    display: block;
+    width: 100%;
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+    background: var(--cc98-color-surface);
+    box-shadow: 0 0.75rem 1.5rem rgb(0 0 0 / 0.2);
+    color: var(--cc98-color-text);
+  }
+
+  .site-header__mobile-panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-block: 0.75rem 1rem;
+  }
+
+  .header-search--mobile {
+    display: flex;
+    width: 100%;
+    height: 2.5rem;
+    margin: 0;
+    border-color: var(--cc98-color-border);
+    border-radius: var(--cc98-radius-md);
+    background: var(--cc98-color-surface-subtle);
+  }
+
+  .header-search--mobile input,
+  .header-search--mobile button,
+  .header-search--mobile :deep(.ui-select__trigger--header) {
+    color: var(--cc98-color-text);
+  }
+
+  .site-header__mobile-nav,
+  .site-header__mobile-user-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .site-header__mobile-user-nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--cc98-color-border);
+  }
+
+  .site-header__mobile-nav > a,
+  .site-header__mobile-user-nav > a,
+  .site-header__mobile-user-nav > button {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    border: 1px solid var(--cc98-color-border);
+    border-radius: var(--cc98-radius-sm);
+    background: var(--cc98-color-surface-subtle);
+    color: var(--cc98-color-text);
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .site-header__mobile-nav > a:hover,
+  .site-header__mobile-user-nav > a:hover,
+  .site-header__mobile-user-nav > button:hover {
+    border-color: var(--cc98-color-primary);
+    background: var(--cc98-color-primary-fill);
+    color: #fff;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header__row {
+    gap: 0.35rem;
+  }
+
+  .site-header__brand {
+    gap: 0.45rem;
+    font-size: 1rem;
+  }
+
+  .site-header__account {
+    gap: 0.35rem;
+  }
+
+  .site-header__user > span {
+    display: none;
+  }
+
+  .site-header__mobile-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .site-header__mobile-user-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

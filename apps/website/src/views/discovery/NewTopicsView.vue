@@ -523,4 +523,62 @@ function formatCount(value: number | undefined) {
     position: static;
   }
 }
+
+@media (max-width: 640px) {
+  .new-topics-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .new-topics-toolbar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .new-topics-toolbar__modes {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .new-topics-toolbar__modes button,
+  .new-topics-refresh {
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+  }
+
+  .new-topics-refresh {
+    width: 100%;
+  }
+
+  .new-topic-card-layout {
+    grid-template-areas:
+      "middle"
+      "left"
+      "right";
+    margin-top: 0.75rem;
+  }
+
+  .new-topic-card-layout__left {
+    grid-area: left;
+  }
+
+  .new-topic-card-layout__middle {
+    grid-area: middle;
+  }
+
+  .new-topic-card-layout__right {
+    grid-area: right;
+  }
+
+  .new-topics-to-top {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: 5rem;
+    height: 2.5rem;
+  }
+}
 </style>

@@ -138,4 +138,23 @@ const compact = isCompactBoardGroup(props.group.id);
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 640px) {
+  .board-list-group {
+    border-width: 1px;
+  }
+
+  .board-list-group__header {
+    align-items: flex-start;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .board-list-group__content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board-list-group__content--compact {
+    padding: 0.75rem;
+  }
+}
 </style>

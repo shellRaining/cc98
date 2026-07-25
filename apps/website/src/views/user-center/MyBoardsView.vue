@@ -239,4 +239,39 @@ async function toggleBoard(board: Board & { id: number }) {
   cursor: wait;
   opacity: 0.7;
 }
+
+@media (max-width: 640px) {
+  .user-followed-board-list li {
+    display: grid;
+    min-height: 0;
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+  }
+
+  .user-followed-board__icon,
+  .user-followed-board__image {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
+
+  .user-followed-board__info {
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .user-followed-board__info h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .user-followed-board__info p {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .user-followed-board-list li > button {
+    width: 100%;
+    height: 2.5rem;
+    grid-column: 1 / -1;
+  }
+}
 </style>

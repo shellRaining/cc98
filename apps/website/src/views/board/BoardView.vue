@@ -645,4 +645,114 @@ function completeBatchModeration() {
   color: #fff;
   font-size: 0.875rem;
 }
+
+@media (max-width: 640px) {
+  .board-breadcrumb {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .board-action-row {
+    min-height: 0;
+    align-items: stretch;
+    flex-direction: column;
+    margin-top: 0.75rem;
+  }
+
+  .board-action-row__buttons {
+    gap: 0.75rem;
+  }
+
+  .board-action-row__buttons a,
+  .board-action-row__buttons a:visited {
+    width: auto;
+    height: 3rem;
+    flex: 1;
+    border-radius: var(--cc98-radius-md);
+    font-size: 1rem;
+  }
+
+  .board-action-row :deep(.home-advertisement) {
+    display: none;
+  }
+
+  .board-filter-row {
+    min-height: 0;
+    align-items: stretch;
+    flex-direction: column;
+    margin-block: 0.75rem;
+  }
+
+  .board-tag-layers {
+    max-width: none;
+  }
+
+  .board-tag-layer {
+    gap: 0.4rem;
+  }
+
+  .board-tag-layer a,
+  .board-tag-layer a:visited {
+    min-width: 0;
+    min-height: 2.5rem;
+    height: auto;
+    flex: 1 1 5rem;
+  }
+
+  .board-list-panel__head {
+    min-height: 2.75rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board-list-panel__head nav {
+    justify-content: space-around;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+
+  .board-list-panel__head a,
+  .board-list-panel__head a:visited {
+    min-height: 2.75rem;
+    flex: 1;
+    padding-block: 0.65rem;
+    text-align: center;
+  }
+
+  .board-list-panel__columns {
+    display: none;
+  }
+
+  .board-batch-toolbar {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .board-batch-toolbar button {
+    min-height: 2.5rem;
+  }
+
+  .board-page__bottom {
+    align-items: stretch;
+    flex-direction: column;
+    margin-top: 0.75rem;
+  }
+
+  .board-page__bottom > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .board-page__bottom > div a,
+  .board-page__bottom > div a:visited {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+}
 </style>

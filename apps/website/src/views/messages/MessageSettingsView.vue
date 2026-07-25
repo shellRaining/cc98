@@ -127,4 +127,46 @@ onBeforeUnmount(() => {
   color: #fff;
   font-size: 0.875rem;
 }
+
+@media (max-width: 640px) {
+  .message-setting {
+    height: auto;
+    min-height: 25rem;
+    padding: 0.75rem;
+  }
+
+  .message-setting__row {
+    height: auto;
+    min-height: 4rem;
+    flex: none;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+    border-bottom: 1px dashed var(--cc98-color-border);
+  }
+
+  .message-setting__row-title {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .message-setting__row label {
+    min-height: 2.5rem;
+    margin-left: 0;
+  }
+
+  .message-setting > button {
+    width: 100%;
+    height: 2.75rem;
+    margin: 1rem 0 0;
+  }
+
+  .message-setting__saved {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+  }
+}
 </style>

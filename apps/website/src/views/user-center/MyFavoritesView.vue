@@ -632,4 +632,79 @@ function formatTime(value: string | undefined): string {
   color: var(--cc98-color-accent);
   font-size: 0.8rem;
 }
+
+@media (max-width: 1000px) {
+  .favorite-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .favorite-toolbar__tip {
+    position: static;
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .favorite-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .favorite-toolbar__tip {
+    grid-column: auto;
+  }
+
+  .favorite-toolbar > select,
+  .favorite-search input,
+  .favorite-search button,
+  .favorite-manage-button {
+    min-height: 2.5rem;
+  }
+
+  .user-favorites > hr {
+    margin: 1.5rem 0;
+  }
+
+  .user-content-list__meta {
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .user-content-list__meta a,
+  .user-content-list__meta a:visited {
+    min-width: 0;
+  }
+
+  .user-content-list__title,
+  .user-content-list__title:visited {
+    padding-right: 0;
+  }
+
+  .user-favorite-topic__content {
+    gap: 0.5rem;
+  }
+
+  .favorite-topic-actions {
+    flex-basis: 4rem;
+  }
+
+  .favorite-group-tabs {
+    overflow-x: auto;
+  }
+
+  .favorite-group-tabs button {
+    min-width: 6rem;
+  }
+
+  .favorite-group-form label {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .favorite-move-select {
+    width: 100%;
+    min-height: 2.5rem;
+  }
+}
 </style>

@@ -299,4 +299,64 @@ async function handleLogin() {
     padding: 3rem 1rem;
   }
 }
+
+@media (max-width: 640px) {
+  .login-page {
+    padding-bottom: 1.5rem;
+  }
+
+  .login-announcement {
+    font-size: 0.875rem;
+  }
+
+  .login-announcement p {
+    margin: 0.75rem;
+  }
+
+  .login-announcement__body {
+    padding-left: 0;
+  }
+
+  .login-card {
+    min-height: 0;
+    margin-top: 0.75rem;
+  }
+
+  .login-card__panel {
+    padding: 2rem 0.75rem;
+  }
+
+  .login-form {
+    width: 100%;
+    max-width: none;
+    align-items: stretch;
+  }
+
+  .login-form__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .login-form__row input,
+  .login-form button {
+    width: 100%;
+    height: 2.75rem;
+  }
+
+  .login-form__message,
+  .login-card__link {
+    width: 100%;
+  }
+
+  .login-form__message {
+    min-height: 2rem;
+    line-height: 2rem;
+  }
+
+  .login-card__link {
+    margin: 1rem 0 0;
+  }
+}
 </style>

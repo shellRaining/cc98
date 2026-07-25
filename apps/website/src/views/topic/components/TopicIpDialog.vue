@@ -113,4 +113,19 @@ const errorMessage = computed(() =>
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@media (max-width: 640px) {
+  .topic-ip-groups summary {
+    padding-inline: 0;
+  }
+
+  .topic-ip-groups ol {
+    padding-left: 1.25rem;
+  }
+
+  .topic-ip-groups li p:last-child {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
 </style>

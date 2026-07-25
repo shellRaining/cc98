@@ -269,4 +269,17 @@ async function submit() {
   color: var(--cc98-color-error);
   font-size: 0.875rem;
 }
+
+@media (max-width: 640px) {
+  .topic-moderation-form > label {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .topic-moderation-form input[type="text"],
+  .topic-moderation-form input[type="number"],
+  .topic-moderation-form select {
+    height: 2.75rem;
+  }
+}
 </style>
