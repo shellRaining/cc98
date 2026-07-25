@@ -5,7 +5,6 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
-import { parse as parseYaml } from "yaml";
 
 const execFileAsync = promisify(execFile);
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,8 +14,6 @@ const generatedFiles = [
   { name: "openapi.json", parse: JSON.parse },
   { name: "openid.openapi.json", parse: JSON.parse },
   { name: "endpoint-catalog.json", parse: JSON.parse },
-  { name: "openapi.yaml", parse: parseYaml },
-  { name: "openid.openapi.yaml", parse: parseYaml },
 ];
 
 try {

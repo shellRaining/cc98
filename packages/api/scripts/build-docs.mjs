@@ -1,11 +1,8 @@
-import { execFile } from "node:child_process";
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 
-const execFileAsync = promisify(execFile);
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const generatedDir = resolve(packageDir, "generated");
 const checkOnly = process.argv.includes("--check");
@@ -63,23 +60,23 @@ function navigation() {
 </nav>`;
 }
 
-async function redoclyEntry() {
-  const packageJsonPath = fileURLToPath(import.meta.resolve("@redocly/cli/package.json"));
-  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
-  return resolve(dirname(packageJsonPath), packageJson.bin.redocly);
-}
-
-async function buildRedoc(input, output, title) {
-  await execFileAsync(process.execPath, [
-    await redoclyEntry(),
-    "build-docs",
-    input,
-    "--output",
-    output,
-    "--title",
-    title,
-    "--disableGoogleFont",
-  ]);
+function redocPage(title, specification) {
+  return `<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>${escapeHtml(title)}</title>
+  </head>
+  <body>
+    <div id="redoc"></div>
+    <noscript><p>请启用 JavaScript，或直接查看 <a href="${specification}">OpenAPI JSON</a>。</p></noscript>
+    <script src="https://cdn.redocly.com/redoc/v2.5.3/bundles/redoc.standalone.js" integrity="sha384-xiEssMQFSpSfLbzRZCGfxxIM5QDb2DTrU6vyoZdp2sV1L6pmOMy6MpTtUoLbpC96" crossorigin="anonymous"></script>
+    <script>Redoc.init(${JSON.stringify(specification)}, { disableGoogleFont: true }, document.getElementById("redoc"));</script>
+  </body>
+</html>
+`;
 }
 
 try {
@@ -92,23 +89,14 @@ try {
   await mkdir(outputDir, { recursive: true });
 
   await Promise.all([
-    buildRedoc(
-      resolve(generatedDir, "openapi.json"),
-      resolve(outputDir, "openapi.html"),
-      "CC98 API 参考",
-    ),
-    buildRedoc(
-      resolve(generatedDir, "openid.openapi.json"),
+    writeFile(resolve(outputDir, "openapi.html"), redocPage("CC98 API 参考", "./openapi.json")),
+    writeFile(
       resolve(outputDir, "openid.html"),
-      "CC98 OpenID 参考",
+      redocPage("CC98 OpenID 参考", "./openid.openapi.json"),
     ),
-    ...[
-      "openapi.json",
-      "openapi.yaml",
-      "openid.openapi.json",
-      "openid.openapi.yaml",
-      "endpoint-catalog.json",
-    ].map((fileName) => copyFile(resolve(generatedDir, fileName), resolve(outputDir, fileName))),
+    ...["openapi.json", "openid.openapi.json", "endpoint-catalog.json"].map((fileName) =>
+      copyFile(resolve(generatedDir, fileName), resolve(outputDir, fileName)),
+    ),
   ]);
 
   const rows = catalog
@@ -145,8 +133,8 @@ try {
 </ul>
 <h2>下载</h2>
 <ul>
-  <li><a href="./openapi.json">主 API OpenAPI JSON</a> / <a href="./openapi.yaml">YAML</a></li>
-  <li><a href="./openid.openapi.json">OpenID JSON</a> / <a href="./openid.openapi.yaml">YAML</a></li>
+  <li><a href="./openapi.json">主 API OpenAPI JSON</a></li>
+  <li><a href="./openid.openapi.json">OpenID OpenAPI JSON</a></li>
   <li><a href="./endpoint-catalog.json">接口目录 JSON</a></li>
 </ul>
 <h2>接入 Apifox</h2>
@@ -168,9 +156,11 @@ try {
   );
   if (!indexHtml.includes("CC98 API 文档")) throw new Error("文档首页生成失败");
   if (!catalogHtml.includes("getBoardBoardId")) throw new Error("接口目录缺少已知 operation");
-  if (!mainHtml.includes("getBoardBoardId")) throw new Error("主 API 参考文档缺少已知 operation");
-  if (!openIdHtml.includes("postConnectToken"))
-    throw new Error("OpenID 参考文档缺少 token operation");
+  if (!openapi.paths?.["/board/{boardId}"]) throw new Error("主 API 规范缺少已知 operation");
+  if (!openid.paths?.["/connect/token"]) throw new Error("OpenID 规范缺少 token operation");
+  if (!mainHtml.includes("./openapi.json")) throw new Error("主 API 参考文档未绑定 JSON 规范");
+  if (!openIdHtml.includes("./openid.openapi.json"))
+    throw new Error("OpenID 参考文档未绑定 JSON 规范");
 
   console.log(`生成 API 静态文档：${outputDir}`);
 } finally {

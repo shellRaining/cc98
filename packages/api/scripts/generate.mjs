@@ -3,7 +3,6 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { createDocument } from "zod-openapi";
-import { stringify as stringifyYaml } from "yaml";
 import { operationRegistry } from "../src/operations/index.ts";
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -163,16 +162,8 @@ await writeFile(
 );
 await writeFile(resolve(generatedDir, "openapi.json"), `${JSON.stringify(openapi, null, 2)}\n`);
 await writeFile(
-  resolve(generatedDir, "openapi.yaml"),
-  stringifyYaml(openapi, { aliasDuplicateObjects: false, lineWidth: 0 }),
-);
-await writeFile(
   resolve(generatedDir, "openid.openapi.json"),
   `${JSON.stringify(openIdOpenapi, null, 2)}\n`,
-);
-await writeFile(
-  resolve(generatedDir, "openid.openapi.yaml"),
-  stringifyYaml(openIdOpenapi, { aliasDuplicateObjects: false, lineWidth: 0 }),
 );
 
 console.log(

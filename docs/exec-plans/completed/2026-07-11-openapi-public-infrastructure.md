@@ -101,8 +101,8 @@ packages/api/
 │   ├── registry.ts
 │   └── index.ts
 ├── generated/
-│   ├── openapi.yaml
 │   ├── openapi.json
+│   ├── openid.openapi.json
 │   └── endpoint-catalog.json
 ├── fixtures/
 │   ├── anonymous/
@@ -121,8 +121,8 @@ packages/api/
 Zod schema 和 operation 元数据按领域拆分，构建时生成 OpenAPI 和接口目录。npm 包建议导出：
 
 - 包根路径：Zod schema、推导类型和公共枚举。
-- `./openapi.yaml`
 - `./openapi.json`
+- `./openid.openapi.json`
 - `./catalog`
 - `./package.json`
 
@@ -133,7 +133,7 @@ Zod schema 和 operation 元数据按领域拆分，构建时生成 OpenAPI 和�
 - 后端原始 wire schema，对字段名、nullable、optional 和枚举做准确描述。
 - 每个 operation 的 method、path、参数、请求体、响应、认证、风险和验证状态。
 - 从 Zod 推导的 TypeScript 类型。
-- 生成后的 OpenAPI YAML、JSON 和接口目录。
+- 生成后的 OpenAPI JSON 和接口目录。
 - 经过脱敏的最小响应 fixture。
 - 接口发现、真实请求探测、脱敏、生成和校验脚本。
 - 公共使用文档、许可证、版本和贡献说明。
@@ -286,7 +286,7 @@ flowchart LR
 - 依赖只用于开发，不增加网站运行时代码体积。
 - 能在 CI 中离线 lint 和 bundle，在线探测单独触发。
 
-初步可试验 `@redocly/cli` 配合 `openapi-typescript`。在试验结果写入本计划前，不把它们定为长期架构决策。
+静态文档最初试验了 `@redocly/cli`。最终页面直接加载固定版本的 Redoc CDN 脚本和同站 JSON 规范，不保留专用 CLI 依赖。
 
 ## 版本与发布
 
@@ -543,14 +543,15 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-18：完成状态审计。接口资产、Zod-first 契约、生成物、真实探测和网站接入已经落地；第 7、8 阶段的静态文档、公共示例和发布准备继续保留为后续计划。
 - 2026-07-18：登录探测改为从本地账号密码实时获取短期 access token，不再维护会过期的 token 文件。
 - 2026-07-18：业务 API 与 OpenID 拆为 `generated/openapi.json` 和 `generated/openid.openapi.json`。主规范包含 135 个 operation、115 个 path，OpenID 规范单独包含匿名的 `POST /connect/token`；生成物一致性检查同时覆盖两份规范和 endpoint catalog。
-- 2026-07-18：OpenAPI 同时生成 JSON 和 YAML，主 API 与 OpenID 规范补齐包版本、MIT 许可证和仓库问题入口。
-- 2026-07-18：使用 Redocly 构建静态首页、接口目录、主 API 和 OpenID 参考页，并提供规范下载。`docs:check` 在临时目录完成构建，不污染工作区。
+- 2026-07-18：主 API 与 OpenID 规范补齐包版本、MIT 许可证和仓库问题入口。
+- 2026-07-18：构建静态首页、接口目录、主 API 和 OpenID 参考页，并提供规范下载。`docs:check` 在临时目录完成构建，不污染工作区。
 - 2026-07-18：公共 README 补齐 Zod、TypeScript、fetch、curl、认证、限频和 UBB 示例。仓库补齐许可证、贡献指南、行为准则和安全报告方式。
-- 2026-07-18：包版本调整为 `0.1.0-alpha.0`，补齐仓库元数据、CHANGELOG 和显式 JSON、YAML、catalog exports。
+- 2026-07-18：包版本调整为 `0.1.0-alpha.0`，补齐仓库元数据、CHANGELOG 和显式 JSON、catalog exports。
 - 2026-07-18：`pack:check` 验证 tarball 内容，并在独立临时项目安装后导入 schema、OpenAPI 和接口目录。
 - 2026-07-18：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 279 项测试全部通过。
 - 2026-07-25：增加独立 Vercel 部署配置和稳定规范直链；Apifox 改用主 API 与 OpenID 两个 URL 数据源，不再依赖仓库侧 CLI 同步。
-- 2026-07-25：生产产物预览通过。首页、接口目录、主 API 与 OpenID 页面均可打开，四个规范直链返回 200；JSON 为 `application/json`，YAML 为 `text/yaml`，Vercel 配置会将生产 YAML 固定为 `application/yaml`。
+- 2026-07-25：生产产物预览通过。首页、接口目录、主 API 与 OpenID 页面均可打开，两份 JSON 规范直链返回 200 和 `application/json`。
+- 2026-07-25：按最终使用需求删除 YAML 生成与发布链路。Redoc 页面改为直接读取同站 JSON，移除 `yaml` 和 `@redocly/cli` 开发依赖。
 - 2026-07-25：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 288 项和工具包 1 项测试全部通过。
 
 ## 决策记录

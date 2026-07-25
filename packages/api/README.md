@@ -7,8 +7,8 @@ CC98 API 的公共契约包。Zod schema 和 operation registry 是事实源，O
 ## 提供的内容
 
 - Zod 运行时 schema 和通过 `z.infer` 得到的 TypeScript 类型。
-- 主业务 API 的 OpenAPI 3.1 JSON 与 YAML。
-- OpenID 登录与 Token 刷新的独立 OpenAPI 3.1 JSON 与 YAML。
+- 主业务 API 的 OpenAPI 3.1 JSON。
+- OpenID 登录与 Token 刷新的独立 OpenAPI 3.1 JSON。
 - 包含认证要求、风险等级和验证状态的接口目录。
 - 匿名与登录只读接口的脱敏验证记录。
 
@@ -18,9 +18,7 @@ CC98 API 的公共契约包。Zod schema 和 operation registry 是事实源，O
 | ------------------------------- | -------------------------------- |
 | `@cc98/api`                     | Zod schema、类型、枚举和公共常量 |
 | `@cc98/api/openapi.json`        | 主业务 API OpenAPI JSON          |
-| `@cc98/api/openapi.yaml`        | 主业务 API OpenAPI YAML          |
 | `@cc98/api/openid.openapi.json` | OpenID OpenAPI JSON              |
-| `@cc98/api/openid.openapi.yaml` | OpenID OpenAPI YAML              |
 | `@cc98/api/catalog`             | 机器可读接口目录                 |
 
 ## 在仓库内使用
@@ -71,7 +69,7 @@ Vercel 项目接入仓库后，静态站的预期生产域名为 `https://cc98-a
 - `https://cc98-api-docs.vercel.app/openapi.json`
 - `https://cc98-api-docs.vercel.app/openid.openapi.json`
 
-YAML 使用同名的 `.yaml` 地址。Apifox 应为两份规范分别创建 URL 数据源并选择不同的目标模块，不需要仓库侧的 Apifox CLI 同步。
+Apifox 应为两份规范分别创建 URL 数据源并选择不同的目标模块，不需要仓库侧的 Apifox CLI 同步。
 
 ```ts
 import openapi from "@cc98/api/openapi.json" with { type: "json" };

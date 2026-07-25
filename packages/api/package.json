@@ -26,9 +26,7 @@
       "import": "./dist/index.mjs"
     },
     "./openapi.json": "./generated/openapi.json",
-    "./openapi.yaml": "./generated/openapi.yaml",
     "./openid.openapi.json": "./generated/openid.openapi.json",
-    "./openid.openapi.yaml": "./generated/openid.openapi.yaml",
     "./catalog": "./generated/endpoint-catalog.json",
     "./package.json": "./package.json"
   },
@@ -50,11 +48,9 @@
     "zod-openapi": "catalog:"
   },
   "devDependencies": {
-    "@redocly/cli": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "vite-plus": "catalog:",
-    "yaml": "catalog:"
+    "vite-plus": "catalog:"
   },
   "engines": {
     "node": ">=22.18.0"
