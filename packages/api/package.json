@@ -35,7 +35,6 @@
     "generate": "node scripts/generate.mjs && vp fmt generated --write",
     "probe:anonymous": "node scripts/probe.mjs",
     "probe:authenticated": "node --env-file-if-exists=../../.cc98-credentials.local scripts/probe.mjs --authenticated --auth-blocked",
-    "pack:check": "node scripts/check-package.mjs",
     "test": "node scripts/check-generated.mjs && vp test",
     "check": "vp check",
     "prepack": "node scripts/check-generated.mjs && vp pack"

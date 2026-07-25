@@ -457,7 +457,7 @@ flowchart LR
 - [x] 在没有 `@cc98` 发布权限时保留仓库内包名和 `private: true`，不抢占或冒用官方 scope。
 - [x] 评估 npm 自有 scope、无 scope 包名和 GitHub Packages，registry 选择推迟到实际发布前。
 - [x] 补许可证、行为准则、版本策略和协作入口。
-- [x] 配置发布包检查和 changelog。
+- [x] 配置 changelog。
 - [x] 生成 `0.1.0-alpha.0` tarball，并在 monorepo 外的临时项目完成安装与导入验证。
 
 ### 9. 持续维护
@@ -553,6 +553,7 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-25：按最终使用需求删除 YAML 生成与发布链路，移除 `yaml` 和 `@redocly/cli` 开发依赖。
 - 2026-07-25：进一步删除静态首页、接口目录页面、Redoc 参考页和相关构建脚本。Vercel 不安装依赖，只发布 `openapi.json` 与 `openid.openapi.json`。
 - 2026-07-25：最终生产产物预览通过。两份 JSON 均返回 200 和 `application/json`，根路径返回 404，没有额外页面。
+- 2026-07-25：当前没有 npm 发布流程，删除未进入 `ready` 或自动发布门禁的 `pack:check` 和 `check-package.mjs`。历史 tarball 验证结果继续保留，实际准备发布时再按届时流程建立检查。
 - 2026-07-25：删除与 `docs/collaborating.md` 重复的 `CONTRIBUTING.md`。由于仓库未启用 GitHub 私密漏洞报告，删除渠道说明不成立的 `SECURITY.md`，并清理相关引用。
 - 2026-07-25：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 288 项和工具包 1 项测试全部通过。
 
@@ -566,5 +567,6 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-11：只有具有独立领域含义、需要稳定复用的 schema 声明 component ID；简单参数和临时包装保持内联。
 - 2026-07-11：写接口不进入普通 CI 在线探测。
 - 2026-07-18：最初实现的静态 API 页面是可重建产物，不提交仓库，部署失败不影响主站。
-- 2026-07-25：最终不维护静态 API 页面。独立 Vercel 项目只托管两份 OpenAPI JSON，用户帮助站和主站不承担开发者规范托管。
 - 2026-07-18：没有确认 registry 和发布身份前保持 `private: true`。本计划以可安装 tarball 和独立项目消费通过作为发布准备验收，不执行真实 registry 发布。
+- 2026-07-25：最终不维护静态 API 页面。独立 Vercel 项目只托管两份 OpenAPI JSON，用户帮助站和主站不承担开发者规范托管。
+- 2026-07-25：npm 包仍为未来选项，不为尚未确定的发布流程保留手动端到端脚本。
