@@ -456,7 +456,7 @@ flowchart LR
 
 - [x] 在没有 `@cc98` 发布权限时保留仓库内包名和 `private: true`，不抢占或冒用官方 scope。
 - [x] 评估 npm 自有 scope、无 scope 包名和 GitHub Packages，registry 选择推迟到实际发布前。
-- [x] 补许可证、贡献指南、行为准则、版本策略和安全报告方式。
+- [x] 补许可证、行为准则、版本策略和协作入口。
 - [x] 配置发布包检查和 changelog。
 - [x] 生成 `0.1.0-alpha.0` tarball，并在 monorepo 外的临时项目完成安装与导入验证。
 
@@ -545,13 +545,14 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-18：业务 API 与 OpenID 拆为 `generated/openapi.json` 和 `generated/openid.openapi.json`。主规范包含 135 个 operation、115 个 path，OpenID 规范单独包含匿名的 `POST /connect/token`；生成物一致性检查同时覆盖两份规范和 endpoint catalog。
 - 2026-07-18：主 API 与 OpenID 规范补齐包版本、MIT 许可证和仓库问题入口。
 - 2026-07-18：构建静态首页、接口目录、主 API 和 OpenID 参考页，并提供规范下载。`docs:check` 在临时目录完成构建，不污染工作区。
-- 2026-07-18：公共 README 补齐 Zod、TypeScript、fetch、curl、认证、限频和 UBB 示例。仓库补齐许可证、贡献指南、行为准则和安全报告方式。
+- 2026-07-18：公共 README 补齐 Zod、TypeScript、fetch、curl、认证、限频和 UBB 示例。仓库补齐许可证和行为准则。
 - 2026-07-18：包版本调整为 `0.1.0-alpha.0`，补齐仓库元数据、CHANGELOG 和显式 JSON、catalog exports。
 - 2026-07-18：`pack:check` 验证 tarball 内容，并在独立临时项目安装后导入 schema、OpenAPI 和接口目录。
 - 2026-07-18：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 279 项测试全部通过。
 - 2026-07-25：增加独立 Vercel 部署配置和稳定规范直链；Apifox 改用主 API 与 OpenID 两个 URL 数据源，不再依赖仓库侧 CLI 同步。
 - 2026-07-25：生产产物预览通过。首页、接口目录、主 API 与 OpenID 页面均可打开，两份 JSON 规范直链返回 200 和 `application/json`。
 - 2026-07-25：按最终使用需求删除 YAML 生成与发布链路。Redoc 页面改为直接读取同站 JSON，移除 `yaml` 和 `@redocly/cli` 开发依赖。
+- 2026-07-25：删除与 `docs/collaborating.md` 重复的 `CONTRIBUTING.md`。由于仓库未启用 GitHub 私密漏洞报告，删除渠道说明不成立的 `SECURITY.md`，并清理相关引用。
 - 2026-07-25：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 288 项和工具包 1 项测试全部通过。
 
 ## 决策记录

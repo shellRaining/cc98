@@ -37,4 +37,4 @@ type 清单：
 
 新增文档页面后，按需补充 `apps/docs/.vitepress/config.ts` 中的侧栏和导航。构建会检查站内链接是否存在。开发者准则、ADR 和执行计划继续放在根目录 `docs/`，不复制到用户帮助站。
 
-公共贡献的完整流程见根目录 `CONTRIBUTING.md`，社区交流遵循 `CODE_OF_CONDUCT.md`，漏洞和隐私问题按 `SECURITY.md` 使用私密渠道报告。
+仓库协作以本文件为准，Agent 入口和常用命令见根目录 `AGENTS.md`。社区交流遵循 `CODE_OF_CONDUCT.md`。公开 issue 和 PR 不得包含密码、token、私信、IP 或未脱敏的论坛数据；发现凭证泄漏时，应先撤销或轮换凭证，再联系维护者处理仓库记录。

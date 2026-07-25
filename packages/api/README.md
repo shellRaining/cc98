@@ -141,4 +141,4 @@ function parsePostContent(post: Post) {
 
 登录探测从仓库根目录忽略的 `.cc98-credentials.local` 读取测试账号，每次运行临时换取 access token。token 不持久化，临时请求头文件使用 `0600` 权限并在退出时删除。fixture 必须先脱敏，高隐私响应默认不落盘。
 
-安全问题请按仓库根目录的 `SECURITY.md` 报告，不要在公开 issue 中粘贴 token、密码、私信、IP 或未脱敏响应。
+公开 issue 中不要粘贴 token、密码、私信、IP 或未脱敏响应。凭证已经泄漏时，应先撤销或轮换，再联系维护者处理仓库记录。
