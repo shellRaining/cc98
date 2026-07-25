@@ -135,7 +135,7 @@ export const voteInfoSchema = z
   .looseObject({
     topicId: z.number().optional(),
     voteItems: z.array(voteItemSchema).optional(),
-    voteRecords: z.array(voteRecordSchema).optional(),
+    voteRecords: z.array(voteRecordSchema).nullable().optional(),
     expiredTime: z.string().optional(),
     isAvailable: z.boolean().optional(),
     maxVoteCount: z.number().optional(),

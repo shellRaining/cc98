@@ -1076,7 +1076,7 @@
     "summary": "Get topic vote info",
     "tags": ["Topic"],
     "risk": "read-only",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-authenticated",
     "requiresAuthentication": true
   },
   {

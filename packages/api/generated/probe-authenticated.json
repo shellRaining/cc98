@@ -549,11 +549,11 @@
     "operationId": "getTopicTopicIdVote",
     "method": "GET",
     "path": "/topic/{topicId}/vote",
-    "url": "https://api-v2.cc98.org/topic/6572083/vote",
-    "status": 400,
-    "durationMs": 200,
+    "url": "https://api-v2.cc98.org/topic/6583126/vote",
+    "status": 200,
+    "durationMs": 279,
     "contentType": "application/json; charset=utf-8",
-    "bodyType": "string",
+    "bodyType": "object",
     "validation": {
       "status": "passed"
     }

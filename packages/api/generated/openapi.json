@@ -1443,7 +1443,7 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -8141,10 +8141,17 @@
             }
           },
           "voteRecords": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VoteRecord"
-            }
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VoteRecord"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "expiredTime": {
             "type": "string"
