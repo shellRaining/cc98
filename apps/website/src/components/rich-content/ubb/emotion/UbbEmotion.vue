@@ -25,7 +25,7 @@ const isDarkAcEmotion = computed(
     :title="emotion.alt"
     loading="lazy"
     decoding="async"
-    class="ubb-emotion inline-block max-w-full align-middle"
+    class="inline-block max-w-full align-middle"
     :class="{ 'ubb-emotion--ac-dark': isDarkAcEmotion }"
   />
 </template>
