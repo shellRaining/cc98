@@ -63,6 +63,14 @@ export function normalizeApiError(
     return { kind: "server", status, message: "服务器暂时不可用，请稍后重试", cause: error };
   }
 
+  if (error instanceof FetchError && status == null) {
+    return {
+      kind: "unknown",
+      message: "网络连接失败，请检查网络后重试",
+      cause: error,
+    };
+  }
+
   if (error instanceof Error && error.message) {
     return { kind: "unknown", status, message: error.message, cause: error };
   }

@@ -48,6 +48,7 @@
     "unocss": "catalog:",
     "vite": "catalog:",
     "vite-plugin-pwa": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "workbox-window": "catalog:"
   }
 }

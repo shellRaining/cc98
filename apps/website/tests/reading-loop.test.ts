@@ -130,6 +130,14 @@ describe("api-error", () => {
     fetchError.statusCode = 403;
     expect(normalizeApiError(fetchError).kind).toBe("forbidden");
 
+    const networkError = new FetchError(
+      '[GET] "https://api-v2.cc98.org/config/index": Failed to fetch',
+    );
+    expect(normalizeApiError(networkError)).toMatchObject({
+      kind: "unknown",
+      message: "网络连接失败，请检查网络后重试",
+    });
+
     try {
       z.object({ id: z.number() }).parse({});
     } catch (error) {
