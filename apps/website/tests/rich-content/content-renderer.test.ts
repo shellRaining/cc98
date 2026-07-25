@@ -1,18 +1,24 @@
+import { createPinia } from "pinia";
 import { createSSRApp, h } from "vue";
 import { describe, expect, test } from "vite-plus/test";
 import { renderToString } from "vue/server-renderer";
 import ContentRenderer from "../../src/components/rich-content/ContentRenderer.vue";
+import { useThemeStore } from "../../src/stores/theme.ts";
+import type { ThemeMode } from "../../src/stores/skins.ts";
 
 async function renderContent(
   content: string,
   type: "ubb" | "markdown" = "ubb",
   options: Record<string, unknown> = {},
+  mode: ThemeMode = "light",
 ) {
-  return renderToString(
-    createSSRApp({
-      render: () => h(ContentRenderer, { content, type, options }),
-    }),
-  );
+  const app = createSSRApp({
+    render: () => h(ContentRenderer, { content, type, options }),
+  });
+  const pinia = createPinia();
+  app.use(pinia);
+  useThemeStore(pinia).mode = mode;
+  return renderToString(app);
 }
 
 describe("ContentRenderer", () => {
@@ -78,6 +84,16 @@ describe("ContentRenderer", () => {
     expect(html).toContain("max-w-full");
     expect(html).not.toContain("max-h-12");
     expect(html).not.toContain("max-w-24");
+  });
+
+  test("AC 娘表情随明暗模式切换资源", async () => {
+    const light = await renderContent("[ac01]");
+    const dark = await renderContent("[ac01]", "ubb", {}, "dark");
+
+    expect(light).toContain("/ac/01.png");
+    expect(light).not.toContain("/ac-dark/");
+    expect(dark).toContain("/ac-dark/01.png");
+    expect(dark).toContain("ubb-emotion--ac-dark");
   });
 
   test("B 站播放器保留旧站海报参数和容器标记", async () => {

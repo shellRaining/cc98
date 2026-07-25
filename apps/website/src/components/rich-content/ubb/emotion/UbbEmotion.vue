@@ -1,17 +1,39 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { UbbEmotionDescriptor } from "@cc98/ubb";
+import { useThemeStore } from "../../../../stores/theme";
 
-defineProps<{
+const props = defineProps<{
   emotion: UbbEmotionDescriptor;
 }>();
+
+const theme = useThemeStore();
+const displaySource = computed(() => {
+  if (props.emotion.family !== "ac" || theme.effectiveMode !== "dark") {
+    return props.emotion.src;
+  }
+  return props.emotion.src.replace("/ac/", "/ac-dark/");
+});
+
+const isDarkAcEmotion = computed(
+  () => props.emotion.family === "ac" && theme.effectiveMode === "dark",
+);
 </script>
 
 <template>
   <img
-    :src="emotion.src"
+    :src="displaySource"
     :alt="emotion.alt"
     :title="emotion.alt"
     loading="lazy"
+    decoding="async"
     class="inline-block max-w-full align-middle"
+    :class="{ 'ubb-emotion--ac-dark': isDarkAcEmotion }"
   />
 </template>
+
+<style scoped>
+.ubb-emotion--ac-dark {
+  max-width: min(100%, 150px);
+}
+</style>
