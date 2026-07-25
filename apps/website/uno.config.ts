@@ -42,7 +42,6 @@ export default defineConfig({
       "cc98-text-muted": "var(--cc98-color-text-muted)",
       "cc98-text-caption": "var(--cc98-color-text-caption)",
       "cc98-link": "var(--cc98-color-link)",
-      "cc98-link-visited": "var(--cc98-color-link-visited)",
       "cc98-inverse-surface": "var(--cc98-color-inverse-surface)",
       "cc98-inverse-text": "var(--cc98-color-inverse-text)",
       "cc98-success": "var(--cc98-color-success)",
