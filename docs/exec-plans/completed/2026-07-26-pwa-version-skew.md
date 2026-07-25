@@ -36,22 +36,33 @@ PWA 状态组件保存注册结果，通过一个带并发合并和最小检查�
 - [x] 加入主动更新检查与懒加载失败处理。
 - [x] 补并发、节流、Worker 等待和缓存响应的回归测试。
 - [x] 同步前端缓存规范和执行计划索引。
-- [ ] 运行全量检查、生产构建和浏览器更新场景验证。
+- [x] 运行全量检查、生产构建和浏览器更新场景验证。
 
 ## 验证
 
-- `vp run ready` 全量通过。
+- `vp run ready` 全量通过，网站 34 个测试文件共 299 项测试通过。
 - 构建后的 `sw.js` 使用新的 `CacheFirst` 资源缓存，并包含状态码和 Content-Type 校验。
-- 业务深层路由仍能加载，缺失 `/assets/*.js` 不返回 `index.html`。
-- 模拟 `vite:preloadError` 后出现版本失效提示，确认更新只刷新一次。
-- 页面重新可见和恢复联网时会触发更新检查，短时间重复事件不会并发请求。
+- 本地生产预览的首页、页面切换和深层路由刷新正常。
+- 模拟 `vite:preloadError` 后出现版本失效提示，“稍后”关闭提示，“立即更新”只触发一次重新加载。
+- Vercel Preview 中缺失 `/assets/definitely-missing-version.js` 返回 `404 text/plain`，业务深层路由返回 `200 text/html`，`sw.js` 返回 `200 application/javascript` 并保持 `max-age=0, must-revalidate`。
+- 更新检查器的回归测试覆盖并发合并、节流、强制检查和 Worker 等待状态。
 
 ## 进展与调整
 
 - 2026-07-26：从远端 `main` 创建 `fix/pwa-version-skew` worktree。主 worktree 有用户未提交修改，本任务没有读取或覆盖这些修改。
 - 2026-07-26：实现 Vercel 路由排除、`CacheFirst` 资源缓存、响应类型校验、主动更新检查和预加载失败提示，新增 8 项回归测试。
 - 2026-07-26：`vp run ready` 全量通过。生产预览中首页、页面切换和深层路由刷新正常；模拟 `vite:preloadError` 后能显示版本失效提示，“稍后”和“立即更新”行为符合预期。
-- 2026-07-26：本地 Vite Preview 会自行把缺失资源回退到 `index.html`，不能验证 Vercel 路由。创建 PR 后需在 Vercel Preview 确认缺失 `/assets/*.js` 返回 404 且不是 HTML，再完成计划归档。
+- 2026-07-26：本地 Vite Preview 会自行把缺失资源回退到 `index.html`，因此在 PR #44 的 Vercel Preview 完成最终路由验收。缺失脚本返回 404 且不是 HTML，业务路由和 Service Worker 响应正常。
+
+## 结果
+
+部署切换后，已经访问过的带哈希资源可以继续从 Cache Storage 使用。未访问资源已经被新部署移除时，Vercel 不再用首页 HTML 冒充脚本响应，页面会显示明确的版本失效提示。长时间打开的标签页也会在重新可见、恢复联网和每小时定时检查时主动发现更新。
+
+根目录 `README.md` 的表格变化来自 `vp check --fix` 对主分支近期内容的格式化，没有改变文意。
+
+## 遗留项
+
+当前没有影响本计划交付的遗留项。Vercel Skew Protection 仍属于独立的可选增强，不纳入本次修复。
 
 ## 决策记录
 
