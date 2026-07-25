@@ -2,16 +2,18 @@
 import { computed } from "vue";
 import type { UbbEmotionDescriptor } from "@cc98/ubb";
 import { useThemeStore } from "../../../../stores/theme";
-import { resolveEmotionDisplaySource } from "./source";
 
 const props = defineProps<{
   emotion: UbbEmotionDescriptor;
 }>();
 
 const theme = useThemeStore();
-const displaySource = computed(() =>
-  resolveEmotionDisplaySource(props.emotion, theme.effectiveMode),
-);
+const displaySource = computed(() => {
+  if (props.emotion.family !== "ac" || theme.effectiveMode !== "dark") {
+    return props.emotion.src;
+  }
+  return props.emotion.src.replace("/ac/", "/ac-dark/");
+});
 
 const isDarkAcEmotion = computed(
   () => props.emotion.family === "ac" && theme.effectiveMode === "dark",
