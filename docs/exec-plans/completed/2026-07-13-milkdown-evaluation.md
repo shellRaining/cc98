@@ -1,6 +1,6 @@
 # Milkdown 选型调研
 
-> 状态：调研已完成，生产编辑器迁移待实施。当前网站继续使用 `md-editor-v3`，正式迁移需要单独的实施计划。
+> 状态：调研完成。生产编辑器和阅读解析器的迁移由 `2026-07-18-milkdown-remark-migration.md` 继续推进。
 
 ## 背景
 
@@ -101,7 +101,7 @@ Milkdown 值得进入正式 workspace spike，但不直接采用 Crepe 默认完
 
 ## 后续实施入口
 
-- [ ] 新建生产编辑器迁移计划，完成 workspace 集成 spike 后再替换 `md-editor-v3`。
+- [x] 新建生产编辑器迁移计划，按用户确认的范围同时替换 `md-editor-v3` 和 `markdown-it`。
 
 ## 决策记录
 
@@ -109,3 +109,4 @@ Milkdown 值得进入正式 workspace spike，但不直接采用 Crepe 默认完
 - 2026-07-13：阅读侧 parser 是否统一不按依赖数量决定，以主包体积、懒加载效果、语法一致性和维护成本综合判断。
 - 2026-07-13：后续正式集成优先评估按需组装的 Milkdown Kit，不直接引入 Crepe 完整功能集。
 - 2026-07-13：Milkdown 首次接入不绑定阅读侧 parser 迁移，避免把编辑体验改造和 renderer 重写放进同一批变更。
+- 2026-07-18：用户确认实施 Milkdown，并要求阅读侧统一迁移到 remark，仓库不再保留 `markdown-it`。调研计划完成，后续实施单独记录。

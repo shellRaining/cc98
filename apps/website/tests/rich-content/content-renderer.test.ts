@@ -71,6 +71,40 @@ describe("ContentRenderer", () => {
     expect(markdown).toContain("rich-content-table-wrap");
   });
 
+  test("Markdown 使用 remark 解析 GFM、引用链接和脚注", async () => {
+    const html = await renderContent(
+      [
+        "~~删除~~ www.example.com",
+        "",
+        "- [x] 已完成",
+        "- [ ] 待处理",
+        "",
+        "[项目主页][home] 与脚注[^note]",
+        "",
+        '[home]: https://example.com "示例"',
+        "[^note]: 脚注内容",
+      ].join("\n"),
+      "markdown",
+    );
+
+    expect(html).toContain("<s>删除</s>");
+    expect(html).toContain('href="http://www.example.com"');
+    expect(html).toContain('type="checkbox" checked disabled');
+    expect(html).toContain('type="checkbox" disabled');
+    expect(html).toContain('href="https://example.com"');
+    expect(html).toContain("脚注内容");
+    expect(html).toContain("脚注");
+  });
+
+  test("Markdown 行内公式和块公式使用 KaTeX 渲染", async () => {
+    const html = await renderContent("行内 $E=mc^2$\n\n$$\na^2+b^2=c^2\n$$", "markdown");
+
+    expect(html).toContain("katex");
+    expect(html).toContain("katex-display");
+    expect(html).toContain("E=mc");
+    expect(html).not.toContain("$$");
+  });
+
   test("UBB 代码保留旧站行号并去掉首尾空行", async () => {
     const html = await renderContent("[code]\n第一行\n\n第三行\n[/code]");
     expect(html).toContain("ubb-code-block");

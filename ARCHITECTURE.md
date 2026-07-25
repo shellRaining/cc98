@@ -52,10 +52,11 @@ flowchart LR
   content --> markdown["Markdown 适配层"]
   ubb --> parser["@cc98/ubb AST"]
   ubb --> universe["Universe 共享 UI"]
-  markdown --> universe
+  markdown --> remark["remark / MDAST"]
+  remark --> universe
 ```
 
-`packages/ubb` 只负责解析和标签契约，不依赖 Vue。`apps/website` 解释 AST 和 Markdown token，并集中处理 URL 安全、图片计数、媒体开关等渲染策略。
+`packages/ubb` 只负责解析和标签契约，不依赖 Vue。`apps/website` 解释 UBB AST 和 Markdown MDAST，并集中处理 URL 安全、图片计数、媒体开关等渲染策略。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
 
 ## 依赖方向
 
