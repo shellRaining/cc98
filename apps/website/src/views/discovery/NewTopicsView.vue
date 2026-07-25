@@ -309,6 +309,7 @@ function formatCount(value: number | undefined) {
   min-height: 2.25rem;
   align-items: flex-start;
   justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .new-topics-toolbar__modes {
@@ -345,7 +346,6 @@ function formatCount(value: number | undefined) {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-top: 0.45rem;
 }
 
 .new-topic-card-layout {
@@ -353,7 +353,6 @@ function formatCount(value: number | undefined) {
   grid-template-columns: 15.625rem 34.625rem 19.875rem;
   gap: 0.375rem;
   align-items: start;
-  margin-top: 1.2rem;
 }
 
 .new-topic-card-layout__left,
