@@ -1,6 +1,6 @@
 # CC98 OpenAPI 公共基础设施
 
-> 状态：部分完成。Zod-first 契约、OpenAPI 生成、接口探测和网站接入已经完成；静态文档、公共使用说明和发布准备仍待实施。
+> 状态：待集成。Zod-first 契约、OpenAPI 生成、接口探测和网站接入已经进入 `main`；静态文档、公共使用说明和发布准备已在远端实现分支完成，合入主线后才能归档。
 
 ## 背景
 
@@ -541,6 +541,7 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-18：完成状态审计。接口资产、Zod-first 契约、生成物、真实探测和网站接入已经落地；第 7、8 阶段的静态文档、公共示例和发布准备继续保留为后续计划。
 - 2026-07-18：登录探测改为从本地账号密码实时获取短期 access token，不再维护会过期的 token 文件。
 - 2026-07-18：业务 API 与 OpenID 拆为 `generated/openapi.json` 和 `generated/openid.openapi.json`。主规范包含 135 个 operation、115 个 path，OpenID 规范单独包含匿名的 `POST /connect/token`；生成物一致性检查同时覆盖两份规范和 endpoint catalog。
+- 2026-07-25：归档审计确认远端分支 `origin/codex/openapi-public` 已完成第 7、8 阶段，最新实现提交为 `81fd868`。该分支尚未合入 `main`，本计划继续留在 `active/`。下一步是完成主线集成，重新运行 `vp run ready`，再补齐合入后的验证记录并归档。
 
 ## 决策记录
 
