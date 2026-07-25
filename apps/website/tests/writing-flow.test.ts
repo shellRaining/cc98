@@ -13,7 +13,7 @@ import {
   createAttachmentMarkdown,
 } from "../src/components/markdown-editor.ts";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../src/stores/drafts.ts";
-import { createVotePayload } from "../src/views/topic/topic-vote.ts";
+import { calculateVotePercentage, createVotePayload } from "../src/views/topic/topic-vote.ts";
 import { validateCreateVote } from "../src/views/writing/create-topic.ts";
 
 function createStorage(): Storage {
@@ -155,6 +155,13 @@ describe("投票校验", () => {
     expect(createVotePayload([], [1, 2], 1).error).toContain("至少选择");
     expect(createVotePayload([1, 2], [1, 2], 1).error).toContain("最多");
     expect(createVotePayload([3], [1, 2], 1).error).toContain("已失效");
+  });
+
+  test("结果占比处理零参与和异常计数", () => {
+    expect(calculateVotePercentage(24, 95)).toBeCloseTo(25.26, 2);
+    expect(calculateVotePercentage(0, 0)).toBe(0);
+    expect(calculateVotePercentage(-1, 10)).toBe(0);
+    expect(calculateVotePercentage(12, 10)).toBe(100);
   });
 
   test("公共契约解析旧前端可证实的投票字段", () => {

@@ -1,5 +1,12 @@
 import type { SubmitVoteRequest } from "@cc98/api";
 
+export function calculateVotePercentage(count: number, participantCount: number): number {
+  if (!Number.isFinite(count) || !Number.isFinite(participantCount) || participantCount <= 0) {
+    return 0;
+  }
+  return Math.min(100, Math.max(0, (count / participantCount) * 100));
+}
+
 export function createVotePayload(
   selectedItems: number[],
   availableIds: number[],
