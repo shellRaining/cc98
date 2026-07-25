@@ -163,7 +163,7 @@ function postLink(post: (typeof posts.value)[number]): string {
   border: 0;
   border-radius: 0.25rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   cursor: pointer;
 }

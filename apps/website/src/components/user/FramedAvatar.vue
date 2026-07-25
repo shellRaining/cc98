@@ -118,7 +118,7 @@ function replaceBrokenAvatar(event: Event) {
   display: block;
   width: 5rem;
   height: 5rem;
-  box-shadow: 0 0 5px rgb(0 0 0 / 0.45);
+  box-shadow: 0 0 5px var(--cc98-color-shadow-strong);
 }
 
 .framed-avatar--post.framed-avatar--flat .framed-avatar__portrait {

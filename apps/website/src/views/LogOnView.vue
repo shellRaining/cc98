@@ -130,15 +130,15 @@ async function handleLogin() {
 
 <style scoped>
 .login-page {
-  --login-accent: #28a7e1;
+  --login-accent: var(--cc98-color-primary-fill);
   padding-bottom: 4.5rem;
-  color: #1a1d21;
+  color: var(--cc98-color-text);
 }
 
 .login-announcement {
   width: 100%;
-  border: 1px solid #cccccc;
-  background: #ffffff;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -158,8 +158,8 @@ async function handleLogin() {
   width: 100%;
   min-height: 567px;
   margin-top: 1.875rem;
-  border: 1px solid #cccccc;
-  background: #ffffff;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
 }
 
 .login-card__illustration {
@@ -187,6 +187,11 @@ async function handleLogin() {
   object-fit: contain;
 }
 
+:global(:root[data-theme="dark"] .login-card__welcome) {
+  filter: brightness(0) invert(1);
+  opacity: 0.82;
+}
+
 .login-form {
   display: flex;
   width: 400px;
@@ -209,28 +214,28 @@ async function handleLogin() {
   width: 100%;
   height: 2.5rem;
   padding-inline: 0.625rem;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--cc98-color-border);
   border-radius: 5px;
-  background: #ffffff;
-  color: #1a1d21;
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
   font: inherit;
 }
 
 .login-form__row input:focus {
   border-color: var(--login-accent);
-  outline: 2px solid rgb(40 167 225 / 0.18);
+  outline: 2px solid color-mix(in srgb, var(--login-accent) 22%, transparent);
   outline-offset: 1px;
 }
 
 .login-form__row input:disabled {
-  background: #f3f3f3;
+  background: var(--cc98-color-surface-subtle);
 }
 
 .login-form__message {
   width: 320px;
   min-height: 2.5rem;
   margin: 0.5rem 0 0;
-  color: #d00b0b;
+  color: var(--cc98-color-error);
   font-size: 0.75rem;
   line-height: 2.5rem;
   text-align: center;
@@ -242,17 +247,17 @@ async function handleLogin() {
   border: 0;
   border-radius: 5px;
   background: var(--login-accent);
-  color: #ffffff;
+  color: var(--cc98-color-on-primary);
   cursor: pointer;
   font: inherit;
 }
 
 .login-form button:hover:not(:disabled) {
-  background: #29aedf;
+  background: var(--cc98-color-primary-fill-hover);
 }
 
 .login-form button:active:not(:disabled) {
-  background: #269ac4;
+  filter: brightness(0.92);
 }
 
 .login-form button:disabled {

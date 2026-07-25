@@ -58,7 +58,7 @@ function formatTime(value?: string) {
   height: 6.5rem;
   grid-template-columns: minmax(0, 1fr);
   overflow: hidden;
-  border: 2px solid #6b7178;
+  border: 2px solid var(--cc98-color-secondary);
   background: var(--cc98-color-surface);
 }
 
@@ -128,7 +128,7 @@ function formatTime(value?: string) {
 .topic-hero__meta :deep(button:hover),
 .topic-hero__meta a:hover {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .topic-hero__meta > div {
@@ -140,8 +140,8 @@ function formatTime(value?: string) {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1.5px solid #6b7178;
-  color: #6b7178;
+  border-left: 1.5px solid var(--cc98-color-secondary);
+  color: var(--cc98-color-secondary);
   flex-direction: column;
   gap: 0.5rem;
   text-align: center;

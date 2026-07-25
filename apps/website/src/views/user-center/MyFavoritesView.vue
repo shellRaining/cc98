@@ -493,7 +493,7 @@ function formatTime(value: string | undefined): string {
   height: 2rem;
   border: 0;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   cursor: pointer;
 }
@@ -565,7 +565,7 @@ function formatTime(value: string | undefined): string {
   padding: 0.35rem 0;
   border: 1px solid var(--cc98-color-border);
   background: var(--cc98-color-surface);
-  box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 0.12);
+  box-shadow: 0 0.25rem 0.75rem var(--cc98-color-shadow);
 }
 
 .favorite-topic-actions button {

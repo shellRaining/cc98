@@ -459,7 +459,7 @@ function formatTime(value?: string | null) {
 <style scoped>
 .annual-review-view {
   min-height: 51rem;
-  color: #000;
+  color: var(--cc98-color-inverse-surface);
 }
 
 .annual-review-shell {
@@ -554,13 +554,13 @@ function formatTime(value?: string | null) {
 .annual-review-copy strong,
 .annual-review-copy a {
   padding-inline: 2px;
-  color: #ff69b4;
+  color: var(--cc98-color-accent);
   font-size: 1.25em;
   font-weight: 700;
 }
 
 .annual-review-copy a:visited {
-  color: #ff69b4;
+  color: var(--cc98-color-accent);
 }
 
 .annual-review-greeting {
@@ -603,7 +603,7 @@ function formatTime(value?: string | null) {
   gap: 1.25rem;
   margin-top: 1.25rem;
   padding: 1rem 1rem 0.75rem;
-  border-bottom: 1px solid rgb(0 0 0 / 0.3);
+  border-bottom: 1px solid color-mix(in srgb, var(--cc98-color-inverse-surface) 30%, transparent);
 }
 
 .annual-review-bar-item {
@@ -620,7 +620,7 @@ function formatTime(value?: string | null) {
   width: 2.1rem;
   min-height: 4px;
   border-radius: 2px 2px 0 0;
-  background: #5198d8;
+  background: var(--cc98-color-primary-fill);
 }
 
 .annual-review-bar-value {
@@ -639,29 +639,29 @@ function formatTime(value?: string | null) {
 
 .annual-review-achievements span {
   padding: 0.2rem 0.55rem;
-  border: 1px solid #ff85c0;
+  border: 1px solid color-mix(in srgb, var(--cc98-color-accent) 45%, transparent);
   border-radius: 4px;
-  background: #fff0f6;
-  color: #c41d7f;
+  background: color-mix(in srgb, var(--cc98-color-accent) 10%, var(--cc98-color-surface));
+  color: var(--cc98-color-accent);
   font-size: 0.75em;
 }
 
 .annual-review-achievements span:nth-child(4n + 2) {
-  border-color: #ff9c6e;
-  background: #fff2e8;
-  color: #ad2102;
+  border-color: color-mix(in srgb, var(--cc98-color-warning) 45%, transparent);
+  background: color-mix(in srgb, var(--cc98-color-warning) 10%, var(--cc98-color-surface));
+  color: var(--cc98-color-warning);
 }
 
 .annual-review-achievements span:nth-child(4n + 3) {
-  border-color: #ffd666;
-  background: #fffbe6;
-  color: #ad6800;
+  border-color: color-mix(in srgb, var(--cc98-color-primary) 45%, transparent);
+  background: color-mix(in srgb, var(--cc98-color-primary) 10%, var(--cc98-color-surface));
+  color: var(--cc98-color-primary);
 }
 
 .annual-review-achievements span:nth-child(4n) {
-  border-color: #b7eb8f;
-  background: #f6ffed;
-  color: #389e0d;
+  border-color: color-mix(in srgb, var(--cc98-color-success) 45%, transparent);
+  background: color-mix(in srgb, var(--cc98-color-success) 10%, var(--cc98-color-surface));
+  color: var(--cc98-color-success);
 }
 
 .annual-review-blessing {

@@ -40,7 +40,7 @@ function formatTime(value: string) {
 
 .board-event-list__head {
   min-height: 2.5rem;
-  background: color-mix(in srgb, var(--cc98-color-primary) 12%, white);
+  background: color-mix(in srgb, var(--cc98-color-primary) 12%, var(--cc98-color-surface));
   font-size: 0.75rem;
 }
 
@@ -51,6 +51,6 @@ function formatTime(value: string) {
 }
 
 .board-event-list__item:hover {
-  background: #eaeaea;
+  background: var(--cc98-color-surface-subtle);
 }
 </style>

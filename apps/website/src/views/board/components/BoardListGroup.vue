@@ -70,7 +70,7 @@ const compact = isCompactBoardGroup(props.group.id);
   gap: 1rem;
   padding: 0.5rem 1rem 0.5rem 1.1rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .board-list-group__heading,
@@ -99,7 +99,7 @@ const compact = isCompactBoardGroup(props.group.id);
 
 .board-list-group__masters a,
 .board-list-group__masters a:visited {
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .board-list-group__toggle {
@@ -107,10 +107,10 @@ const compact = isCompactBoardGroup(props.group.id);
   width: 2.5rem;
   height: 1.25rem;
   padding: 0;
-  border: 1px solid #fff;
+  border: 1px solid var(--cc98-color-on-primary);
   border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font: inherit;
   font-size: 0.75rem;
   line-height: 1.1rem;
@@ -119,7 +119,7 @@ const compact = isCompactBoardGroup(props.group.id);
 
 .board-list-group__toggle:hover,
 .board-list-group__toggle:focus-visible {
-  background: rgb(255 255 255 / 0.15);
+  background: color-mix(in srgb, var(--cc98-color-on-primary) 15%, transparent);
 }
 
 .board-list-group__content {

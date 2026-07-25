@@ -121,9 +121,9 @@ const canNext = computed(() => {
 }
 
 .user-center-pagination > span[aria-current="page"] {
-  border-color: #ccc;
-  background: #ccc;
-  color: #fff;
+  border-color: var(--cc98-color-primary-fill);
+  background: var(--cc98-color-primary-fill);
+  color: var(--cc98-color-on-primary);
 }
 
 .user-center-pagination > .user-center-pagination__ellipsis {

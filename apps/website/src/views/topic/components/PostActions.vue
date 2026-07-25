@@ -139,7 +139,7 @@ async function react(action: PostLikeAction) {
 
 .post-reaction--active,
 .post-reaction--active:hover {
-  color: red;
+  color: var(--cc98-color-error);
 }
 
 .post-reaction__icon {

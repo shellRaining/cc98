@@ -51,7 +51,7 @@ const label = computed(
   width: 1rem;
   height: 1rem;
   flex: none;
-  color: #ffc90e;
+  color: var(--cc98-color-warning);
 }
 
 .board-topic-state svg {
@@ -63,19 +63,19 @@ const label = computed(
 
 .board-topic-state--hot,
 .board-topic-state--global-top {
-  color: #e33131;
+  color: var(--cc98-color-error);
 }
 
 .board-topic-state--top {
-  color: #f28c1b;
+  color: var(--cc98-color-warning);
 }
 
 .board-topic-state--best {
-  color: #ff1493;
+  color: var(--cc98-color-accent);
 }
 
 .board-topic-state--locked {
-  color: #b0b0b0;
+  color: var(--cc98-color-text-caption);
 }
 
 .board-topic-state__cutout {

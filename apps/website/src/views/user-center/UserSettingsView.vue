@@ -327,7 +327,7 @@ function resetProfile() {
 
 .user-settings button.is-primary {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .user-settings button:disabled {

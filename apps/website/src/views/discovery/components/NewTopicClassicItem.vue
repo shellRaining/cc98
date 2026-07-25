@@ -109,7 +109,7 @@ function replaceBrokenAvatar(event: Event) {
   min-width: 0;
   align-items: center;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .new-topic-classic-item__author img {

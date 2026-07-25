@@ -109,6 +109,6 @@ const stateKind = computed(() => {
 
 .search-board-results a:hover {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 </style>

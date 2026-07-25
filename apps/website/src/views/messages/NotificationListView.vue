@@ -148,7 +148,7 @@ function toPage(nextPage: number) {
 .message-notification__bar > a {
   flex: 0 0 auto;
   margin-right: 0.625rem;
-  color: #1e90ff;
+  color: var(--cc98-color-primary);
 }
 
 .message-notification__bar > span {

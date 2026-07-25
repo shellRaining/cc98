@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
 .message-setting > button:hover {
   border-color: var(--cc98-color-primary);
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .message-setting__saved {
@@ -123,8 +123,8 @@ onBeforeUnmount(() => {
   margin: 0;
   padding: 0.75rem 1.5rem;
   border-radius: 3px;
-  background: rgb(0 0 0 / 0.72);
-  color: #fff;
+  background: color-mix(in srgb, var(--cc98-color-inverse-surface) 72%, transparent);
+  color: var(--cc98-color-inverse-text);
   font-size: 0.875rem;
 }
 </style>

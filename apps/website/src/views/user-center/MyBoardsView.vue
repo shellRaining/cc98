@@ -232,7 +232,7 @@ async function toggleBoard(board: Board & { id: number }) {
 
 .user-followed-board-list li > button.is-unfollowed {
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .user-followed-board-list li > button:disabled {

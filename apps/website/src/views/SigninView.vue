@@ -396,7 +396,7 @@ function makeUpMissedSignin() {
   border-radius: 3px;
   margin: 1.25rem 0;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   cursor: pointer;
   font: inherit;
   letter-spacing: 0.3125rem;
@@ -485,7 +485,7 @@ function makeUpMissedSignin() {
   border: 1px solid var(--cc98-color-border);
   border-radius: 4px;
   background: var(--cc98-color-surface);
-  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 0.16);
+  box-shadow: 0 0.35rem 1rem var(--cc98-color-shadow);
   color: var(--cc98-color-text);
   font-size: 0.8125rem;
   line-height: 1.7;
@@ -503,7 +503,7 @@ function makeUpMissedSignin() {
   border-radius: 4px;
   margin-left: 0.25rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   cursor: pointer;
   font: inherit;
   font-size: 0.875rem;
@@ -626,13 +626,13 @@ function makeUpMissedSignin() {
 }
 
 .signin-calendar__tag--makeup {
-  background: #66ccff;
-  color: #fff;
+  background: var(--cc98-color-primary-soft);
+  color: var(--cc98-color-on-primary);
 }
 
 .signin-calendar__tag--missed {
   background: var(--cc98-color-error);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .signin-calendar__state {

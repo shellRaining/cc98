@@ -293,7 +293,7 @@ async function submitSetting() {
 .user-theme-submit button {
   border-color: var(--cc98-color-primary);
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .user-theme-mode button:disabled {
@@ -400,10 +400,10 @@ async function submitSetting() {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.12);
-  color: #fff;
+  box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--cc98-color-overlay) 24%, transparent);
+  color: var(--cc98-color-on-primary);
   font: inherit;
-  text-shadow: 0 1px 3px rgb(0 0 0 / 0.8);
+  text-shadow: 0 1px 3px var(--cc98-color-shadow-strong);
   cursor: pointer;
   transition:
     border-color 120ms ease,
@@ -414,13 +414,13 @@ async function submitSetting() {
 .user-theme-config > button:hover:not(:disabled),
 .user-theme-config > button:focus-visible {
   border-color: var(--cc98-color-primary);
-  box-shadow: inset 0 0 0 999px rgb(0 0 0 / 0.4);
+  box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--cc98-color-overlay) 62%, transparent);
 }
 
 .user-theme-config > button.is-current {
   border-color: var(--cc98-color-primary);
   box-shadow:
-    inset 0 0 0 999px rgb(0 0 0 / 0.3),
+    inset 0 0 0 999px color-mix(in srgb, var(--cc98-color-overlay) 48%, transparent),
     0 0 0 1px var(--cc98-color-primary);
 }
 

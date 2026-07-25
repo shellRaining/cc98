@@ -8,7 +8,8 @@
     "build": "tsc && vp build",
     "preview": "vp preview",
     "test": "vp run @cc98/ubb#build && vp test",
-    "check": "vp check"
+    "check": "vp check && node scripts/check-color-tokens.mjs",
+    "check:colors": "node scripts/check-color-tokens.mjs"
   },
   "dependencies": {
     "@cc98/api": "workspace:*",

@@ -191,7 +191,7 @@ function formatDate(value: string | undefined): string {
 .user-center-profile__badges a:visited {
   min-width: 0;
   width: 60%;
-  color: #35a7ff;
+  color: var(--cc98-color-primary);
   overflow-wrap: anywhere;
 }
 
@@ -202,7 +202,7 @@ function formatDate(value: string | undefined): string {
 }
 
 .user-center-profile__badge-title {
-  color: #f00;
+  color: var(--cc98-color-error);
 }
 
 .user-center-profile__details {

@@ -497,7 +497,7 @@ function completeBatchModeration() {
   height: 4rem;
   border-radius: 1rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 1.25rem;
   place-items: center;
 }
@@ -552,8 +552,8 @@ function completeBatchModeration() {
 
 .board-tag-layer a:hover,
 .board-tag-layer a.is-active {
-  background: var(--cc98-color-secondary);
-  color: #fff;
+  background: var(--cc98-color-primary-fill);
+  color: var(--cc98-color-on-primary);
 }
 
 .board-list-panel {
@@ -567,7 +567,7 @@ function completeBatchModeration() {
   min-height: 3rem;
   align-items: center;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   grid-template-columns: minmax(0, 1fr) 28rem;
 }
 
@@ -580,7 +580,7 @@ function completeBatchModeration() {
 .board-list-panel__head a,
 .board-list-panel__head a:visited {
   padding-block: 0.625rem;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
 }
 
 .board-list-panel__head a.is-active {
@@ -616,7 +616,7 @@ function completeBatchModeration() {
   border: 1px solid var(--cc98-color-primary);
   border-radius: 0.2rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   cursor: pointer;
 }
 
@@ -642,7 +642,7 @@ function completeBatchModeration() {
 .board-page__bottom > div a:visited {
   padding: 0.4rem 0.75rem;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 0.875rem;
 }
 </style>

@@ -512,7 +512,7 @@ async function handleDrop(event: DragEvent) {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: #fb6165;
+  background: var(--cc98-color-accent);
 }
 
 .message-private__more-contacts {
@@ -744,7 +744,7 @@ async function handleDrop(event: DragEvent) {
   border: 0;
   border-radius: 3px;
   background: var(--cc98-color-primary-fill);
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   cursor: pointer;
   font: inherit;
   font-size: 0.75rem;

@@ -83,7 +83,7 @@ const imageUrl = computed(() => normalizeHomepageAssetUrl(current.value?.imageUr
 }
 
 .home-advertisement__dots button {
-  border-color: #fff;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.22);
+  border-color: var(--cc98-color-on-primary);
+  box-shadow: 0 0 0 1px var(--cc98-color-shadow);
 }
 </style>

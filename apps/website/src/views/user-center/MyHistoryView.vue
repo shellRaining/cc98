@@ -209,7 +209,7 @@ function formatTime(value: string | undefined): string {
   justify-content: center;
   border: 1px solid var(--cc98-color-border);
   border-radius: 0.15rem;
-  color: #fff;
+  color: var(--cc98-color-on-primary);
   font-size: 0.75rem;
   line-height: 1;
 }

@@ -47,11 +47,16 @@ const rotation = ref(0);
       />
       <div
         v-if="allowToolbox"
-        class="absolute right-2 top-2 hidden gap-1 rounded bg-black/65 p-1 text-xs text-white group-hover:flex"
+        class="absolute right-2 top-2 hidden gap-1 rounded bg-cc98-inverse-surface/65 p-1 text-xs text-cc98-inverse-text group-hover:flex"
       >
         <button type="button" class="px-2 py-1" @click="rotation += 90">右旋</button>
         <button type="button" class="px-2 py-1" @click="rotation -= 90">左旋</button>
-        <a :href="src" target="_blank" rel="noopener noreferrer" class="px-2 py-1 text-white">
+        <a
+          :href="src"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-2 py-1 text-cc98-inverse-text"
+        >
           原图
         </a>
         <button type="button" class="px-2 py-1" @click="visible = false">收起</button>
