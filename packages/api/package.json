@@ -2,7 +2,7 @@
   "name": "@cc98/api",
   "version": "0.1.0-alpha.0",
   "private": true,
-  "description": "CC98 API 的 Zod 契约、OpenAPI 文档与接口验证工具",
+  "description": "CC98 API 的 Zod 契约、OpenAPI 规范与接口验证工具",
   "homepage": "https://github.com/shellRaining/cc98/tree/main/packages/api#readme",
   "bugs": {
     "url": "https://github.com/shellRaining/cc98/issues"
@@ -35,11 +35,8 @@
     "generate": "node scripts/generate.mjs && vp fmt generated --write",
     "probe:anonymous": "node scripts/probe.mjs",
     "probe:authenticated": "node --env-file-if-exists=../../.cc98-credentials.local scripts/probe.mjs --authenticated --auth-blocked",
-    "docs:build": "node scripts/build-docs.mjs",
-    "docs:check": "node scripts/build-docs.mjs --check",
-    "docs:preview": "vp preview --outDir docs/dist",
     "pack:check": "node scripts/check-package.mjs",
-    "test": "node scripts/check-generated.mjs && node scripts/build-docs.mjs --check && vp test",
+    "test": "node scripts/check-generated.mjs && vp test",
     "check": "vp check",
     "prepack": "node scripts/check-generated.mjs && vp pack"
   },

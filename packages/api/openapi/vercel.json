@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "ignoreCommand": "cd ../../.. && bash scripts/vercel-ignore.sh api-docs",
-  "installCommand": "cd ../../.. && export VP_VERSION=0.2.6 VP_NODE_MANAGER=no && curl -fsSL https://vite.plus | bash && . \"$HOME/.vite-plus/env\" && vp install --frozen-lockfile",
-  "buildCommand": "cd ../../.. && vp run @cc98/api#docs:build",
+  "installCommand": "true",
+  "buildCommand": "mkdir -p dist && cp ../generated/openapi.json ../generated/openid.openapi.json dist/",
   "outputDirectory": "dist",
   "headers": [
     {
@@ -18,17 +18,6 @@
         { "key": "Content-Type", "value": "application/json; charset=utf-8" },
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
-    },
-    {
-      "source": "/endpoint-catalog.json",
-      "headers": [
-        { "key": "Content-Type", "value": "application/json; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/(.*).html",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     }
   ]
 }

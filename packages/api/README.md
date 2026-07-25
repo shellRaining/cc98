@@ -64,26 +64,20 @@ async function getAndParse<T>(url: string, schema: ZodType<T>): Promise<T> {
 
 生成物可以交给 Apifox、代码生成器、文档工具或其他 OpenAPI 3.1 工具。主 API 与 OpenID 使用不同的 server 和认证语义，不要合并成一个默认 server 不明确的规范。
 
-Vercel 项目接入仓库后，静态站的预期生产域名为 `https://cc98-api-docs.vercel.app`。主 API 和 OpenID 的 JSON 直链分别为：
+Vercel 项目接入仓库后，OpenAPI JSON 的预期生产域名为 `https://cc98-api-docs.vercel.app`。主 API 和 OpenID 的直链分别为：
 
 - `https://cc98-api-docs.vercel.app/openapi.json`
 - `https://cc98-api-docs.vercel.app/openid.openapi.json`
 
 Apifox 应为两份规范分别创建 URL 数据源并选择不同的目标模块，不需要仓库侧的 Apifox CLI 同步。
 
+独立 Vercel 项目的 Root Directory 设置为 `packages/api/openapi`。部署不安装依赖，也不生成页面，只把仓库中已经通过一致性检查的两份 JSON 复制到发布目录。
+
 ```ts
 import openapi from "@cc98/api/openapi.json" with { type: "json" };
 
 console.log(openapi.info.version);
 ```
-
-静态 API 文档通过以下命令生成：
-
-```bash
-vp run @cc98/api#docs:build
-```
-
-输出在 `packages/api/docs/dist/`。`docs:check` 会在临时目录完成同样的构建并检查关键 operation，不改写工作区。
 
 ## curl 示例
 
@@ -131,11 +125,11 @@ function parsePostContent(post: Post) {
 
 - `src/schemas/` 按领域维护 Zod schema。需要稳定 OpenAPI component 名称的 schema 在定义处使用 `.meta({ id })`。
 - `src/operations/` 维护 method、path、参数、请求体、响应、认证、风险、来源和验证状态。
-- `vp run @cc98/api#generate` 使用 `zod-openapi` 生成两份 JSON、两份 YAML 和接口目录，只输出 operation 可达的 component schema。
+- `vp run @cc98/api#generate` 使用 `zod-openapi` 生成主 API、OpenID 两份 JSON 和接口目录，只输出 operation 可达的 component schema。
 - 匿名与登录探测直接使用 registry 中的 Zod schema 校验响应。
-- `vp run @cc98/api#test` 在临时目录重新生成产物，并检查结构一致性、静态文档和契约测试，不改写工作区。
+- `vp run @cc98/api#test` 在临时目录重新生成产物，并检查结构一致性和契约测试，不改写工作区。
 
-旧 OpenAPI、Apifox 和静态文档都不是反向修改入口。发现契约问题时，应修正 Zod schema 或 operation registry，再重新生成。
+旧 OpenAPI 和 Apifox 都不是反向修改入口。发现契约问题时，应修正 Zod schema 或 operation registry，再重新生成。
 
 ## 安全边界
 

@@ -44,7 +44,7 @@
 | `completed/2026-07-08-ubb-test-and-logger-foundation.md`            | UBB 测试和前端日志入口均已落地                         |
 | `completed/2026-07-09-login-migration.md`                           | 登录、续期、登出和鉴权链路已验收                       |
 | `completed/2026-07-10-ubb-vue-renderer.md`                          | UBB 与 Markdown 共享富内容渲染已落地                   |
-| `completed/2026-07-11-openapi-public-infrastructure.md`             | API 契约、静态文档和发布包验证已完成                   |
+| `completed/2026-07-11-openapi-public-infrastructure.md`             | API 契约、OpenAPI JSON 托管和发布包验证已完成          |
 | `completed/2026-07-11-core-reading-loop.md`                         | 版面、主题、分页和权限链路已验收                       |
 | `completed/2026-07-11-discovery-list-migration.md`                  | 热门、新帖、推荐和搜索已迁移                           |
 | `completed/2026-07-12-realtime-message-migration.md`                | 消息、实时更新、关注和签到已迁移                       |

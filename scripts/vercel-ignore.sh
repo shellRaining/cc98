@@ -55,16 +55,12 @@ case "$target" in
     )
     ;;
   api-docs)
-    filter="@cc98/api..."
+    filter=""
     inputs=(
-      packages/api/src
-      packages/api/generated
-      packages/api/package.json
-      packages/api/scripts/build-docs.mjs
-      packages/api/docs/vercel.json
-      package.json
+      packages/api/generated/openapi.json
+      packages/api/generated/openid.openapi.json
+      packages/api/openapi/vercel.json
       scripts/vercel-ignore.sh
-      vite.config.ts
     )
     ;;
   *)
@@ -76,6 +72,11 @@ esac
 if ! git diff --quiet "$base" "$head" -- "${inputs[@]}"; then
   echo "$target 的构建输入发生变化，继续部署。"
   exit 1
+fi
+
+if [[ "$target" == "api-docs" ]]; then
+  echo "$target 托管的 JSON 没有变化，跳过部署。"
+  exit 0
 fi
 
 if git diff --quiet "$base" "$head" -- pnpm-lock.yaml pnpm-workspace.yaml; then
