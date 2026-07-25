@@ -1,4 +1,4 @@
-import type { Rollup } from "vite";
+import type { Rolldown } from "vite";
 import { describe, expect, it } from "vite-plus/test";
 import { collectAppShellEntries } from "../build/app-shell.js";
 
@@ -12,7 +12,7 @@ function chunk(
     isEntry?: boolean;
     isDynamicEntry?: boolean;
   } = {},
-): Rollup.OutputChunk {
+): Rolldown.OutputChunk {
   return {
     type: "chunk",
     fileName,
@@ -25,7 +25,7 @@ function chunk(
       importedCss: new Set(options.css),
       importedAssets: new Set(options.assets),
     },
-  } as unknown as Rollup.OutputChunk;
+  } as unknown as Rolldown.OutputChunk;
 }
 
 describe("应用外壳构建清单", () => {
@@ -52,7 +52,7 @@ describe("应用外壳构建清单", () => {
         facadeModuleId: "/repo/apps/website/src/views/topic/TopicView.vue",
         isDynamicEntry: true,
       }),
-    } as unknown as Rollup.OutputBundle;
+    } as unknown as Rolldown.OutputBundle;
 
     expect(collectAppShellEntries(bundle)).toEqual([
       "assets/HomeView.css",
@@ -71,7 +71,7 @@ describe("应用外壳构建清单", () => {
         facadeModuleId: "/repo/apps/website/index.html",
         isEntry: true,
       }),
-    } as unknown as Rollup.OutputBundle;
+    } as unknown as Rolldown.OutputBundle;
 
     expect(() => collectAppShellEntries(bundle)).toThrow("没有在构建产物中找到首页路由 chunk");
   });

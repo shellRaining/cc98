@@ -1,9 +1,9 @@
-import type { Plugin, Rollup } from "vite";
+import type { Plugin, Rolldown } from "vite";
 import type { VitePluginPWAAPI } from "vite-plugin-pwa";
 
 type PwaPlugin = Plugin & { api?: VitePluginPWAAPI };
-type OutputBundle = Rollup.OutputBundle;
-type OutputChunk = Rollup.OutputChunk;
+type OutputBundle = Rolldown.OutputBundle;
+type OutputChunk = Rolldown.OutputChunk;
 type PrecacheEntry = string | { url: string; revision?: string | null };
 
 const INDEX_SUFFIX = "/index.html";
