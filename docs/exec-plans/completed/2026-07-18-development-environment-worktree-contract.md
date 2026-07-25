@@ -32,8 +32,8 @@ flowchart LR
 
 - 不为每次提交构建开发镜像。
 - 不引入 Docker、devcontainer、Nix、devenv 或 mise。
-- 不自动执行 CC98 登录、Apifox 登录或其他需要用户确认的认证操作。
-- 不把 Apifox 云端同步、真实 CC98 探测或浏览器 E2E 加入 `vp run ready`。
+- 不自动执行 CC98 登录或其他需要用户确认的认证操作。
+- 不把真实 CC98 探测或浏览器 E2E 加入 `vp run ready`。
 - 不把当前目录尚未提交的改动自动迁移到新 worktree。
 
 ## 环境声明
@@ -42,17 +42,16 @@ flowchart LR
 
 根 `package.json` 固定以下开发版本：
 
-| 工具          | 版本      | 位置                         |
-| ------------- | --------- | ---------------------------- |
-| Node.js       | `24.18.0` | `devEngines.runtime`         |
-| pnpm          | `11.10.0` | `devEngines.packageManager`  |
-| Vite+         | `0.2.4`   | workspace catalog            |
-| agent-browser | `0.32.2`  | 根 devDependency             |
-| portless      | `0.15.4`  | 根 devDependency             |
-| Apifox CLI    | `2.2.7`   | `packages/api` devDependency |
-| Worktrunk     | `0.68.0`  | 当前验证过的宿主机版本       |
+| 工具          | 版本      | 位置                        |
+| ------------- | --------- | --------------------------- |
+| Node.js       | `24.18.0` | `devEngines.runtime`        |
+| pnpm          | `11.10.0` | `devEngines.packageManager` |
+| Vite+         | `0.2.4`   | workspace catalog           |
+| agent-browser | `0.32.2`  | 根 devDependency            |
+| portless      | `0.15.4`  | 根 devDependency            |
+| Worktrunk     | `0.68.0`  | 当前验证过的宿主机版本      |
 
-`engines.node` 继续描述项目支持范围，开发时由 `devEngines.runtime` 固定 Node.js。agent-browser 的安装脚本已经审计并加入 pnpm 构建白名单；Apifox CLI 带来的数据库驱动和 SSH 原生脚本不属于当前能力范围，明确设置为不执行。
+`engines.node` 继续描述项目支持范围，开发时由 `devEngines.runtime` 固定 Node.js。agent-browser 的安装脚本已经审计并加入 pnpm 构建白名单。
 
 “Vite+ 是唯一 Node.js 宿主”只约束本项目的命令入口：终端直接运行 Node 脚本时使用 `vp node`，workspace 任务使用 `vp run`，本地 CLI 使用 `vp exec`，包管理使用 `vp install` 或 `vp pm`。`vp run` 管理的 package script 已处于 Vite+ 运行时中，可以直接调用 `node`。项目不执行 `vp env setup`，因为该命令会在用户级 `VP_HOME/bin` 创建 shim，并通过 PATH 接管其他目录中的 `node`、`npm` 和包管理器命令。开发者仍可在其他项目继续使用 fnm、nvm 或系统 Node.js。
 
@@ -81,10 +80,9 @@ vp exec agent-browser doctor
 PORTLESS_PORT=1355 PORTLESS_HTTPS=0 PORTLESS_SYNC_HOSTS=0 vp exec portless doctor
 wt config show
 wt list
-vp exec -F @cc98/api apifox --help
 ```
 
-这些命令不读取本地凭证。缺少 portless 路由、Apifox 登录或 CC98 凭证不影响普通开发和离线质量检查。
+这些命令不读取本地凭证。缺少 portless 路由或 CC98 凭证不影响普通开发和离线质量检查。
 
 ## Worktrunk 工作流
 
@@ -177,8 +175,7 @@ CC98_PASSWORD=example
 `vp run ready` 保持离线、确定、可重复，不依赖以下状态：
 
 - CC98 账号是否可登录。
-- Apifox 是否已登录或具有项目权限。
-- 真实 CC98 API 和 Apifox 云端是否可达。
+- 真实 CC98 API 是否可达。
 - portless 代理是否正在运行。
 
 需要外部状态的检查由显式命令触发，并在输出中说明是只读检查还是会修改远端数据。
@@ -186,7 +183,7 @@ CC98_PASSWORD=example
 ## 验收结果
 
 - [x] 固定 Node.js 24.18.0、pnpm 11.10.0 和 Vite+ 0.2.4。
-- [x] 固定 agent-browser、portless 和 Apifox CLI。
+- [x] 固定 agent-browser 和 portless。
 - [x] Worktrunk 使用 `vp install` 标准命令初始化 worktree。
 - [x] 环境检查使用各工具的标准诊断命令，不新增环境管理脚本。
 - [x] 项目内 Node.js 脚本、workspace 任务和本地 CLI 全部通过 Vite+ 进入，不修改用户全局 PATH。
@@ -233,4 +230,3 @@ CC98_PASSWORD=example
 - [Vite+ Installing Dependencies](https://viteplus.dev/guide/install)
 - [portless](https://portless.sh/)
 - [agent-browser](https://github.com/vercel-labs/agent-browser)
-- [Apifox CLI 安装与运行](https://docs.apifox.com/install-and-run-cli)

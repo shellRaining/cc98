@@ -66,6 +66,13 @@ async function getAndParse<T>(url: string, schema: ZodType<T>): Promise<T> {
 
 生成物可以交给 Apifox、代码生成器、文档工具或其他 OpenAPI 3.1 工具。主 API 与 OpenID 使用不同的 server 和认证语义，不要合并成一个默认 server 不明确的规范。
 
+Vercel 项目接入仓库后，静态站的预期生产域名为 `https://cc98-api-docs.vercel.app`。主 API 和 OpenID 的 JSON 直链分别为：
+
+- `https://cc98-api-docs.vercel.app/openapi.json`
+- `https://cc98-api-docs.vercel.app/openid.openapi.json`
+
+YAML 使用同名的 `.yaml` 地址。Apifox 应为两份规范分别创建 URL 数据源并选择不同的目标模块，不需要仓库侧的 Apifox CLI 同步。
+
 ```ts
 import openapi from "@cc98/api/openapi.json" with { type: "json" };
 

@@ -27,10 +27,9 @@
 
 ## 进行中的计划
 
-| 执行计划                                      | 状态   | 说明                                         |
-| --------------------------------------------- | ------ | -------------------------------------------- |
-| `active/2026-07-13-milkdown-evaluation.md`    | 待实施 | 选型调研已完成，生产编辑器迁移尚未开始       |
-| `active/2026-07-18-apifox-cli-integration.md` | 调研中 | CLI 依赖已固定，待登录验证同步算法和远端结构 |
+| 执行计划                                   | 状态   | 说明                                   |
+| ------------------------------------------ | ------ | -------------------------------------- |
+| `active/2026-07-13-milkdown-evaluation.md` | 待实施 | 选型调研已完成，生产编辑器迁移尚未开始 |
 
 ## 已完成的计划
 
@@ -55,6 +54,7 @@
 | `completed/2026-07-16-full-fidelity-migration.md`                   | 阶段 8 与最终浏览器矩阵已验收                          |
 | `completed/2026-07-17-user-documentation.md`                        | 用户帮助站、首批内容和 VitePress 默认主题已验收        |
 | `completed/2026-07-18-css-ownership-migration.md`                   | 业务 CSS 已迁回对应 SFC，全站对照通过                  |
+| `completed/2026-07-18-apifox-cli-integration.md`                    | CLI 方案已终止，由托管 OpenAPI URL 数据源替代          |
 | `completed/2026-07-18-development-environment-worktree-contract.md` | Worktree、Vite+ 和稳定域名开发契约已验收               |
 | `completed/2026-07-18-librarian-new-api-ci.md`                      | New API 每日文档巡检和自动 PR 链路已验证               |
 | `completed/2026-07-18-frontend-migration-roadmap.md`                | 阶段 0 至阶段 8 的迁移历史与完成审计                   |

@@ -18,7 +18,7 @@ const outputDir = temporaryDir
   : outputDirArgument
     ? resolve(packageDir, outputDirArgument)
     : resolve(packageDir, "docs/dist");
-const reviewDate = "2026-07-18";
+const reviewDate = "2026-07-25";
 
 function escapeHtml(value) {
   return String(value)
@@ -137,7 +137,7 @@ try {
     "CC98 API 文档",
     `${navigation()}
 <h1>CC98 API 文档</h1>
-<p>文档由仓库中的 Zod schema 和 operation registry 生成。Apifox、OpenAPI 文件和静态页面都是可重建投影，契约修改应回到源码。</p>
+<p>文档由仓库中的 Zod schema 和 operation registry 生成。OpenAPI 文件和静态页面都是可重建投影，契约修改应回到源码。</p>
 <ul>
   <li>主 API：${Object.keys(openapi.paths ?? {}).length} 个 path</li>
   <li>OpenID：${Object.keys(openid.paths ?? {}).length} 个 path</li>
@@ -148,6 +148,12 @@ try {
   <li><a href="./openapi.json">主 API OpenAPI JSON</a> / <a href="./openapi.yaml">YAML</a></li>
   <li><a href="./openid.openapi.json">OpenID JSON</a> / <a href="./openid.openapi.yaml">YAML</a></li>
   <li><a href="./endpoint-catalog.json">接口目录 JSON</a></li>
+</ul>
+<h2>接入 Apifox</h2>
+<p>主 API 与 OpenID 使用不同的服务地址和认证语义，应分别绑定为两个 URL 数据源：</p>
+<ul>
+  <li><a href="./openapi.json">主 API 数据源</a></li>
+  <li><a href="./openid.openapi.json">OpenID 数据源</a></li>
 </ul>`,
   );
   await Promise.all([

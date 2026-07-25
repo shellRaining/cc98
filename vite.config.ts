@@ -38,6 +38,13 @@ export default defineConfig({
         ],
         cache: false,
       },
+      "api-docs:preview": {
+        command: [
+          "vp run @cc98/api#docs:build",
+          "PORTLESS_PORT=1355 PORTLESS_HTTPS=0 PORTLESS_SYNC_HOSTS=0 vp exec portless run --name cc98-api-docs-preview vp run @cc98/api#docs:preview",
+        ],
+        cache: false,
+      },
     },
   },
 });

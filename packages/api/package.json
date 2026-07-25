@@ -39,6 +39,7 @@
     "probe:authenticated": "node --env-file-if-exists=../../.cc98-credentials.local scripts/probe.mjs --authenticated --auth-blocked",
     "docs:build": "node scripts/build-docs.mjs",
     "docs:check": "node scripts/build-docs.mjs --check",
+    "docs:preview": "vp preview --outDir docs/dist",
     "pack:check": "node scripts/check-package.mjs",
     "test": "node scripts/check-generated.mjs && node scripts/build-docs.mjs --check && vp test",
     "check": "vp check",
@@ -51,7 +52,6 @@
   "devDependencies": {
     "@redocly/cli": "catalog:",
     "@types/node": "catalog:",
-    "apifox-cli": "2.2.7",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
     "yaml": "catalog:"

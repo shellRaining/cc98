@@ -55,7 +55,7 @@
 - Milkdown 生产编辑器迁移：调研已经完成，正式集成仍需单独推进，见 `docs/exec-plans/active/2026-07-13-milkdown-evaluation.md`。
 - 用户文档站：优先验证 VitePress，随后建立 `apps/docs`、首批内容和发布流程，见 `docs/exec-plans/active/2026-07-17-user-documentation.md`。
 - API 公共文档与发布：契约主体已经完成，静态文档、使用示例和公共包发布仍待实施，见 `docs/exec-plans/active/2026-07-11-openapi-public-infrastructure.md`。
-- Apifox CLI 同步：接入包内命令，完成单向同步、幂等检查和远端结构验证，见 `docs/exec-plans/active/2026-07-18-apifox-cli-integration.md`。
+- API 文档与 Apifox：发布独立 OpenAPI 静态站，Apifox 分别绑定主 API 和 OpenID 的 URL 数据源；CLI 同步调研已终止，见 `docs/exec-plans/completed/2026-07-18-apifox-cli-integration.md`。
 
 ## 阶段依赖
 

@@ -1,6 +1,6 @@
 # CC98 OpenAPI 公共基础设施
 
-> 状态：已完成。Zod-first 契约、OpenAPI 生成、接口探测、网站接入、静态文档、公共使用说明和发布包验证均已验收。
+> 状态：已完成。Zod-first 契约、OpenAPI 生成、接口探测、网站接入、独立静态文档部署入口、公共使用说明和发布包验证均已验收。
 
 ## 背景
 
@@ -450,6 +450,7 @@ flowchart LR
 - [x] 生成接口目录、认证标记和验证日期页面。
 - [x] 提供 TypeScript、curl 和通用 fetch 的最小示例，示例不包含真实凭证。
 - [x] 链接 `@cc98/ubb`，说明帖子内容类型与解析方式。
+- [x] 配置独立 Vercel 构建入口，提供主 API 与 OpenID 的稳定 JSON、YAML 直链。
 
 ### 8. 发布准备
 
@@ -490,6 +491,7 @@ flowchart LR
 - `vp pm pack --dry-run` 只包含规范、生成类型、README、许可证和必要元数据。
 - 在 monorepo 外的最小 TypeScript 项目中可以导入类型和读取规范文件。
 - 静态文档可以从 bundled spec 独立构建。
+- 生产预览可以打开首页、接口目录、主 API、OpenID，并直接读取四个规范文件。
 - `vp run ready` 通过。
 
 ## 与前端阶段的关系
@@ -547,6 +549,9 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-18：包版本调整为 `0.1.0-alpha.0`，补齐仓库元数据、CHANGELOG 和显式 JSON、YAML、catalog exports。
 - 2026-07-18：`pack:check` 验证 tarball 内容，并在独立临时项目安装后导入 schema、OpenAPI 和接口目录。
 - 2026-07-18：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 279 项测试全部通过。
+- 2026-07-25：增加独立 Vercel 部署配置和稳定规范直链；Apifox 改用主 API 与 OpenID 两个 URL 数据源，不再依赖仓库侧 CLI 同步。
+- 2026-07-25：生产产物预览通过。首页、接口目录、主 API 与 OpenID 页面均可打开，四个规范直链返回 200；JSON 为 `application/json`，YAML 为 `text/yaml`，Vercel 配置会将生产 YAML 固定为 `application/yaml`。
+- 2026-07-25：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 288 项和工具包 1 项测试全部通过。
 
 ## 决策记录
 
@@ -558,4 +563,5 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-11：只有具有独立领域含义、需要稳定复用的 schema 声明 component ID；简单参数和临时包装保持内联。
 - 2026-07-11：写接口不进入普通 CI 在线探测。
 - 2026-07-18：静态 API 文档是可重建产物，`packages/api/docs/dist/` 不提交仓库，部署失败不影响主站。
+- 2026-07-25：API 文档使用独立 Vercel 项目，用户帮助站和主站不承担开发者规范托管。
 - 2026-07-18：没有确认 registry 和发布身份前保持 `private: true`。本计划以可安装 tarball 和独立项目消费通过作为发布准备验收，不执行真实 registry 发布。

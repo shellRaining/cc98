@@ -60,11 +60,6 @@ peerDependencyRules:
     vitest: "*"
 allowBuilds:
   agent-browser: true
-  cpu-features: false
-  ibm_db: false
-  kerberos: false
-  oracledb: false
-  ssh2: false
   vue-demi: true
 minimumReleaseAgeExclude:
   - "@unocss/cli@66.7.5"

@@ -54,6 +54,19 @@ case "$target" in
       vite.config.ts
     )
     ;;
+  api-docs)
+    filter="@cc98/api..."
+    inputs=(
+      packages/api/src
+      packages/api/generated
+      packages/api/package.json
+      packages/api/scripts/build-docs.mjs
+      packages/api/docs/vercel.json
+      package.json
+      scripts/vercel-ignore.sh
+      vite.config.ts
+    )
+    ;;
   *)
     echo "未知 Vercel 项目：$target"
     exit 1
