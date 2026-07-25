@@ -13,8 +13,9 @@ import { topBar } from "@milkdown/crepe/feature/top-bar";
 import "@milkdown/crepe/theme/classic.css";
 import "@milkdown/crepe/theme/common/style.css";
 import { type Editor, editorViewCtx, editorViewOptionsCtx, type CmdKey } from "@milkdown/kit/core";
+import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { uploadConfig } from "@milkdown/kit/plugin/upload";
-import { insertImageCommand } from "@milkdown/kit/preset/commonmark";
+import { insertImageCommand, insertImageInputRule } from "@milkdown/kit/preset/commonmark";
 import { callCommand, replaceAll } from "@milkdown/kit/utils";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { normalizeApiError } from "../lib/api-error";
@@ -231,6 +232,11 @@ onMounted(async () => {
     });
 
   instance.setReadonly(props.disabled);
+  // Crepe 的 CommonMark 组合未默认注册图片输入规则，需要显式启用。
+  instance.editor.use(insertImageInputRule);
+  // Crepe 默认先注册剪贴板插件，HTML 图片会在上传插件处理前被解析为外链。
+  await instance.editor.remove(clipboard);
+  instance.editor.use(clipboard);
   instance.on((listeners) => {
     listeners.markdownUpdated((_ctx, markdown, previous) => {
       if (markdown === previous) return;
@@ -249,6 +255,7 @@ onMounted(async () => {
     }));
     ctx.update(uploadConfig.key, (previous) => ({
       ...previous,
+      enableHtmlFileUploader: true,
       uploader: async (files, schema) => {
         if (props.disabled) return [];
         const images = [...files].filter((file) => file.type.startsWith("image/"));
