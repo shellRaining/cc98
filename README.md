@@ -4,26 +4,19 @@
 
 ## 开发环境
 
-宿主机需要 Git、curl 和全局 Vite+。并行 Agent 开发推荐安装 [Worktrunk](https://worktrunk.dev/)；macOS 可以执行：
+| 开发者类型 | 需要自行准备 | 说明 |
+| --- | --- | --- |
+| 普通开发者 | [Vite+](https://viteplus.dev/) 的 `vp` CLI | 进入仓库后执行 `vp install`，其余项目工具由仓库管理 |
+| 真实接口验证者 | 浙江大学校园网或代理、CC98 账号 | 账号写入 `.cc98-credentials.local`；普通构建和离线测试不需要 |
+| 并行或自动化开发者 | [Worktrunk](https://worktrunk.dev/)；按需安装浏览器运行环境 | Worktrunk 用于多 worktree；浏览器环境运行 `vp exec agent-browser install` |
+| 部署维护者 | Vercel 项目权限；按需安装 Vercel CLI | 普通开发者不需要；生产域名维护还需要相应 DNS 权限 |
 
-```bash
-brew install worktrunk
-```
-
-拉取代码或进入新 worktree 后运行：
+安装依赖并启动开发环境：
 
 ```bash
 vp install
+vp run dev
 ```
-
-需要浏览器自动化时，再按需检查或安装浏览器运行环境：
-
-```bash
-vp exec agent-browser doctor
-vp exec agent-browser install
-```
-
-项目内的 Node.js、包管理器和 Node CLI 统一由 Vite+ 解析：终端直接运行 Node 脚本时使用 `vp node`，workspace 任务使用 `vp run`，本地 CLI 使用 `vp exec`。`vp run` 管理的 package script 已处于 Vite+ 运行时中，可以直接调用 `node`。项目不会执行 `vp env setup` 或修改全局 PATH，其他项目仍可继续使用 fnm、nvm 或系统 Node.js。
 
 ## Agent 如何进入新 Worktree
 
