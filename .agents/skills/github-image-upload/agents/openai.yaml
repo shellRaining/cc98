@@ -1,0 +1,4 @@
+interface:
+  display_name: "上传 GitHub 附件"
+  short_description: "上传并嵌入 Issue 与 PR 的截图、录屏和文件"
+  default_prompt: "使用 $github-image-upload 将本地验证截图上传并嵌入当前 PR。"
