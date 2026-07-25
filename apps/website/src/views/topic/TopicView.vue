@@ -15,14 +15,12 @@ import {
   boardsQuery,
   boardTagsQuery,
   fullUsersByIdsQuery,
-  homepageAdvertisementsQuery,
   topicHotPostsQuery,
   topicPostsQuery,
   topicQuery,
   topicTracedPostsQuery,
 } from "../../api/queries";
 import FullPageStatus from "../../components/FullPageStatus.vue";
-import HomeAdvertisement from "../../components/home/HomeAdvertisement.vue";
 import MarkdownEditor from "../../components/MarkdownEditor.vue";
 import PageState from "../../components/PageState.vue";
 import Pagination from "../../components/Pagination.vue";
@@ -37,7 +35,6 @@ import TopicModerationDialog from "./components/TopicModerationDialog.vue";
 import UiButton from "../../components/ui/Button.vue";
 import { normalizeApiError } from "../../lib/api-error";
 import { clearDraft, createDraftKey, readDraft, writeDraft } from "../../stores/drafts";
-import { visibleHomepageColumns } from "../../components/home/model.ts";
 import { saveLoginRedirect } from "../../lib/login-redirect";
 import { shouldJumpToLatestReply } from "../../stores/message-settings";
 import { canManagePost, resolveTopicModerationAccess } from "../../components/moderation/access";
@@ -269,8 +266,6 @@ const postUserMap = computed(
   () => new Map((postUsers.value ?? []).map((postUser) => [postUser.id, postUser])),
 );
 
-const advertisementsQuery = useQuery(homepageAdvertisementsQuery);
-const advertisements = computed(() => visibleHomepageColumns(advertisementsQuery.data.value ?? []));
 const locatedFloorHash = ref<string | null>(null);
 
 watch(
@@ -576,9 +571,6 @@ onBeforeUnmount(() => {
       >
         <template #favorite>
           <TopicFavoriteAction :topic-id="numericTopicId ?? 0" />
-        </template>
-        <template #advertisement>
-          <HomeAdvertisement v-if="advertisements.length" :items="advertisements" />
         </template>
       </TopicHeader>
 

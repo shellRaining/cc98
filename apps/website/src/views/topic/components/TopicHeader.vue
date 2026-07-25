@@ -48,7 +48,6 @@ function formatTime(value?: string) {
         <span>{{ board.todayCount ?? 0 }} / {{ board.topicCount ?? 0 }}</span>
       </RouterLink>
     </div>
-    <div class="topic-hero__ad"><slot name="advertisement" /></div>
   </section>
 </template>
 
@@ -57,7 +56,7 @@ function formatTime(value?: string) {
   display: grid;
   width: 100%;
   height: 6.5rem;
-  grid-template-columns: minmax(0, 1fr) 18.65rem;
+  grid-template-columns: minmax(0, 1fr);
   overflow: hidden;
   border: 2px solid #6b7178;
   background: var(--cc98-color-surface);
@@ -161,20 +160,7 @@ function formatTime(value?: string) {
   font-size: 0.75rem;
 }
 
-.topic-hero__ad {
-  min-width: 0;
-  height: 6.25rem;
-}
-
-.topic-hero__ad :deep(.home-advertisement) {
-  height: 100%;
-}
-
 @media (max-width: 1180px) {
-  .topic-hero {
-    grid-template-columns: minmax(0, 1fr) 17rem;
-  }
-
   .topic-hero__main {
     grid-template-columns: minmax(0, 1fr) 9rem;
   }
@@ -187,11 +173,6 @@ function formatTime(value?: string) {
 @media (max-width: 1000px) {
   .topic-hero {
     height: auto;
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .topic-hero__ad {
-    display: none;
   }
 }
 </style>
