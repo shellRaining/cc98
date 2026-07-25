@@ -134,7 +134,7 @@ const pageError = computed(() => (error.value ? normalizeApiError(error.value) :
 }
 
 .home-floating-stats {
-  position: absolute;
+  position: fixed;
   top: 18rem;
   right: calc((100vw - 100%) / -2);
   z-index: 20;
