@@ -54,6 +54,15 @@ case "$target" in
       vite.config.ts
     )
     ;;
+  api-docs)
+    filter=""
+    inputs=(
+      packages/api/generated/openapi.json
+      packages/api/generated/openid.openapi.json
+      packages/api/openapi/vercel.json
+      scripts/vercel-ignore.sh
+    )
+    ;;
   *)
     echo "未知 Vercel 项目：$target"
     exit 1
@@ -63,6 +72,11 @@ esac
 if ! git diff --quiet "$base" "$head" -- "${inputs[@]}"; then
   echo "$target 的构建输入发生变化，继续部署。"
   exit 1
+fi
+
+if [[ "$target" == "api-docs" ]]; then
+  echo "$target 托管的 JSON 没有变化，跳过部署。"
+  exit 0
 fi
 
 if git diff --quiet "$base" "$head" -- pnpm-lock.yaml pnpm-workspace.yaml; then

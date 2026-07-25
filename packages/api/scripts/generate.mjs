@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
@@ -12,6 +12,7 @@ const outputDirArgument = process.argv
 const generatedDir = outputDirArgument
   ? resolve(packageDir, outputDirArgument)
   : resolve(packageDir, "generated");
+const packageJson = JSON.parse(await readFile(resolve(packageDir, "package.json"), "utf8"));
 
 function responseToOpenApi(response) {
   return {
@@ -98,7 +99,13 @@ function createOpenApiDocument({
 }) {
   return createDocument({
     openapi: "3.1.0",
-    info: { title, version: "0.0.0", description },
+    info: {
+      title,
+      version: packageJson.version,
+      description,
+      license: { name: "MIT", identifier: "MIT" },
+      contact: { name: "CC98 前端维护者", url: "https://github.com/shellRaining/cc98/issues" },
+    },
     servers,
     security,
     paths: operationsToPaths(operations, { includeOperationServers }),

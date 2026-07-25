@@ -16,10 +16,10 @@ flowchart LR
   Generator --> ApiOpenAPI["业务 API OpenAPI"]
   Generator --> OpenIdOpenAPI["OpenID OpenAPI"]
   Generator --> Catalog["endpoint catalog"]
+  ApiOpenAPI --> Hosting["独立 OpenAPI JSON 托管"]
+  OpenIdOpenAPI --> Hosting
   Schema --> Website["apps/website"]
-  ApiOpenAPI --> Community["其他 CC98 项目"]
-  OpenIdOpenAPI --> Community
-  Catalog --> Community
+  Hosting --> Community["其他 CC98 项目与 Apifox URL 数据源"]
 ```
 
 ## 模块布局
@@ -39,7 +39,7 @@ graph TD
 
 - `apps/website`：面向用户的 Web 应用（Vue 3.6 SPA）。内部分层见 `docs/frontend.md`
 - `apps/docs`：面向论坛用户的 VitePress 帮助站，使用默认主题和独立静态构建，不依赖主站运行
-- `packages/api`：CC98 API 的 Zod schema、operation registry、OpenAPI 和验证工具
+- `packages/api`：CC98 API 的 Zod schema、operation registry、OpenAPI JSON 和验证工具
 - `packages/ubb`：UBB 解析器，核心产出是 AST（`parseUbb`），附带 HTML 和 Markdown 两个导出器。只读不做编辑器
 - `packages/utils`：TypeScript 工具包脚手架，当前仅有占位代码，尚未投入使用
 

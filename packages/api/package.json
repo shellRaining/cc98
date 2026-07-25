@@ -1,16 +1,33 @@
 {
   "name": "@cc98/api",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "private": true,
-  "description": "CC98 API 的 Zod 契约、OpenAPI 文档与接口验证工具",
+  "description": "CC98 API 的 Zod 契约、OpenAPI 规范与接口验证工具",
+  "homepage": "https://github.com/shellRaining/cc98/tree/main/packages/api#readme",
+  "bugs": {
+    "url": "https://github.com/shellRaining/cc98/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shellRaining/cc98.git",
+    "directory": "packages/api"
+  },
   "files": [
     "dist",
-    "generated"
+    "generated",
+    "CHANGELOG.md"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./openapi.json": "./generated/openapi.json",
+    "./openid.openapi.json": "./generated/openid.openapi.json",
+    "./catalog": "./generated/endpoint-catalog.json",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -19,7 +36,8 @@
     "probe:anonymous": "node scripts/probe.mjs",
     "probe:authenticated": "node --env-file-if-exists=../../.cc98-credentials.local scripts/probe.mjs --authenticated --auth-blocked",
     "test": "node scripts/check-generated.mjs && vp test",
-    "check": "vp check"
+    "check": "vp check",
+    "prepack": "node scripts/check-generated.mjs && vp pack"
   },
   "dependencies": {
     "zod": "catalog:",
@@ -27,8 +45,10 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "apifox-cli": "2.2.7",
     "typescript": "catalog:",
     "vite-plus": "catalog:"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

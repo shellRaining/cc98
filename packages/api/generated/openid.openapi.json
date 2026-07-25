@@ -2,8 +2,16 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CC98 OpenID API",
-    "version": "0.0.0",
-    "description": "供 Apifox 等工具独立导入的 CC98 登录与 Token 刷新契约。"
+    "version": "0.1.0-alpha.0",
+    "description": "供 Apifox 等工具独立导入的 CC98 登录与 Token 刷新契约。",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    },
+    "contact": {
+      "name": "CC98 前端维护者",
+      "url": "https://github.com/shellRaining/cc98/issues"
+    }
   },
   "servers": [
     {

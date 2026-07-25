@@ -1,6 +1,6 @@
 # CC98 OpenAPI 公共基础设施
 
-> 状态：部分完成。Zod-first 契约、OpenAPI 生成、接口探测和网站接入已经完成；静态文档、公共使用说明和发布准备仍待实施。
+> 状态：已完成。Zod-first 契约、OpenAPI 生成、接口探测、网站接入、两份 OpenAPI JSON 的独立托管、公共使用说明和发布包验证均已验收。
 
 ## 背景
 
@@ -26,10 +26,10 @@ OpenAPI 文件记录 HTTP operation、参数、认证和响应；Zod schema 负�
 - 建立 CC98 API 的接口目录和统一命名。
 - 覆盖当前项目、旧项目和可发现历史资料中的全部接口。
 - 对可安全调用的接口发起真实请求，根据实际响应编写 Zod schema。
-- 提供通过 lint 和 bundle 校验的 OpenAPI 文档。
+- 提供经过生成物一致性检查的 OpenAPI 规范。
 - 标记每个接口的来源、验证状态、认证要求和风险等级。
 - 从 Zod schema 推导 TypeScript 类型，并生成或校验 OpenAPI component schema。
-- 提供静态 API 文档和可下载的单文件规范。
+- 独立托管主 API 与 OpenID 的两份 OpenAPI JSON。
 - 建立接口探测、脱敏样例、差异记录和回归检查流程。
 - 允许后续发布为公共 npm 包，不与 Vue 或当前网站绑定。
 - 为 `@cc98/ubb` 和未来公共包统一补齐许可证、仓库信息、版本和发布流程。
@@ -101,8 +101,8 @@ packages/api/
 │   ├── registry.ts
 │   └── index.ts
 ├── generated/
-│   ├── openapi.yaml
 │   ├── openapi.json
+│   ├── openid.openapi.json
 │   └── endpoint-catalog.json
 ├── fixtures/
 │   ├── anonymous/
@@ -121,8 +121,8 @@ packages/api/
 Zod schema 和 operation 元数据按领域拆分，构建时生成 OpenAPI 和接口目录。npm 包建议导出：
 
 - 包根路径：Zod schema、推导类型和公共枚举。
-- `./openapi.yaml`
 - `./openapi.json`
+- `./openid.openapi.json`
 - `./catalog`
 - `./package.json`
 
@@ -133,7 +133,7 @@ Zod schema 和 operation 元数据按领域拆分，构建时生成 OpenAPI 和�
 - 后端原始 wire schema，对字段名、nullable、optional 和枚举做准确描述。
 - 每个 operation 的 method、path、参数、请求体、响应、认证、风险和验证状态。
 - 从 Zod 推导的 TypeScript 类型。
-- 生成后的 OpenAPI YAML、JSON 和接口目录。
+- 生成后的 OpenAPI JSON 和接口目录。
 - 经过脱敏的最小响应 fixture。
 - 接口发现、真实请求探测、脱敏、生成和校验脚本。
 - 公共使用文档、许可证、版本和贡献说明。
@@ -196,11 +196,11 @@ Zod schema 是响应和请求体结构的可执行事实源，operation registry
 flowchart LR
   discovery["旧项目与历史资料"] --> registry["Operation registry"]
   probe["真实请求与脱敏 fixture"] --> zod["Zod schema"]
-  registry --> openapi["OpenAPI YAML / JSON"]
+  registry --> openapi["OpenAPI JSON"]
   zod --> openapi
   zod --> types["TypeScript 类型"]
   zod --> website["当前 Vue 项目运行时校验"]
-  openapi --> docs["静态 API 文档"]
+  openapi --> hosting["独立 JSON 托管"]
 ```
 
 网站直接从 `@cc98/api` 导入公共 schema 并执行 `parse`，不再维护应用内转发层或平行定义。OpenAPI 生成后再用独立 validator 校验 fixtures，保证生成结果与 Zod 一致。
@@ -273,10 +273,10 @@ flowchart LR
 
 实现前做一个短试验，再固定工具：
 
-- OpenAPI lint 与 bundle：选择支持多文件引用、自定义扩展和 OpenAPI 3.1 的成熟 CLI。
+- OpenAPI 生成与检查：选择支持自定义扩展和 OpenAPI 3.1 的成熟库。
 - TypeScript 类型生成：优先只生成类型、不捆绑 HTTP 客户端的工具。
 - schema 校验：只读探测脚本用 OpenAPI validator 校验响应。
-- 文档：从 bundled spec 生成静态页面，部署不依赖后端服务。
+- 托管：独立发布两份生成后的 JSON，不生成额外页面。
 
 选型要求：
 
@@ -284,9 +284,9 @@ flowchart LR
 - CLI 可在 Node 22 运行。
 - 输出稳定，升级不会造成大面积无意义 diff。
 - 依赖只用于开发，不增加网站运行时代码体积。
-- 能在 CI 中离线 lint 和 bundle，在线探测单独触发。
+- 能在 CI 中离线生成并检查一致性，在线探测单独触发。
 
-初步可试验 `@redocly/cli` 配合 `openapi-typescript`。在试验结果写入本计划前，不把它们定为长期架构决策。
+静态页面曾先后试验 `@redocly/cli` 和 Redoc CDN。最终使用方可以直接从 URL 拉取 OpenAPI，因此删除页面生成器和 Redoc，只独立托管两份 JSON。
 
 ## 版本与发布
 
@@ -304,9 +304,9 @@ flowchart LR
 
 1. 去掉 `private`，补 `repository`、`homepage`、`bugs`、`publishConfig` 和 `files`。
 2. 使用公开 npm scope 或确认 `@cc98` scope 的发布权限。
-3. 发布前运行 lint、bundle、类型生成、测试和 package dry-run。
+3. 发布前运行生成物一致性检查、类型生成、测试和 package dry-run。
 4. Git tag 与 npm 版本对应，生成中文 changelog。
-5. 文档站随 tag 或主分支发布，页面标明规范版本与最近验证日期。
+5. 两份 OpenAPI JSON 随主分支发布，规范自身记录版本与最近验证日期。
 
 `@cc98/ubb` 可以复用相同发布流程，但应单独完成 README、API 文档、许可证确认和 package exports 检查，不与 API spec 首次发布绑成一个不可拆分的大任务。
 
@@ -408,7 +408,7 @@ flowchart LR
 ### 2. 工具链试验
 
 - [x] 用阶段 3 接口验证最小 OpenAPI 3.1 生成链路，随后扩展到完整 operation registry。
-- [x] 完成 OpenAPI 生成、单文件输出、TypeScript 类型推导和生成物一致性检查；静态文档归入第 7 阶段。
+- [x] 完成 OpenAPI 生成、单文件输出、TypeScript 类型推导和生成物一致性检查；公开托管归入第 7 阶段。
 - [x] 确认生成 diff 稳定且 Node 22 可用；许可证与公共发布材料归入第 8 阶段。
 - [x] 根据试验结果采用 `zod-openapi`，并更新 `docs/dependency.md`。
 
@@ -444,20 +444,21 @@ flowchart LR
 - [x] 删除应用中已经迁移完成的重复 schema 和类型。
 - [x] 保持应用层 query key、错误映射和认证编排独立于规范包。
 
-### 7. 文档与公共使用说明
+### 7. OpenAPI 托管与公共使用说明
 
-- [ ] 编写从零开始的 README：获取规范、生成类型、调用 API、认证和限频注意事项。
-- [ ] 生成接口目录、认证标记和验证日期页面。
-- [ ] 提供 TypeScript、curl 和通用 fetch 的最小示例，示例不包含真实凭证。
-- [ ] 链接 `@cc98/ubb`，说明帖子内容类型与解析方式。
+- [x] 编写从零开始的 README：获取规范、生成类型、调用 API、认证和限频注意事项。
+- [x] 在生成的 OpenAPI 和接口目录中保留认证标记与验证日期。
+- [x] 提供 TypeScript、curl 和通用 fetch 的最小示例，示例不包含真实凭证。
+- [x] 链接 `@cc98/ubb`，说明帖子内容类型与解析方式。
+- [x] 配置独立 Vercel 构建入口，只提供主 API 与 OpenID 的稳定 JSON 直链。
 
 ### 8. 发布准备
 
-- [ ] 在没有 `@cc98` 发布权限时先使用仓库内包名，不抢占或冒用官方 scope。
-- [ ] 评估无 scope 公共包名、自有 scope 或 GitHub Packages。
-- [ ] 补许可证、贡献指南、行为准则、版本策略和安全报告方式。
-- [ ] 配置发布 dry-run 和 changelog。
-- [ ] 先发布预览版本，在当前网站和一个独立示例项目中消费验证。
+- [x] 在没有 `@cc98` 发布权限时保留仓库内包名和 `private: true`，不抢占或冒用官方 scope。
+- [x] 评估 npm 自有 scope、无 scope 包名和 GitHub Packages，registry 选择推迟到实际发布前。
+- [x] 补许可证、行为准则、版本策略和协作入口。
+- [x] 配置 changelog。
+- [x] 生成 `0.1.0-alpha.0` tarball，并在 monorepo 外的临时项目完成安装与导入验证。
 
 ### 9. 持续维护
 
@@ -489,7 +490,8 @@ flowchart LR
 
 - `vp pm pack --dry-run` 只包含规范、生成类型、README、许可证和必要元数据。
 - 在 monorepo 外的最小 TypeScript 项目中可以导入类型和读取规范文件。
-- 静态文档可以从 bundled spec 独立构建。
+- Vercel 构建不安装依赖，只把两份已提交且经过一致性检查的 JSON 复制到发布目录。
+- 生产预览只包含 `openapi.json` 和 `openid.openapi.json`，两者均返回 JSON 内容类型。
 - `vp run ready` 通过。
 
 ## 与前端阶段的关系
@@ -505,11 +507,11 @@ flowchart LR
 
 API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并行。全部接口盘点可以先完成，但不必等所有高风险接口都实测后才继续前端；阶段 3 需要的接口应优先达到 `verified`，其余接口按风险批次推进。
 
-## 发布前待确认事项
+## 后续发布事项
 
-1. 包当前继续留在 monorepo；公共发布时再决定是否拆分独立仓库。
-2. 没有 `@cc98` npm scope 权限时，未来选择自有 scope、无 scope 包名还是 GitHub Packages。实现阶段可以暂时保持 `private`，不影响内部消费。
-3. 是否准备公开当前仓库。如果仓库暂时不公开，可以后续只拆出 `packages/api` 和 `packages/ubb`。
+1. 包当前继续留在 monorepo，实际发布时再决定是否拆分独立仓库。
+2. 发布前需要确认 `@cc98` scope 权限，或选择自有 scope、无 scope 包名或 GitHub Packages。确认前保持 `private: true`。
+3. 如果仓库暂时不公开，可以后续只拆出 `packages/api` 和 `packages/ubb`。
 
 专用测试账号、测试版面和测试主题已经用于契约验证。管理和破坏性接口没有隔离环境，因此继续保留权限拒绝与未验证状态，不在生产环境执行成功探测。
 
@@ -538,9 +540,22 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-11：probe 的临时 bearer header 文件改为通过 `try/finally` 统一清理，覆盖 curl 启动失败和其他异常退出路径。
 - 2026-07-11：Token 请求的三个稳定 component 加入生成结果，OpenAPI 调整为 60 个可达组件；operation 和 path 数量保持 136 / 116。
 - 2026-07-11：包测试增加生成物一致性门禁，在临时目录重新生成 OpenAPI 和 endpoint catalog 后进行 JSON 结构比较；`vp run ready` 现在可以发现忘记更新的生成文件，且不会改写工作区。
-- 2026-07-18：完成状态审计。接口资产、Zod-first 契约、生成物、真实探测和网站接入已经落地；第 7、8 阶段的静态文档、公共示例和发布准备继续保留为后续计划。
+- 2026-07-18：完成状态审计。接口资产、Zod-first 契约、生成物、真实探测和网站接入已经落地；第 7、8 阶段的公开托管、公共示例和发布准备继续保留为后续计划。
 - 2026-07-18：登录探测改为从本地账号密码实时获取短期 access token，不再维护会过期的 token 文件。
 - 2026-07-18：业务 API 与 OpenID 拆为 `generated/openapi.json` 和 `generated/openid.openapi.json`。主规范包含 135 个 operation、115 个 path，OpenID 规范单独包含匿名的 `POST /connect/token`；生成物一致性检查同时覆盖两份规范和 endpoint catalog。
+- 2026-07-18：主 API 与 OpenID 规范补齐包版本、MIT 许可证和仓库问题入口。
+- 2026-07-18：构建静态首页、接口目录、主 API 和 OpenID 参考页，并提供规范下载。`docs:check` 在临时目录完成构建，不污染工作区。
+- 2026-07-18：公共 README 补齐 Zod、TypeScript、fetch、curl、认证、限频和 UBB 示例。仓库补齐许可证和行为准则。
+- 2026-07-18：包版本调整为 `0.1.0-alpha.0`，补齐仓库元数据、CHANGELOG 和显式 JSON、catalog exports。
+- 2026-07-18：`pack:check` 验证 tarball 内容，并在独立临时项目安装后导入 schema、OpenAPI 和接口目录。
+- 2026-07-18：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 279 项测试全部通过。
+- 2026-07-25：增加独立 Vercel 部署配置和稳定规范直链；Apifox 改用主 API 与 OpenID 两个 URL 数据源，不再依赖仓库侧 CLI 同步。
+- 2026-07-25：按最终使用需求删除 YAML 生成与发布链路，移除 `yaml` 和 `@redocly/cli` 开发依赖。
+- 2026-07-25：进一步删除静态首页、接口目录页面、Redoc 参考页和相关构建脚本。Vercel 不安装依赖，只发布 `openapi.json` 与 `openid.openapi.json`。
+- 2026-07-25：最终生产产物预览通过。两份 JSON 均返回 200 和 `application/json`，根路径返回 404，没有额外页面。
+- 2026-07-25：当前没有 npm 发布流程，删除未进入 `ready` 或自动发布门禁的 `pack:check` 和 `check-package.mjs`。历史 tarball 验证结果继续保留，实际准备发布时再按届时流程建立检查。
+- 2026-07-25：删除与 `docs/collaborating.md` 重复的 `CONTRIBUTING.md`。由于仓库未启用 GitHub 私密漏洞报告，删除渠道说明不成立的 `SECURITY.md`，并清理相关引用。
+- 2026-07-25：`vp run ready` 通过。API 契约 17 项、UBB 187 项、网站 288 项和工具包 1 项测试全部通过。
 
 ## 决策记录
 
@@ -551,3 +566,7 @@ API 基础设施应先建立清单和公共 schema 骨架，再与阶段 3 并�
 - 2026-07-11：Zod 到 OpenAPI 的转换和 `$ref` 管理由成熟依赖负责，项目只维护领域 schema、operation metadata 和文件输出入口。
 - 2026-07-11：只有具有独立领域含义、需要稳定复用的 schema 声明 component ID；简单参数和临时包装保持内联。
 - 2026-07-11：写接口不进入普通 CI 在线探测。
+- 2026-07-18：最初实现的静态 API 页面是可重建产物，不提交仓库，部署失败不影响主站。
+- 2026-07-18：没有确认 registry 和发布身份前保持 `private: true`。本计划以可安装 tarball 和独立项目消费通过作为发布准备验收，不执行真实 registry 发布。
+- 2026-07-25：最终不维护静态 API 页面。独立 Vercel 项目只托管两份 OpenAPI JSON，用户帮助站和主站不承担开发者规范托管。
+- 2026-07-25：npm 包仍为未来选项，不为尚未确定的发布流程保留手动端到端脚本。

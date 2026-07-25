@@ -10,7 +10,11 @@ const execFileAsync = promisify(execFile);
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const generatedDir = resolve(packageDir, "generated");
 const temporaryDir = await mkdtemp(join(tmpdir(), "cc98-api-generated-"));
-const generatedFiles = ["openapi.json", "openid.openapi.json", "endpoint-catalog.json"];
+const generatedFiles = [
+  { name: "openapi.json", parse: JSON.parse },
+  { name: "openid.openapi.json", parse: JSON.parse },
+  { name: "endpoint-catalog.json", parse: JSON.parse },
+];
 
 try {
   await execFileAsync(process.execPath, [
@@ -18,10 +22,10 @@ try {
     `--output-dir=${temporaryDir}`,
   ]);
 
-  for (const fileName of generatedFiles) {
+  for (const { name: fileName, parse } of generatedFiles) {
     const [committed, current] = await Promise.all([
-      readFile(resolve(generatedDir, fileName), "utf8").then(JSON.parse),
-      readFile(resolve(temporaryDir, fileName), "utf8").then(JSON.parse),
+      readFile(resolve(generatedDir, fileName), "utf8").then(parse),
+      readFile(resolve(temporaryDir, fileName), "utf8").then(parse),
     ]);
     assert.deepStrictEqual(
       committed,
