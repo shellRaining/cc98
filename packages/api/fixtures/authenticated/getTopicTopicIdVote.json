@@ -1,0 +1,38 @@
+{
+  "topicId": 6583126,
+  "voteItems": [
+    {
+      "id": 1,
+      "description": "<redacted>",
+      "count": 0
+    },
+    {
+      "id": 2,
+      "description": "<redacted>",
+      "count": 0
+    },
+    {
+      "id": 3,
+      "description": "<redacted>",
+      "count": 0
+    },
+    {
+      "id": 4,
+      "description": "<redacted>",
+      "count": 0
+    },
+    {
+      "id": 5,
+      "description": "<redacted>",
+      "count": 0
+    }
+  ],
+  "voteRecords": null,
+  "expiredTime": "2026-01-01T00:00:00Z",
+  "isAvailable": true,
+  "maxVoteCount": 1,
+  "canVote": true,
+  "myRecord": null,
+  "needVote": true,
+  "voteUserCount": 46
+}

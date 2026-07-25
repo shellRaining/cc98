@@ -155,7 +155,7 @@ export const topicOperations = defineOperations([
     summary: "Get topic vote info",
     tags: ["Topic"],
     parameters: [
-      { name: "topicId", in: "path", required: true, schema: z.number(), probeValue: 6572083 },
+      { name: "topicId", in: "path", required: true, schema: z.number(), probeValue: 6583126 },
     ],
     responses: {
       "200": { description: "Vote info", contentType: "application/json", schema: voteInfoSchema },
@@ -167,7 +167,7 @@ export const topicOperations = defineOperations([
     },
     auth: "required",
     risk: "read-only",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
   },
   {
