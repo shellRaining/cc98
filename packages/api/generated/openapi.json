@@ -6826,7 +6826,8 @@
     "/file": {
       "post": {
         "operationId": "postFile",
-        "summary": "Upload files",
+        "summary": "上传文件",
+        "description": "上传一个或多个附件，返回可嵌入主题、回复或私信内容的文件地址。图片默认由服务端压缩，可通过查询参数关闭压缩。",
         "tags": ["File"],
         "security": [
           {
@@ -6841,7 +6842,8 @@
             "in": "query",
             "name": "compressImage",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "是否压缩上传的图片。省略或传入 true 时使用服务端默认压缩；传入 false 时保留原图。对非图片文件没有已确认的影响。"
             }
           }
         ],
@@ -6850,25 +6852,14 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "contentType": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/FileUploadRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Uploaded URLs",
+            "description": "上传后生成的文件地址列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6893,7 +6884,8 @@
     "/file/portrait": {
       "post": {
         "operationId": "postFilePortrait",
-        "summary": "Upload portrait file",
+        "summary": "上传头像图片",
+        "description": "上传一张头像图片并返回文件地址。该接口只负责上传文件；客户端随后使用返回地址更新当前用户头像。",
         "tags": ["File", "Me"],
         "security": [
           {
@@ -6908,22 +6900,14 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "string"
-                  },
-                  "contentType": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/PortraitUploadRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Uploaded portrait URLs",
+            "description": "上传后生成的头像图片地址列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -7447,6 +7431,47 @@
         },
         "required": ["receiverId", "content"],
         "additionalProperties": false
+      },
+      "FileUploadRequest": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary",
+              "contentEncoding": "binary",
+              "description": "需要上传的文件。"
+            },
+            "description": "一个或多个待上传文件；使用同名 `files` 字段重复提交。"
+          },
+          "contentType": {
+            "description": "兼容旧客户端随表单提交的内容类型字符串；当前客户端固定传入 `multipart/form-data`，服务端是否必需尚未确认。",
+            "type": "string",
+            "const": "multipart/form-data"
+          }
+        },
+        "required": ["files"],
+        "description": "通用文件上传表单。"
+      },
+      "PortraitUploadRequest": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "string",
+            "format": "binary",
+            "contentEncoding": "binary",
+            "description": "需要上传的头像图片文件。"
+          },
+          "contentType": {
+            "description": "兼容旧客户端随表单提交的内容类型字符串；当前客户端固定传入 `multipart/form-data`，服务端是否必需尚未确认。",
+            "type": "string",
+            "const": "multipart/form-data"
+          }
+        },
+        "required": ["files"],
+        "description": "头像图片上传表单。"
       },
       "GlobalConfig": {
         "type": "object",
@@ -10152,8 +10177,10 @@
         "type": "array",
         "items": {
           "type": "string",
-          "minLength": 1
-        }
+          "minLength": 1,
+          "description": "上传后可访问的文件地址。"
+        },
+        "description": "成功上传后返回的文件地址列表。单文件上传也使用数组包装。"
       }
     },
     "securitySchemes": {
