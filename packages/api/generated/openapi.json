@@ -6336,7 +6336,8 @@
     "/notification/system": {
       "get": {
         "operationId": "getNotificationSystem",
-        "summary": "Get system notifications",
+        "summary": "获取系统通知",
+        "description": "分页返回当前用户收到的系统通知。通知内容使用 CC98 UBB 格式；通知关联主题或帖子时会携带相应 ID 和帖子基础信息。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6351,22 +6352,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条通知开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条通知开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的通知数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的通知数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "System notifications",
+            "description": "成功获取系统通知列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6394,7 +6403,8 @@
     "/notification/reply": {
       "get": {
         "operationId": "getNotificationReply",
-        "summary": "Get reply notifications",
+        "summary": "获取回复通知",
+        "description": "分页返回其他用户回复当前用户所产生的通知，每项包含关联主题、帖子及回复者的基础信息。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6409,22 +6419,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条通知开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条通知开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的通知数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的通知数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Reply notifications",
+            "description": "成功获取回复通知列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6452,7 +6470,8 @@
     "/notification/at": {
       "get": {
         "operationId": "getNotificationAt",
-        "summary": "Get @ notifications",
+        "summary": "获取 @ 提及通知",
+        "description": "分页返回其他用户在主题或回复中提及当前用户所产生的通知，每项包含关联主题、帖子及提及者的基础信息。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6467,22 +6486,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条通知开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条通知开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的通知数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的通知数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "At notifications",
+            "description": "成功获取 @ 提及通知列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6508,7 +6535,8 @@
       },
       "post": {
         "operationId": "postNotificationAt",
-        "summary": "Send @ notifications after posting",
+        "summary": "发送 @ 提及通知",
+        "description": "在主题或回复发布成功后，向请求体中的用户发送 @ 提及通知。主题和帖子必须与实际触发提及的内容对应。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6523,17 +6551,25 @@
             "in": "query",
             "name": "topicid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "触发 @ 提及的主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "触发 @ 提及的主题 ID。"
           },
           {
             "in": "query",
             "name": "postid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "触发 @ 提及的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "触发 @ 提及的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -6541,17 +6577,20 @@
           "content": {
             "application/json": {
               "schema": {
+                "maxItems": 10,
                 "type": "array",
                 "items": {
-                  "type": "string"
-                }
+                  "type": "string",
+                  "description": "需要接收 @ 通知的用户名。"
+                },
+                "description": "被提及的用户名列表，最多包含 10 个用户名。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "@ 提及通知发送请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -6569,7 +6608,8 @@
     "/notification/read-all-reply": {
       "put": {
         "operationId": "putNotificationReadAllReply",
-        "summary": "Mark all reply notifications as read",
+        "summary": "将全部回复通知标记为已读",
+        "description": "将当前用户收到的全部回复通知标记为已读。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6581,7 +6621,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "全部回复通知已标记为已读"
           },
           "default": {
             "description": "API 错误码",
@@ -6599,7 +6639,8 @@
     "/notification/read-all-at": {
       "put": {
         "operationId": "putNotificationReadAllAt",
-        "summary": "Mark all @ notifications as read",
+        "summary": "将全部 @ 提及通知标记为已读",
+        "description": "将当前用户收到的全部 @ 提及通知标记为已读。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6611,7 +6652,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "全部 @ 提及通知已标记为已读"
           },
           "default": {
             "description": "API 错误码",
@@ -6629,7 +6670,8 @@
     "/notification/read-all-system": {
       "put": {
         "operationId": "putNotificationReadAllSystem",
-        "summary": "Mark all system notifications as read",
+        "summary": "将全部系统通知标记为已读",
+        "description": "将当前用户收到的全部系统通知标记为已读。",
         "tags": ["Notification"],
         "security": [
           {
@@ -6641,7 +6683,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "全部系统通知已标记为已读"
           },
           "default": {
             "description": "API 错误码",
@@ -9327,25 +9369,30 @@
             "type": "object",
             "properties": {
               "title": {
-                "type": "string"
+                "type": "string",
+                "description": "系统通知标题。"
               },
               "content": {
-                "type": "string"
+                "type": "string",
+                "description": "系统通知正文，使用 CC98 UBB 格式。"
               }
             },
             "required": ["title", "content"],
             "additionalProperties": {}
           }
-        ]
+        ],
+        "description": "论坛发送给当前用户的系统通知。"
       },
       "NotificationBase": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "通知 ID。"
           },
           "type": {
-            "type": "number"
+            "type": "number",
+            "description": "通知类型编号：0 为全站系统通知，1 为个人系统通知，2 为回复通知；其他取值含义尚未确认。"
           },
           "topicId": {
             "anyOf": [
@@ -9355,7 +9402,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "关联主题 ID；不关联主题时为 null。"
           },
           "postId": {
             "anyOf": [
@@ -9365,13 +9413,16 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "关联帖子 ID；不关联具体帖子时为 null。"
           },
           "time": {
-            "type": "string"
+            "type": "string",
+            "description": "通知产生时间。"
           },
           "isRead": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "当前用户是否已读该通知。"
           },
           "postBasicInfo": {
             "anyOf": [
@@ -9381,38 +9432,47 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "关联帖子的基础信息；不关联具体帖子时为 null。"
           }
         },
         "required": ["id", "type", "topicId", "postId", "time", "isRead", "postBasicInfo"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "各类通知共有的字段。"
       },
       "NotificationPostBasicInfo": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "触发通知的帖子 ID，与通知的 postId 对应。"
           },
           "floor": {
             "type": "integer",
             "exclusiveMinimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "该帖子在主题中的楼层号。"
           },
           "userId": {
-            "type": "number"
+            "type": "number",
+            "description": "发布该帖的用户 ID。"
           },
           "userName": {
-            "type": "string"
+            "type": "string",
+            "description": "发布该帖的用户名。"
           },
           "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "关联帖子是否已被删除。"
           },
           "boardId": {
-            "type": "number"
+            "type": "number",
+            "description": "关联帖子所在的版面 ID。"
           }
         },
         "required": ["id", "floor", "userId", "userName", "isDeleted", "boardId"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "通知关联帖子的基础信息。"
       },
       "ReplyOrAtNotification": {
         "allOf": [
@@ -9423,12 +9483,14 @@
             "type": "object",
             "properties": {
               "boardId": {
+                "description": "通知记录携带的版面 ID；字段可能省略，关联帖子所在版面以 postBasicInfo.boardId 为准。",
                 "type": "number"
               }
             },
             "additionalProperties": {}
           }
-        ]
+        ],
+        "description": "回复或 @ 提及通知。"
       },
       "FileUploadResponse": {
         "type": "array",
