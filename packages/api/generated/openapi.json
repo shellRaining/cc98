@@ -300,7 +300,8 @@
     "/config/index": {
       "get": {
         "operationId": "getConfigIndex",
-        "summary": "Get homepage aggregate data",
+        "summary": "获取首页聚合数据",
+        "description": "返回论坛首页一次展示所需的聚合数据，包括公告、自动和人工热门主题、推荐栏目、分类主题及全站统计。后端可能省略暂时没有内容的栏目。",
         "tags": ["Index"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -308,7 +309,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Homepage data",
+            "description": "首页公告、热门主题、运营栏目、分类主题和论坛统计",
             "content": {
               "application/json": {
                 "schema": {
@@ -333,7 +334,8 @@
     "/config/index/update": {
       "put": {
         "operationId": "putConfigIndexUpdate",
-        "summary": "Update or clear homepage cache",
+        "summary": "刷新首页聚合缓存",
+        "description": "清除并刷新首页聚合数据缓存，使公告和首页栏目等配置更新尽快生效。需要站点管理权限。",
         "tags": ["Index", "Moderation"],
         "security": [
           {
@@ -345,7 +347,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "首页聚合缓存刷新请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -363,7 +365,8 @@
     "/index/column/{columnKind}/all": {
       "get": {
         "operationId": "getIndexColumnColumnKindAll",
-        "summary": "Get all items in a homepage column",
+        "summary": "获取首页栏目全部配置",
+        "description": "供站点管理页面读取指定首页栏目的全部配置，包括当前未启用的项目。",
         "tags": ["Index", "Moderation"],
         "security": [
           {
@@ -391,14 +394,16 @@
                   "type": "string",
                   "const": "schoolnews"
                 }
-              ]
+              ],
+              "description": "栏目类型：recommandationreading 为推荐阅读，recommandationfunction 为推荐功能，schoolnews 为校园新闻。"
             },
-            "required": true
+            "required": true,
+            "description": "栏目类型：recommandationreading 为推荐阅读，recommandationfunction 为推荐功能，schoolnews 为校园新闻。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Column items",
+            "description": "指定首页栏目的全部配置项",
             "content": {
               "application/json": {
                 "schema": {
@@ -426,7 +431,8 @@
     "/index/column/": {
       "post": {
         "operationId": "postIndexColumn",
-        "summary": "Create homepage column item",
+        "summary": "创建首页栏目配置项",
+        "description": "创建推荐阅读、推荐功能、校园新闻、Banner 或福利优惠等首页栏目配置项。需要站点管理权限。",
         "tags": ["Index", "Moderation"],
         "security": [
           {
@@ -448,7 +454,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "首页栏目配置项创建请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -466,7 +472,8 @@
     "/index/column/{id}": {
       "put": {
         "operationId": "putIndexColumnId",
-        "summary": "Update homepage column item",
+        "summary": "修改首页栏目配置项",
+        "description": "修改指定首页栏目配置项的内容、链接、图片、排序、有效期、启用状态或可见范围。需要站点管理权限。",
         "tags": ["Index", "Moderation"],
         "security": [
           {
@@ -481,9 +488,13 @@
             "in": "path",
             "name": "id",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要修改的首页栏目配置项 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要修改的首页栏目配置项 ID。"
           }
         ],
         "requestBody": {
@@ -498,7 +509,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "首页栏目配置项修改请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -8347,138 +8358,169 @@
         "type": "object",
         "properties": {
           "announcement": {
+            "description": "全站公告内容，使用 CC98 UBB 格式。",
             "type": "string"
           },
           "hotTopic": {
+            "description": "服务端自动统计的今日热门主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/HotTopic"
             }
           },
           "manualHotTopic": {
+            "description": "人工配置的热门推荐主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/HotTopic"
             }
           },
           "recommendationReading": {
+            "description": "首页推荐阅读栏目。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IndexColumn"
             }
           },
           "recommendationFunction": {
+            "description": "首页推荐功能入口。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IndexColumn"
             }
           },
           "specialOffer": {
+            "description": "首页福利优惠栏目。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IndexColumn"
             }
           },
           "schoolNews": {
+            "description": "首页校园新闻栏目。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IndexColumn"
             }
           },
           "schoolEvent": {
+            "description": "首页校园活动主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "academics": {
+            "description": "首页学术通知主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "study": {
+            "description": "首页学习交流分类主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "emotion": {
+            "description": "首页情感交流分类主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "fleaMarket": {
+            "description": "首页跳蚤市场分类主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "partTimeJob": {
+            "description": "首页兼职招聘分类主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "fullTimeJob": {
+            "description": "首页全职招聘分类主题。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MainpageAutoContent"
             }
           },
           "todayCount": {
+            "description": "论坛今日发帖数量。",
             "type": "number"
           },
           "todayTopicCount": {
+            "description": "论坛今日新主题数量。",
             "type": "number"
           },
           "topicCount": {
+            "description": "论坛主题总数。",
             "type": "number"
           },
           "postCount": {
+            "description": "论坛帖子总数。",
             "type": "number"
           },
           "userCount": {
+            "description": "论坛注册用户总数。",
             "type": "number"
           },
           "lastUserName": {
+            "description": "最新注册用户的用户名。",
             "type": "string"
           },
           "onlineUserCount": {
+            "description": "当前在线用户数量。",
             "type": "number"
           },
           "lastUpdateTime": {
+            "description": "首页聚合数据最近更新时间。",
             "type": "string"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": {},
+        "description": "论坛首页聚合数据，包括公告、热门主题、运营栏目、分类主题和全站统计。"
       },
       "HotTopic": {
         "type": "object",
         "properties": {
           "id": {
+            "description": "热门主题 ID。",
             "type": "number"
           },
           "title": {
+            "description": "热门主题标题。",
             "type": "string"
           },
           "boardId": {
+            "description": "热门主题所属版面 ID。",
             "type": "number"
           },
           "boardName": {
+            "description": "热门主题所属版面名称。",
             "type": "string"
           },
           "participantCount": {
+            "description": "参与该主题讨论的用户数量。",
             "type": "number"
           },
           "replyCount": {
+            "description": "主题回复数量。",
             "type": "number"
           },
           "hitCount": {
+            "description": "主题浏览次数。",
             "type": "number"
           },
           "authorName": {
+            "description": "主题作者用户名；匿名主题中可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8489,49 +8531,63 @@
             ]
           },
           "authorUserId": {
+            "description": "主题作者用户 ID；匿名主题当前返回 -1。",
             "type": "number"
           },
           "createTime": {
+            "description": "主题创建时间。",
             "type": "string"
           },
           "type": {
+            "description": "主题类型：0 为普通主题，1 为校园活动，2 为学术通知。",
             "type": "number"
           },
           "isAnonymous": {
+            "description": "主题是否匿名发布。",
             "type": "boolean"
           },
           "hotTopicType": {
+            "description": "热门主题来源类型；当前观察到 1 为自动热门、3 为人工推荐。",
             "type": "number"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "首页展示的热门主题摘要。"
       },
       "MainpageAutoContent": {
         "type": "object",
         "properties": {
           "id": {
+            "description": "首页自动聚合主题 ID。",
             "type": "number"
           },
           "boardId": {
+            "description": "主题所属版面 ID。",
             "type": "number"
           },
           "title": {
+            "description": "主题标题。",
             "type": "string"
           },
           "state": {
+            "description": "主题状态码：1 表示主题已锁定，其他取值含义尚未确认。",
             "type": "number"
           },
           "type": {
+            "description": "主题类型：0 为普通主题，1 为校园活动，2 为学术通知。",
             "type": "number"
           },
           "isInternalOnly": {
+            "description": "主题是否仅允许从校园内网访问。",
             "type": "boolean"
           },
           "isVote": {
+            "description": "主题是否为投票主题。",
             "type": "boolean"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": {},
+        "description": "首页分类板块自动聚合的主题概要。"
       },
       "DisplayTitle": {
         "type": "object",

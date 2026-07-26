@@ -53,21 +53,34 @@ export type ServerTimeResponse = z.infer<typeof serverTimeResponseSchema>;
 
 export const hotTopicSchema = z
   .looseObject({
-    id: z.number().optional(),
-    title: z.string().optional(),
-    boardId: z.number().optional(),
-    boardName: z.string().optional(),
-    participantCount: z.number().optional(),
-    replyCount: z.number().optional(),
-    hitCount: z.number().optional(),
-    authorName: z.string().nullable().optional(),
-    authorUserId: z.number().optional(),
-    createTime: z.string().optional(),
-    type: z.number().optional(),
-    isAnonymous: z.boolean().optional(),
-    hotTopicType: z.number().optional(),
+    id: z.number().optional().meta({ description: "热门主题 ID。" }),
+    title: z.string().optional().meta({ description: "热门主题标题。" }),
+    boardId: z.number().optional().meta({ description: "热门主题所属版面 ID。" }),
+    boardName: z.string().optional().meta({ description: "热门主题所属版面名称。" }),
+    participantCount: z.number().optional().meta({ description: "参与该主题讨论的用户数量。" }),
+    replyCount: z.number().optional().meta({ description: "主题回复数量。" }),
+    hitCount: z.number().optional().meta({ description: "主题浏览次数。" }),
+    authorName: z
+      .string()
+      .nullable()
+      .optional()
+      .meta({ description: "主题作者用户名；匿名主题中可能为 null。" }),
+    authorUserId: z
+      .number()
+      .optional()
+      .meta({ description: "主题作者用户 ID；匿名主题当前返回 -1。" }),
+    createTime: z.string().optional().meta({ description: "主题创建时间。" }),
+    type: z
+      .number()
+      .optional()
+      .meta({ description: "主题类型：0 为普通主题，1 为校园活动，2 为学术通知。" }),
+    isAnonymous: z.boolean().optional().meta({ description: "主题是否匿名发布。" }),
+    hotTopicType: z
+      .number()
+      .optional()
+      .meta({ description: "热门主题来源类型；当前观察到 1 为自动热门、3 为人工推荐。" }),
   })
-  .meta({ id: "HotTopic" });
+  .meta({ id: "HotTopic", description: "首页展示的热门主题摘要。" });
 export type HotTopic = z.infer<typeof hotTopicSchema>;
 
 export const indexColumnSchema = z
@@ -116,16 +129,22 @@ export const indexColumnSchema = z
 export type IndexColumn = z.infer<typeof indexColumnSchema>;
 
 export const mainpageAutoContentSchema = z
-  .object({
-    id: z.number().optional(),
-    boardId: z.number().optional(),
-    title: z.string().optional(),
-    state: z.number().optional(),
-    type: z.number().optional(),
-    isInternalOnly: z.boolean().optional(),
-    isVote: z.boolean().optional(),
+  .looseObject({
+    id: z.number().optional().meta({ description: "首页自动聚合主题 ID。" }),
+    boardId: z.number().optional().meta({ description: "主题所属版面 ID。" }),
+    title: z.string().optional().meta({ description: "主题标题。" }),
+    state: z
+      .number()
+      .optional()
+      .meta({ description: "主题状态码：1 表示主题已锁定，其他取值含义尚未确认。" }),
+    type: z
+      .number()
+      .optional()
+      .meta({ description: "主题类型：0 为普通主题，1 为校园活动，2 为学术通知。" }),
+    isInternalOnly: z.boolean().optional().meta({ description: "主题是否仅允许从校园内网访问。" }),
+    isVote: z.boolean().optional().meta({ description: "主题是否为投票主题。" }),
   })
-  .meta({ id: "MainpageAutoContent" });
+  .meta({ id: "MainpageAutoContent", description: "首页分类板块自动聚合的主题概要。" });
 export type MainpageAutoContent = z.infer<typeof mainpageAutoContentSchema>;
 
 export const displayTitleSchema = z
@@ -140,29 +159,65 @@ export const displayTitleSchema = z
 export type DisplayTitle = z.infer<typeof displayTitleSchema>;
 
 export const indexSchema = z
-  .object({
-    announcement: z.string().optional(),
-    hotTopic: z.array(hotTopicSchema).optional(),
-    manualHotTopic: z.array(hotTopicSchema).optional(),
-    recommendationReading: z.array(indexColumnSchema).optional(),
-    recommendationFunction: z.array(indexColumnSchema).optional(),
-    specialOffer: z.array(indexColumnSchema).optional(),
-    schoolNews: z.array(indexColumnSchema).optional(),
-    schoolEvent: z.array(mainpageAutoContentSchema).optional(),
-    academics: z.array(mainpageAutoContentSchema).optional(),
-    study: z.array(mainpageAutoContentSchema).optional(),
-    emotion: z.array(mainpageAutoContentSchema).optional(),
-    fleaMarket: z.array(mainpageAutoContentSchema).optional(),
-    partTimeJob: z.array(mainpageAutoContentSchema).optional(),
-    fullTimeJob: z.array(mainpageAutoContentSchema).optional(),
-    todayCount: z.number().optional(),
-    todayTopicCount: z.number().optional(),
-    topicCount: z.number().optional(),
-    postCount: z.number().optional(),
-    userCount: z.number().optional(),
-    lastUserName: z.string().optional(),
-    onlineUserCount: z.number().optional(),
-    lastUpdateTime: z.string().optional(),
+  .looseObject({
+    announcement: z.string().optional().meta({ description: "全站公告内容，使用 CC98 UBB 格式。" }),
+    hotTopic: z
+      .array(hotTopicSchema)
+      .optional()
+      .meta({ description: "服务端自动统计的今日热门主题。" }),
+    manualHotTopic: z
+      .array(hotTopicSchema)
+      .optional()
+      .meta({ description: "人工配置的热门推荐主题。" }),
+    recommendationReading: z
+      .array(indexColumnSchema)
+      .optional()
+      .meta({ description: "首页推荐阅读栏目。" }),
+    recommendationFunction: z
+      .array(indexColumnSchema)
+      .optional()
+      .meta({ description: "首页推荐功能入口。" }),
+    specialOffer: z.array(indexColumnSchema).optional().meta({ description: "首页福利优惠栏目。" }),
+    schoolNews: z.array(indexColumnSchema).optional().meta({ description: "首页校园新闻栏目。" }),
+    schoolEvent: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页校园活动主题。" }),
+    academics: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页学术通知主题。" }),
+    study: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页学习交流分类主题。" }),
+    emotion: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页情感交流分类主题。" }),
+    fleaMarket: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页跳蚤市场分类主题。" }),
+    partTimeJob: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页兼职招聘分类主题。" }),
+    fullTimeJob: z
+      .array(mainpageAutoContentSchema)
+      .optional()
+      .meta({ description: "首页全职招聘分类主题。" }),
+    todayCount: z.number().optional().meta({ description: "论坛今日发帖数量。" }),
+    todayTopicCount: z.number().optional().meta({ description: "论坛今日新主题数量。" }),
+    topicCount: z.number().optional().meta({ description: "论坛主题总数。" }),
+    postCount: z.number().optional().meta({ description: "论坛帖子总数。" }),
+    userCount: z.number().optional().meta({ description: "论坛注册用户总数。" }),
+    lastUserName: z.string().optional().meta({ description: "最新注册用户的用户名。" }),
+    onlineUserCount: z.number().optional().meta({ description: "当前在线用户数量。" }),
+    lastUpdateTime: z.string().optional().meta({ description: "首页聚合数据最近更新时间。" }),
   })
-  .meta({ id: "Index" });
+  .meta({
+    id: "Index",
+    description: "论坛首页聚合数据，包括公告、热门主题、运营栏目、分类主题和全站统计。",
+  });
 export type Index = z.infer<typeof indexSchema>;

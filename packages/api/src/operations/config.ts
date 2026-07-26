@@ -198,11 +198,15 @@ export const configOperations = defineOperations([
     method: "GET",
     path: "/config/index",
     operationId: "getConfigIndex",
-    summary: "Get homepage aggregate data",
+    summary: "获取首页聚合数据",
     tags: ["Index"],
     parameters: [],
     responses: {
-      "200": { description: "Homepage data", contentType: "application/json", schema: indexSchema },
+      "200": {
+        description: "首页公告、热门主题、运营栏目、分类主题和论坛统计",
+        contentType: "application/json",
+        schema: indexSchema,
+      },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -213,16 +217,18 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "返回论坛首页一次展示所需的聚合数据，包括公告、自动和人工热门主题、推荐栏目、分类主题及全站统计。后端可能省略暂时没有内容的栏目。",
   },
   {
     method: "PUT",
     path: "/config/index/update",
     operationId: "putConfigIndexUpdate",
-    summary: "Update or clear homepage cache",
+    summary: "刷新首页聚合缓存",
     tags: ["Index", "Moderation"],
     parameters: [],
     responses: {
-      "200": { description: "Success" },
+      "200": { description: "首页聚合缓存刷新请求已处理" },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -233,12 +239,14 @@ export const configOperations = defineOperations([
     risk: "destructive",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "清除并刷新首页聚合数据缓存，使公告和首页栏目等配置更新尽快生效。需要站点管理权限。",
   },
   {
     method: "GET",
     path: "/index/column/{columnKind}/all",
     operationId: "getIndexColumnColumnKindAll",
-    summary: "Get all items in a homepage column",
+    summary: "获取首页栏目全部配置",
     tags: ["Index", "Moderation"],
     parameters: [
       {
@@ -250,12 +258,14 @@ export const configOperations = defineOperations([
           z.literal("recommandationfunction"),
           z.literal("schoolnews"),
         ]),
+        description:
+          "栏目类型：recommandationreading 为推荐阅读，recommandationfunction 为推荐功能，schoolnews 为校园新闻。",
         probeValue: "recommandationreading",
       },
     ],
     responses: {
       "200": {
-        description: "Column items",
+        description: "指定首页栏目的全部配置项",
         contentType: "application/json",
         schema: z.array(indexColumnSchema),
       },
@@ -269,17 +279,18 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
+    description: "供站点管理页面读取指定首页栏目的全部配置，包括当前未启用的项目。",
   },
   {
     method: "POST",
     path: "/index/column/",
     operationId: "postIndexColumn",
-    summary: "Create homepage column item",
+    summary: "创建首页栏目配置项",
     tags: ["Index", "Moderation"],
     parameters: [],
     requestBody: { required: true, contentType: "application/json", schema: indexColumnSchema },
     responses: {
-      "200": { description: "Success" },
+      "200": { description: "首页栏目配置项创建请求已处理" },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -290,17 +301,28 @@ export const configOperations = defineOperations([
     risk: "destructive",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "创建推荐阅读、推荐功能、校园新闻、Banner 或福利优惠等首页栏目配置项。需要站点管理权限。",
   },
   {
     method: "PUT",
     path: "/index/column/{id}",
     operationId: "putIndexColumnId",
-    summary: "Update homepage column item",
+    summary: "修改首页栏目配置项",
     tags: ["Index", "Moderation"],
-    parameters: [{ name: "id", in: "path", required: true, schema: z.number(), probeValue: 758 }],
+    parameters: [
+      {
+        name: "id",
+        in: "path",
+        required: true,
+        schema: z.number().int().positive(),
+        description: "需要修改的首页栏目配置项 ID。",
+        probeValue: 758,
+      },
+    ],
     requestBody: { required: true, contentType: "application/json", schema: indexColumnSchema },
     responses: {
-      "200": { description: "Success" },
+      "200": { description: "首页栏目配置项修改请求已处理" },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -311,6 +333,8 @@ export const configOperations = defineOperations([
     risk: "destructive",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "修改指定首页栏目配置项的内容、链接、图片、排序、有效期、启用状态或可见范围。需要站点管理权限。",
   },
   {
     method: "GET",
