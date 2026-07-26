@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "id": 5,
+    "name": "<redacted>",
+    "boardMasters": ["<redacted>", "<redacted>", "<redacted>"],
+    "topicCount": 2,
+    "postCount": 4,
+    "todayCount": 0,
+    "description": "<redacted>",
+    "anonymousState": 0,
+    "showShareTip": false,
+    "canVote": true
+  },
+  {
+    "id": 43,
+    "name": "<redacted>",
+    "boardMasters": ["<redacted>"],
+    "topicCount": 2,
+    "postCount": 3,
+    "todayCount": 0,
+    "description": "<redacted>",
+    "anonymousState": 0,
+    "showShareTip": false,
+    "canVote": true
+  },
+  {
+    "id": 100,
+    "name": "<redacted>",
+    "boardMasters": ["<redacted>", "<redacted>", "<redacted>", "<redacted>"],
+    "topicCount": 218173,
+    "postCount": 3585763,
+    "todayCount": 196,
+    "description": "<redacted>",
+    "anonymousState": 0,
+    "showShareTip": false,
+    "canVote": true
+  },
+  {
+    "id": 235,
+    "name": "<redacted>",
+    "boardMasters": ["<redacted>", "<redacted>", "<redacted>"],
+    "topicCount": 113115,
+    "postCount": 1365343,
+    "todayCount": 199,
+    "description": "<redacted>",
+    "anonymousState": 2,
+    "showShareTip": false,
+    "canVote": true
+  },
+  {
+    "id": 443,
+    "name": "<redacted>",
+    "boardMasters": ["<redacted>"],
+    "topicCount": 0,
+    "postCount": 0,
+    "todayCount": 0,
+    "description": "<redacted>",
+    "anonymousState": 0,
+    "showShareTip": false,
+    "canVote": true
+  }
+]

@@ -553,7 +553,8 @@
     "/board/all": {
       "get": {
         "operationId": "getBoardAll",
-        "summary": "Get all board groups",
+        "summary": "获取全部版面分组",
+        "description": "返回论坛版面导航使用的全部一级分组，以及每个分组下的版面概要。",
         "tags": ["Board"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -561,7 +562,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Board groups",
+            "description": "成功获取全部版面分组及版面概要",
             "content": {
               "application/json": {
                 "schema": {
@@ -589,7 +590,8 @@
     "/board/": {
       "get": {
         "operationId": "getBoard",
-        "summary": "Get boards by repeated id query",
+        "summary": "批量获取指定版面",
+        "description": "根据一个或多个版面 ID 批量返回版面信息，常用于补齐收藏和主题记录中的版面资料。",
         "tags": ["Board"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -603,14 +605,16 @@
               "type": "array",
               "items": {
                 "type": "number"
-              }
+              },
+              "description": "要查询的版面 ID，可重复传入多个 id 参数。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询的版面 ID，可重复传入多个 id 参数。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Board list",
+            "description": "成功获取指定版面列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -638,7 +642,8 @@
     "/board/search": {
       "get": {
         "operationId": "getBoardSearch",
-        "summary": "Search boards",
+        "summary": "搜索版面",
+        "description": "按关键词搜索版面名称和版面简介，返回匹配的版面概要。",
         "tags": ["Board"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -649,14 +654,16 @@
             "in": "query",
             "name": "keyword",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "description": "在版面名称或简介中搜索的关键词。"
             },
-            "required": true
+            "required": true,
+            "description": "在版面名称或简介中搜索的关键词。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Matching boards",
+            "description": "成功获取名称或简介匹配关键词的版面",
             "content": {
               "application/json": {
                 "schema": {
@@ -684,7 +691,8 @@
     "/board/{boardId}": {
       "get": {
         "operationId": "getBoardBoardId",
-        "summary": "Get board details",
+        "summary": "获取版面详情",
+        "description": "返回版面公告、简介、统计、访问限制和当前访问者能力。登录后还会包含是否已关注等用户相关状态。",
         "tags": ["Board"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -695,14 +703,16 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要查询的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询的版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Board details",
+            "description": "成功获取版面详情",
             "content": {
               "application/json": {
                 "schema": {
@@ -727,7 +737,8 @@
     "/board/{boardId}/topic": {
       "get": {
         "operationId": "getBoardBoardIdTopic",
-        "summary": "Get topics in a board",
+        "summary": "获取版面主题列表",
+        "description": "按偏移量分页返回指定版面的普通主题列表；置顶主题由独立接口提供。需要登录。",
         "tags": ["Board", "Topic"],
         "security": [
           {
@@ -742,30 +753,36 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要查询主题的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询主题的版面 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "主题列表的起始偏移量。"
             },
-            "required": true
+            "required": true,
+            "description": "主题列表的起始偏移量。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "本次请求的主题数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次请求的主题数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topics",
+            "description": "成功获取当前页的版面主题",
             "content": {
               "application/json": {
                 "schema": {
@@ -791,7 +808,8 @@
       },
       "post": {
         "operationId": "postBoardBoardIdTopic",
-        "summary": "Create topic in a board",
+        "summary": "创建版面主题",
+        "description": "在指定版面创建普通、校园活动、学术通知或投票主题。需要登录，并受到版面发帖、匿名和主题类型权限限制。",
         "tags": ["Board", "Topic"],
         "security": [
           {
@@ -806,9 +824,11 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要发布主题的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要发布主题的版面 ID。"
           }
         ],
         "requestBody": {
@@ -823,7 +843,7 @@
         },
         "responses": {
           "200": {
-            "description": "新主题 ID",
+            "description": "主题创建成功，返回新主题 ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -848,7 +868,8 @@
     "/board/{boardId}/tag": {
       "get": {
         "operationId": "getBoardBoardIdTag",
-        "summary": "Get board tags",
+        "summary": "获取版面分层标签",
+        "description": "返回版面可用于主题分类和筛选的标签，并按第一层、第二层分别分组。",
         "tags": ["Board"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -859,14 +880,16 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要查询标签的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询标签的版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Board tag groups",
+            "description": "成功获取按层级拆分的版面标签组",
             "content": {
               "application/json": {
                 "schema": {
@@ -894,8 +917,8 @@
     "/board/{boardId}/tag-v2": {
       "get": {
         "operationId": "getBoardBoardIdTagV2",
-        "summary": "Get board tags v2",
-        "description": "Exact schema is not clear from frontend source.",
+        "summary": "获取版面树状标签",
+        "description": "以树状结构返回版面标签。layers 为 0、1 或 2，顶层标签通过 subTags 包含下一层标签。",
         "tags": ["Board"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -906,14 +929,16 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要查询标签树的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询标签树的版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Board tag data",
+            "description": "成功获取版面标签层数和标签树",
             "content": {
               "application/json": {
                 "schema": {
@@ -938,14 +963,15 @@
     "/board/{boardId}/events": {
       "get": {
         "operationId": "getBoardBoardIdEvents",
-        "summary": "Get board event records",
+        "summary": "获取版面管理记录",
+        "description": "分页返回版面内的管理操作记录，用于版务记录页面。需要登录。",
         "tags": ["Board", "Moderation"],
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -953,30 +979,36 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要查询管理记录的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询管理记录的版面 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "管理记录的起始偏移量。"
             },
-            "required": true
+            "required": true,
+            "description": "管理记录的起始偏移量。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "本次请求的管理记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次请求的管理记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Board events",
+            "description": "成功获取版面管理记录分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -1001,7 +1033,8 @@
     "/board/{boardId}/big-paper": {
       "put": {
         "operationId": "putBoardBoardIdBigPaper",
-        "summary": "Update board big-paper announcement",
+        "summary": "更新版面大字报",
+        "description": "更新版面页展示的大字报内容。需要登录和相应的版面管理权限。",
         "tags": ["Board", "Moderation"],
         "security": [
           {
@@ -1016,9 +1049,11 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要更新大字报的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要更新大字报的版面 ID。"
           }
         ],
         "requestBody": {
@@ -1029,7 +1064,8 @@
                 "type": "object",
                 "properties": {
                   "content": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "新的版面大字报内容，使用 CC98 UBB 格式。"
                   }
                 },
                 "required": ["content"]
@@ -1039,7 +1075,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "版面大字报更新成功"
           },
           "default": {
             "description": "API 错误码",
@@ -1057,14 +1093,15 @@
     "/board/{boardId}/stop-post-user": {
       "get": {
         "operationId": "getBoardBoardIdStopPostUser",
-        "summary": "Get board muted users",
+        "summary": "获取版面禁言用户",
+        "description": "分页返回指定版面的禁言用户、禁言期限和操作人。需要登录。",
         "tags": ["Board", "Moderation"],
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -1072,30 +1109,36 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要查询禁言用户的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要查询禁言用户的版面 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "禁言记录的起始偏移量。"
             },
-            "required": true
+            "required": true,
+            "description": "禁言记录的起始偏移量。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "本次请求的禁言记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次请求的禁言记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Muted user list",
+            "description": "成功获取版面禁言用户列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -1123,7 +1166,8 @@
     "/board/{boardId}/stop-post-user/{userId}": {
       "delete": {
         "operationId": "deleteBoardBoardIdStopPostUserUserId",
-        "summary": "Cancel board mute for a user",
+        "summary": "解除用户版面禁言",
+        "description": "解除指定用户在该版面的禁言状态。需要登录和相应的版面管理权限。",
         "tags": ["Board", "Moderation"],
         "security": [
           {
@@ -1138,22 +1182,26 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要解除禁言的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要解除禁言的版面 ID。"
           },
           {
             "in": "path",
             "name": "userId",
             "schema": {
-              "type": "number"
+              "type": "number",
+              "description": "要解除版面禁言的用户 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "要解除版面禁言的用户 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "用户的版面禁言已解除"
           },
           "default": {
             "description": "API 错误码",
@@ -7214,7 +7262,8 @@
         "type": "object",
         "properties": {
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "主题正文，格式由 contentType 决定。"
           },
           "contentType": {
             "anyOf": [
@@ -7226,33 +7275,43 @@
                 "type": "number",
                 "const": 1
               }
-            ]
+            ],
+            "description": "正文格式：0 为 UBB，1 为 Markdown。"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "主题标题。"
           },
           "type": {
-            "type": "number"
+            "type": "number",
+            "description": "主题类型：0 为普通主题，1 为校园活动，2 为学术通知。"
           },
           "tag1": {
+            "description": "第一层标签 ID；版面没有标签时可省略。",
             "type": "number"
           },
           "tag2": {
+            "description": "第二层标签 ID；版面少于两层标签时可省略。",
             "type": "number"
           },
           "notifyPoster": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "主题作者是否接收后续回复提醒。"
           },
           "isAnonymous": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "是否匿名发布主题。"
           },
           "clientType": {
-            "type": "number"
+            "type": "number",
+            "description": "发帖客户端类型标识；Web 前端使用 1，其他取值含义尚未确认。"
           },
           "isVote": {
+            "description": "是否创建投票主题。",
             "type": "boolean"
           },
           "voteInfo": {
+            "description": "投票配置；普通主题可省略。",
             "$ref": "#/components/schemas/CreateVoteInfo"
           }
         },
@@ -7264,7 +7323,8 @@
           "notifyPoster",
           "isAnonymous",
           "clientType"
-        ]
+        ],
+        "description": "在指定版面创建主题的请求体。"
       },
       "CreateVoteInfo": {
         "type": "object",
@@ -7273,23 +7333,28 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "投票选项文字列表。"
           },
           "expiredDays": {
             "type": "integer",
             "minimum": -9007199254740991,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "投票有效天数。"
           },
           "maxVoteCount": {
             "type": "integer",
             "minimum": -9007199254740991,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "每位用户最多可以选择的选项数。"
           },
           "needVote": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "是否必须完成投票后才能在截止前查看结果。"
           }
         },
-        "required": ["voteItems", "expiredDays", "maxVoteCount", "needVote"]
+        "required": ["voteItems", "expiredDays", "maxVoteCount", "needVote"],
+        "description": "创建投票主题时提交的投票配置。"
       },
       "ReasonRequest": {
         "type": "object",
@@ -8044,39 +8109,48 @@
         "type": "object",
         "properties": {
           "id": {
+            "description": "版面分组 ID。",
             "type": "number"
           },
           "name": {
+            "description": "版面分组名称。",
             "type": "string"
           },
           "order": {
+            "description": "版面分组的展示顺序。",
             "type": "number"
           },
           "masters": {
+            "description": "分区主管用户名列表。",
             "type": "array",
             "items": {
               "type": "string"
             }
           },
           "boards": {
+            "description": "分组内的版面概要列表。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Board"
             }
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "论坛版面导航中的一级分组。"
       },
       "Board": {
         "type": "object",
         "properties": {
           "id": {
+            "description": "版面 ID。",
             "type": "number"
           },
           "name": {
+            "description": "版面名称。",
             "type": "string"
           },
           "description": {
+            "description": "版面简介；未配置时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8087,6 +8161,7 @@
             ]
           },
           "logoUri": {
+            "description": "版面图标地址；未配置独立图标时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8097,45 +8172,66 @@
             ]
           },
           "topicCount": {
+            "description": "版面主题总数。",
             "type": "number"
           },
           "postCount": {
+            "description": "版面回复总数。",
             "type": "number"
           },
           "todayCount": {
+            "description": "版面今日回复数。",
             "type": "number"
           },
           "boardMasters": {
+            "description": "版主用户名列表。",
             "type": "array",
             "items": {
               "type": "string"
             }
           },
           "isUserCustomBoard": {
+            "description": "当前登录用户是否已关注该版面。",
             "type": "boolean"
           },
           "internalState": {
+            "description": "版面内网可见性状态码，具体枚举含义尚未确认。",
             "type": "number"
           },
           "isLock": {
+            "description": "旧版响应使用的版面锁定标记；当前响应通常使用 isLocked。",
             "type": "boolean"
           },
           "isLocked": {
+            "description": "版面是否已锁定。",
             "type": "boolean"
           },
           "parentId": {
+            "description": "父版面或所属版面分组 ID。",
             "type": "number"
           },
           "anonymousState": {
+            "description": "匿名发帖模式：0 为不可匿名，1 为只能匿名，2、3 均允许在发主题时选择是否匿名；2 与 3 在回复场景中的具体差异尚未完全确认。",
             "type": "number"
           },
-          "canEntry": {
-            "type": "boolean"
+          "privacyState": {
+            "description": "版面隐私状态码，具体枚举含义尚未确认。",
+            "type": "number"
           },
-          "canVote": {
-            "type": "boolean"
+          "viewerFilterState": {
+            "description": "版面访问者筛选状态码，具体枚举含义尚未确认。",
+            "type": "number"
           },
-          "bigPaper": {
+          "protectionLevel": {
+            "description": "版面保护等级，具体等级含义尚未确认。",
+            "type": "number"
+          },
+          "rootId": {
+            "description": "版面所属根分区的 ID。",
+            "type": "number"
+          },
+          "lastPostContent": {
+            "description": "版面最新回复内容；没有可用内容时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8144,29 +8240,78 @@
                 "type": "null"
               }
             ]
+          },
+          "allowPostOnly": {
+            "description": "版面发帖限制状态码；0 与 2 的具体权限差异尚未确认。",
+            "type": "number"
+          },
+          "forbidRvpn": {
+            "description": "是否禁止通过 RVPN 访问版面。",
+            "type": "boolean"
+          },
+          "canEntry": {
+            "description": "当前访问者是否可以进入版面。",
+            "type": "boolean"
+          },
+          "canVote": {
+            "description": "当前访问者是否可以在版面发布投票主题。",
+            "type": "boolean"
+          },
+          "bigPaper": {
+            "description": "版面大字报内容，使用 CC98 UBB 格式；未配置时可能为 null。",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "topicAuthorPermissions": {
+            "description": "版面对主题作者开放的管理权限标识列表，具体取值尚未确认。",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowNotifyAllReplier": {
+            "description": "版面是否允许主题作者通知全部回复者。",
+            "type": "boolean"
+          },
+          "showShareTip": {
+            "description": "是否展示版面分享提示，具体触发场景尚未确认。",
+            "type": "boolean"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "CC98 版面信息。不同接口和登录状态可能只返回其中一部分字段，后端也可能增加未声明字段。"
       },
       "Topic": {
         "type": "object",
         "properties": {
           "id": {
+            "description": "主题 ID。",
             "type": "number"
           },
           "boardId": {
+            "description": "主题所属版面 ID。",
             "type": "number"
           },
           "boardName": {
+            "description": "主题所属版面名称。",
             "type": "string"
           },
           "title": {
+            "description": "主题标题。",
             "type": "string"
           },
           "time": {
+            "description": "主题发布时间。",
             "type": "string"
           },
           "userId": {
+            "description": "主题作者用户 ID；匿名主题中可能为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -8177,6 +8322,7 @@
             ]
           },
           "userName": {
+            "description": "主题作者用户名；匿名主题中可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8186,72 +8332,8 @@
               }
             ]
           },
-          "isAnonymous": {
-            "type": "boolean"
-          },
-          "disableHot": {
-            "type": "boolean"
-          },
-          "lastPostTime": {
-            "type": "string"
-          },
-          "state": {
-            "type": "number"
-          },
-          "type": {
-            "type": "number"
-          },
-          "replyCount": {
-            "type": "number"
-          },
-          "hitCount": {
-            "type": "number"
-          },
-          "totalVoteUserCount": {
-            "type": "number"
-          },
-          "lastPostUser": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "lastPostContent": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "topState": {
-            "type": "number"
-          },
-          "bestState": {
-            "type": "number"
-          },
-          "isVote": {
-            "type": "boolean"
-          },
-          "isPosterOnly": {
-            "type": "boolean"
-          },
-          "allowedViewerState": {
-            "type": "number"
-          },
-          "likeCount": {
-            "type": "number"
-          },
-          "dislikeCount": {
-            "type": "number"
-          },
-          "highlightInfo": {
+          "userInfo": {
+            "description": "主题作者摘要；当前真实主题列表中仅观察到 null，内部字段尚未确认。",
             "anyOf": [
               {
                 "type": "object",
@@ -8263,7 +8345,109 @@
               }
             ]
           },
+          "isAnonymous": {
+            "description": "主题是否匿名发布。",
+            "type": "boolean"
+          },
+          "isMe": {
+            "description": "当前登录用户是否为主题作者。",
+            "type": "boolean"
+          },
+          "disableHot": {
+            "description": "主题是否被禁止进入热门主题列表。",
+            "type": "boolean"
+          },
+          "lastPostTime": {
+            "description": "主题最后回复时间。",
+            "type": "string"
+          },
+          "state": {
+            "description": "主题状态码：1 表示主题已锁定，其他取值含义尚未确认。",
+            "type": "number"
+          },
+          "type": {
+            "description": "主题类型：0 为普通主题，1 为校园活动，2 为学术通知。",
+            "type": "number"
+          },
+          "replyCount": {
+            "description": "主题回复数。",
+            "type": "number"
+          },
+          "todayCount": {
+            "description": "主题今日回复数。",
+            "type": "number"
+          },
+          "hitCount": {
+            "description": "主题浏览次数。",
+            "type": "number"
+          },
+          "totalVoteUserCount": {
+            "description": "投票主题的参与用户总数。",
+            "type": "number"
+          },
+          "lastPostUser": {
+            "description": "最后回复者用户名；没有回复者信息时可能为 null。",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastPostContent": {
+            "description": "最后回复内容摘要；可能包含原始 UBB 片段。",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "topState": {
+            "description": "主题置顶状态：0 为未置顶，2 为版面固顶，4 为全站固顶；其他取值含义尚未确认。",
+            "type": "number"
+          },
+          "bestState": {
+            "description": "主题精华状态：1 表示精华，其他取值含义尚未确认。",
+            "type": "number"
+          },
+          "isVote": {
+            "description": "是否为投票主题。",
+            "type": "boolean"
+          },
+          "isPosterOnly": {
+            "description": "楼主相关的内容限制标记，具体行为尚未确认。",
+            "type": "boolean"
+          },
+          "allowedViewerState": {
+            "description": "主题可见用户限制状态码，具体枚举含义尚未确认。",
+            "type": "number"
+          },
+          "likeCount": {
+            "description": "主题收到的赞同数。",
+            "type": "number"
+          },
+          "dislikeCount": {
+            "description": "主题收到的反对数。",
+            "type": "number"
+          },
+          "highlightInfo": {
+            "description": "主题标题高亮样式；未设置时为 null。",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TopicHighlightInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "tag1": {
+            "description": "主题第一层标签 ID；未选择时可能为 null 或 0。",
             "anyOf": [
               {
                 "type": "number"
@@ -8274,6 +8458,7 @@
             ]
           },
           "tag2": {
+            "description": "主题第二层标签 ID；未选择时可能为 null 或 0。",
             "anyOf": [
               {
                 "type": "number"
@@ -8284,24 +8469,68 @@
             ]
           },
           "isInternalOnly": {
+            "description": "主题是否仅允许从校园内网访问。",
             "type": "boolean"
           },
           "favoriteCount": {
+            "description": "收藏该主题的用户数。",
             "type": "number"
           },
           "notifyPoster": {
+            "description": "主题作者是否接收后续回复提醒。",
+            "type": "boolean"
+          },
+          "allowHotReply": {
+            "description": "主题是否允许热门回复，具体行为尚未确认。",
             "type": "boolean"
           },
           "canNotifyAllReplier": {
+            "description": "当前用户是否可以通知该主题的全部回复者。",
             "type": "boolean"
           },
           "topicAuthorPermissions": {
+            "description": "服务端授予当前主题作者的主题管理权限标识列表。",
             "type": "array",
             "items": {
               "type": "string"
             }
           },
+          "specialStyle": {
+            "description": "主题特殊展示样式编号，具体枚举含义尚未确认。",
+            "type": "number"
+          },
+          "notifyAllReplierCountByLZ": {
+            "description": "楼主已使用“通知全部回复者”功能的次数。",
+            "type": "number"
+          },
+          "lastNotifyAllReplierFloorByLZ": {
+            "description": "楼主最近一次使用“通知全部回复者”功能时的楼层。",
+            "type": "number"
+          },
+          "notifyAllReplierPostIds": {
+            "description": "触发过“通知全部回复者”的回复 ID 列表。",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "isHotTopic": {
+            "description": "主题当前是否属于热门主题。",
+            "type": "boolean"
+          },
+          "lotteryTopicDetail": {
+            "description": "抽奖主题详情；非抽奖主题为 null。",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LotteryTopicDetail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "lastBrowsingTime": {
+            "description": "当前用户最近浏览该主题的时间。",
             "type": "string"
           },
           "contentType": {
@@ -8326,40 +8555,14 @@
                 "type": "number",
                 "const": 4
               }
-            ]
+            ],
+            "description": "主题卡片的媒体类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片。"
           },
           "mediaContent": {
+            "description": "主题卡片使用的媒体摘要；普通主题可能为 null。",
             "anyOf": [
               {
-                "type": "object",
-                "properties": {
-                  "thumbnail": {
-                    "anyOf": [
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "video": {
-                    "type": "string"
-                  },
-                  "audio": {
-                    "type": "string"
-                  },
-                  "width": {
-                    "type": "number"
-                  },
-                  "height": {
-                    "type": "number"
-                  }
-                },
-                "additionalProperties": {}
+                "$ref": "#/components/schemas/MediaTopicContent"
               },
               {
                 "type": "null"
@@ -8367,7 +8570,105 @@
             ]
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "主题概要。不同主题列表和详情接口可能只返回部分字段，后端也可能增加未声明字段。"
+      },
+      "TopicHighlightInfo": {
+        "type": "object",
+        "properties": {
+          "isBold": {
+            "description": "主题标题是否加粗。",
+            "type": "boolean"
+          },
+          "isItalic": {
+            "description": "主题标题是否使用斜体。",
+            "type": "boolean"
+          },
+          "color": {
+            "description": "主题标题颜色；未指定时可能为 null。",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": {},
+        "description": "主题标题的高亮样式。"
+      },
+      "LotteryTopicDetail": {
+        "type": "object",
+        "properties": {
+          "drawingTime": {
+            "description": "预定开奖时间。",
+            "type": "string"
+          },
+          "drawingCount": {
+            "description": "计划抽取的中奖数量。",
+            "type": "number"
+          },
+          "mode": {
+            "description": "抽奖去重模式：1 为每个 CC98 账号最多中奖一次，2 为每个浙大通行证最多中奖一次。",
+            "type": "number"
+          },
+          "status": {
+            "description": "抽奖状态：1 为等待开奖，2 为已开奖，3 为异常中止。",
+            "type": "number"
+          },
+          "resultFloor": {
+            "description": "公布中奖名单的楼层；尚未开奖或异常中止时可能为 null。",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": {},
+        "description": "抽奖主题的开奖配置和状态。"
+      },
+      "MediaTopicContent": {
+        "type": "object",
+        "properties": {
+          "thumbnail": {
+            "description": "主题卡片使用的缩略图地址列表。",
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "video": {
+            "description": "主题卡片关联的视频地址。",
+            "type": "string"
+          },
+          "audio": {
+            "description": "主题卡片关联的音频地址。",
+            "type": "string"
+          },
+          "width": {
+            "description": "媒体内容的原始宽度。",
+            "type": "number"
+          },
+          "height": {
+            "description": "媒体内容的原始高度。",
+            "type": "number"
+          }
+        },
+        "additionalProperties": {},
+        "description": "主题列表卡片使用的媒体摘要。"
       },
       "NumericIdResponse": {
         "type": "integer",
@@ -8378,67 +8679,107 @@
         "type": "object",
         "properties": {
           "layer": {
+            "description": "标签层级序号，从 1 开始。",
             "type": "number"
           },
           "tags": {
+            "description": "该层级可选的标签列表。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Tag"
             }
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "按层级拆分的版面标签组。"
       },
       "BoardTagData": {
         "type": "object",
         "properties": {
           "layers": {
-            "type": "number"
+            "type": "number",
+            "description": "标签树层数：0 为无标签，1 为一层标签，2 为两层标签。"
           },
           "tags": {
             "type": "array",
-            "items": {}
+            "items": {
+              "$ref": "#/components/schemas/BoardTagNode"
+            },
+            "description": "版面的顶层标签节点。"
           }
         },
         "required": ["layers", "tags"],
+        "additionalProperties": {},
+        "description": "树状组织的版面标签配置。"
+      },
+      "BoardTagNode": {
+        "description": "版面标签树中的一个标签节点。",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "标签 ID。"
+          },
+          "name": {
+            "type": "string",
+            "description": "标签名称。"
+          },
+          "subTags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoardTagNode"
+            },
+            "description": "下一层子标签；叶子标签为空数组。"
+          }
+        },
+        "required": ["id", "name", "subTags"],
         "additionalProperties": {}
       },
       "BoardEventPage": {
         "type": "object",
         "properties": {
           "boardId": {
-            "type": "number"
+            "type": "number",
+            "description": "所查询的版面 ID。"
           },
           "count": {
-            "type": "number"
+            "type": "number",
+            "description": "符合条件的版务记录总数。"
           },
           "from": {
-            "type": "number"
+            "type": "number",
+            "description": "本页记录的起始偏移量。"
           },
           "size": {
-            "type": "number"
+            "type": "number",
+            "description": "本页请求的记录数。"
           },
           "boardEvents": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BoardEvent"
-            }
+            },
+            "description": "当前页的版务记录。"
           }
         },
         "required": ["boardId", "count", "from", "size", "boardEvents"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "版面管理记录分页结果。"
       },
       "BoardEvent": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "版务记录 ID。"
           },
           "topicId": {
-            "type": "number"
+            "type": "number",
+            "description": "版务操作关联的主题 ID。"
           },
           "boardId": {
-            "type": "number"
+            "type": "number",
+            "description": "发生版务操作的版面 ID。"
           },
           "targetUserName": {
             "anyOf": [
@@ -8448,25 +8789,39 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "版务操作对象的用户名；匿名或没有明确对象时可能为 null。"
           },
           "operatorUserName": {
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "执行版务操作的用户名；部分系统记录可能为 null。"
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "版务操作内容或原因。"
           },
           "time": {
-            "type": "string"
+            "type": "string",
+            "description": "版务操作发生时间。"
           },
           "ip": {
-            "type": "string"
+            "type": "string",
+            "description": "版务操作来源 IP。"
           },
           "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "关联内容是否已被删除。"
           },
           "isAnonymous": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "关联内容或操作对象是否匿名。"
           }
         },
         "required": [
@@ -8481,29 +8836,36 @@
           "isDeleted",
           "isAnonymous"
         ],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "版面管理操作记录。"
       },
       "BoardMutedUser": {
         "type": "object",
         "properties": {
           "userId": {
-            "type": "number"
+            "type": "number",
+            "description": "被版面禁言用户的 ID。"
           },
           "userName": {
-            "type": "string"
+            "type": "string",
+            "description": "被版面禁言用户的用户名。"
           },
           "expiredTime": {
-            "type": "string"
+            "type": "string",
+            "description": "版面禁言到期时间。"
           },
           "days": {
-            "type": "number"
+            "type": "number",
+            "description": "本次版面禁言的天数。"
           },
           "operatorUserName": {
-            "type": "string"
+            "type": "string",
+            "description": "执行版面禁言的用户名。"
           }
         },
         "required": ["userId", "userName", "expiredTime", "days", "operatorUserName"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "版面禁言中的用户记录。"
       },
       "Post": {
         "type": "object",
