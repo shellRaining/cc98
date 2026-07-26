@@ -223,10 +223,10 @@
     "method": "POST",
     "path": "/connect/token",
     "operationId": "postConnectToken",
-    "summary": "Login or refresh access token",
+    "summary": "申请或刷新访问令牌",
     "tags": ["OpenID"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-anonymous",
     "requiresAuthentication": false
   },
   {

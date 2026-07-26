@@ -24,12 +24,12 @@
     "/connect/token": {
       "post": {
         "operationId": "postConnectToken",
-        "summary": "Login or refresh access token",
-        "description": "The frontend calls this endpoint on the configured OpenID server.",
+        "summary": "申请或刷新访问令牌",
+        "description": "使用 CC98 用户名和密码申请 Access Token，或使用 Refresh Token 换取一组新 Token。该接口属于独立的 OpenID 服务，不使用论坛 API 的 Bearer 鉴权。",
         "tags": ["OpenID"],
         "security": [],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-anonymous",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,
@@ -43,7 +43,7 @@
         },
         "responses": {
           "200": {
-            "description": "Token response",
+            "description": "OpenID 服务签发的 Token",
             "content": {
               "application/json": {
                 "schema": {
@@ -52,12 +52,12 @@
               }
             }
           },
-          "default": {
-            "description": "API 错误码",
+          "400": {
+            "description": "Token 请求参数或授权凭据无效",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorCode"
+                  "$ref": "#/components/schemas/TokenErrorResponse"
                 }
               }
             }
@@ -77,6 +77,7 @@
             "$ref": "#/components/schemas/RefreshTokenRequest"
           }
         ],
+        "description": "OpenID Token 请求；由 grant_type 决定表单结构。",
         "type": "object",
         "discriminator": {
           "propertyName": "grant_type",
@@ -90,67 +91,127 @@
         "type": "object",
         "properties": {
           "client_id": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "OpenID 客户端 ID。"
           },
           "client_secret": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "OpenID 客户端密钥。",
+            "format": "password",
+            "writeOnly": true
           },
           "grant_type": {
             "type": "string",
-            "const": "password"
+            "const": "password",
+            "description": "授权模式，密码登录时固定为 password。"
           },
           "username": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "CC98 用户名。"
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "CC98 账号密码。",
+            "format": "password",
+            "writeOnly": true
           },
           "scope": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "请求的授权范围，多个 scope 使用空格分隔。"
           }
         },
-        "required": ["client_id", "client_secret", "grant_type", "username", "password", "scope"]
+        "required": ["client_id", "client_secret", "grant_type", "username", "password", "scope"],
+        "description": "使用用户名和密码申请 Token 的表单。"
       },
       "RefreshTokenRequest": {
         "type": "object",
         "properties": {
           "client_id": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "OpenID 客户端 ID。"
           },
           "client_secret": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "OpenID 客户端密钥。",
+            "format": "password",
+            "writeOnly": true
           },
           "grant_type": {
             "type": "string",
-            "const": "refresh_token"
+            "const": "refresh_token",
+            "description": "授权模式，刷新 Token 时固定为 refresh_token。"
           },
           "refresh_token": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "description": "上一次授权获得的 Refresh Token。",
+            "format": "password",
+            "writeOnly": true
           }
         },
-        "required": ["client_id", "client_secret", "grant_type", "refresh_token"]
+        "required": ["client_id", "client_secret", "grant_type", "refresh_token"],
+        "description": "使用 Refresh Token 换取新 Token 的表单。"
       },
       "TokenResponse": {
         "type": "object",
         "properties": {
           "access_token": {
-            "type": "string"
+            "type": "string",
+            "description": "访问 CC98 API 时使用的 Access Token。"
           },
           "expires_in": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Access Token 的有效期，单位为秒。"
           },
           "refresh_token": {
-            "type": "string"
+            "type": "string",
+            "description": "用于换取新 Token 的 Refresh Token。"
           },
           "token_type": {
+            "type": "string",
+            "description": "Token 类型，当前返回 Bearer。"
+          },
+          "scope": {
+            "description": "服务端实际授予的授权范围。",
+            "type": "string"
+          },
+          "id_token": {
+            "description": "OpenID Connect 身份令牌；刷新 Token 时可能返回。",
             "type": "string"
           }
         },
         "required": ["access_token", "expires_in", "refresh_token", "token_type"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "OpenID 服务签发的 Token。"
       },
-      "ErrorCode": {
-        "type": "string"
+      "TokenErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "OAuth 2.0 错误代码。"
+          },
+          "error_description": {
+            "description": "可读的错误原因说明。",
+            "type": "string"
+          },
+          "error_uri": {
+            "description": "错误说明文档地址。",
+            "type": "string"
+          }
+        },
+        "required": ["error"],
+        "additionalProperties": {},
+        "description": "OpenID Token 请求失败时的 OAuth 错误。"
       }
     },
     "securitySchemes": {
