@@ -2,43 +2,43 @@ import { z } from "zod";
 
 export const messageCountsSchema = z
   .looseObject({
-    systemCount: z.number().int().nonnegative(),
-    atCount: z.number().int().nonnegative(),
-    replyCount: z.number().int().nonnegative(),
-    messageCount: z.number().int().nonnegative(),
+    systemCount: z.number().int().nonnegative().meta({ description: "系统通知数量。" }),
+    atCount: z.number().int().nonnegative().meta({ description: "@ 提及通知数量。" }),
+    replyCount: z.number().int().nonnegative().meta({ description: "回复通知数量。" }),
+    messageCount: z.number().int().nonnegative().meta({ description: "私信数量。" }),
   })
-  .meta({ id: "MessageCounts" });
+  .meta({ id: "MessageCounts", description: "当前用户各类消息和通知的数量。" });
 export type MessageCounts = z.infer<typeof messageCountsSchema>;
 
 export const privateMessageSchema = z
   .looseObject({
-    id: z.number().optional(),
-    senderId: z.number().optional(),
-    receiverId: z.number().optional(),
-    content: z.string().optional(),
-    isRead: z.boolean().optional(),
-    time: z.string().optional(),
+    id: z.number().optional().meta({ description: "私信 ID。" }),
+    senderId: z.number().optional().meta({ description: "发信用户 ID。" }),
+    receiverId: z.number().optional().meta({ description: "收信用户 ID。" }),
+    content: z.string().optional().meta({ description: "私信正文。" }),
+    isRead: z.boolean().optional().meta({ description: "收信用户是否已读。" }),
+    time: z.string().optional().meta({ description: "私信发送时间。" }),
   })
-  .meta({ id: "PrivateMessage" });
+  .meta({ id: "PrivateMessage", description: "两个用户之间的一条私信。" });
 export type PrivateMessage = z.infer<typeof privateMessageSchema>;
 
 export const recentContactSchema = z
   .looseObject({
-    userId: z.number(),
-    senderId: z.number(),
-    lastContent: z.string(),
-    isRead: z.boolean(),
-    time: z.string(),
+    userId: z.number().meta({ description: "最近联系人用户 ID。" }),
+    senderId: z.number().meta({ description: "最近一条私信的发送者 ID。" }),
+    lastContent: z.string().meta({ description: "与该联系人的最近一条私信正文。" }),
+    isRead: z.boolean().meta({ description: "最近一条收到的私信是否已读。" }),
+    time: z.string().meta({ description: "最近一条私信的发送时间。" }),
   })
-  .meta({ id: "RecentContact" });
+  .meta({ id: "RecentContact", description: "最近私信联系人及会话摘要。" });
 export type RecentContact = z.infer<typeof recentContactSchema>;
 
 export const sendMessageRequestSchema = z
   .strictObject({
-    receiverId: z.number().int().positive(),
-    content: z.string().trim().min(1),
+    receiverId: z.number().int().positive().meta({ description: "收信用户 ID。" }),
+    content: z.string().trim().min(1).meta({ description: "私信正文。" }),
   })
-  .meta({ id: "SendMessageRequest" });
+  .meta({ id: "SendMessageRequest", description: "发送私信的请求。" });
 export type SendMessageRequest = z.infer<typeof sendMessageRequestSchema>;
 
 export const notificationPostBasicInfoSchema = z

@@ -4767,7 +4767,8 @@
     "/me": {
       "get": {
         "operationId": "getMe",
-        "summary": "Get current user",
+        "summary": "获取当前用户资料",
+        "description": "返回当前登录用户的完整资料，包括公开资料、账号状态、隐私设置、关注数据和仅本人可见的联系方式等字段。",
         "tags": ["Me"],
         "security": [
           {
@@ -4779,7 +4780,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Current user",
+            "description": "当前登录用户的详细资料",
             "content": {
               "application/json": {
                 "schema": {
@@ -4802,7 +4803,8 @@
       },
       "put": {
         "operationId": "putMe",
-        "summary": "Update current user profile",
+        "summary": "修改当前用户资料",
+        "description": "修改当前用户的邮箱、性别、个人简介、QQ、个性签名、生日或展示头衔。",
         "tags": ["Me"],
         "security": [
           {
@@ -4824,7 +4826,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "用户资料修改请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -4842,7 +4844,8 @@
     "/me/portrait": {
       "put": {
         "operationId": "putMePortrait",
-        "summary": "Update current user's portrait URL",
+        "summary": "修改当前用户头像",
+        "description": "将当前用户头像设置为请求体中的图片地址。上传本地头像时应先调用头像文件上传接口。",
         "tags": ["Me"],
         "security": [
           {
@@ -4857,14 +4860,16 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1,
+                "description": "新的头像图片地址。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "头像地址修改请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -4882,7 +4887,8 @@
     "/me/theme": {
       "put": {
         "operationId": "putMeTheme",
-        "summary": "Set current user's theme",
+        "summary": "设置当前用户主题皮肤",
+        "description": "保存当前用户选择的论坛主题皮肤编号。",
         "tags": ["Me"],
         "security": [
           {
@@ -4897,14 +4903,18 @@
             "in": "query",
             "name": "id",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题皮肤编号。"
             },
-            "required": true
+            "required": true,
+            "description": "主题皮肤编号。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题皮肤设置请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -4922,7 +4932,8 @@
     "/me/theme-setting": {
       "put": {
         "operationId": "putMeThemeSetting",
-        "summary": "Set current user's theme switching rules",
+        "summary": "设置当前用户明暗主题规则",
+        "description": "保存当前用户按时间切换主题或跟随浏览器明暗模式的规则。",
         "tags": ["Me"],
         "security": [
           {
@@ -4944,7 +4955,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "明暗主题规则设置请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -4962,7 +4973,8 @@
     "/me/topic-view-mode": {
       "put": {
         "operationId": "putMeTopicViewMode",
-        "summary": "Set current user's topic view mode",
+        "summary": "设置当前用户新帖浏览模式",
+        "description": "保存当前用户访问新帖页面时默认使用的浏览模式。",
         "tags": ["Me"],
         "security": [
           {
@@ -4977,14 +4989,29 @@
             "in": "query",
             "name": "mode",
             "schema": {
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 0
+                },
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                }
+              ],
+              "description": "新帖浏览模式：0 为经典列表，1 为卡片列表，2 为媒体模式。"
             },
-            "required": true
+            "required": true,
+            "description": "新帖浏览模式：0 为经典列表，1 为卡片列表，2 为媒体模式。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "新帖浏览模式设置请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5002,7 +5029,8 @@
     "/me/followee/{userId}": {
       "put": {
         "operationId": "putMeFolloweeUserId",
-        "summary": "Follow user",
+        "summary": "关注用户",
+        "description": "将指定用户加入当前用户的关注列表。",
         "tags": ["Me", "User"],
         "security": [
           {
@@ -5010,21 +5038,25 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "userId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要关注的用户 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要关注的用户 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "关注请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5040,7 +5072,8 @@
       },
       "delete": {
         "operationId": "deleteMeFolloweeUserId",
-        "summary": "Unfollow user",
+        "summary": "取消关注用户",
+        "description": "将指定用户从当前用户的关注列表中移除。",
         "tags": ["Me", "User"],
         "security": [
           {
@@ -5048,21 +5081,25 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "userId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要取消关注的用户 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要取消关注的用户 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "取消关注请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5080,7 +5117,8 @@
     "/me/followee": {
       "get": {
         "operationId": "getMeFollowee",
-        "summary": "Get followed user ids",
+        "summary": "获取当前用户关注的用户 ID",
+        "description": "分页返回当前用户关注的用户 ID。",
         "tags": ["Me", "User"],
         "security": [
           {
@@ -5095,28 +5133,37 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "User ids",
+            "description": "当前用户关注的用户 ID 列表",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "被关注用户 ID。"
                   }
                 }
               }
@@ -5138,7 +5185,8 @@
     "/me/follower": {
       "get": {
         "operationId": "getMeFollower",
-        "summary": "Get follower user ids",
+        "summary": "获取当前用户的粉丝 ID",
+        "description": "分页返回关注当前用户的用户 ID。",
         "tags": ["Me", "User"],
         "security": [
           {
@@ -5153,28 +5201,37 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "User ids",
+            "description": "关注当前用户的用户 ID 列表",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "粉丝用户 ID。"
                   }
                 }
               }
@@ -5196,7 +5253,8 @@
     "/me/followee/topic": {
       "get": {
         "operationId": "getMeFolloweeTopic",
-        "summary": "Get topic feed from followed users",
+        "summary": "获取关注用户的主题动态",
+        "description": "分页聚合当前用户所关注用户发表的主题。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5211,29 +5269,40 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           },
           {
             "in": "query",
             "name": "order",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "排序方式编号；当前前端使用 0，其他取值含义尚未确认。"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Topics",
+            "description": "关注用户最近发表的主题列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -5261,7 +5330,8 @@
     "/me/custom-board/{boardId}": {
       "put": {
         "operationId": "putMeCustomBoardBoardId",
-        "summary": "Follow board",
+        "summary": "关注版面",
+        "description": "将指定版面加入当前用户的关注版面列表。",
         "tags": ["Me", "Board"],
         "security": [
           {
@@ -5269,21 +5339,25 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要关注的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要关注的版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "关注版面请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5299,7 +5373,8 @@
       },
       "delete": {
         "operationId": "deleteMeCustomBoardBoardId",
-        "summary": "Unfollow board",
+        "summary": "取消关注版面",
+        "description": "将指定版面从当前用户的关注版面列表中移除。",
         "tags": ["Me", "Board"],
         "security": [
           {
@@ -5307,21 +5382,25 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要取消关注的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要取消关注的版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "取消关注版面请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5339,7 +5418,8 @@
     "/me/custom-board/topic": {
       "get": {
         "operationId": "getMeCustomBoardTopic",
-        "summary": "Get topic feed from followed boards",
+        "summary": "获取关注版面的主题动态",
+        "description": "分页聚合当前用户所关注版面中的主题。",
         "tags": ["Me", "Board", "Topic"],
         "security": [
           {
@@ -5354,22 +5434,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topics",
+            "description": "关注版面的主题列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -5397,7 +5485,8 @@
     "/me/favorite/{topicId}": {
       "put": {
         "operationId": "putMeFavoriteTopicId",
-        "summary": "Favorite topic",
+        "summary": "收藏主题",
+        "description": "将指定主题加入当前用户的默认收藏夹或指定收藏夹。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5405,28 +5494,35 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要收藏的主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要收藏的主题 ID。"
           },
           {
             "in": "query",
             "name": "groupid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "目标收藏夹 ID；省略时使用默认收藏夹。"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "收藏主题请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5442,7 +5538,8 @@
       },
       "delete": {
         "operationId": "deleteMeFavoriteTopicId",
-        "summary": "Unfavorite topic",
+        "summary": "取消收藏主题",
+        "description": "从当前用户的收藏中移除指定主题。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5450,21 +5547,25 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要取消收藏的主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要取消收藏的主题 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "取消收藏主题请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5482,7 +5583,8 @@
     "/me/favorite-topic-group": {
       "get": {
         "operationId": "getMeFavoriteTopicGroup",
-        "summary": "Get favorite topic groups",
+        "summary": "获取当前用户的主题收藏夹",
+        "description": "返回当前用户的默认收藏夹和自定义主题收藏夹。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5494,7 +5596,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Favorite groups",
+            "description": "当前用户的主题收藏夹分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -5517,7 +5619,8 @@
       },
       "post": {
         "operationId": "postMeFavoriteTopicGroup",
-        "summary": "Create favorite topic group",
+        "summary": "创建主题收藏夹",
+        "description": "为当前用户创建一个自定义主题收藏夹。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5525,7 +5628,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,
@@ -5535,17 +5638,20 @@
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "新收藏夹名称。"
                   }
                 },
-                "required": ["name"]
+                "required": ["name"],
+                "description": "创建主题收藏夹的请求。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "收藏夹创建请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5561,7 +5667,8 @@
       },
       "put": {
         "operationId": "putMeFavoriteTopicGroup",
-        "summary": "Update favorite topic group",
+        "summary": "重命名主题收藏夹",
+        "description": "修改当前用户指定主题收藏夹的名称。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5569,7 +5676,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,
@@ -5579,20 +5686,26 @@
                 "type": "object",
                 "properties": {
                   "id": {
-                    "type": "number"
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "需要重命名的收藏夹 ID。"
                   },
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "新的收藏夹名称。"
                   }
                 },
-                "required": ["id", "name"]
+                "required": ["id", "name"],
+                "description": "重命名主题收藏夹的请求。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "收藏夹重命名请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5608,7 +5721,8 @@
       },
       "delete": {
         "operationId": "deleteMeFavoriteTopicGroup",
-        "summary": "Delete favorite topic group",
+        "summary": "删除主题收藏夹",
+        "description": "删除当前用户指定的主题收藏夹。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5616,21 +5730,25 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "query",
             "name": "groupid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要删除的收藏夹 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要删除的收藏夹 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "收藏夹删除请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5648,7 +5766,8 @@
     "/me/recent-topic": {
       "get": {
         "operationId": "getMeRecentTopic",
-        "summary": "Get current user's recent topics",
+        "summary": "获取当前用户最近发表的主题",
+        "description": "分页返回当前用户最近发表的主题。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5663,22 +5782,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Recent topics",
+            "description": "当前用户最近发表的主题列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -5706,7 +5833,8 @@
     "/me/recent-post": {
       "get": {
         "operationId": "getMeRecentPost",
-        "summary": "Get current user's recent posts",
+        "summary": "获取当前用户最近发表的回复",
+        "description": "分页返回当前用户最近发表的回复。",
         "tags": ["Me", "Post"],
         "security": [
           {
@@ -5721,22 +5849,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Recent posts",
+            "description": "当前用户最近发表的回复分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -5761,7 +5897,8 @@
     "/me/hot-post": {
       "get": {
         "operationId": "getMeHotPost",
-        "summary": "Get current user's hot posts",
+        "summary": "获取当前用户的热门回复",
+        "description": "分页返回当前用户的热门回复，具体排序规则由服务端决定。",
         "tags": ["Me", "Post"],
         "security": [
           {
@@ -5776,22 +5913,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Hot posts",
+            "description": "当前用户的热门回复分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -5816,7 +5961,8 @@
     "/me/browsing-record": {
       "get": {
         "operationId": "getMeBrowsingRecord",
-        "summary": "Get current user's browsing history",
+        "summary": "获取当前用户的浏览历史",
+        "description": "分页返回当前用户最近浏览过的主题及最后浏览时间。",
         "tags": ["Me", "Topic"],
         "security": [
           {
@@ -5831,22 +5977,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Browsing records",
+            "description": "当前用户的主题浏览历史分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -5871,7 +6025,8 @@
     "/me/browsing-history": {
       "put": {
         "operationId": "putMeBrowsingHistory",
-        "summary": "Enable or disable browsing history",
+        "summary": "设置是否记录浏览历史",
+        "description": "开启或关闭当前用户的主题浏览历史记录。",
         "tags": ["Me"],
         "security": [
           {
@@ -5879,21 +6034,23 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-authenticated",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "query",
             "name": "enabled",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "是否启用主题浏览历史记录。"
             },
-            "required": true
+            "required": true,
+            "description": "是否启用主题浏览历史记录。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "浏览历史设置请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -5911,7 +6068,8 @@
     "/me/transfer-wealth": {
       "put": {
         "operationId": "putMeTransferWealth",
-        "summary": "Transfer wealth to users",
+        "summary": "向其他用户转账",
+        "description": "向一个或多个用户分别转出指定财富值。当前前端按转账金额的 10% 与 10 中的较大值计算每笔手续费。",
         "tags": ["Me", "User"],
         "security": [
           {
@@ -5933,7 +6091,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful receiver names",
+            "description": "完成转账的收款用户名列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -5958,7 +6116,8 @@
     "/me/unread-count": {
       "get": {
         "operationId": "getMeUnreadCount",
-        "summary": "Get unread message and notification counts",
+        "summary": "获取未读消息数量",
+        "description": "返回当前用户未读的系统通知、@ 提及、回复通知和私信数量。",
         "tags": ["Me", "Message"],
         "security": [
           {
@@ -5970,7 +6129,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Unread counts",
+            "description": "各类未读消息和通知数量",
             "content": {
               "application/json": {
                 "schema": {
@@ -5995,7 +6154,8 @@
     "/me/all-message-count": {
       "get": {
         "operationId": "getMeAllMessageCount",
-        "summary": "Get total message and notification counts",
+        "summary": "获取全部消息数量",
+        "description": "返回当前用户收到的系统通知、@ 提及、回复通知和私信总数。",
         "tags": ["Me", "Message"],
         "security": [
           {
@@ -6007,7 +6167,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Total counts",
+            "description": "各类消息和通知总数",
             "content": {
               "application/json": {
                 "schema": {
@@ -6032,7 +6192,8 @@
     "/me/signin": {
       "get": {
         "operationId": "getMeSignin",
-        "summary": "Get current user's signin state",
+        "summary": "获取当前用户签到状态",
+        "description": "返回当前用户今天是否已签到、连续签到天数、最近签到时间和最近一次奖励。",
         "tags": ["Signin", "Me"],
         "security": [
           {
@@ -6044,7 +6205,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Signin state",
+            "description": "当前用户的签到状态",
             "content": {
               "application/json": {
                 "schema": {
@@ -6067,8 +6228,8 @@
       },
       "post": {
         "operationId": "postMeSignin",
-        "summary": "Sign in today",
-        "description": "接口接受可选的签到留言；当前页面按旧站约定提交字符串，未填写时提交空字符串。",
+        "summary": "执行今日签到",
+        "description": "为当前用户执行当天签到，并可附带签到留言。",
         "tags": ["Signin", "Me"],
         "security": [
           {
@@ -6085,21 +6246,24 @@
               "schema": {
                 "anyOf": [
                   {
-                    "type": "string"
+                    "type": "string",
+                    "description": "可选的签到留言。"
                   },
                   {
                     "type": "object",
                     "properties": {},
-                    "additionalProperties": {}
+                    "additionalProperties": {},
+                    "description": "兼容旧接口的签到配置对象，内部字段含义尚未确认。"
                   }
-                ]
+                ],
+                "description": "可选签到内容；当前前端提交字符串，未填写时提交空字符串。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "签到请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -6117,7 +6281,8 @@
     "/me/signin-in-month": {
       "get": {
         "operationId": "getMeSigninInMonth",
-        "summary": "Get signin records in a month",
+        "summary": "获取指定月份的签到记录",
+        "description": "返回当前用户在指定年月中的每日签到和补签记录。",
         "tags": ["Signin", "Me"],
         "security": [
           {
@@ -6132,22 +6297,30 @@
             "in": "query",
             "name": "year",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "需要查询的年份。"
             },
-            "required": true
+            "required": true,
+            "description": "需要查询的年份。"
           },
           {
             "in": "query",
             "name": "month",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12,
+              "description": "需要查询的月份，取值为 1 至 12。"
             },
-            "required": true
+            "required": true,
+            "description": "需要查询的月份，取值为 1 至 12。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Signin records",
+            "description": "指定月份的签到记录列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6175,7 +6348,8 @@
     "/me/make-up-missed-signin": {
       "post": {
         "operationId": "postMeMakeUpMissedSignin",
-        "summary": "Make up missed signin",
+        "summary": "使用补签卡补签",
+        "description": "消耗当前用户的一张补签卡补签缺失日期，具体补签日期由服务端决定。",
         "tags": ["Signin", "Me"],
         "security": [
           {
@@ -6187,7 +6361,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Make-up result",
+            "description": "补签处理结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -6212,7 +6386,8 @@
     "/me/annual-review-2022": {
       "get": {
         "operationId": "getMeAnnualReview2022",
-        "summary": "Get annual review for 2022",
+        "summary": "获取 2022 年度报告",
+        "description": "返回当前用户 2022 年的发帖、互动、活跃版面和发言时段等年度统计。",
         "tags": ["AnnualReview", "Me"],
         "security": [
           {
@@ -6224,7 +6399,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Annual review",
+            "description": "当前用户的 2022 年度报告",
             "content": {
               "application/json": {
                 "schema": {
@@ -6249,7 +6424,8 @@
     "/me/annual-review-{year}": {
       "get": {
         "operationId": "getMeAnnualReviewYear",
-        "summary": "Get annual review by year",
+        "summary": "获取指定年份的年度报告",
+        "description": "返回当前用户指定年份的发帖、互动、活跃版面、点赞关联用户、抽卡和竞猜等年度统计。不同年份可能省略不适用的模块。",
         "tags": ["AnnualReview", "Me"],
         "security": [
           {
@@ -6264,14 +6440,18 @@
             "in": "path",
             "name": "year",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "年度报告对应年份。"
             },
-            "required": true
+            "required": true,
+            "description": "年度报告对应年份。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Annual review",
+            "description": "当前用户指定年份的年度报告",
             "content": {
               "application/json": {
                 "schema": {
@@ -6296,7 +6476,8 @@
     "/message/recent-contact-users": {
       "get": {
         "operationId": "getMessageRecentContactUsers",
-        "summary": "Get recent private-message contacts",
+        "summary": "获取最近私信联系人",
+        "description": "分页返回当前用户最近的私信联系人，以及每个会话的最近消息摘要。",
         "tags": ["Message"],
         "security": [
           {
@@ -6311,22 +6492,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Recent contacts",
+            "description": "最近私信联系人及会话摘要列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6354,7 +6543,8 @@
     "/message/user/{userId}": {
       "get": {
         "operationId": "getMessageUserUserId",
-        "summary": "Get private-message history with a user",
+        "summary": "获取与指定用户的私信记录",
+        "description": "分页返回当前用户与指定用户之间的双向私信记录。",
         "tags": ["Message"],
         "security": [
           {
@@ -6369,30 +6559,42 @@
             "in": "path",
             "name": "userId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "私信会话另一方的用户 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "私信会话另一方的用户 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Private messages",
+            "description": "当前用户与指定用户之间的私信列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -6420,8 +6622,8 @@
     "/message": {
       "post": {
         "operationId": "postMessage",
-        "summary": "Send private message",
-        "description": "The legacy frontend sends { receiverId, content } as JSON. The success response still needs live verification.",
+        "summary": "发送私信",
+        "description": "向指定用户发送一条私信。请求体包含收信用户 ID 和私信正文。",
         "tags": ["Message"],
         "security": [
           {
@@ -6443,7 +6645,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "私信发送请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -7402,19 +7604,30 @@
         "type": "object",
         "properties": {
           "userNames": {
+            "minItems": 1,
+            "maxItems": 10,
             "type": "array",
             "items": {
-              "type": "string"
-            }
+              "type": "string",
+              "minLength": 1,
+              "description": "收款用户名。"
+            },
+            "description": "收款用户名列表，一次最多包含 10 个用户。"
           },
           "wealth": {
-            "type": "number"
+            "type": "number",
+            "minimum": 10,
+            "description": "向每名收款人转出的财富值，不得小于 10。"
           },
           "reason": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "转账理由。"
           }
         },
-        "required": ["userNames", "wealth", "reason"]
+        "required": ["userNames", "wealth", "reason"],
+        "description": "向一个或多个用户转账的请求。"
       },
       "SendMessageRequest": {
         "type": "object",
@@ -7422,15 +7635,18 @@
           "receiverId": {
             "type": "integer",
             "exclusiveMinimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "收信用户 ID。"
           },
           "content": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "description": "私信正文。"
           }
         },
         "required": ["receiverId", "content"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "发送私信的请求。"
       },
       "FileUploadRequest": {
         "type": "object",
@@ -9555,18 +9771,23 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FavoriteTopicGroup"
-            }
+            },
+            "description": "收藏夹列表。"
           },
           "count": {
-            "type": "number"
+            "type": "number",
+            "description": "收藏夹总数。"
           },
           "from": {
-            "type": "number"
+            "type": "number",
+            "description": "本次结果的起始位置。"
           },
           "size": {
-            "type": "number"
+            "type": "number",
+            "description": "本次结果的分页大小。"
           },
           "extra": {
+            "description": "附加数据；没有附加数据时为 null。",
             "anyOf": [
               {},
               {
@@ -9575,29 +9796,36 @@
             ]
           },
           "errorCode": {
-            "type": "number"
+            "type": "number",
+            "description": "业务错误码；0 表示成功。"
           }
         },
         "required": ["data", "count", "from", "size", "errorCode"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "当前用户的主题收藏夹分页结果。"
       },
       "FavoriteTopicGroup": {
         "type": "object",
         "properties": {
           "id": {
+            "description": "收藏夹 ID；默认收藏夹通常为 0。",
             "type": "number"
           },
           "name": {
+            "description": "收藏夹名称。",
             "type": "string"
           },
           "count": {
+            "description": "收藏夹中的主题数量。",
             "type": "number"
           },
           "createTime": {
+            "description": "收藏夹创建时间。",
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "当前用户的主题收藏夹。"
       },
       "PagedPostResult": {
         "type": "object",
@@ -9668,8 +9896,10 @@
       "TransferWealthResponse": {
         "type": "array",
         "items": {
-          "type": "string"
-        }
+          "type": "string",
+          "description": "完成转账的收款用户名。"
+        },
+        "description": "成功收到转账的用户名列表。"
       },
       "MessageCounts": {
         "type": "object",
@@ -9677,49 +9907,59 @@
           "systemCount": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "系统通知数量。"
           },
           "atCount": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "@ 提及通知数量。"
           },
           "replyCount": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "回复通知数量。"
           },
           "messageCount": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "私信数量。"
           }
         },
         "required": ["systemCount", "atCount", "replyCount", "messageCount"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "当前用户各类消息和通知的数量。"
       },
       "SigninInfo": {
         "type": "object",
         "properties": {
           "hasSignedInToday": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "当前用户今天是否已经签到。"
           },
           "lastSignInCount": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "当前连续签到天数。"
           },
           "lastSignInTime": {
-            "type": "string"
+            "type": "string",
+            "description": "最近一次签到时间。"
           },
           "lastReward": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "最近一次签到获得的财富值。"
           }
         },
         "required": ["hasSignedInToday", "lastSignInCount", "lastSignInTime", "lastReward"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "当前用户的签到状态。"
       },
       "SigninRecord": {
         "type": "object",
@@ -9727,76 +9967,126 @@
           "year": {
             "type": "integer",
             "minimum": -9007199254740991,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "签到年份。"
           },
           "month": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 12
+            "maximum": 12,
+            "description": "签到月份。"
           },
           "day": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 31
+            "maximum": 31,
+            "description": "签到日期。"
           },
           "useCard": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "该日签到记录是否通过补签卡产生。"
           },
           "reward": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "该次签到获得的财富值。"
           }
         },
         "required": ["year", "month", "day", "useCard", "reward"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "某一天的签到记录。"
       },
       "MakeUpSigninResult": {
         "type": "object",
         "properties": {
           "errorCode": {
+            "description": "业务错误码；0 表示补签成功。",
             "type": "number"
           },
           "extra": {
+            "description": "补签失败时的错误说明。",
             "type": "string"
           },
           "data": {
+            "description": "补签后的连续签到天数。",
             "type": "number"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "使用补签卡后的处理结果。"
       },
       "AnnualReview": {
         "type": "object",
         "properties": {
+          "userId": {
+            "description": "年度报告所属用户 ID。",
+            "type": "number"
+          },
+          "year": {
+            "description": "年度报告对应年份。",
+            "type": "number"
+          },
           "postDay": {
+            "description": "该年有发言记录的天数。",
             "type": "number"
           },
           "topicCount": {
+            "description": "该年发表的主题数量。",
             "type": "number"
           },
           "replyCount": {
+            "description": "该年发表的回复数量。",
             "type": "number"
           },
           "hotTopicCount": {
+            "description": "该年产生的热门主题数量。",
             "type": "number"
           },
           "sendLikeCount": {
+            "description": "该年送出的点赞数量。",
             "type": "number"
           },
           "receiveLikeCount": {
+            "description": "该年收到的点赞数量。",
             "type": "number"
           },
           "sendRateCount": {
+            "description": "该年发起的评分次数。",
             "type": "number"
           },
           "receiveRateCount": {
+            "description": "该年收到的评分次数。",
             "type": "number"
           },
           "sofaCount": {
+            "description": "该年抢到沙发的次数。",
             "type": "number"
           },
+          "mostReplyTopicId": {
+            "description": "该年回复数最多的主题 ID；没有可用主题时为 null。",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "mostReplyTopicCount": {
+            "description": "回复数最多主题的回复数量；没有可用主题时为 null。",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mostViewTopicId": {
+            "description": "该年浏览量最高的主题 ID；没有可用主题时为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -9807,6 +10097,18 @@
             ]
           },
           "mostViewTopicCount": {
+            "description": "浏览量最高主题的浏览次数；没有可用主题时为 null。",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mostReceiveLikePostId": {
+            "description": "该年获赞最多的帖子 ID；没有可用帖子时为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -9817,6 +10119,7 @@
             ]
           },
           "mostReceiveLikePostCount": {
+            "description": "获赞最多帖子的点赞数量；没有可用帖子时为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -9827,6 +10130,7 @@
             ]
           },
           "board1": {
+            "description": "年度活跃度排名第一的版面 ID；没有数据时为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -9837,6 +10141,7 @@
             ]
           },
           "board2": {
+            "description": "年度活跃度排名第二的版面 ID；没有数据时为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -9847,6 +10152,7 @@
             ]
           },
           "board3": {
+            "description": "年度活跃度排名第三的版面 ID；没有数据时为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -9857,6 +10163,7 @@
             ]
           },
           "latestPostTime": {
+            "description": "该年最晚一次发言的时间；没有发言时为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -9867,22 +10174,28 @@
             ]
           },
           "postCount06": {
+            "description": "0:00 至 6:00 的发言数量。",
             "type": "number"
           },
           "postCount612": {
+            "description": "6:00 至 12:00 的发言数量。",
             "type": "number"
           },
           "postCount1218": {
+            "description": "12:00 至 18:00 的发言数量。",
             "type": "number"
           },
           "postCount1824": {
+            "description": "18:00 至 24:00 的发言数量。",
             "type": "number"
           },
           "achievement": {
+            "description": "年度成就或总结文案。",
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "旧版年度报告的基础统计数据。"
       },
       "AnnualReviewV2": {
         "allOf": [
@@ -9893,18 +10206,22 @@
             "type": "object",
             "properties": {
               "favoriteTopicCount": {
+                "description": "该年新增收藏的主题数量。",
                 "type": "number"
               },
               "mostSendLikeUser": {
+                "description": "当前用户送出点赞最多的用户。",
                 "$ref": "#/components/schemas/AnnualReviewUser"
               },
               "mostReceiveLikeUser": {
+                "description": "向当前用户送出点赞最多的用户。",
                 "$ref": "#/components/schemas/AnnualReviewUser"
               },
               "cardDraw": {
                 "$ref": "#/components/schemas/AnnualCardDraw"
               },
               "bet": {
+                "description": "年度竞猜统计；没有参与竞猜时可能为 null。",
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/AnnualBet"
@@ -9917,7 +10234,8 @@
             },
             "additionalProperties": {}
           }
-        ]
+        ],
+        "description": "新版年度报告统计数据。"
       },
       "AnnualReviewUser": {
         "anyOf": [
@@ -9925,15 +10243,19 @@
             "type": "object",
             "properties": {
               "userId": {
+                "description": "关联用户 ID。",
                 "type": "number"
               },
               "userName": {
+                "description": "关联用户名。",
                 "type": "string"
               },
               "portraitUrl": {
+                "description": "关联用户头像地址。",
                 "type": "string"
               },
               "likeCount": {
+                "description": "当前用户与该用户之间的相关点赞数量。",
                 "type": "number"
               }
             },
@@ -9942,104 +10264,133 @@
           {
             "type": "null"
           }
-        ]
+        ],
+        "description": "年度点赞统计关联的用户；没有数据时为 null。"
       },
       "AnnualCardDraw": {
         "type": "object",
         "properties": {
           "totalMysteryCount": {
+            "description": "该年获得的 Mystery 卡数量。",
             "type": "number"
           },
           "totalSSRCount": {
+            "description": "该年获得的 SSR 卡数量。",
             "type": "number"
           },
           "totalSRCount": {
+            "description": "该年获得的 SR 卡数量。",
             "type": "number"
           },
           "totalRCount": {
+            "description": "该年获得的 R 卡数量。",
             "type": "number"
           },
           "totalNCount": {
+            "description": "该年获得的 N 卡数量。",
             "type": "number"
           },
           "annualPayment": {
+            "description": "该年抽卡消耗的财富值。",
             "type": "number"
           },
           "annualCount": {
+            "description": "该年获得的卡片总数。",
             "type": "number"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "年度抽卡统计。"
       },
       "AnnualBet": {
         "type": "object",
         "properties": {
           "totalCount": {
+            "description": "该年参与竞猜的总次数。",
             "type": "number"
           },
           "winCount": {
+            "description": "竞猜获胜次数。",
             "type": "number"
           },
           "loseCount": {
+            "description": "竞猜失败次数。",
             "type": "number"
           },
           "drawCount": {
+            "description": "竞猜平局次数。",
             "type": "number"
           },
           "payment": {
+            "description": "竞猜投入的财富值。",
             "type": "number"
           },
           "profit": {
+            "description": "竞猜获得的净收益。",
             "type": "number"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "年度竞猜统计。"
       },
       "RecentContact": {
         "type": "object",
         "properties": {
           "userId": {
-            "type": "number"
+            "type": "number",
+            "description": "最近联系人用户 ID。"
           },
           "senderId": {
-            "type": "number"
+            "type": "number",
+            "description": "最近一条私信的发送者 ID。"
           },
           "lastContent": {
-            "type": "string"
+            "type": "string",
+            "description": "与该联系人的最近一条私信正文。"
           },
           "isRead": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "最近一条收到的私信是否已读。"
           },
           "time": {
-            "type": "string"
+            "type": "string",
+            "description": "最近一条私信的发送时间。"
           }
         },
         "required": ["userId", "senderId", "lastContent", "isRead", "time"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "最近私信联系人及会话摘要。"
       },
       "PrivateMessage": {
         "type": "object",
         "properties": {
           "id": {
+            "description": "私信 ID。",
             "type": "number"
           },
           "senderId": {
+            "description": "发信用户 ID。",
             "type": "number"
           },
           "receiverId": {
+            "description": "收信用户 ID。",
             "type": "number"
           },
           "content": {
+            "description": "私信正文。",
             "type": "string"
           },
           "isRead": {
+            "description": "收信用户是否已读。",
             "type": "boolean"
           },
           "time": {
+            "description": "私信发送时间。",
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "两个用户之间的一条私信。"
       },
       "SystemNotification": {
         "allOf": [
