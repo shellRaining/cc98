@@ -153,7 +153,7 @@ describe("API 契约基线", () => {
     ).toMatchObject({ floor: 20, boardId: 10 });
   });
 
-  it("Token operation 使用真实运行时契约和可展开的 OpenAPI 表单", () => {
+  it("Token operation 使用 grant_type 判别两种表单", () => {
     expect(
       tokenRequestSchema.safeParse({
         client_id: "client",
@@ -183,7 +183,14 @@ describe("API 契约基线", () => {
       openIdOpenapi.paths["/connect/token"].post.requestBody.content[
         "application/x-www-form-urlencoded"
       ].schema,
-    ).toEqual({ $ref: "#/components/schemas/TokenFormRequest" });
+    ).toEqual({ $ref: "#/components/schemas/TokenRequest" });
+    expect(openIdOpenapi.components.schemas.TokenRequest).toMatchObject({
+      oneOf: [
+        { $ref: "#/components/schemas/PasswordTokenRequest" },
+        { $ref: "#/components/schemas/RefreshTokenRequest" },
+      ],
+      discriminator: { propertyName: "grant_type" },
+    });
   });
 
   it("现有探测报告中的 operation 都属于 registry", () => {

@@ -36,7 +36,7 @@
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/TokenFormRequest"
+                "$ref": "#/components/schemas/TokenRequest"
               }
             }
           }
@@ -68,7 +68,25 @@
   },
   "components": {
     "schemas": {
-      "TokenFormRequest": {
+      "TokenRequest": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PasswordTokenRequest"
+          },
+          {
+            "$ref": "#/components/schemas/RefreshTokenRequest"
+          }
+        ],
+        "type": "object",
+        "discriminator": {
+          "propertyName": "grant_type",
+          "mapping": {
+            "password": "#/components/schemas/PasswordTokenRequest",
+            "refresh_token": "#/components/schemas/RefreshTokenRequest"
+          }
+        }
+      },
+      "PasswordTokenRequest": {
         "type": "object",
         "properties": {
           "client_id": {
@@ -79,7 +97,7 @@
           },
           "grant_type": {
             "type": "string",
-            "enum": ["password", "refresh_token"]
+            "const": "password"
           },
           "username": {
             "type": "string"
@@ -89,13 +107,28 @@
           },
           "scope": {
             "type": "string"
+          }
+        },
+        "required": ["client_id", "client_secret", "grant_type", "username", "password", "scope"]
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          },
+          "grant_type": {
+            "type": "string",
+            "const": "refresh_token"
           },
           "refresh_token": {
             "type": "string"
           }
         },
-        "required": ["client_id", "client_secret", "grant_type"],
-        "description": "OpenAPI 表单描述。密码登录填写 username、password、scope；刷新登录填写 refresh_token。"
+        "required": ["client_id", "client_secret", "grant_type", "refresh_token"]
       },
       "TokenResponse": {
         "type": "object",
