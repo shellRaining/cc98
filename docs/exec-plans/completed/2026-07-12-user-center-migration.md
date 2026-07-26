@@ -11,7 +11,7 @@
 本计划对照以下项目整理：
 
 - 当前项目 `/Users/shellraining/Documents/cc98`：Vue 3 SPA，作为实现目标。
-- 旧项目 `/Users/shellraining/Documents/Forum`：用于核对入口、分页和管理语义，不迁移 Redux、类组件或旧路由状态管理。
+- 旧论坛仓库（通过 `cc98.legacyForumPath` 定位）：用于核对入口、分页和管理语义，不迁移 Redux、类组件或旧路由状态管理。
 
 ## 目标
 
