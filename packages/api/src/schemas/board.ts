@@ -25,10 +25,10 @@ export type Board = z.infer<typeof boardSchema>;
 
 export const tagSchema = z
   .looseObject({
-    id: z.number().optional(),
-    name: z.string().optional(),
+    id: z.number().optional().meta({ description: "全局标签 ID。" }),
+    name: z.string().optional().meta({ description: "全局标签名称。" }),
   })
-  .meta({ id: "Tag" });
+  .meta({ id: "Tag", description: "可用于主题分类和筛选的全局标签。" });
 export type Tag = z.infer<typeof tagSchema>;
 
 export const boardEventSchema = z

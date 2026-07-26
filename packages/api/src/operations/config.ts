@@ -6,6 +6,7 @@ import {
   globalConfigSchema,
   indexSchema,
   indexColumnSchema,
+  serverTimeResponseSchema,
   tagSchema,
 } from "../schemas/index.ts";
 
@@ -14,12 +15,12 @@ export const configOperations = defineOperations([
     method: "GET",
     path: "/config/global",
     operationId: "getConfigGlobal",
-    summary: "Get global config",
+    summary: "获取论坛全局配置",
     tags: ["Config"],
     parameters: [],
     responses: {
       "200": {
-        description: "Global config",
+        description: "成功获取论坛全局运行配置与统计信息",
         contentType: "application/json",
         schema: globalConfigSchema,
       },
@@ -33,22 +34,25 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
-    description: "Some frontend call sites send Authorization and some do not.",
+    description:
+      "返回论坛运行状态、全站统计、公告、签到和生日活动等全局配置。后端可能省略部分字段或返回额外字段。",
   },
   {
     method: "PUT",
     path: "/config/global/announcement",
     operationId: "putConfigGlobalAnnouncement",
-    summary: "Update global announcement",
+    summary: "更新全站公告",
     tags: ["Config", "Moderation"],
     parameters: [],
     requestBody: {
       required: true,
       contentType: "application/json",
-      schema: z.object({ announcement: z.string() }),
+      schema: z.object({
+        announcement: z.string().meta({ description: "新的全站公告内容，使用 CC98 UBB 格式。" }),
+      }),
     },
     responses: {
-      "200": { description: "Success" },
+      "200": { description: "公告更新成功" },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -59,17 +63,18 @@ export const configOperations = defineOperations([
     risk: "destructive",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
+    description: "更新 `/config/global` 和首页聚合数据中展示的全站公告。需要站点管理权限。",
   },
   {
     method: "GET",
     path: "/config/global/advertisement",
     operationId: "getConfigGlobalAdvertisement",
-    summary: "Get homepage advertisements",
+    summary: "获取首页 Banner",
     tags: ["Config", "Index"],
     parameters: [],
     responses: {
       "200": {
-        description: "Advertisement list",
+        description: "成功获取当前可展示的首页 Banner 列表",
         contentType: "application/json",
         schema: z.array(indexColumnSchema),
       },
@@ -83,17 +88,19 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "返回当前访问者可见的首页 Banner。服务端根据启用状态、过期时间和登录状态筛选配置项。",
   },
   {
     method: "GET",
     path: "/config/global/advertisement/all",
     operationId: "getConfigGlobalAdvertisementAll",
-    summary: "Get all advertisement config items",
+    summary: "获取全部首页 Banner 配置",
     tags: ["Config", "Index", "Moderation"],
     parameters: [],
     responses: {
       "200": {
-        description: "Advertisement config list",
+        description: "成功获取全部首页 Banner 配置",
         contentType: "application/json",
         schema: z.array(indexColumnSchema),
       },
@@ -107,17 +114,19 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "供站点管理页面读取全部首页 Banner 配置，包括已停用、过期或仅对特定登录状态可见的记录。",
   },
   {
     method: "GET",
     path: "/config/global/special-offer/all",
     operationId: "getConfigGlobalSpecialOfferAll",
-    summary: "Get all special-offer config items",
+    summary: "获取全部福利优惠配置",
     tags: ["Config", "Index", "Moderation"],
     parameters: [],
     responses: {
       "200": {
-        description: "Special offer config list",
+        description: "成功获取全部福利优惠配置",
         contentType: "application/json",
         schema: z.array(indexColumnSchema),
       },
@@ -131,17 +140,19 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "供站点管理页面读取全部福利优惠配置，包括已停用、过期或仅对特定登录状态可见的记录。",
   },
   {
     method: "GET",
     path: "/config/global/alltag",
     operationId: "getConfigGlobalAlltag",
-    summary: "Get all global tags",
+    summary: "获取全部全局标签",
     tags: ["Config"],
     parameters: [],
     responses: {
       "200": {
-        description: "Tag list",
+        description: "成功获取全局标签 ID 与名称列表",
         contentType: "application/json",
         schema: z.array(tagSchema),
       },
@@ -155,19 +166,20 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
+    description: "返回主题分类和筛选使用的全局标签字典。",
   },
   {
     method: "GET",
     path: "/config/now",
     operationId: "getConfigNow",
-    summary: "Get server time",
+    summary: "获取服务器时间",
     tags: ["Config"],
     parameters: [],
     responses: {
       "200": {
-        description: "Current server time",
+        description: "成功获取服务器当前时间",
         contentType: "application/json",
-        schema: z.object({ data: z.string().optional() }),
+        schema: serverTimeResponseSchema,
       },
       default: {
         description: "API 错误码",
@@ -179,6 +191,8 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
+    description:
+      "返回论坛服务器当前时间。签到和补签页面使用该时间确定当前日期，避免客户端时钟或时区差异影响月份和日期判断。",
   },
   {
     method: "GET",
@@ -302,17 +316,17 @@ export const configOperations = defineOperations([
     method: "GET",
     path: "/config/global/all-user-title",
     operationId: "getConfigGlobalAllUserTitle",
-    summary: "Get all user display titles",
+    summary: "获取全部用户头衔",
     tags: ["Config", "User"],
     parameters: [],
     responses: {
       "200": {
-        description: "User display titles",
+        description: "成功获取全部用户头衔定义",
         contentType: "application/json",
         schema: z.array(displayTitleSchema),
       },
       default: {
-        description: "API error code",
+        description: "API 错误码",
         contentType: "application/json",
         schema: errorCodeSchema,
       },
@@ -321,5 +335,6 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
+    description: "返回用户头衔定义，用于匹配用户资料中的 displayTitleId 和 userTitleIds。",
   },
 ]);
