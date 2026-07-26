@@ -29,7 +29,7 @@
       "get": {
         "operationId": "getConfigGlobal",
         "summary": "获取论坛全局配置",
-        "description": "返回论坛运行状态、全站统计、公告、签到和生日活动等全局配置。接口可匿名访问；旧项目的部分调用会携带 Authorization，但响应不依赖登录态。后端可能省略部分字段或返回额外字段。",
+        "description": "返回论坛运行状态、全站统计、公告、签到和生日活动等全局配置。后端可能省略部分字段或返回额外字段。",
         "tags": ["Config"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -63,7 +63,7 @@
       "put": {
         "operationId": "putConfigGlobalAnnouncement",
         "summary": "更新全站公告",
-        "description": "更新 `/config/global` 和首页聚合数据中展示的全站公告。该操作需要站点管理权限；当前仅验证了未授权请求会被拒绝，成功响应尚未验证。",
+        "description": "更新 `/config/global` 和首页聚合数据中展示的全站公告。需要站点管理权限。",
         "tags": ["Config", "Moderation"],
         "security": [
           {
@@ -92,7 +92,7 @@
         },
         "responses": {
           "200": {
-            "description": "公告更新成功；成功响应体尚未验证"
+            "description": "公告更新成功"
           },
           "default": {
             "description": "API 错误码",
@@ -111,7 +111,7 @@
       "get": {
         "operationId": "getConfigGlobalAdvertisement",
         "summary": "获取首页 Banner",
-        "description": "返回面向首页访客展示的 Banner。服务端会根据启用状态、过期时间和访问者登录状态筛选配置项，因此响应通常不包含管理端可见的全部记录。",
+        "description": "返回当前访问者可见的首页 Banner。服务端根据启用状态、过期时间和登录状态筛选配置项。",
         "tags": ["Config", "Index"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -148,7 +148,7 @@
       "get": {
         "operationId": "getConfigGlobalAdvertisementAll",
         "summary": "获取全部首页 Banner 配置",
-        "description": "供站点管理页面读取全部首页 Banner 配置，包括可能已停用、过期或仅对特定登录状态可见的记录。当前仅验证了普通账号会收到权限拒绝，成功响应结构依据旧项目管理页面推断。",
+        "description": "供站点管理页面读取全部首页 Banner 配置，包括已停用、过期或仅对特定登录状态可见的记录。",
         "tags": ["Config", "Index", "Moderation"],
         "security": [
           {
@@ -160,7 +160,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "成功获取全部首页 Banner 配置；成功响应尚未验证",
+            "description": "成功获取全部首页 Banner 配置",
             "content": {
               "application/json": {
                 "schema": {
@@ -189,7 +189,7 @@
       "get": {
         "operationId": "getConfigGlobalSpecialOfferAll",
         "summary": "获取全部福利优惠配置",
-        "description": "供站点管理页面读取全部福利优惠配置，包括可能已停用、过期或仅对特定登录状态可见的记录。当前仅验证了普通账号会收到权限拒绝，成功响应结构依据旧项目管理页面推断。",
+        "description": "供站点管理页面读取全部福利优惠配置，包括已停用、过期或仅对特定登录状态可见的记录。",
         "tags": ["Config", "Index", "Moderation"],
         "security": [
           {
@@ -201,7 +201,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "成功获取全部福利优惠配置；成功响应尚未验证",
+            "description": "成功获取全部福利优惠配置",
             "content": {
               "application/json": {
                 "schema": {
@@ -230,7 +230,7 @@
       "get": {
         "operationId": "getConfigGlobalAlltag",
         "summary": "获取全部全局标签",
-        "description": "返回主题分类和筛选使用的全局标签字典。旧项目会缓存该列表，并用它在标签 ID 与名称之间进行转换。",
+        "description": "返回主题分类和筛选使用的全局标签字典。",
         "tags": ["Config"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -275,7 +275,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "成功获取服务器当前时间和业务状态包装",
+            "description": "成功获取服务器当前时间",
             "content": {
               "application/json": {
                 "schema": {
@@ -517,7 +517,7 @@
       "get": {
         "operationId": "getConfigGlobalAllUserTitle",
         "summary": "获取全部用户头衔",
-        "description": "返回用户头衔定义。客户端根据用户资料中的 displayTitleId 和 userTitleIds 展示可选头衔、用户徽章或头像框。",
+        "description": "返回用户头衔定义，用于匹配用户资料中的 displayTitleId 和 userTitleIds。",
         "tags": ["Config", "User"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -6827,7 +6827,7 @@
             "type": "boolean"
           },
           "time": {
-            "description": "配置项相关时间；原项目未使用，具体含义无法进一步推断。",
+            "description": "配置项相关时间，具体含义尚未确认。",
             "type": "string"
           },
           "orderWeight": {
@@ -7311,13 +7311,12 @@
             "type": "boolean"
           },
           "signInRewards": {
-            "description": "签到奖励配置项列表；原项目未解析其内部结构。",
+            "description": "签到奖励配置项列表；当前只能确认元素为对象，内部字段含义尚未确认。",
             "type": "array",
             "items": {
               "type": "object",
               "properties": {},
-              "additionalProperties": {},
-              "description": "签到奖励配置项；线上响应仅观察到空对象，内部字段目前无法推断。"
+              "additionalProperties": {}
             }
           },
           "signInTopicId": {
@@ -7336,18 +7335,18 @@
             "type": "number"
           },
           "anonymityAdmin": {
-            "description": "匿名发帖管理相关的用户名列表；原项目未使用，具体权限含义无法进一步推断。",
+            "description": "匿名发帖管理相关的用户名列表，具体权限含义尚未确认。",
             "type": "array",
             "items": {
               "type": "string"
             }
           },
           "lastBirthdayActivityDay": {
-            "description": "生日活动相关日期；原项目未使用，具体含义无法进一步推断。",
+            "description": "生日活动相关日期，具体含义尚未确认。",
             "type": "string"
           },
           "birthdayActivitySetting": {
-            "description": "生日活动配置字符串；原项目未解析其内部格式。",
+            "description": "生日活动配置字符串，内部格式尚未确认。",
             "type": "string"
           },
           "birthdayActivityIsEnabled": {
@@ -7600,15 +7599,15 @@
           },
           "type": {
             "type": "number",
-            "description": "用户头衔分类编号；原项目未使用，1、2、3 的具体含义无法推断。"
+            "description": "用户头衔分类编号，1、2、3 的具体含义尚未确认。"
           },
           "sortOrder": {
             "type": "number",
-            "description": "用户头衔排序值；原项目未显式排序，具体排序方向无法确认。"
+            "description": "用户头衔排序值。"
           },
           "iconUri": {
             "type": "string",
-            "description": "用户头衔图标地址；原项目未直接使用该字段展示头像框。"
+            "description": "用户头衔图标地址。"
           }
         },
         "required": ["id", "name", "type", "sortOrder", "iconUri"],

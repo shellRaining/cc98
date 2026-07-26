@@ -35,7 +35,7 @@ export const configOperations = defineOperations([
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "返回论坛运行状态、全站统计、公告、签到和生日活动等全局配置。接口可匿名访问；旧项目的部分调用会携带 Authorization，但响应不依赖登录态。后端可能省略部分字段或返回额外字段。",
+      "返回论坛运行状态、全站统计、公告、签到和生日活动等全局配置。后端可能省略部分字段或返回额外字段。",
   },
   {
     method: "PUT",
@@ -52,7 +52,7 @@ export const configOperations = defineOperations([
       }),
     },
     responses: {
-      "200": { description: "公告更新成功；成功响应体尚未验证" },
+      "200": { description: "公告更新成功" },
       default: {
         description: "API 错误码",
         contentType: "application/json",
@@ -63,8 +63,7 @@ export const configOperations = defineOperations([
     risk: "destructive",
     verificationStatus: "unknown",
     sources: ["legacy-openapi", "live-probe"],
-    description:
-      "更新 `/config/global` 和首页聚合数据中展示的全站公告。该操作需要站点管理权限；当前仅验证了未授权请求会被拒绝，成功响应尚未验证。",
+    description: "更新 `/config/global` 和首页聚合数据中展示的全站公告。需要站点管理权限。",
   },
   {
     method: "GET",
@@ -90,7 +89,7 @@ export const configOperations = defineOperations([
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "返回面向首页访客展示的 Banner。服务端会根据启用状态、过期时间和访问者登录状态筛选配置项，因此响应通常不包含管理端可见的全部记录。",
+      "返回当前访问者可见的首页 Banner。服务端根据启用状态、过期时间和登录状态筛选配置项。",
   },
   {
     method: "GET",
@@ -101,7 +100,7 @@ export const configOperations = defineOperations([
     parameters: [],
     responses: {
       "200": {
-        description: "成功获取全部首页 Banner 配置；成功响应尚未验证",
+        description: "成功获取全部首页 Banner 配置",
         contentType: "application/json",
         schema: z.array(indexColumnSchema),
       },
@@ -116,7 +115,7 @@ export const configOperations = defineOperations([
     verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "供站点管理页面读取全部首页 Banner 配置，包括可能已停用、过期或仅对特定登录状态可见的记录。当前仅验证了普通账号会收到权限拒绝，成功响应结构依据旧项目管理页面推断。",
+      "供站点管理页面读取全部首页 Banner 配置，包括已停用、过期或仅对特定登录状态可见的记录。",
   },
   {
     method: "GET",
@@ -127,7 +126,7 @@ export const configOperations = defineOperations([
     parameters: [],
     responses: {
       "200": {
-        description: "成功获取全部福利优惠配置；成功响应尚未验证",
+        description: "成功获取全部福利优惠配置",
         contentType: "application/json",
         schema: z.array(indexColumnSchema),
       },
@@ -142,7 +141,7 @@ export const configOperations = defineOperations([
     verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "供站点管理页面读取全部福利优惠配置，包括可能已停用、过期或仅对特定登录状态可见的记录。当前仅验证了普通账号会收到权限拒绝，成功响应结构依据旧项目管理页面推断。",
+      "供站点管理页面读取全部福利优惠配置，包括已停用、过期或仅对特定登录状态可见的记录。",
   },
   {
     method: "GET",
@@ -167,8 +166,7 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
-    description:
-      "返回主题分类和筛选使用的全局标签字典。旧项目会缓存该列表，并用它在标签 ID 与名称之间进行转换。",
+    description: "返回主题分类和筛选使用的全局标签字典。",
   },
   {
     method: "GET",
@@ -179,7 +177,7 @@ export const configOperations = defineOperations([
     parameters: [],
     responses: {
       "200": {
-        description: "成功获取服务器当前时间和业务状态包装",
+        description: "成功获取服务器当前时间",
         contentType: "application/json",
         schema: serverTimeResponseSchema,
       },
@@ -337,7 +335,6 @@ export const configOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
-    description:
-      "返回用户头衔定义。客户端根据用户资料中的 displayTitleId 和 userTitleIds 展示可选头衔、用户徽章或头像框。",
+    description: "返回用户头衔定义，用于匹配用户资料中的 displayTitleId 和 userTitleIds。",
   },
 ]);

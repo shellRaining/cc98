@@ -14,13 +14,9 @@ export const globalConfigSchema = z
     announcement: z.string().optional().meta({ description: "全站公告内容，使用 CC98 UBB 格式。" }),
     signInEnabled: z.boolean().optional().meta({ description: "论坛签到功能是否开启。" }),
     signInRewards: z
-      .array(
-        z.looseObject({}).meta({
-          description: "签到奖励配置项；线上响应仅观察到空对象，内部字段目前无法推断。",
-        }),
-      )
+      .array(z.looseObject({}))
       .optional()
-      .meta({ description: "签到奖励配置项列表；原项目未解析其内部结构。" }),
+      .meta({ description: "签到奖励配置项列表；当前只能确认元素为对象，内部字段含义尚未确认。" }),
     signInTopicId: z
       .number()
       .nullable()
@@ -28,16 +24,16 @@ export const globalConfigSchema = z
       .meta({ description: "签到主题 ID；未配置签到主题时可能为空。" }),
     todayCount: z.number().optional().meta({ description: "论坛今日发帖数。" }),
     anonymityAdmin: z.array(z.string()).optional().meta({
-      description: "匿名发帖管理相关的用户名列表；原项目未使用，具体权限含义无法进一步推断。",
+      description: "匿名发帖管理相关的用户名列表，具体权限含义尚未确认。",
     }),
     lastBirthdayActivityDay: z
       .string()
       .optional()
-      .meta({ description: "生日活动相关日期；原项目未使用，具体含义无法进一步推断。" }),
+      .meta({ description: "生日活动相关日期，具体含义尚未确认。" }),
     birthdayActivitySetting: z
       .string()
       .optional()
-      .meta({ description: "生日活动配置字符串；原项目未解析其内部格式。" }),
+      .meta({ description: "生日活动配置字符串，内部格式尚未确认。" }),
     birthdayActivityIsEnabled: z.boolean().optional().meta({ description: "生日活动是否开启。" }),
   })
   .meta({
@@ -94,10 +90,7 @@ export const indexColumnSchema = z
       .optional()
       .meta({ description: "展示图片地址；不需要图片的栏目中可能为 null。" }),
     enable: z.boolean().optional().meta({ description: "配置项是否启用。" }),
-    time: z
-      .string()
-      .optional()
-      .meta({ description: "配置项相关时间；原项目未使用，具体含义无法进一步推断。" }),
+    time: z.string().optional().meta({ description: "配置项相关时间，具体含义尚未确认。" }),
     orderWeight: z
       .number()
       .optional()
@@ -139,15 +132,9 @@ export const displayTitleSchema = z
   .looseObject({
     id: z.number().meta({ description: "用户头衔 ID，对应用户资料中的 displayTitleId。" }),
     name: z.string().meta({ description: "用户头衔的展示名称。" }),
-    type: z
-      .number()
-      .meta({ description: "用户头衔分类编号；原项目未使用，1、2、3 的具体含义无法推断。" }),
-    sortOrder: z
-      .number()
-      .meta({ description: "用户头衔排序值；原项目未显式排序，具体排序方向无法确认。" }),
-    iconUri: z
-      .string()
-      .meta({ description: "用户头衔图标地址；原项目未直接使用该字段展示头像框。" }),
+    type: z.number().meta({ description: "用户头衔分类编号，1、2、3 的具体含义尚未确认。" }),
+    sortOrder: z.number().meta({ description: "用户头衔排序值。" }),
+    iconUri: z.string().meta({ description: "用户头衔图标地址。" }),
   })
   .meta({ id: "DisplayTitle", description: "可授予用户并在个人资料中展示的头衔。" });
 export type DisplayTitle = z.infer<typeof displayTitleSchema>;
