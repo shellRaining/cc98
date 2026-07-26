@@ -28,8 +28,8 @@
     "/config/global": {
       "get": {
         "operationId": "getConfigGlobal",
-        "summary": "Get global config",
-        "description": "Some frontend call sites send Authorization and some do not.",
+        "summary": "获取论坛全局配置",
+        "description": "返回论坛运行状态、全站统计、公告、签到和生日活动等全局配置。接口可匿名访问；旧项目的部分调用会携带 Authorization，但响应不依赖登录态。后端可能省略部分字段或返回额外字段。",
         "tags": ["Config"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -37,7 +37,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Global config",
+            "description": "成功获取论坛全局运行配置与统计信息",
             "content": {
               "application/json": {
                 "schema": {
@@ -62,7 +62,8 @@
     "/config/global/announcement": {
       "put": {
         "operationId": "putConfigGlobalAnnouncement",
-        "summary": "Update global announcement",
+        "summary": "更新全站公告",
+        "description": "更新 `/config/global` 和首页聚合数据中展示的全站公告。该操作需要站点管理权限；当前仅验证了未授权请求会被拒绝，成功响应尚未验证。",
         "tags": ["Config", "Moderation"],
         "security": [
           {
@@ -80,7 +81,8 @@
                 "type": "object",
                 "properties": {
                   "announcement": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "新的全站公告内容，使用 CC98 UBB 格式。"
                   }
                 },
                 "required": ["announcement"]
@@ -90,7 +92,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "公告更新成功；成功响应体尚未验证"
           },
           "default": {
             "description": "API 错误码",
@@ -108,7 +110,8 @@
     "/config/global/advertisement": {
       "get": {
         "operationId": "getConfigGlobalAdvertisement",
-        "summary": "Get homepage advertisements",
+        "summary": "获取首页 Banner",
+        "description": "返回面向首页访客展示的 Banner。服务端会根据启用状态、过期时间和访问者登录状态筛选配置项，因此响应通常不包含管理端可见的全部记录。",
         "tags": ["Config", "Index"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -116,7 +119,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Advertisement list",
+            "description": "成功获取当前可展示的首页 Banner 列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -144,7 +147,8 @@
     "/config/global/advertisement/all": {
       "get": {
         "operationId": "getConfigGlobalAdvertisementAll",
-        "summary": "Get all advertisement config items",
+        "summary": "获取全部首页 Banner 配置",
+        "description": "供站点管理页面读取全部首页 Banner 配置，包括可能已停用、过期或仅对特定登录状态可见的记录。当前仅验证了普通账号会收到权限拒绝，成功响应结构依据旧项目管理页面推断。",
         "tags": ["Config", "Index", "Moderation"],
         "security": [
           {
@@ -156,7 +160,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Advertisement config list",
+            "description": "成功获取全部首页 Banner 配置；成功响应尚未验证",
             "content": {
               "application/json": {
                 "schema": {
@@ -184,7 +188,8 @@
     "/config/global/special-offer/all": {
       "get": {
         "operationId": "getConfigGlobalSpecialOfferAll",
-        "summary": "Get all special-offer config items",
+        "summary": "获取全部福利优惠配置",
+        "description": "供站点管理页面读取全部福利优惠配置，包括可能已停用、过期或仅对特定登录状态可见的记录。当前仅验证了普通账号会收到权限拒绝，成功响应结构依据旧项目管理页面推断。",
         "tags": ["Config", "Index", "Moderation"],
         "security": [
           {
@@ -196,7 +201,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Special offer config list",
+            "description": "成功获取全部福利优惠配置；成功响应尚未验证",
             "content": {
               "application/json": {
                 "schema": {
@@ -224,7 +229,8 @@
     "/config/global/alltag": {
       "get": {
         "operationId": "getConfigGlobalAlltag",
-        "summary": "Get all global tags",
+        "summary": "获取全部全局标签",
+        "description": "返回主题分类和筛选使用的全局标签字典。旧项目会缓存该列表，并用它在标签 ID 与名称之间进行转换。",
         "tags": ["Config"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -232,7 +238,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Tag list",
+            "description": "成功获取全局标签 ID 与名称列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -260,7 +266,8 @@
     "/config/now": {
       "get": {
         "operationId": "getConfigNow",
-        "summary": "Get server time",
+        "summary": "获取服务器时间",
+        "description": "返回论坛服务器当前时间。签到和补签页面使用该时间确定当前日期，避免客户端时钟或时区差异影响月份和日期判断。",
         "tags": ["Config"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -268,7 +275,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "Current server time",
+            "description": "成功获取服务器当前时间和业务状态包装",
             "content": {
               "application/json": {
                 "schema": {
@@ -509,7 +516,8 @@
     "/config/global/all-user-title": {
       "get": {
         "operationId": "getConfigGlobalAllUserTitle",
-        "summary": "Get all user display titles",
+        "summary": "获取全部用户头衔",
+        "description": "返回用户头衔定义。客户端根据用户资料中的 displayTitleId 和 userTitleIds 展示可选头衔、用户徽章或头像框。",
         "tags": ["Config", "User"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -517,7 +525,7 @@
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
-            "description": "User display titles",
+            "description": "成功获取全部用户头衔定义",
             "content": {
               "application/json": {
                 "schema": {
@@ -530,7 +538,7 @@
             }
           },
           "default": {
-            "description": "API error code",
+            "description": "API 错误码",
             "content": {
               "application/json": {
                 "schema": {
@@ -6777,15 +6785,19 @@
         "type": "object",
         "properties": {
           "id": {
+            "description": "首页栏目配置项 ID。",
             "type": "number"
           },
           "type": {
+            "description": "首页栏目类型：1 为推荐阅读，2 为推荐功能，3 为校园新闻，4 为首页 Banner，7 为福利优惠。",
             "type": "number"
           },
           "title": {
+            "description": "展示标题；Banner 中用作图片的简短说明。",
             "type": "string"
           },
           "content": {
+            "description": "展示内容或摘要，主要用于推荐阅读；不适用时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -6796,9 +6808,11 @@
             ]
           },
           "url": {
+            "description": "点击配置项后跳转的站内或站外地址。",
             "type": "string"
           },
           "imageUrl": {
+            "description": "展示图片地址；不需要图片的栏目中可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -6809,18 +6823,23 @@
             ]
           },
           "enable": {
+            "description": "配置项是否启用。",
             "type": "boolean"
           },
           "time": {
+            "description": "配置项相关时间；原项目未使用，具体含义无法进一步推断。",
             "type": "string"
           },
           "orderWeight": {
+            "description": "排序权重；推荐阅读和推荐功能按较大的权重优先展示。",
             "type": "number"
           },
           "days": {
+            "description": "从保存时起计算的有效天数，主要用于 Banner 和福利优惠。",
             "type": "number"
           },
           "expiredTime": {
+            "description": "配置项的过期时间；没有过期时间时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -6831,10 +6850,12 @@
             ]
           },
           "visibility": {
+            "description": "可见性：0 为全部可见，1 为仅登录用户可见，2 为仅未登录用户可见。",
             "type": "number"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "首页运营栏目配置项，由类型决定实际使用的字段。"
       },
       "CreateTopicRequest": {
         "type": "object",
@@ -7245,10 +7266,62 @@
       "GlobalConfig": {
         "type": "object",
         "properties": {
-          "announcement": {
+          "maxOnlineCount": {
+            "description": "论坛历史最高同时在线人数。",
+            "type": "number"
+          },
+          "maxOnlineDate": {
+            "description": "论坛达到历史最高在线人数的时间。",
             "type": "string"
           },
+          "topicCount": {
+            "description": "论坛主题总数。",
+            "type": "number"
+          },
+          "postCount": {
+            "description": "论坛回复总数。",
+            "type": "number"
+          },
+          "userCount": {
+            "description": "论坛注册用户总数。",
+            "type": "number"
+          },
+          "lastUserName": {
+            "description": "最新注册用户的用户名。",
+            "type": "string"
+          },
+          "maxPostCount": {
+            "description": "论坛历史最高单日发帖数。",
+            "type": "number"
+          },
+          "maxPostDate": {
+            "description": "论坛达到历史最高单日发帖数的日期。",
+            "type": "string"
+          },
+          "isMaintaining": {
+            "description": "论坛是否处于维护状态。",
+            "type": "boolean"
+          },
+          "announcement": {
+            "description": "全站公告内容，使用 CC98 UBB 格式。",
+            "type": "string"
+          },
+          "signInEnabled": {
+            "description": "论坛签到功能是否开启。",
+            "type": "boolean"
+          },
+          "signInRewards": {
+            "description": "签到奖励配置项列表；原项目未解析其内部结构。",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": {},
+              "description": "签到奖励配置项；线上响应仅观察到空对象，内部字段目前无法推断。"
+            }
+          },
           "signInTopicId": {
+            "description": "签到主题 ID；未配置签到主题时可能为空。",
             "anyOf": [
               {
                 "type": "number"
@@ -7257,9 +7330,33 @@
                 "type": "null"
               }
             ]
+          },
+          "todayCount": {
+            "description": "论坛今日发帖数。",
+            "type": "number"
+          },
+          "anonymityAdmin": {
+            "description": "匿名发帖管理相关的用户名列表；原项目未使用，具体权限含义无法进一步推断。",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastBirthdayActivityDay": {
+            "description": "生日活动相关日期；原项目未使用，具体含义无法进一步推断。",
+            "type": "string"
+          },
+          "birthdayActivitySetting": {
+            "description": "生日活动配置字符串；原项目未解析其内部格式。",
+            "type": "string"
+          },
+          "birthdayActivityIsEnabled": {
+            "description": "生日活动是否开启。",
+            "type": "boolean"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "论坛全局运行配置与统计信息。后端可能省略部分字段，并可能增加未声明字段。"
       },
       "ErrorCode": {
         "type": "string"
@@ -7268,30 +7365,37 @@
         "type": "object",
         "properties": {
           "id": {
+            "description": "全局标签 ID。",
             "type": "number"
           },
           "name": {
+            "description": "全局标签名称。",
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "可用于主题分类和筛选的全局标签。"
       },
       "ServerTimeResponse": {
         "type": "object",
         "properties": {
           "data": {
-            "type": "string"
+            "type": "string",
+            "description": "服务器当前时间字符串。"
           },
           "extra": {
-            "type": "null"
+            "type": "null",
+            "description": "成功响应的附加数据；当前固定为 null。"
           },
           "errorCode": {
             "type": "number",
-            "const": 0
+            "const": 0,
+            "description": "业务错误码；0 表示成功。"
           }
         },
         "required": ["data", "extra", "errorCode"],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "服务器时间接口的成功响应包装。"
       },
       "Index": {
         "type": "object",
@@ -7487,23 +7591,29 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "用户头衔 ID，对应用户资料中的 displayTitleId。"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "用户头衔的展示名称。"
           },
           "type": {
-            "type": "number"
+            "type": "number",
+            "description": "用户头衔分类编号；原项目未使用，1、2、3 的具体含义无法推断。"
           },
           "sortOrder": {
-            "type": "number"
+            "type": "number",
+            "description": "用户头衔排序值；原项目未显式排序，具体排序方向无法确认。"
           },
           "iconUri": {
-            "type": "string"
+            "type": "string",
+            "description": "用户头衔图标地址；原项目未直接使用该字段展示头像框。"
           }
         },
         "required": ["id", "name", "type", "sortOrder", "iconUri"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "可授予用户并在个人资料中展示的头衔。"
       },
       "BoardGroup": {
         "type": "object",
