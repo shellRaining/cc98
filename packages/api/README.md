@@ -71,6 +71,8 @@ Vercel 项目接入仓库后，OpenAPI JSON 的预期生产域名为 `https://cc
 
 Apifox 应为两份规范分别创建 URL 数据源并选择不同的目标模块，不需要仓库侧的 Apifox CLI 同步。
 
+第一次配置 Apifox 时，可以按[用 Apifox 调试 CC98 API](https://cc98-docs.vercel.app/developer/apifox)完成双模块、前置 URL、Token 提取和 Bearer 鉴权设置。
+
 独立 Vercel 项目的 Root Directory 设置为 `packages/api/openapi`。部署不安装依赖，也不生成页面，只把仓库中已经通过一致性检查的两份 JSON 复制到发布目录。
 
 ```ts

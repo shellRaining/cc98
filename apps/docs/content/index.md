@@ -4,7 +4,7 @@ layout: home
 hero:
   name: CC98 帮助中心
   text: 论坛使用说明
-  tagline: 按实际任务查找登录、浏览、发帖、消息、账号和外观设置说明。
+  tagline: 按实际任务查找论坛使用说明，也可以导入 OpenAPI 调试 CC98 接口。
   actions:
     - theme: brand
       text: 开始使用
@@ -26,4 +26,8 @@ features:
     details: 查看通知和私信，调整皮肤、明暗模式和日夜切换。
     link: /messages/overview
     linkText: 查看消息说明
+  - title: API 调试
+    details: 在 Apifox 中导入主站 API 和 OpenID，并自动复用登录 Token。
+    link: /developer/apifox
+    linkText: 查看调试教程
 ---

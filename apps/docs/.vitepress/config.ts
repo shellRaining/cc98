@@ -6,7 +6,7 @@ const siteUrl = process.env.DOCS_SITE_URL || "https://cc98-docs.vercel.app";
 export default defineConfig({
   lang: "zh-CN",
   title: "CC98 帮助中心",
-  description: "登录、浏览、发帖、消息、账号和外观设置说明。",
+  description: "登录、浏览、发帖、消息、账号、外观设置和 API 调试说明。",
   srcDir: "content",
   outDir: "dist",
   vite: { publicDir: resolve(import.meta.dirname, "../public") },
@@ -18,6 +18,7 @@ export default defineConfig({
     nav: [
       { text: "使用指南", link: "/guide/getting-started" },
       { text: "常见问题", link: "/faq/troubleshooting" },
+      { text: "API 调试", link: "/developer/apifox" },
       { text: "返回论坛", link: "https://www.cc98.org" },
     ],
     sidebar: [
@@ -45,6 +46,10 @@ export default defineConfig({
           { text: "调整皮肤和明暗模式", link: "/appearance/theme" },
           { text: "常见问题", link: "/faq/troubleshooting" },
         ],
+      },
+      {
+        text: "开发与调试",
+        items: [{ text: "用 Apifox 调试 CC98 API", link: "/developer/apifox" }],
       },
     ],
     search: { provider: "local" },
