@@ -182,43 +182,59 @@ export type Topic = z.infer<typeof topicSchema>;
 
 export const recommendedTopicSchema = z
   .looseObject({
-    topic: topicSchema.optional(),
-    content: z.string().nullable().optional(),
+    topic: topicSchema.optional().meta({ description: "推荐的主题概要。" }),
+    content: z
+      .string()
+      .nullable()
+      .optional()
+      .meta({ description: "推荐主题的正文摘要；没有可用摘要时可能为 null。" }),
   })
-  .meta({ id: "RecommendedTopic" });
+  .meta({ id: "RecommendedTopic", description: "随机推荐主题及其正文摘要。" });
 export type RecommendedTopic = z.infer<typeof recommendedTopicSchema>;
 
 export const topicPagedResultSchema = z
   .object({
-    topics: z.array(topicSchema).optional(),
-    count: z.number().optional(),
+    topics: z.array(topicSchema).optional().meta({ description: "当前页的主题列表。" }),
+    count: z.number().optional().meta({ description: "符合条件的主题总数。" }),
   })
-  .meta({ id: "TopicPagedResult" });
+  .meta({ id: "TopicPagedResult", description: "主题分页结果。" });
 export type TopicPagedResult = z.infer<typeof topicPagedResultSchema>;
 
 export const pagedTopicResultDataSchema = z
   .looseObject({
-    data: z.array(topicSchema),
-    count: z.number(),
-    from: z.number(),
-    size: z.number(),
-    extra: z.unknown().nullable().optional(),
-    errorCode: z.number(),
+    data: z.array(topicSchema).meta({ description: "当前页的主题列表。" }),
+    count: z.number().meta({ description: "符合条件的主题总数。" }),
+    from: z.number().meta({ description: "本次结果的起始位置。" }),
+    size: z.number().meta({ description: "本次结果的分页大小。" }),
+    extra: z
+      .unknown()
+      .nullable()
+      .optional()
+      .meta({ description: "附加数据；没有附加数据时为 null。" }),
+    errorCode: z.number().meta({ description: "业务错误码；0 表示成功。" }),
   })
-  .meta({ id: "PagedTopicResultData" });
+  .meta({ id: "PagedTopicResultData", description: "包含统一分页元数据的主题列表。" });
 export type PagedTopicResultData = z.infer<typeof pagedTopicResultDataSchema>;
 
 export const createPostRequestSchema = z
   .object({
-    content: z.string(),
-    contentType: postContentTypeSchema,
-    title: z.string(),
-    parentId: z.number().optional(),
-    isAnonymous: z.boolean(),
-    notifyAllReplier: z.boolean().optional(),
-    clientType: z.number(),
+    content: z.string().meta({ description: "回复正文，格式由 contentType 决定。" }),
+    contentType: postContentTypeSchema.meta({ description: "正文格式：0 为 UBB，1 为 Markdown。" }),
+    title: z.string().meta({ description: "回复标题；普通回复通常传空字符串。" }),
+    parentId: z
+      .number()
+      .optional()
+      .meta({ description: "被回复帖子的 ID；直接回复主题时可省略。" }),
+    isAnonymous: z.boolean().meta({ description: "是否匿名回复。" }),
+    notifyAllReplier: z
+      .boolean()
+      .optional()
+      .meta({ description: "是否同时通知该主题的全部回复者。" }),
+    clientType: z
+      .number()
+      .meta({ description: "发帖客户端类型标识；Web 前端使用 1，其他取值含义尚未确认。" }),
   })
-  .meta({ id: "CreatePostRequest" });
+  .meta({ id: "CreatePostRequest", description: "在主题中发表回复的请求体。" });
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
 
 export const createVoteInfoSchema = z
@@ -233,112 +249,148 @@ export type CreateVoteInfo = z.infer<typeof createVoteInfoSchema>;
 
 export const voteItemSchema = z
   .looseObject({
-    id: z.number(),
-    description: z.string(),
-    count: z.number(),
+    id: z.number().meta({ description: "投票选项 ID。" }),
+    description: z.string().meta({ description: "投票选项文字。" }),
+    count: z.number().meta({ description: "该选项获得的票数。" }),
   })
-  .meta({ id: "VoteItem" });
+  .meta({ id: "VoteItem", description: "一个投票选项及其票数。" });
 export type VoteItem = z.infer<typeof voteItemSchema>;
 
 export const voteRecordSchema = z
   .looseObject({
-    userId: z.number(),
-    userName: z.string(),
-    items: z.array(z.number()),
-    ip: z.string(),
-    time: z.string(),
+    userId: z.number().meta({ description: "投票用户 ID。" }),
+    userName: z.string().meta({ description: "投票用户名。" }),
+    items: z.array(z.number()).meta({ description: "该用户选择的投票选项 ID 列表。" }),
+    ip: z.string().meta({ description: "投票来源 IP；是否返回由权限和投票设置决定。" }),
+    time: z.string().meta({ description: "投票时间。" }),
   })
-  .meta({ id: "VoteRecord" });
+  .meta({ id: "VoteRecord", description: "一名用户的投票记录。" });
 export type VoteRecord = z.infer<typeof voteRecordSchema>;
 
 export const voteInfoSchema = z
   .looseObject({
-    topicId: z.number().optional(),
-    voteItems: z.array(voteItemSchema).optional(),
-    voteRecords: z.array(voteRecordSchema).nullable().optional(),
-    expiredTime: z.string().optional(),
-    isAvailable: z.boolean().optional(),
-    maxVoteCount: z.number().optional(),
-    canVote: z.boolean().optional(),
-    myRecord: voteRecordSchema.nullable().optional(),
-    needVote: z.boolean().optional(),
-    voteUserCount: z.number().optional(),
+    topicId: z.number().optional().meta({ description: "投票所属主题 ID。" }),
+    voteItems: z.array(voteItemSchema).optional().meta({ description: "投票选项列表。" }),
+    voteRecords: z
+      .array(voteRecordSchema)
+      .nullable()
+      .optional()
+      .meta({ description: "全部投票记录；结果不可见时可能为 null。" }),
+    expiredTime: z.string().optional().meta({ description: "投票截止时间。" }),
+    isAvailable: z.boolean().optional().meta({ description: "投票当前是否仍然有效。" }),
+    maxVoteCount: z.number().optional().meta({ description: "每名用户最多可以选择的选项数。" }),
+    canVote: z.boolean().optional().meta({ description: "当前用户现在是否可以投票。" }),
+    myRecord: voteRecordSchema
+      .nullable()
+      .optional()
+      .meta({ description: "当前用户的投票记录；尚未投票时为 null。" }),
+    needVote: z.boolean().optional().meta({ description: "是否必须投票后才能在截止前查看结果。" }),
+    voteUserCount: z.number().optional().meta({ description: "参与投票的用户总数。" }),
   })
-  .meta({ id: "VoteInfo" });
+  .meta({ id: "VoteInfo", description: "主题投票的选项、结果和当前用户状态。" });
 export type VoteInfo = z.infer<typeof voteInfoSchema>;
 
 export const submitVoteRequestSchema = z
   .object({
-    items: z.array(z.number().int().positive()),
+    items: z
+      .array(z.number().int().positive())
+      .min(1)
+      .meta({ description: "当前用户选择的投票选项 ID 列表。" }),
   })
-  .meta({ id: "SubmitVoteRequest" });
+  .meta({ id: "SubmitVoteRequest", description: "提交主题投票的请求体。" });
 export type SubmitVoteRequest = z.infer<typeof submitVoteRequestSchema>;
 
 export const reasonRequestSchema = z
   .object({
-    reason: z.string().optional(),
+    reason: z.string().optional().meta({ description: "执行管理操作的原因。" }),
   })
-  .meta({ id: "ReasonRequest" });
+  .meta({ id: "ReasonRequest", description: "只包含操作原因的管理请求体。" });
 export type ReasonRequest = z.infer<typeof reasonRequestSchema>;
+
+export const topicLockRequestSchema = z
+  .object({
+    reason: z.string().optional().meta({ description: "锁定主题的原因。" }),
+    value: z.number().optional().meta({ description: "锁定时长，单位为天。" }),
+  })
+  .meta({ id: "TopicLockRequest", description: "锁定一个或多个主题的请求体。" });
+export type TopicLockRequest = z.infer<typeof topicLockRequestSchema>;
 
 export const topicTopRequestSchema = z
   .object({
-    topState: z.number().optional(),
-    duration: z.number().optional(),
-    reason: z.string().optional(),
+    topState: z
+      .union([z.literal(2), z.literal(4)])
+      .optional()
+      .meta({ description: "置顶级别：2 为版面置顶，4 为全站置顶。" }),
+    duration: z.number().optional().meta({ description: "置顶时长，单位为天。" }),
+    reason: z.string().optional().meta({ description: "设置置顶的原因。" }),
   })
-  .meta({ id: "TopicTopRequest" });
+  .meta({ id: "TopicTopRequest", description: "设置主题置顶状态的请求体。" });
 export type TopicTopRequest = z.infer<typeof topicTopRequestSchema>;
 
 export const topicHighlightRequestSchema = z
   .object({
-    isBold: z.boolean().optional(),
-    isItalic: z.boolean().optional(),
-    color: z.string().optional(),
-    duration: z.number().optional(),
-    reason: z.string().optional(),
+    isBold: z.boolean().optional().meta({ description: "主题标题是否加粗。" }),
+    isItalic: z.boolean().optional().meta({ description: "主题标题是否使用斜体。" }),
+    color: z
+      .string()
+      .optional()
+      .meta({ description: "主题标题颜色，Web 前端使用十六进制颜色值。" }),
+    duration: z.number().optional().meta({ description: "高亮持续时间，单位为天。" }),
+    reason: z.string().optional().meta({ description: "设置高亮的原因。" }),
   })
-  .meta({ id: "TopicHighlightRequest" });
+  .meta({ id: "TopicHighlightRequest", description: "设置主题标题高亮样式的请求体。" });
 export type TopicHighlightRequest = z.infer<typeof topicHighlightRequestSchema>;
 
 export const topicIpGroupSchema = z
   .object({
-    ip: z.string().optional(),
+    ip: z.string().optional().meta({ description: "一组回复使用的 IP 地址。" }),
     posts: z
       .array(
         z.object({
-          userName: z.string().optional(),
-          floor: z.number().optional(),
-          content: z.string().optional(),
+          userName: z.string().optional().meta({ description: "回复者用户名。" }),
+          floor: z.number().optional().meta({ description: "回复所在楼层。" }),
+          content: z.string().optional().meta({ description: "回复正文。" }),
         }),
       )
-      .optional(),
+      .optional()
+      .meta({ description: "使用该 IP 发布的回复。" }),
   })
-  .meta({ id: "TopicIpGroup" });
+  .meta({ id: "TopicIpGroup", description: "按 IP 地址分组的主题回复。" });
 export type TopicIpGroup = z.infer<typeof topicIpGroupSchema>;
 
 export const topicEventSchema = z
   .looseObject({
-    id: z.number(),
-    content: z.string(),
-    targetUserName: z.string().nullable().optional(),
-    time: z.string(),
-    operatorUserName: z.string(),
-    ip: z.string(),
+    id: z.number().meta({ description: "主题操作记录 ID。" }),
+    content: z.string().meta({ description: "操作内容说明。" }),
+    targetUserName: z
+      .string()
+      .nullable()
+      .optional()
+      .meta({ description: "操作涉及的目标用户名；不涉及具体用户时可能为 null。" }),
+    time: z.string().meta({ description: "操作发生时间。" }),
+    operatorUserName: z.string().meta({ description: "执行操作的用户名。" }),
+    ip: z.string().meta({ description: "执行操作时的 IP 地址。" }),
   })
-  .meta({ id: "TopicEvent" });
+  .meta({ id: "TopicEvent", description: "一条主题管理操作记录。" });
 export type TopicEvent = z.infer<typeof topicEventSchema>;
 
 export const topicEventPageSchema = z
   .looseObject({
-    data: z.array(topicEventSchema).nullable(),
-    count: z.number(),
-    from: z.number(),
-    size: z.number(),
-    extra: z.unknown().nullable().optional(),
-    errorCode: z.number(),
+    data: z
+      .array(topicEventSchema)
+      .nullable()
+      .meta({ description: "当前页的主题操作记录；不可查看或没有数据时可能为 null。" }),
+    count: z.number().meta({ description: "主题操作记录总数。" }),
+    from: z.number().meta({ description: "本次结果的起始位置。" }),
+    size: z.number().meta({ description: "本次结果的分页大小。" }),
+    extra: z
+      .unknown()
+      .nullable()
+      .optional()
+      .meta({ description: "附加数据；没有附加数据时为 null。" }),
+    errorCode: z.number().meta({ description: "业务错误码；0 表示成功。" }),
   })
-  .meta({ id: "TopicEventPage" });
+  .meta({ id: "TopicEventPage", description: "主题管理操作记录的分页结果。" });
 export type TopicEventPage = z.infer<typeof topicEventPageSchema>;
 
 export const createTopicRequestSchema = z
