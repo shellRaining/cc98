@@ -14,7 +14,7 @@ const logger = createLogger("pwa");
 const isOnline = useOnline();
 const isUpdating = ref(false);
 const updateError = ref("");
-const versionExpired = ref(false);
+const preloadFailed = ref(false);
 const registration = shallowRef<ServiceWorkerRegistration>();
 const checkForUpdate = createServiceWorkerUpdateChecker(() => registration.value);
 const { needRefresh, updateServiceWorker } = useRegisterSW({
@@ -27,20 +27,21 @@ const { needRefresh, updateServiceWorker } = useRegisterSW({
 });
 
 const promptOpen = computed({
-  get: () => needRefresh.value || versionExpired.value,
+  get: () => needRefresh.value || preloadFailed.value,
   set: (open: boolean) => {
     if (open) return;
     needRefresh.value = false;
-    versionExpired.value = false;
+    preloadFailed.value = false;
     updateError.value = "";
   },
 });
-const promptTitle = computed(() => (versionExpired.value ? "当前版本已失效" : "发现新版本"));
+const promptTitle = computed(() => (preloadFailed.value ? "页面资源加载失败" : "发现新版本"));
 const promptDescription = computed(() =>
-  versionExpired.value
-    ? "页面代码已经更新，当前版本无法继续加载目标页面。立即更新会重新加载当前页面，请先保存尚未提交的内容。"
+  preloadFailed.value
+    ? "目标页面所需资源未能加载，可能是网络波动或网站刚刚更新。重新加载当前页面后可以重试，请先保存尚未提交的内容。"
     : "新版本已经准备好，立即更新会重新加载当前页面。请先保存尚未提交的内容。",
 );
+const confirmLabel = computed(() => (preloadFailed.value ? "重新加载" : "立即更新"));
 
 function requestUpdateCheck(force = false): void {
   if (!navigator.onLine) return;
@@ -55,10 +56,11 @@ useEventListener(document, "visibilitychange", () => {
   if (document.visibilityState === "visible") requestUpdateCheck();
 });
 useEventListener(window, "vite:preloadError", (event: Event) => {
+  if (!navigator.onLine) return;
   event.preventDefault();
-  versionExpired.value = true;
+  preloadFailed.value = true;
   const error = (event as Event & { payload?: unknown }).payload ?? new Error("页面资源加载失败");
-  logErrorOnce(logger, error, "页面资源加载失败，当前版本可能已经失效");
+  logErrorOnce(logger, error, "页面资源加载失败");
   requestUpdateCheck(true);
 });
 
@@ -80,7 +82,9 @@ async function update(): Promise<void> {
       window.location.reload();
     }
   } catch (error) {
-    updateError.value = "更新失败，请稍后重试。";
+    updateError.value = preloadFailed.value
+      ? "重新加载失败，请稍后重试。"
+      : "更新失败，请稍后重试。";
     logErrorOnce(logger, error, "Service Worker 更新失败");
   } finally {
     isUpdating.value = false;
@@ -94,7 +98,7 @@ async function update(): Promise<void> {
     :title="promptTitle"
     :description="promptDescription"
     cancel-label="稍后"
-    confirm-label="立即更新"
+    :confirm-label="confirmLabel"
     :pending="isUpdating"
     @confirm="update"
   >

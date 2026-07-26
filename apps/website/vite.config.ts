@@ -49,7 +49,7 @@ const pwaPlugins = VitePWA({
         urlPattern: /\/assets\/[^?]+\.(?:js|css|woff2?|ttf)$/,
         handler: "CacheFirst",
         options: {
-          cacheName: "app-assets-v2",
+          cacheName: "app-assets-v1",
           plugins: [createAppAssetCachePlugin()],
           expiration: {
             maxEntries: 160,
