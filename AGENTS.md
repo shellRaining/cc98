@@ -33,7 +33,6 @@ agent-first 工作流：人设计环境和意图，agent 执行。这份文件�
 - `DESIGN.md`：设计语言与视觉 token（根目录，遵循 Google DESIGN.md 规范）。修改界面样式、主题、皮肤或组件视觉前必读，新增和调整 token 按其中的生命周期规则执行
 - `docs/security.md`：应用安全（XSS / CSRF / auth / secrets）
 - `docs/dependency.md`：依赖和供应链安全
-- `docs/api-contract.md`：API 接口调研、Schema、OpenAPI 和 Apifox 整理约定
 - `docs/adr/`：架构决策记录，遇到重大架构抉择时写一条
 - `docs/exec-plans/README.md`：执行计划索引和生命周期规则
 - `docs/exec-plans/active/`：正在推进的复杂改动。开工前先查是否有相关计划，复杂改动时参考模板新写一份
