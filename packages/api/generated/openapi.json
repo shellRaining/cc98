@@ -1219,7 +1219,8 @@
     "/topic/{topicId}": {
       "get": {
         "operationId": "getTopicTopicId",
-        "summary": "Get topic details",
+        "summary": "获取主题详情",
+        "description": "返回指定主题的概要和详情状态，包括作者、版面、回复统计、标签、置顶与精华状态、媒体摘要和当前用户相关权限。",
         "tags": ["Topic"],
         "security": [
           {
@@ -1234,14 +1235,18 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topic details",
+            "description": "主题的标题、作者、状态、统计和展示信息",
             "content": {
               "application/json": {
                 "schema": {
@@ -1264,7 +1269,8 @@
       },
       "delete": {
         "operationId": "deleteTopicTopicId",
-        "summary": "Delete topic",
+        "summary": "删除主题",
+        "description": "删除指定主题及其回复。该操作需要主题管理权限。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1272,16 +1278,20 @@
           }
         ],
         "x-cc98-risk": "destructive",
-        "x-cc98-verification": "permission-denied",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1296,7 +1306,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题删除请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1314,7 +1324,8 @@
     "/topic/{topicId}/post": {
       "get": {
         "operationId": "getTopicTopicIdPost",
-        "summary": "Get posts in a topic",
+        "summary": "获取主题回复",
+        "description": "分页获取指定主题中的主楼和回复。from 按帖子记录位置计算。",
         "tags": ["Topic", "Post"],
         "security": [
           {
@@ -1322,37 +1333,49 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "verified-write",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Post list",
+            "description": "按楼层顺序返回的主题帖子列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -1378,7 +1401,8 @@
       },
       "post": {
         "operationId": "postTopicTopicIdPost",
-        "summary": "Reply to a topic",
+        "summary": "回复主题",
+        "description": "在指定主题中发表回复，也可通过 parentId 回复某一楼层。",
         "tags": ["Topic", "Post"],
         "security": [
           {
@@ -1386,16 +1410,20 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "verified-write",
+        "x-cc98-verification": "unknown",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1410,7 +1438,7 @@
         },
         "responses": {
           "200": {
-            "description": "新回复 ID",
+            "description": "新回复的帖子 ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -1435,7 +1463,8 @@
     "/topic/{topicId}/hot-post": {
       "get": {
         "operationId": "getTopicTopicIdHotPost",
-        "summary": "Get hot posts in a topic",
+        "summary": "获取主题热门回复",
+        "description": "返回指定主题中由服务端判定为热门的回复。",
         "tags": ["Topic", "Post"],
         "security": [
           {
@@ -1450,14 +1479,18 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Hot posts",
+            "description": "主题中的热门帖子列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -1485,7 +1518,8 @@
     "/topic/{topicId}/vote": {
       "get": {
         "operationId": "getTopicTopicIdVote",
-        "summary": "Get topic vote info",
+        "summary": "获取主题投票信息",
+        "description": "返回投票主题的选项、票数、有效期以及当前用户能否投票。投票设置可能限制结果可见性。",
         "tags": ["Topic"],
         "security": [
           {
@@ -1500,14 +1534,18 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "投票主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "投票主题 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Vote info",
+            "description": "投票选项、结果、截止时间和当前用户投票状态",
             "content": {
               "application/json": {
                 "schema": {
@@ -1530,7 +1568,8 @@
       },
       "post": {
         "operationId": "postTopicTopicIdVote",
-        "summary": "Submit vote",
+        "summary": "提交主题投票",
+        "description": "为指定投票主题提交当前用户选择的一个或多个选项。",
         "tags": ["Topic"],
         "security": [
           {
@@ -1545,9 +1584,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "投票主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "投票主题 ID。"
           }
         ],
         "requestBody": {
@@ -1562,7 +1605,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "投票提交请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1580,7 +1623,8 @@
     "/topic/{topicId}/isfavorite": {
       "get": {
         "operationId": "getTopicTopicIdIsfavorite",
-        "summary": "Check whether current user has favorited a topic",
+        "summary": "查询主题收藏状态",
+        "description": "查询指定主题的收藏状态。携带登录凭据时返回当前用户的真实状态。",
         "tags": ["Topic", "Me"],
         "security": [],
         "x-cc98-risk": "account-scoped",
@@ -1591,18 +1635,23 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Favorite state",
+            "description": "当前用户是否已收藏该主题",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "当前用户是否已收藏该主题。"
                 }
               }
             }
@@ -1623,7 +1672,8 @@
     "/topic/{topicId}/event": {
       "get": {
         "operationId": "getTopicTopicIdEvent",
-        "summary": "Get topic event records",
+        "summary": "获取主题操作记录",
+        "description": "分页返回指定主题的管理操作记录。具体可见内容由主题状态和用户权限决定。",
         "tags": ["Topic", "Moderation"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -1634,30 +1684,42 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topic events",
+            "description": "主题管理操作记录的分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -1682,14 +1744,15 @@
     "/topic/{topicId}/look-ip": {
       "get": {
         "operationId": "getTopicTopicIdLookIp",
-        "summary": "View IP groups for a topic",
+        "summary": "按 IP 查看主题回复",
+        "description": "按发布 IP 对指定主题中的回复进行分组。该接口需要相应的版务权限。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "x-cc98-risk": "destructive",
+        "x-cc98-risk": "read-only",
         "x-cc98-verification": "permission-denied",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
@@ -1697,14 +1760,18 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "IP grouped posts",
+            "description": "按 IP 地址分组的主题回复",
             "content": {
               "application/json": {
                 "schema": {
@@ -1732,7 +1799,8 @@
     "/topic/{topicId}/top": {
       "put": {
         "operationId": "putTopicTopicIdTop",
-        "summary": "Set topic top state",
+        "summary": "设置主题置顶",
+        "description": "将指定主题设置为版面置顶或全站置顶，并可指定持续天数和操作原因。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1747,9 +1815,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1764,7 +1836,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题置顶设置请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1780,7 +1852,8 @@
       },
       "delete": {
         "operationId": "deleteTopicTopicIdTop",
-        "summary": "Remove topic top state",
+        "summary": "取消主题置顶",
+        "description": "移除指定主题的置顶状态。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1795,9 +1868,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1812,7 +1889,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "取消主题置顶请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1830,7 +1907,8 @@
     "/topic/{topicId}/lock": {
       "put": {
         "operationId": "putTopicTopicIdLock",
-        "summary": "Lock topic",
+        "summary": "锁定主题",
+        "description": "锁定指定主题，使其不能继续回复，并可指定锁定天数和原因。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1845,9 +1923,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1855,22 +1937,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "reason": {
-                    "type": "string"
-                  },
-                  "value": {
-                    "type": "number"
-                  }
-                }
+                "$ref": "#/components/schemas/TopicLockRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题锁定请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1886,7 +1960,8 @@
       },
       "delete": {
         "operationId": "deleteTopicTopicIdLock",
-        "summary": "Unlock topic",
+        "summary": "解除主题锁定",
+        "description": "解除指定主题的锁定状态，允许用户继续回复。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1901,9 +1976,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1918,7 +1997,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "解除主题锁定请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1936,7 +2015,8 @@
     "/topic/{topicId}/best": {
       "put": {
         "operationId": "putTopicTopicIdBest",
-        "summary": "Mark topic as best",
+        "summary": "将主题设为精华",
+        "description": "将指定主题标记为精华主题。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1951,9 +2031,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -1968,7 +2052,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题加精请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -1984,7 +2068,8 @@
       },
       "delete": {
         "operationId": "deleteTopicTopicIdBest",
-        "summary": "Remove best topic mark",
+        "summary": "取消主题精华",
+        "description": "移除指定主题的精华标记。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -1999,9 +2084,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -2016,7 +2105,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "取消主题精华请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2034,7 +2123,8 @@
     "/topic/{topicId}/not-hot": {
       "put": {
         "operationId": "putTopicTopicIdNotHot",
-        "summary": "Disable topic from hot list",
+        "summary": "禁止主题进入热门列表",
+        "description": "设置指定主题不参与热门主题列表的计算和展示。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2049,9 +2139,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -2066,7 +2160,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "热门列表限制请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2082,7 +2176,8 @@
       },
       "delete": {
         "operationId": "deleteTopicTopicIdNotHot",
-        "summary": "Enable topic for hot list",
+        "summary": "恢复主题进入热门列表",
+        "description": "取消指定主题的热门列表限制，使其重新参与热门主题计算。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2097,9 +2192,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -2114,7 +2213,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "取消热门列表限制请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2132,7 +2231,8 @@
     "/topic/{topicId}/highlight": {
       "put": {
         "operationId": "putTopicTopicIdHighlight",
-        "summary": "Set topic highlight style",
+        "summary": "设置主题标题高亮",
+        "description": "设置指定主题标题的粗体、斜体和颜色样式，并可指定持续天数。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2147,9 +2247,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -2164,7 +2268,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题高亮设置请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2182,7 +2286,8 @@
     "/topic/{topicId}/up": {
       "put": {
         "operationId": "putTopicTopicIdUp",
-        "summary": "Bump topic",
+        "summary": "提升主题排序位置",
+        "description": "提升指定主题在版面主题列表中的排序位置。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2197,9 +2302,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           }
         ],
         "requestBody": {
@@ -2214,7 +2323,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题提升请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2232,7 +2341,8 @@
     "/topic/{topicId}/moveto/{boardId}": {
       "put": {
         "operationId": "putTopicTopicIdMovetoBoardId",
-        "summary": "Move topic to another board",
+        "summary": "移动主题到其他版面",
+        "description": "将指定主题及其回复移动到目标版面。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2247,17 +2357,25 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           },
           {
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "版面 ID。"
           }
         ],
         "requestBody": {
@@ -2272,7 +2390,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "主题移动请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2290,8 +2408,8 @@
     "/topic/multi-lock": {
       "put": {
         "operationId": "putTopicMultiLock",
-        "summary": "Lock multiple topics",
-        "description": "The target topics are passed as query string generated by the frontend; exact parameter names are inferred as backend-specific.",
+        "summary": "批量锁定主题",
+        "description": "通过重复的 id 查询参数一次锁定多个主题。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2304,11 +2422,18 @@
         "parameters": [
           {
             "in": "query",
-            "name": "target",
+            "name": "id",
             "schema": {
-              "type": "string",
-              "description": "Placeholder for one or more target topic query parameters."
-            }
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "description": "需要锁定的主题 ID，可重复传入该查询参数。"
+            },
+            "required": true,
+            "description": "需要锁定的主题 ID，可重复传入该查询参数。"
           }
         ],
         "requestBody": {
@@ -2316,22 +2441,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "reason": {
-                    "type": "string"
-                  },
-                  "value": {
-                    "type": "number"
-                  }
-                }
+                "$ref": "#/components/schemas/TopicLockRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "批量锁定主题请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2349,8 +2466,8 @@
     "/topic/multi-delete": {
       "put": {
         "operationId": "putTopicMultiDelete",
-        "summary": "Delete multiple topics",
-        "description": "The target topics are passed as query string generated by the frontend; exact parameter names are inferred as backend-specific.",
+        "summary": "批量删除主题",
+        "description": "通过重复的 id 查询参数一次删除多个主题及其回复。",
         "tags": ["Topic", "Moderation"],
         "security": [
           {
@@ -2363,11 +2480,18 @@
         "parameters": [
           {
             "in": "query",
-            "name": "target",
+            "name": "id",
             "schema": {
-              "type": "string",
-              "description": "Placeholder for one or more target topic query parameters."
-            }
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "description": "需要删除的主题 ID，可重复传入该查询参数。"
+            },
+            "required": true,
+            "description": "需要删除的主题 ID，可重复传入该查询参数。"
           }
         ],
         "requestBody": {
@@ -2382,7 +2506,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "批量删除主题请求已处理"
           },
           "default": {
             "description": "API 错误码",
@@ -2400,7 +2524,8 @@
     "/topic/toptopics": {
       "get": {
         "operationId": "getTopicToptopics",
-        "summary": "Get top topics in a board",
+        "summary": "获取版面置顶主题",
+        "description": "返回指定版面的置顶主题，用于与普通主题列表分开展示。",
         "tags": ["Topic"],
         "security": [
           {
@@ -2415,14 +2540,18 @@
             "in": "query",
             "name": "boardid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Top topics",
+            "description": "指定版面需要优先展示的置顶主题",
             "content": {
               "application/json": {
                 "schema": {
@@ -2450,7 +2579,8 @@
     "/topic/best/board/{boardId}": {
       "get": {
         "operationId": "getTopicBestBoardBoardId",
-        "summary": "Get best topics in a board",
+        "summary": "获取版面精华主题",
+        "description": "分页返回指定版面中被标记为精华的主题。",
         "tags": ["Topic", "Board"],
         "security": [
           {
@@ -2465,30 +2595,42 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "版面 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Paged topics",
+            "description": "指定版面的精华主题分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -2513,7 +2655,8 @@
     "/topic/save/board/{boardId}": {
       "get": {
         "operationId": "getTopicSaveBoardBoardId",
-        "summary": "Get saved topics in a board",
+        "summary": "获取版面保存主题",
+        "description": "分页返回指定版面中处于“保存”状态的主题；该状态的具体管理规则尚未确认。",
         "tags": ["Topic", "Board"],
         "security": [
           {
@@ -2528,30 +2671,42 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "版面 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Paged topics",
+            "description": "指定版面的保存主题分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -2576,7 +2731,8 @@
     "/topic/search": {
       "get": {
         "operationId": "getTopicSearch",
-        "summary": "Search topics globally",
+        "summary": "全站搜索主题",
+        "description": "按关键词在全站范围搜索主题标题，并分页返回匹配主题。",
         "tags": ["Topic"],
         "security": [
           {
@@ -2591,30 +2747,41 @@
             "in": "query",
             "name": "keyword",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "description": "主题搜索关键词。"
             },
-            "required": true
+            "required": true,
+            "description": "主题搜索关键词。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topic search results",
+            "description": "全站主题搜索结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -2642,7 +2809,8 @@
     "/topic/search/board/{boardId}": {
       "get": {
         "operationId": "getTopicSearchBoardBoardId",
-        "summary": "Search topics in a board",
+        "summary": "搜索版面主题",
+        "description": "按关键词搜索指定版面的主题标题，并分页返回匹配主题。",
         "tags": ["Topic", "Board"],
         "security": [
           {
@@ -2657,38 +2825,53 @@
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "版面 ID。"
           },
           {
             "in": "query",
             "name": "keyword",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "description": "主题搜索关键词。"
             },
-            "required": true
+            "required": true,
+            "description": "主题搜索关键词。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topic search results",
+            "description": "指定版面中的主题搜索结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -2716,7 +2899,8 @@
     "/topic/search/board/{boardId}/tag": {
       "get": {
         "operationId": "getTopicSearchBoardBoardIdTag",
-        "summary": "Search board topics by tags",
+        "summary": "按标签筛选版面主题",
+        "description": "按一层或两层标签筛选指定版面的主题。tag1 和 tag2 至少需要提供一个。",
         "tags": ["Topic", "Board"],
         "security": [
           {
@@ -2724,51 +2908,69 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "版面 ID。"
           },
           {
             "in": "query",
             "name": "tag1",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "第一层标签 ID；tag1 和 tag2 至少提供一个。"
             }
           },
           {
             "in": "query",
             "name": "tag2",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "第二层标签 ID；tag1 和 tag2 至少提供一个。"
             }
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Paged topics",
+            "description": "符合标签条件的主题分页结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -2793,7 +2995,8 @@
     "/topic/new": {
       "get": {
         "operationId": "getTopicNew",
-        "summary": "Get newest topics",
+        "summary": "获取最新主题",
+        "description": "分页返回全站最新主题，供经典列表和卡片列表使用。具体排序规则由服务端决定。",
         "tags": ["Topic"],
         "security": [
           {
@@ -2808,22 +3011,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "New topics",
+            "description": "按发布时间或更新时间排列的最新主题",
             "content": {
               "application/json": {
                 "schema": {
@@ -2851,7 +3062,8 @@
     "/topic/new-media": {
       "get": {
         "operationId": "getTopicNewMedia",
-        "summary": "Get newest media topics",
+        "summary": "获取最新媒体主题",
+        "description": "分页返回适合媒体卡片展示的最新主题，mediaContent 中可能包含缩略图或音视频信息。",
         "tags": ["Topic"],
         "security": [
           {
@@ -2866,22 +3078,30 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "New media topics",
+            "description": "包含图片、音视频等媒体摘要的最新主题",
             "content": {
               "application/json": {
                 "schema": {
@@ -2909,7 +3129,8 @@
     "/topic/random-recommendation": {
       "get": {
         "operationId": "getTopicRandomRecommendation",
-        "summary": "Get random recommended topics",
+        "summary": "获取随机推荐主题",
+        "description": "按照服务端推荐策略随机返回指定数量的主题，并附带正文摘要。",
         "tags": ["Topic"],
         "security": [
           {
@@ -2924,14 +3145,18 @@
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Recommended topic list",
+            "description": "推荐主题及正文摘要列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -2959,7 +3184,8 @@
     "/topic/random-recent": {
       "get": {
         "operationId": "getTopicRandomRecent",
-        "summary": "Get random recent topics",
+        "summary": "获取随机近期主题",
+        "description": "从近期主题中随机返回指定数量的主题。",
         "tags": ["Topic"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -2970,14 +3196,18 @@
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Topic list",
+            "description": "随机选取的近期主题列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3005,7 +3235,8 @@
     "/topic/hot-{type}": {
       "get": {
         "operationId": "getTopicHotType",
-        "summary": "Get hot topics by type",
+        "summary": "获取热门主题",
+        "description": "返回周榜、月榜或历史榜中的热门主题。",
         "tags": ["Topic"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -3029,14 +3260,16 @@
                   "type": "string",
                   "const": "history"
                 }
-              ]
+              ],
+              "description": "热门统计周期：weekly 为周榜，monthly 为月榜，history 为历史榜。"
             },
-            "required": true
+            "required": true,
+            "description": "热门统计周期：weekly 为周榜，monthly 为月榜，history 为历史榜。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Hot topics",
+            "description": "指定统计周期的热门主题列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3064,7 +3297,8 @@
     "/topic/basic": {
       "get": {
         "operationId": "getTopicBasic",
-        "summary": "Get basic topic info by repeated id query",
+        "summary": "批量获取主题概要",
+        "description": "通过重复的 id 查询参数批量获取主题概要，常用于为帖子或通知补充主题信息。",
         "tags": ["Topic"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -3077,15 +3311,19 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "number"
-              }
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "description": "主题 ID，可重复传入该查询参数。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID，可重复传入该查询参数。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Basic topics",
+            "description": "与给定 ID 对应的主题概要列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3113,7 +3351,8 @@
     "/topic/me/favorite": {
       "get": {
         "operationId": "getTopicMeFavorite",
-        "summary": "Get current user's favorite topics",
+        "summary": "获取当前用户收藏的主题",
+        "description": "分页返回当前用户收藏的主题，可按收藏夹筛选并选择排序方式。",
         "tags": ["Topic", "Me"],
         "security": [
           {
@@ -3128,36 +3367,61 @@
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           },
           {
             "in": "query",
             "name": "order",
             "schema": {
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 0
+                },
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                }
+              ],
+              "description": "排序方式：0 按发帖时间，1 按最后回复时间，2 按收藏顺序。"
             }
           },
           {
             "in": "query",
             "name": "groupid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "收藏夹 ID；省略时由服务端选择默认收藏范围。"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Favorite topics",
+            "description": "当前用户收藏的主题列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3185,7 +3449,8 @@
     "/topic/me/search-favorite": {
       "get": {
         "operationId": "getTopicMeSearchFavorite",
-        "summary": "Search current user's favorite topics",
+        "summary": "搜索当前用户收藏的主题",
+        "description": "按关键词搜索当前用户收藏的主题，并分页返回匹配结果。",
         "tags": ["Topic", "Me"],
         "security": [
           {
@@ -3200,30 +3465,41 @@
             "in": "query",
             "name": "keyword",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "description": "收藏主题搜索关键词。"
             },
-            "required": true
+            "required": true,
+            "description": "收藏主题搜索关键词。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "从第几条记录开始获取，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "从第几条记录开始获取，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的记录数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的记录数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Favorite topic search results",
+            "description": "当前用户收藏主题中的搜索结果",
             "content": {
               "application/json": {
                 "schema": {
@@ -7477,15 +7753,18 @@
         "type": "object",
         "properties": {
           "reason": {
+            "description": "执行管理操作的原因。",
             "type": "string"
           }
-        }
+        },
+        "description": "只包含操作原因的管理请求体。"
       },
       "CreatePostRequest": {
         "type": "object",
         "properties": {
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "回复正文，格式由 contentType 决定。"
           },
           "contentType": {
             "anyOf": [
@@ -7497,73 +7776,116 @@
                 "type": "number",
                 "const": 1
               }
-            ]
+            ],
+            "description": "正文格式：0 为 UBB，1 为 Markdown。"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "回复标题；普通回复通常传空字符串。"
           },
           "parentId": {
+            "description": "被回复帖子的 ID；直接回复主题时可省略。",
             "type": "number"
           },
           "isAnonymous": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "是否匿名回复。"
           },
           "notifyAllReplier": {
+            "description": "是否同时通知该主题的全部回复者。",
             "type": "boolean"
           },
           "clientType": {
-            "type": "number"
+            "type": "number",
+            "description": "发帖客户端类型标识；Web 前端使用 1，其他取值含义尚未确认。"
           }
         },
-        "required": ["content", "contentType", "title", "isAnonymous", "clientType"]
+        "required": ["content", "contentType", "title", "isAnonymous", "clientType"],
+        "description": "在主题中发表回复的请求体。"
       },
       "SubmitVoteRequest": {
         "type": "object",
         "properties": {
           "items": {
+            "minItems": 1,
             "type": "array",
             "items": {
               "type": "integer",
               "exclusiveMinimum": 0,
               "maximum": 9007199254740991
-            }
+            },
+            "description": "当前用户选择的投票选项 ID 列表。"
           }
         },
-        "required": ["items"]
+        "required": ["items"],
+        "description": "提交主题投票的请求体。"
       },
       "TopicTopRequest": {
         "type": "object",
         "properties": {
           "topState": {
-            "type": "number"
+            "description": "置顶级别：2 为版面置顶，4 为全站置顶。",
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 2
+              },
+              {
+                "type": "number",
+                "const": 4
+              }
+            ]
           },
           "duration": {
+            "description": "置顶时长，单位为天。",
             "type": "number"
           },
           "reason": {
+            "description": "设置置顶的原因。",
             "type": "string"
           }
-        }
+        },
+        "description": "设置主题置顶状态的请求体。"
+      },
+      "TopicLockRequest": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "锁定主题的原因。",
+            "type": "string"
+          },
+          "value": {
+            "description": "锁定时长，单位为天。",
+            "type": "number"
+          }
+        },
+        "description": "锁定一个或多个主题的请求体。"
       },
       "TopicHighlightRequest": {
         "type": "object",
         "properties": {
           "isBold": {
+            "description": "主题标题是否加粗。",
             "type": "boolean"
           },
           "isItalic": {
+            "description": "主题标题是否使用斜体。",
             "type": "boolean"
           },
           "color": {
+            "description": "主题标题颜色，Web 前端使用十六进制颜色值。",
             "type": "string"
           },
           "duration": {
+            "description": "高亮持续时间，单位为天。",
             "type": "number"
           },
           "reason": {
+            "description": "设置高亮的原因。",
             "type": "string"
           }
-        }
+        },
+        "description": "设置主题标题高亮样式的请求体。"
       },
       "EditPostRequest": {
         "type": "object",
@@ -9232,15 +9554,18 @@
         "type": "object",
         "properties": {
           "topicId": {
+            "description": "投票所属主题 ID。",
             "type": "number"
           },
           "voteItems": {
+            "description": "投票选项列表。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VoteItem"
             }
           },
           "voteRecords": {
+            "description": "全部投票记录；结果不可见时可能为 null。",
             "anyOf": [
               {
                 "type": "array",
@@ -9254,18 +9579,23 @@
             ]
           },
           "expiredTime": {
+            "description": "投票截止时间。",
             "type": "string"
           },
           "isAvailable": {
+            "description": "投票当前是否仍然有效。",
             "type": "boolean"
           },
           "maxVoteCount": {
+            "description": "每名用户最多可以选择的选项数。",
             "type": "number"
           },
           "canVote": {
+            "description": "当前用户现在是否可以投票。",
             "type": "boolean"
           },
           "myRecord": {
+            "description": "当前用户的投票记录；尚未投票时为 null。",
             "anyOf": [
               {
                 "$ref": "#/components/schemas/VoteRecord"
@@ -9276,54 +9606,67 @@
             ]
           },
           "needVote": {
+            "description": "是否必须投票后才能在截止前查看结果。",
             "type": "boolean"
           },
           "voteUserCount": {
+            "description": "参与投票的用户总数。",
             "type": "number"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "主题投票的选项、结果和当前用户状态。"
       },
       "VoteItem": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "投票选项 ID。"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "投票选项文字。"
           },
           "count": {
-            "type": "number"
+            "type": "number",
+            "description": "该选项获得的票数。"
           }
         },
         "required": ["id", "description", "count"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "一个投票选项及其票数。"
       },
       "VoteRecord": {
         "type": "object",
         "properties": {
           "userId": {
-            "type": "number"
+            "type": "number",
+            "description": "投票用户 ID。"
           },
           "userName": {
-            "type": "string"
+            "type": "string",
+            "description": "投票用户名。"
           },
           "items": {
             "type": "array",
             "items": {
               "type": "number"
-            }
+            },
+            "description": "该用户选择的投票选项 ID 列表。"
           },
           "ip": {
-            "type": "string"
+            "type": "string",
+            "description": "投票来源 IP；是否返回由权限和投票设置决定。"
           },
           "time": {
-            "type": "string"
+            "type": "string",
+            "description": "投票时间。"
           }
         },
         "required": ["userId", "userName", "items", "ip", "time"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "一名用户的投票记录。"
       },
       "TopicEventPage": {
         "type": "object",
@@ -9339,18 +9682,23 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "当前页的主题操作记录；不可查看或没有数据时可能为 null。"
           },
           "count": {
-            "type": "number"
+            "type": "number",
+            "description": "主题操作记录总数。"
           },
           "from": {
-            "type": "number"
+            "type": "number",
+            "description": "本次结果的起始位置。"
           },
           "size": {
-            "type": "number"
+            "type": "number",
+            "description": "本次结果的分页大小。"
           },
           "extra": {
+            "description": "附加数据；没有附加数据时为 null。",
             "anyOf": [
               {},
               {
@@ -9359,22 +9707,27 @@
             ]
           },
           "errorCode": {
-            "type": "number"
+            "type": "number",
+            "description": "业务错误码；0 表示成功。"
           }
         },
         "required": ["data", "count", "from", "size", "errorCode"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "主题管理操作记录的分页结果。"
       },
       "TopicEvent": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "主题操作记录 ID。"
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "操作内容说明。"
           },
           "targetUserName": {
+            "description": "操作涉及的目标用户名；不涉及具体用户时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -9385,36 +9738,45 @@
             ]
           },
           "time": {
-            "type": "string"
+            "type": "string",
+            "description": "操作发生时间。"
           },
           "operatorUserName": {
-            "type": "string"
+            "type": "string",
+            "description": "执行操作的用户名。"
           },
           "ip": {
-            "type": "string"
+            "type": "string",
+            "description": "执行操作时的 IP 地址。"
           }
         },
         "required": ["id", "content", "time", "operatorUserName", "ip"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "一条主题管理操作记录。"
       },
       "TopicIpGroup": {
         "type": "object",
         "properties": {
           "ip": {
+            "description": "一组回复使用的 IP 地址。",
             "type": "string"
           },
           "posts": {
+            "description": "使用该 IP 发布的回复。",
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
                 "userName": {
+                  "description": "回复者用户名。",
                   "type": "string"
                 },
                 "floor": {
+                  "description": "回复所在楼层。",
                   "type": "number"
                 },
                 "content": {
+                  "description": "回复正文。",
                   "type": "string"
                 }
               },
@@ -9422,30 +9784,36 @@
             }
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "按 IP 地址分组的主题回复。"
       },
       "TopicPagedResult": {
         "type": "object",
         "properties": {
           "topics": {
+            "description": "当前页的主题列表。",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Topic"
             }
           },
           "count": {
+            "description": "符合条件的主题总数。",
             "type": "number"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "主题分页结果。"
       },
       "RecommendedTopic": {
         "type": "object",
         "properties": {
           "topic": {
+            "description": "推荐的主题概要。",
             "$ref": "#/components/schemas/Topic"
           },
           "content": {
+            "description": "推荐主题的正文摘要；没有可用摘要时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -9456,7 +9824,8 @@
             ]
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "随机推荐主题及其正文摘要。"
       },
       "Like": {
         "type": "object",
@@ -10441,18 +10810,23 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Topic"
-            }
+            },
+            "description": "当前页的主题列表。"
           },
           "count": {
-            "type": "number"
+            "type": "number",
+            "description": "符合条件的主题总数。"
           },
           "from": {
-            "type": "number"
+            "type": "number",
+            "description": "本次结果的起始位置。"
           },
           "size": {
-            "type": "number"
+            "type": "number",
+            "description": "本次结果的分页大小。"
           },
           "extra": {
+            "description": "附加数据；没有附加数据时为 null。",
             "anyOf": [
               {},
               {
@@ -10461,11 +10835,13 @@
             ]
           },
           "errorCode": {
-            "type": "number"
+            "type": "number",
+            "description": "业务错误码；0 表示成功。"
           }
         },
         "required": ["data", "count", "from", "size", "errorCode"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "包含统一分页元数据的主题列表。"
       },
       "TransferWealthResponse": {
         "type": "array",
