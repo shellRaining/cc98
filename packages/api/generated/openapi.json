@@ -3251,7 +3251,8 @@
     "/post/{postId}": {
       "put": {
         "operationId": "putPostPostId",
-        "summary": "Edit post",
+        "summary": "编辑帖子",
+        "description": "修改指定帖子的正文。编辑主题首帖时，还可以同步修改主题标题、标签、主题类型和消息提醒设置。",
         "tags": ["Post"],
         "security": [
           {
@@ -3266,9 +3267,13 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要编辑的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要编辑的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -3283,7 +3288,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "帖子修改成功"
           },
           "default": {
             "description": "API 错误码",
@@ -3299,7 +3304,8 @@
       },
       "delete": {
         "operationId": "deletePostPostId",
-        "summary": "Delete post",
+        "summary": "删除帖子",
+        "description": "删除指定帖子，可在请求体中提供删除理由。",
         "tags": ["Post", "Moderation"],
         "security": [
           {
@@ -3314,9 +3320,13 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要删除的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要删除的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -3331,7 +3341,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "帖子删除成功"
           },
           "default": {
             "description": "API 错误码",
@@ -3349,7 +3359,8 @@
     "/post/{postId}/original": {
       "get": {
         "operationId": "getPostPostIdOriginal",
-        "summary": "Get original post content for editing",
+        "summary": "获取帖子原始内容",
+        "description": "返回帖子未经渲染的正文、格式和楼层等编辑所需信息。当前用户需要具有该帖子的编辑权限。",
         "tags": ["Post"],
         "security": [
           {
@@ -3357,21 +3368,25 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "permission-denied",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要读取原始内容的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要读取原始内容的帖子 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Original post data",
+            "description": "成功获取可编辑的帖子原始内容",
             "content": {
               "application/json": {
                 "schema": {
@@ -3396,7 +3411,8 @@
     "/post/{postId}/like": {
       "get": {
         "operationId": "getPostPostIdLike",
-        "summary": "Get post like state and counts",
+        "summary": "获取帖子赞踩状态",
+        "description": "返回指定帖子的点赞数、点踩数，以及当前访问者的赞踩状态。",
         "tags": ["Post"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -3407,14 +3423,18 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要查询赞踩状态的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要查询赞踩状态的帖子 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Like state",
+            "description": "成功获取点赞数、点踩数和当前用户状态",
             "content": {
               "application/json": {
                 "schema": {
@@ -3437,7 +3457,8 @@
       },
       "put": {
         "operationId": "putPostPostIdLike",
-        "summary": "Like or dislike a post",
+        "summary": "点赞或点踩帖子",
+        "description": "对指定帖子执行点赞或点踩。请求体使用字符串 1 表示点赞，字符串 2 表示点踩。",
         "tags": ["Post"],
         "security": [
           {
@@ -3452,9 +3473,13 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要点赞或点踩的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要点赞或点踩的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -3471,14 +3496,15 @@
                     "type": "string",
                     "const": "2"
                   }
-                ]
+                ],
+                "description": "赞踩操作：字符串 1 表示点赞，字符串 2 表示点踩。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "赞踩操作成功"
           },
           "default": {
             "description": "API 错误码",
@@ -3496,8 +3522,8 @@
     "/post/basic": {
       "get": {
         "operationId": "getPostBasic",
-        "summary": "Get basic post info by repeated id query",
-        "description": "旧前端曾使用该读取接口；2026-07-11 实测返回 405，当前路由仅允许 PUT 和 DELETE。",
+        "summary": "批量获取帖子基础信息（已弃用）",
+        "description": "旧版前端曾按帖子 ID 批量读取基础信息；当前服务不再提供该 GET 路由。",
         "deprecated": true,
         "tags": ["Post"],
         "security": [
@@ -3506,7 +3532,7 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "conflicted",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -3515,15 +3541,19 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "number"
-              }
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "description": "需要查询的帖子 ID，可重复传入多个 id 参数。"
             },
-            "required": true
+            "required": true,
+            "description": "需要查询的帖子 ID，可重复传入多个 id 参数。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Basic posts",
+            "description": "帖子基础信息列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3551,7 +3581,9 @@
     "/post/topic/user": {
       "get": {
         "operationId": "getPostTopicUser",
-        "summary": "Get one user's posts in a topic",
+        "summary": "获取主题内指定用户的帖子（已弃用）",
+        "description": "旧版前端用于筛选某位用户在主题中的帖子；当前服务不再提供该路由。",
+        "deprecated": true,
         "tags": ["Post", "Topic"],
         "security": [
           {
@@ -3559,45 +3591,61 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "conflicted",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "query",
             "name": "topicid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "主题 ID。"
           },
           {
             "in": "query",
             "name": "userid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要筛选的用户 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要筛选的用户 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "起始偏移量，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "起始偏移量，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的帖子数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的帖子数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Posts",
+            "description": "指定用户在主题中的帖子列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3625,7 +3673,8 @@
     "/post/topic/specific-user": {
       "get": {
         "operationId": "getPostTopicSpecificUser",
-        "summary": "Trace replies related to a specific post user",
+        "summary": "追踪指定帖子作者的回复",
+        "description": "根据 postid 对应的作者，分页返回该作者在指定主题中发布的帖子。",
         "tags": ["Post", "Topic"],
         "security": [
           {
@@ -3633,45 +3682,61 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-authenticated",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "query",
             "name": "topicid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要追踪的主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要追踪的主题 ID。"
           },
           {
             "in": "query",
             "name": "postid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "用于确定目标作者的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "用于确定目标作者的帖子 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "起始偏移量，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "起始偏移量，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的帖子数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的帖子数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Posts",
+            "description": "目标作者在该主题中的帖子列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3699,7 +3764,9 @@
     "/post/topic/anonymous/user": {
       "get": {
         "operationId": "getPostTopicAnonymousUser",
-        "summary": "Trace anonymous replies related to a specific post",
+        "summary": "追踪匿名帖子作者的回复（已弃用）",
+        "description": "旧版前端用于追踪同一匿名作者在主题中的帖子；当前服务不再提供该路由。",
+        "deprecated": true,
         "tags": ["Post", "Topic"],
         "security": [
           {
@@ -3707,45 +3774,61 @@
           }
         ],
         "x-cc98-risk": "read-only",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "conflicted",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
             "in": "query",
             "name": "topicid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要追踪的主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要追踪的主题 ID。"
           },
           {
             "in": "query",
             "name": "postid",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "用于确定匿名作者标识的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "用于确定匿名作者标识的帖子 ID。"
           },
           {
             "in": "query",
             "name": "from",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "起始偏移量，0 表示第一条。"
             },
-            "required": true
+            "required": true,
+            "description": "起始偏移量，0 表示第一条。"
           },
           {
             "in": "query",
             "name": "size",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "本次最多返回的帖子数量。"
             },
-            "required": true
+            "required": true,
+            "description": "本次最多返回的帖子数量。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Posts",
+            "description": "同一匿名作者在该主题中的帖子列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -3773,7 +3856,9 @@
     "/post/{postId}/rating": {
       "put": {
         "operationId": "putPostPostIdRating",
-        "summary": "Rate a post, legacy version",
+        "summary": "提交帖子评分（旧版）",
+        "description": "使用正负评分值和自由文本理由给帖子评分。新客户端应使用 rating-v2 接口。",
+        "deprecated": true,
         "tags": ["Post"],
         "security": [
           {
@@ -3788,9 +3873,13 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要评分的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要评分的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -3810,20 +3899,23 @@
                         "type": "number",
                         "const": 1
                       }
-                    ]
+                    ],
+                    "description": "评分值：1 为正面评分，-1 为负面评分。"
                   },
                   "reason": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "评分理由。"
                   }
                 },
-                "required": ["value", "reason"]
+                "required": ["value", "reason"],
+                "description": "旧版自由文本帖子评分请求。"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "帖子评分成功"
           },
           "default": {
             "description": "API 错误码",
@@ -3841,7 +3933,8 @@
     "/post/{postId}/rating-v2": {
       "put": {
         "operationId": "putPostPostIdRatingV2",
-        "summary": "Rate a post, v2 reason based version",
+        "summary": "按预设理由给帖子评分",
+        "description": "使用评分类型和预设理由 ID 给指定帖子提交正面或负面评分。",
         "tags": ["Post"],
         "security": [
           {
@@ -3856,9 +3949,13 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要评分的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要评分的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -3873,7 +3970,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "帖子评分成功"
           },
           "default": {
             "description": "API 错误码",
@@ -3891,8 +3988,8 @@
     "/post/{postId}/operation": {
       "post": {
         "operationId": "postPostPostIdOperation",
-        "summary": "Perform post management operation",
-        "description": "Used for wealth, prestige, and board mute operations. Exact enum values are inferred.",
+        "summary": "执行帖子管理操作",
+        "description": "根据帖子执行财富或声望奖励、扣除，以及对发帖用户实施版面禁言。需要相应管理权限。",
         "tags": ["Post", "Moderation"],
         "security": [
           {
@@ -3907,9 +4004,13 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "作为管理操作依据的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "作为管理操作依据的帖子 ID。"
           }
         ],
         "requestBody": {
@@ -3924,7 +4025,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "帖子管理操作成功"
           },
           "default": {
             "description": "API 错误码",
@@ -3942,7 +4043,8 @@
     "/post/{postId}/awards": {
       "get": {
         "operationId": "getPostPostIdAwards",
-        "summary": "Get post awards or ratings",
+        "summary": "获取帖子奖励和处罚记录",
+        "description": "返回管理人员对指定帖子执行的财富、声望等奖励或处罚记录。",
         "tags": ["Post"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -3953,22 +4055,24 @@
             "in": "path",
             "name": "postId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要查询奖励和处罚记录的帖子 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要查询奖励和处罚记录的帖子 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Award list",
+            "description": "成功获取帖子的奖励和处罚记录",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {},
-                    "additionalProperties": {}
+                    "$ref": "#/components/schemas/PostAward"
                   }
                 }
               }
@@ -3990,7 +4094,8 @@
     "/manage/reward-daily-record": {
       "get": {
         "operationId": "getManageRewardDailyRecord",
-        "summary": "Query daily reward records for a board",
+        "summary": "查询版面每日奖励额度",
+        "description": "供版面管理人员查询当天可发放的财富值上限及已发放数量。",
         "tags": ["Moderation"],
         "security": [
           {
@@ -4005,14 +4110,18 @@
             "in": "query",
             "name": "boardId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要查询奖励额度的版面 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要查询奖励额度的版面 ID。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Reward daily records",
+            "description": "成功获取版面的每日奖励额度使用情况",
             "content": {
               "application/json": {
                 "schema": {
@@ -4037,7 +4146,8 @@
     "/post/rating-reason": {
       "get": {
         "operationId": "getPostRatingReason",
-        "summary": "Get available post rating reasons",
+        "summary": "获取帖子评分理由",
+        "description": "返回帖子评分时可选择的预设理由，可通过 enabled 判断是否可用。",
         "tags": ["Post"],
         "security": [],
         "x-cc98-risk": "read-only",
@@ -4057,14 +4167,16 @@
                   "type": "number",
                   "const": 2
                 }
-              ]
+              ],
+              "description": "评分类型：1 为正面评分，2 为负面评分。"
             },
-            "required": true
+            "required": true,
+            "description": "评分类型：1 为正面评分，2 为负面评分。"
           }
         ],
         "responses": {
           "200": {
-            "description": "Available rating reasons",
+            "description": "成功获取指定类型的评分理由列表",
             "content": {
               "application/json": {
                 "schema": {
@@ -4082,7 +4194,8 @@
     "/post/topic/{topicId}": {
       "post": {
         "operationId": "postPostTopicTopicId",
-        "summary": "Reply to a topic using the legacy route",
+        "summary": "回复主题（旧路由）",
+        "description": "旧版回帖路由。新客户端应使用 POST /topic/{topicId}/post。",
         "deprecated": true,
         "tags": ["Post", "Topic"],
         "security": [
@@ -4098,9 +4211,13 @@
             "in": "path",
             "name": "topicId",
             "schema": {
-              "type": "number"
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "需要回复的主题 ID。"
             },
-            "required": true
+            "required": true,
+            "description": "需要回复的主题 ID。"
           }
         ],
         "requestBody": {
@@ -4115,7 +4232,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "回复发布成功"
           }
         }
       }
@@ -7452,7 +7569,8 @@
         "type": "object",
         "properties": {
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "修改后的帖子正文。"
           },
           "contentType": {
             "anyOf": [
@@ -7464,25 +7582,32 @@
                 "type": "number",
                 "const": 1
               }
-            ]
+            ],
+            "description": "正文格式：0 为 CC98 UBB，1 为 Markdown。"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "修改后的主题标题；编辑普通回复时传空字符串。"
           },
           "tag1": {
+            "description": "主题的一级标签 ID，仅编辑主题首帖时使用。",
             "type": "number"
           },
           "tag2": {
+            "description": "主题的二级标签 ID，仅编辑主题首帖时使用。",
             "type": "number"
           },
           "type": {
+            "description": "主题类型：0 为普通主题，1 为校园活动，2 为学术通知；仅编辑主题首帖时使用。",
             "type": "number"
           },
           "notifyPoster": {
+            "description": "是否接收主题相关消息提醒，仅编辑主题首帖时使用。",
             "type": "boolean"
           }
         },
-        "required": ["content", "contentType", "title"]
+        "required": ["content", "contentType", "title"],
+        "description": "编辑帖子或主题首帖时提交的内容。"
       },
       "PostRatingRequest": {
         "type": "object",
@@ -7490,7 +7615,8 @@
           "reasonId": {
             "type": "integer",
             "exclusiveMinimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "评分理由 ID。"
           },
           "type": {
             "anyOf": [
@@ -7502,30 +7628,38 @@
                 "type": "number",
                 "const": 2
               }
-            ]
+            ],
+            "description": "评分类型：1 为正面评分，2 为负面评分。"
           }
         },
-        "required": ["reasonId", "type"]
+        "required": ["reasonId", "type"],
+        "description": "基于预设理由提交帖子评分。"
       },
       "PostOperationRequest": {
         "type": "object",
         "properties": {
           "operationType": {
+            "description": "管理操作类型：0 为奖励，1 为扣除或处罚。",
             "type": "number"
           },
           "reason": {
+            "description": "执行管理操作的理由。",
             "type": "string"
           },
           "wealth": {
+            "description": "增加或扣除的财富值。",
             "type": "number"
           },
           "prestige": {
+            "description": "增加或扣除的声望值。",
             "type": "number"
           },
           "stopPostDays": {
+            "description": "在所属版面禁止发帖的天数。",
             "type": "number"
           }
-        }
+        },
+        "description": "奖励、扣除财富或声望，以及版面禁言操作。"
       },
       "UserOperationRequest": {
         "type": "object",
@@ -8871,15 +9005,19 @@
         "type": "object",
         "properties": {
           "id": {
+            "description": "帖子 ID。",
             "type": "number"
           },
           "topicId": {
+            "description": "帖子所属的主题 ID。",
             "type": "number"
           },
           "boardId": {
+            "description": "帖子所属的版面 ID。",
             "type": "number"
           },
           "title": {
+            "description": "帖子标题；普通回复通常为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8890,9 +9028,11 @@
             ]
           },
           "content": {
+            "description": "帖子正文原文，需要根据 contentType 解析。",
             "type": "string"
           },
           "contentType": {
+            "description": "正文格式：0 为 CC98 UBB，1 为 Markdown。",
             "anyOf": [
               {
                 "type": "number",
@@ -8905,12 +9045,15 @@
             ]
           },
           "floor": {
+            "description": "帖子在主题中的楼层号，从 1 开始。",
             "type": "number"
           },
           "count": {
+            "description": "筛选类接口中的匹配帖子总数；普通主题帖子列表中通常为 0。",
             "type": "number"
           },
           "userId": {
+            "description": "发帖用户 ID；匿名或无法提供用户信息时可能为 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -8921,6 +9064,7 @@
             ]
           },
           "userName": {
+            "description": "发帖用户名或匿名标识；无法提供时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -8931,30 +9075,39 @@
             ]
           },
           "ip": {
+            "description": "发帖 IP 信息，内容可能随当前用户权限而变化。",
             "type": "string"
           },
           "isAllowedOnly": {
+            "description": "是否仅允许指定用户查看。",
             "type": "boolean"
           },
           "isAnonymous": {
+            "description": "帖子是否以匿名方式发布。",
             "type": "boolean"
           },
           "isBest": {
+            "description": "帖子是否被标记为精华，具体展示规则尚未确认。",
             "type": "boolean"
           },
           "isDeleted": {
+            "description": "帖子是否已被删除。",
             "type": "boolean"
           },
           "isLZ": {
+            "description": "帖子是否由主题作者发布。",
             "type": "boolean"
           },
           "likeCount": {
+            "description": "点赞数量。",
             "type": "number"
           },
           "dislikeCount": {
+            "description": "点踩数量。",
             "type": "number"
           },
           "likeState": {
+            "description": "当前用户的赞踩状态：0 为未操作，1 为点赞，2 为点踩。",
             "anyOf": [
               {
                 "type": "number",
@@ -8971,9 +9124,11 @@
             ]
           },
           "length": {
+            "description": "旧响应中的主题总楼层数。",
             "type": "number"
           },
           "parentId": {
+            "description": "被回复或引用的帖子 ID；没有指定父帖子时可能为 0 或 null。",
             "anyOf": [
               {
                 "type": "number"
@@ -8984,20 +9139,22 @@
             ]
           },
           "state": {
+            "description": "帖子状态编号，具体取值含义尚未确认。",
             "type": "number"
           },
           "time": {
+            "description": "帖子发布时间。",
             "type": "string"
           },
           "awards": {
+            "description": "该帖子获得的奖励或处罚记录。",
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {},
-              "additionalProperties": {}
+              "$ref": "#/components/schemas/PostAward"
             }
           },
           "allowedViewers": {
+            "description": "允许查看受限帖子的用户 ID 列表；帖子不受限时可能为 null。",
             "anyOf": [
               {
                 "type": "array",
@@ -9011,6 +9168,7 @@
             ]
           },
           "lastUpdateTime": {
+            "description": "帖子最后编辑时间；未编辑时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -9021,6 +9179,7 @@
             ]
           },
           "lastUpdateAuthor": {
+            "description": "最后编辑帖子的用户名或匿名标识；未编辑时可能为 null。",
             "anyOf": [
               {
                 "type": "string"
@@ -9031,10 +9190,43 @@
             ]
           },
           "isMe": {
+            "description": "帖子是否由当前登录用户发布。",
             "type": "boolean"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "主题中的帖子或回复。后端可能省略部分字段。"
+      },
+      "PostAward": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "奖励或处罚记录 ID。",
+            "type": "number"
+          },
+          "content": {
+            "description": "财富、声望等奖励或处罚的内容摘要。",
+            "type": "string"
+          },
+          "operatorName": {
+            "description": "执行奖励或处罚的用户名。",
+            "type": "string"
+          },
+          "reason": {
+            "description": "执行该操作时填写的理由。",
+            "type": "string"
+          },
+          "time": {
+            "description": "奖励或处罚的执行时间。",
+            "type": "string"
+          },
+          "type": {
+            "description": "奖励或处罚类型编号，具体取值含义尚未确认。",
+            "type": "number"
+          }
+        },
+        "additionalProperties": {},
+        "description": "帖子获得的奖励或处罚记录。"
       },
       "VoteInfo": {
         "type": "object",
@@ -9270,12 +9462,15 @@
         "type": "object",
         "properties": {
           "dislikeCount": {
+            "description": "点踩数量。",
             "type": "number"
           },
           "likeCount": {
+            "description": "点赞数量。",
             "type": "number"
           },
           "likeState": {
+            "description": "当前用户的赞踩状态：0 为未操作，1 为点赞，2 为点踩。",
             "anyOf": [
               {
                 "type": "number",
@@ -9292,31 +9487,38 @@
             ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "帖子的点赞、点踩数量及当前用户状态。"
       },
       "PostRewardDailyRecord": {
         "type": "object",
         "properties": {
           "rewardMaxValue": {
+            "description": "该版面每日允许发放的财富值上限。",
             "type": "number"
           },
           "rewardTotalValue": {
+            "description": "当前用户当天已在该版面发放的财富值。",
             "type": "number"
           },
           "boardName": {
+            "description": "版面名称。",
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "版主当天在指定版面的财富奖励额度使用情况。"
       },
       "RatingReason": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "评分理由 ID。"
           },
           "reason": {
-            "type": "string"
+            "type": "string",
+            "description": "评分理由的展示文本。"
           },
           "type": {
             "anyOf": [
@@ -9328,14 +9530,17 @@
                 "type": "number",
                 "const": 2
               }
-            ]
+            ],
+            "description": "评分类型：1 为正面评分，2 为负面评分。"
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "该评分理由当前是否可用。"
           }
         },
         "required": ["id", "reason", "type", "enabled"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "帖子评分时可选择的预设理由。"
       },
       "User": {
         "allOf": [
@@ -10196,18 +10401,23 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Post"
-            }
+            },
+            "description": "当前分页返回的帖子列表。"
           },
           "count": {
-            "type": "number"
+            "type": "number",
+            "description": "符合条件的帖子总数。"
           },
           "from": {
-            "type": "number"
+            "type": "number",
+            "description": "本页数据的起始偏移量。"
           },
           "size": {
-            "type": "number"
+            "type": "number",
+            "description": "请求的分页数量。"
           },
           "extra": {
+            "description": "附加数据；没有时可能为 null。",
             "anyOf": [
               {},
               {
@@ -10216,11 +10426,13 @@
             ]
           },
           "errorCode": {
-            "type": "number"
+            "type": "number",
+            "description": "业务错误码；0 表示成功。"
           }
         },
         "required": ["data", "count", "from", "size", "errorCode"],
-        "additionalProperties": {}
+        "additionalProperties": {},
+        "description": "带总数和分页信息的帖子列表响应。"
       },
       "PagedTopicResultData": {
         "type": "object",
