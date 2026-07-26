@@ -21,6 +21,7 @@ import {
   userOperationRequestSchema,
   messageCountsSchema,
   notificationPostBasicInfoSchema,
+  serverTimeResponseSchema,
   sendMessageRequestSchema,
 } from "../src/index.ts";
 import type { ApiOperation } from "../src/operations/types.ts";
@@ -64,6 +65,16 @@ describe("API 契约基线", () => {
     expect(index.todayTopicCount).toBeTypeOf("number");
     expect(index.manualHotTopic?.length).toBeGreaterThan(0);
     expect(index.specialOffer?.length).toBeGreaterThan(0);
+  });
+
+  it("服务器时间响应保留完整成功包装", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getConfigNow.json"),
+        "utf8",
+      ),
+    );
+    expect(serverTimeResponseSchema.parse(fixture)).toEqual(fixture);
   });
 
   it("用户中心分页响应保留页码元数据", () => {

@@ -8,6 +8,15 @@ export const globalConfigSchema = z
   .meta({ id: "GlobalConfig" });
 export type GlobalConfig = z.infer<typeof globalConfigSchema>;
 
+export const serverTimeResponseSchema = z
+  .object({
+    data: z.string(),
+    extra: z.null(),
+    errorCode: z.literal(0),
+  })
+  .meta({ id: "ServerTimeResponse" });
+export type ServerTimeResponse = z.infer<typeof serverTimeResponseSchema>;
+
 export const hotTopicSchema = z
   .looseObject({
     id: z.number().optional(),

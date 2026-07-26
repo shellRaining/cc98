@@ -6,6 +6,7 @@ import {
   globalConfigSchema,
   indexSchema,
   indexColumnSchema,
+  serverTimeResponseSchema,
   tagSchema,
 } from "../schemas/index.ts";
 
@@ -167,7 +168,7 @@ export const configOperations = defineOperations([
       "200": {
         description: "Current server time",
         contentType: "application/json",
-        schema: z.object({ data: z.string().optional() }),
+        schema: serverTimeResponseSchema,
       },
       default: {
         description: "API 错误码",

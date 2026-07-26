@@ -272,13 +272,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false
+                  "$ref": "#/components/schemas/ServerTimeResponse"
                 }
               }
             }
@@ -7281,6 +7275,23 @@
           }
         },
         "additionalProperties": {}
+      },
+      "ServerTimeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "extra": {
+            "type": "null"
+          },
+          "errorCode": {
+            "type": "number",
+            "const": 0
+          }
+        },
+        "required": ["data", "extra", "errorCode"],
+        "additionalProperties": false
       },
       "Index": {
         "type": "object",
