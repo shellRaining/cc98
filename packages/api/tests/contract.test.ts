@@ -8,6 +8,7 @@ import openIdOpenapi from "../generated/openid.openapi.json" with { type: "json"
 import {
   endpointCatalog,
   boardEventPageSchema,
+  boardSummarySchema,
   boardSchema,
   createPostRequestSchema,
   favoriteTopicGroupSchema,
@@ -105,6 +106,24 @@ describe("API 契约基线", () => {
     expect(boardSchema.parse({ id: 763, bigPaper: null })).toMatchObject({
       id: 763,
       bigPaper: null,
+    });
+  });
+
+  it("版面导航概要不混入详情字段", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getBoardAll.json"),
+        "utf8",
+      ),
+    );
+    const summary = boardSummarySchema.parse(fixture[0].boards[0]);
+    const summaryProperties = openapi.components.schemas.BoardSummary.properties;
+
+    expect(summary.showShareTip).toBeTypeOf("boolean");
+    expect(summaryProperties).toHaveProperty("showShareTip");
+    expect(summaryProperties).not.toHaveProperty("logoUri");
+    expect(openapi.components.schemas.BoardGroup.properties.boards.items).toEqual({
+      $ref: "#/components/schemas/BoardSummary",
     });
   });
 

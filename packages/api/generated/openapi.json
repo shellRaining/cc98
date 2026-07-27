@@ -8643,12 +8643,69 @@
             "description": "分组内的版面概要列表。",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Board"
+              "$ref": "#/components/schemas/BoardSummary"
             }
           }
         },
         "additionalProperties": {},
         "description": "论坛版面导航中的一级分组。"
+      },
+      "BoardSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "版面 ID。",
+            "type": "number"
+          },
+          "name": {
+            "description": "版面名称。",
+            "type": "string"
+          },
+          "description": {
+            "description": "版面简介；未配置时可能为 null。",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "topicCount": {
+            "description": "版面主题总数。",
+            "type": "number"
+          },
+          "postCount": {
+            "description": "版面回复总数。",
+            "type": "number"
+          },
+          "todayCount": {
+            "description": "版面今日回复数。",
+            "type": "number"
+          },
+          "boardMasters": {
+            "description": "版主用户名列表。",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "anonymousState": {
+            "description": "匿名发帖模式：0 为不可匿名，1 为只能匿名，2、3 均允许在发主题时选择是否匿名；2 与 3 在回复场景中的具体差异尚未完全确认。",
+            "type": "number"
+          },
+          "showShareTip": {
+            "description": "是否展示版面分享提示，具体触发场景尚未确认。",
+            "type": "boolean"
+          },
+          "canVote": {
+            "description": "当前访问者是否可以在版面发布投票主题。",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": {},
+        "description": "版面导航中的版面概要，仅包含 /board/all 实际返回的字段。"
       },
       "Board": {
         "type": "object",

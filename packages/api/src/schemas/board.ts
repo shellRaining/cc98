@@ -85,6 +85,25 @@ export const boardSchema = z
   });
 export type Board = z.infer<typeof boardSchema>;
 
+export const boardSummarySchema = boardSchema
+  .pick({
+    id: true,
+    name: true,
+    description: true,
+    topicCount: true,
+    postCount: true,
+    todayCount: true,
+    boardMasters: true,
+    anonymousState: true,
+    showShareTip: true,
+    canVote: true,
+  })
+  .meta({
+    id: "BoardSummary",
+    description: "版面导航中的版面概要，仅包含 /board/all 实际返回的字段。",
+  });
+export type BoardSummary = z.infer<typeof boardSummarySchema>;
+
 export const tagSchema = z
   .looseObject({
     id: z.number().optional().meta({ description: "全局标签 ID。" }),
@@ -132,7 +151,7 @@ export const boardGroupSchema = z
     name: z.string().optional().meta({ description: "版面分组名称。" }),
     order: z.number().optional().meta({ description: "版面分组的展示顺序。" }),
     masters: z.array(z.string()).optional().meta({ description: "分区主管用户名列表。" }),
-    boards: z.array(boardSchema).optional().meta({ description: "分组内的版面概要列表。" }),
+    boards: z.array(boardSummarySchema).optional().meta({ description: "分组内的版面概要列表。" }),
   })
   .meta({ id: "BoardGroup", description: "论坛版面导航中的一级分组。" });
 export type BoardGroup = z.infer<typeof boardGroupSchema>;
