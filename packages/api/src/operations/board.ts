@@ -5,6 +5,7 @@ import {
   boardGroupSchema,
   boardMutedUserSchema,
   boardSchema,
+  boardSummarySchema,
   boardTagDataSchema,
   createTopicRequestSchema,
   errorCodeSchema,
@@ -93,7 +94,7 @@ export const boardOperations = defineOperations([
       "200": {
         description: "成功获取名称或简介匹配关键词的版面",
         contentType: "application/json",
-        schema: z.array(boardSchema),
+        schema: z.array(boardSummarySchema),
       },
       default: {
         description: "API 错误码",

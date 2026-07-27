@@ -109,21 +109,34 @@ describe("API 契约基线", () => {
     });
   });
 
-  it("版面导航概要不混入详情字段", async () => {
-    const fixture = JSON.parse(
+  it("版面概要不混入详情字段", async () => {
+    const boardAllFixture = JSON.parse(
       await readFile(
         resolve(import.meta.dirname, "../fixtures/anonymous/getBoardAll.json"),
         "utf8",
       ),
     );
-    const summary = boardSummarySchema.parse(fixture[0].boards[0]);
+    const boardSearchFixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getBoardSearch.json"),
+        "utf8",
+      ),
+    );
+    const summary = boardSummarySchema.parse(boardAllFixture[0].boards[0]);
     const summaryProperties = openapi.components.schemas.BoardSummary.properties;
 
     expect(summary.showShareTip).toBeTypeOf("boolean");
+    expect(boardSummarySchema.array().safeParse(boardSearchFixture).success).toBe(true);
     expect(summaryProperties).toHaveProperty("showShareTip");
     expect(summaryProperties).not.toHaveProperty("logoUri");
     expect(openapi.components.schemas.BoardGroup.properties.boards.items).toEqual({
       $ref: "#/components/schemas/BoardSummary",
+    });
+    expect(
+      openapi.paths["/board/search"].get.responses["200"].content["application/json"].schema,
+    ).toEqual({
+      type: "array",
+      items: { $ref: "#/components/schemas/BoardSummary" },
     });
   });
 
