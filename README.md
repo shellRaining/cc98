@@ -4,12 +4,12 @@
 
 ## 开发环境
 
-| 开发者类型 | 需要自行准备 | 说明 |
-| --- | --- | --- |
-| 普通开发者 | [Vite+](https://viteplus.dev/) 的 `vp` CLI | 进入仓库后执行 `vp install`，其余项目工具由仓库管理 |
-| 真实接口验证者 | 浙江大学校园网或代理、CC98 账号 | 账号写入 `.cc98-credentials.local`；普通构建和离线测试不需要 |
+| 开发者类型         | 需要自行准备                                                | 说明                                                                      |
+| ------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 普通开发者         | [Vite+](https://viteplus.dev/) 的 `vp` CLI                  | 进入仓库后执行 `vp install`，其余项目工具由仓库管理                       |
+| 真实接口验证者     | 浙江大学校园网或代理、CC98 账号                             | 账号写入 `.cc98-credentials.local`；普通构建和离线测试不需要              |
 | 并行或自动化开发者 | [Worktrunk](https://worktrunk.dev/)；按需安装浏览器运行环境 | Worktrunk 用于多 worktree；浏览器环境运行 `vp exec agent-browser install` |
-| 部署维护者 | Vercel 项目权限；按需安装 Vercel CLI | 普通开发者不需要；生产域名维护还需要相应 DNS 权限 |
+| 部署维护者         | Vercel 项目权限；按需安装 Vercel CLI                        | 普通开发者不需要；生产域名维护还需要相应 DNS 权限                         |
 
 安装依赖并启动开发环境：
 
@@ -23,10 +23,10 @@ vp run dev
 需要隔离开发时，当前 Agent 运行：
 
 ```bash
-wt switch --create codex/<task-name> --base=@ --no-cd --format json
+wt switch --create <type>/<short-desc> --base=@ --no-cd --format json
 ```
 
-Worktrunk 会返回新 worktree 的 `path`。Agent 之后必须把所有命令的工作目录和文件编辑路径切到该目录，并用 `git branch --show-current`、`git rev-parse --show-toplevel` 确认位置。不要使用 `-x codex`，它会启动另一个 Codex 进程，无法切换当前任务。
+分支名按任务意图选择 `feature/`、`fix/`、`docs/` 等前缀，具体约定见 `docs/collaborating.md`，不要使用 Agent 或工具名作为固定前缀。Worktrunk 会返回新 worktree 的 `path`。Agent 之后必须把所有命令的工作目录和文件编辑路径切到该目录，并用 `git branch --show-current`、`git rev-parse --show-toplevel` 确认位置。不要使用 `-x codex`，它会启动另一个 Codex 进程，无法切换当前任务。
 
 新 worktree 从已提交的 `HEAD` 创建，不包含当前目录尚未提交的改动。任务依赖这些改动时，应继续使用当前目录，不能直接创建 worktree。Worktrunk 会按 `.config/wt.toml` 复制 `.worktreeinclude` 中声明的本地文件，再运行 `vp install --frozen-lockfile --prefer-offline`。
 
