@@ -52,13 +52,13 @@ export const boardOperations = defineOperations([
         in: "query",
         required: true,
         schema: z.array(z.number()),
-        description: "要查询的版面 ID，可重复传入多个 id 参数。",
+        description: "要查询的版面 ID，可重复传入多个 id 参数；重复的 ID 只返回一次。",
         probeValue: 758,
       },
     ],
     responses: {
       "200": {
-        description: "成功获取指定版面列表",
+        description: "成功获取至少一个匹配的版面详情列表",
         contentType: "application/json",
         schema: z.array(boardSchema),
       },
@@ -72,7 +72,8 @@ export const boardOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
-    description: "根据一个或多个版面 ID 批量返回版面信息，常用于补齐收藏和主题记录中的版面资料。",
+    description:
+      "批量查询一个或多个版面，返回值字段与 /board/{boardId} 相同。适合已有多个版面 ID 时一次补齐收藏、主题记录等列表中的版面资料，避免逐个请求。不存在的 ID 会被忽略，全部 ID 均不存在时返回 404；调用方应按 id 关联结果，不应依赖响应顺序。",
   },
   {
     method: "GET",
@@ -141,7 +142,7 @@ export const boardOperations = defineOperations([
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "返回版面公告、简介、统计、访问限制和当前访问者能力。登录后还会包含是否已关注等用户相关状态。",
+      "查询单个版面并直接返回一个 Board 对象；需要同时查询多个版面时应使用 /board/ 批量接口，两者返回相同的版面字段。本接口包含版面公告、简介、统计、访问限制和当前访问者能力，登录后还会包含是否已关注等用户相关状态。",
   },
   {
     method: "GET",
