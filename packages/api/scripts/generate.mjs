@@ -7,11 +7,35 @@ import { operationRegistry } from "../src/operations/index.ts";
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const accessTokenSecuritySchemeName = "CC98_ACCESS_TOKEN";
-const accessTokenSecurityRequirement = { [accessTokenSecuritySchemeName]: [] };
+const apifoxAccessTokenVariable = "{{CC98_ACCESS_TOKEN}}";
+
+function createAccessTokenSecurityRequirement(schemeGroupId) {
+  return {
+    [accessTokenSecuritySchemeName]: [],
+    "x-apifox": {
+      schemeGroups: [{ id: schemeGroupId, schemeIds: [accessTokenSecuritySchemeName] }],
+      required: true,
+      use: {
+        id: schemeGroupId,
+        configs: {
+          [accessTokenSecuritySchemeName]: {
+            authConfigs: {
+              "x-apifox": { token: apifoxAccessTokenVariable },
+            },
+          },
+        },
+      },
+      scopes: {
+        [schemeGroupId]: { [accessTokenSecuritySchemeName]: [] },
+      },
+    },
+  };
+}
+
 const accessTokenSecurityScheme = {
   type: "http",
   scheme: "bearer",
-  description: "CC98 access token。Apifox 中可通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。",
+  description: "CC98 access token。Apifox 中通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。",
 };
 const outputDirArgument = process.argv
   .find((argument) => argument.startsWith("--output-dir="))
@@ -87,7 +111,10 @@ function operationsToPaths(operations, { includeOperationServers = true } = {}) 
           responseToOpenApi(response),
         ]),
       ),
-      security: operation.auth === "anonymous" ? [] : [accessTokenSecurityRequirement],
+      security:
+        operation.auth === "anonymous"
+          ? []
+          : [createAccessTokenSecurityRequirement(`cc98AccessToken-${operation.operationId}`)],
       "x-cc98-risk": operation.risk,
       "x-cc98-verification": operation.verificationStatus,
       "x-cc98-source": operation.sources,
@@ -132,7 +159,7 @@ const openapi = createOpenApiDocument({
   title: "CC98 API",
   description: "根据 CC98 前端调用与真实接口响应维护的公共 API 契约。",
   servers: [{ url: "https://api-v2.cc98.org", description: "CC98 正式 API" }],
-  security: [accessTokenSecurityRequirement],
+  security: [createAccessTokenSecurityRequirement("cc98AccessToken")],
   securitySchemes: { [accessTokenSecuritySchemeName]: accessTokenSecurityScheme },
   operations: apiOperations,
 });

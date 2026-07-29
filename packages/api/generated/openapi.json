@@ -21,7 +21,33 @@
   ],
   "security": [
     {
-      "CC98_ACCESS_TOKEN": []
+      "CC98_ACCESS_TOKEN": [],
+      "x-apifox": {
+        "schemeGroups": [
+          {
+            "id": "cc98AccessToken",
+            "schemeIds": ["CC98_ACCESS_TOKEN"]
+          }
+        ],
+        "required": true,
+        "use": {
+          "id": "cc98AccessToken",
+          "configs": {
+            "CC98_ACCESS_TOKEN": {
+              "authConfigs": {
+                "x-apifox": {
+                  "token": "{{CC98_ACCESS_TOKEN}}"
+                }
+              }
+            }
+          }
+        },
+        "scopes": {
+          "cc98AccessToken": {
+            "CC98_ACCESS_TOKEN": []
+          }
+        }
+      }
     }
   ],
   "paths": {
@@ -67,7 +93,33 @@
         "tags": ["Config", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putConfigGlobalAnnouncement",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putConfigGlobalAnnouncement",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putConfigGlobalAnnouncement": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -152,7 +204,33 @@
         "tags": ["Config", "Index", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getConfigGlobalAdvertisementAll",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getConfigGlobalAdvertisementAll",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getConfigGlobalAdvertisementAll": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -193,7 +271,33 @@
         "tags": ["Config", "Index", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getConfigGlobalSpecialOfferAll",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getConfigGlobalSpecialOfferAll",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getConfigGlobalSpecialOfferAll": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -339,7 +443,33 @@
         "tags": ["Index", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putConfigIndexUpdate",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putConfigIndexUpdate",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putConfigIndexUpdate": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -370,7 +500,33 @@
         "tags": ["Index", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getIndexColumnColumnKindAll",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getIndexColumnColumnKindAll",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getIndexColumnColumnKindAll": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -436,7 +592,33 @@
         "tags": ["Index", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postIndexColumn",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postIndexColumn",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postIndexColumn": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -477,7 +659,33 @@
         "tags": ["Index", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putIndexColumnId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putIndexColumnId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putIndexColumnId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -753,7 +961,33 @@
         "tags": ["Board", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getBoardBoardIdTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getBoardBoardIdTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getBoardBoardIdTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -824,7 +1058,33 @@
         "tags": ["Board", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postBoardBoardIdTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postBoardBoardIdTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postBoardBoardIdTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -979,7 +1239,33 @@
         "tags": ["Board", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getBoardBoardIdEvents",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getBoardBoardIdEvents",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getBoardBoardIdEvents": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1049,7 +1335,33 @@
         "tags": ["Board", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putBoardBoardIdBigPaper",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putBoardBoardIdBigPaper",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putBoardBoardIdBigPaper": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -1109,7 +1421,33 @@
         "tags": ["Board", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getBoardBoardIdStopPostUser",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getBoardBoardIdStopPostUser",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getBoardBoardIdStopPostUser": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1182,7 +1520,33 @@
         "tags": ["Board", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteBoardBoardIdStopPostUserUserId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteBoardBoardIdStopPostUserUserId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteBoardBoardIdStopPostUserUserId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -1235,7 +1599,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicTopicId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicTopicId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicTopicId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1285,7 +1675,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteTopicTopicId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteTopicTopicId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteTopicTopicId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -1340,7 +1756,33 @@
         "tags": ["Topic", "Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicTopicIdPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicTopicIdPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicTopicIdPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1417,7 +1859,33 @@
         "tags": ["Topic", "Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postTopicTopicIdPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postTopicTopicIdPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postTopicTopicIdPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -1479,7 +1947,33 @@
         "tags": ["Topic", "Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicTopicIdHotPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicTopicIdHotPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicTopicIdHotPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1534,7 +2028,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicTopicIdVote",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicTopicIdVote",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicTopicIdVote": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1584,7 +2104,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postTopicTopicIdVote",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postTopicTopicIdVote",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postTopicTopicIdVote": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -1760,7 +2306,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicTopicIdLookIp",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicTopicIdLookIp",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicTopicIdLookIp": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -1815,7 +2387,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdTop",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdTop",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdTop": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -1868,7 +2466,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteTopicTopicIdTop",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteTopicTopicIdTop",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteTopicTopicIdTop": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -1923,7 +2547,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdLock",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdLock",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdLock": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -1976,7 +2626,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteTopicTopicIdLock",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteTopicTopicIdLock",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteTopicTopicIdLock": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2031,7 +2707,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdBest",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdBest",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdBest": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2084,7 +2786,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteTopicTopicIdBest",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteTopicTopicIdBest",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteTopicTopicIdBest": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2139,7 +2867,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdNotHot",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdNotHot",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdNotHot": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2192,7 +2946,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteTopicTopicIdNotHot",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteTopicTopicIdNotHot",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteTopicTopicIdNotHot": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2247,7 +3027,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdHighlight",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdHighlight",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdHighlight": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2302,7 +3108,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdUp",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdUp",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdUp": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2357,7 +3189,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicTopicIdMovetoBoardId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicTopicIdMovetoBoardId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicTopicIdMovetoBoardId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2424,7 +3282,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicMultiLock",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicMultiLock",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicMultiLock": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2482,7 +3366,33 @@
         "tags": ["Topic", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putTopicMultiDelete",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putTopicMultiDelete",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putTopicMultiDelete": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -2540,7 +3450,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicToptopics",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicToptopics",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicToptopics": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -2595,7 +3531,33 @@
         "tags": ["Topic", "Board"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicBestBoardBoardId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicBestBoardBoardId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicBestBoardBoardId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -2671,7 +3633,33 @@
         "tags": ["Topic", "Board"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicSaveBoardBoardId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicSaveBoardBoardId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicSaveBoardBoardId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -2747,7 +3735,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicSearch",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicSearch",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicSearch": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -2825,7 +3839,33 @@
         "tags": ["Topic", "Board"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicSearchBoardBoardId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicSearchBoardBoardId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicSearchBoardBoardId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -2915,7 +3955,33 @@
         "tags": ["Topic", "Board"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicSearchBoardBoardIdTag",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicSearchBoardBoardIdTag",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicSearchBoardBoardIdTag": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3011,7 +4077,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicNew",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicNew",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicNew": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3078,7 +4170,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicNewMedia",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicNewMedia",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicNewMedia": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3145,7 +4263,33 @@
         "tags": ["Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicRandomRecommendation",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicRandomRecommendation",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicRandomRecommendation": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3367,7 +4511,33 @@
         "tags": ["Topic", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicMeFavorite",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicMeFavorite",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicMeFavorite": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3465,7 +4635,33 @@
         "tags": ["Topic", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getTopicMeSearchFavorite",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getTopicMeSearchFavorite",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getTopicMeSearchFavorite": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3543,7 +4739,33 @@
         "tags": ["Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putPostPostId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putPostPostId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putPostPostId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -3596,7 +4818,33 @@
         "tags": ["Post", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deletePostPostId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deletePostPostId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deletePostPostId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -3651,7 +4899,33 @@
         "tags": ["Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getPostPostIdOriginal",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getPostPostIdOriginal",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getPostPostIdOriginal": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3749,7 +5023,33 @@
         "tags": ["Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putPostPostIdLike",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putPostPostIdLike",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putPostPostIdLike": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -3815,7 +5115,33 @@
         "tags": ["Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getPostBasic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getPostBasic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getPostBasic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3874,7 +5200,33 @@
         "tags": ["Post", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getPostTopicUser",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getPostTopicUser",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getPostTopicUser": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -3965,7 +5317,33 @@
         "tags": ["Post", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getPostTopicSpecificUser",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getPostTopicSpecificUser",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getPostTopicSpecificUser": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -4057,7 +5435,33 @@
         "tags": ["Post", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getPostTopicAnonymousUser",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getPostTopicAnonymousUser",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getPostTopicAnonymousUser": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -4149,7 +5553,33 @@
         "tags": ["Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putPostPostIdRating",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putPostPostIdRating",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putPostPostIdRating": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -4225,7 +5655,33 @@
         "tags": ["Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putPostPostIdRatingV2",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putPostPostIdRatingV2",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putPostPostIdRatingV2": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -4280,7 +5736,33 @@
         "tags": ["Post", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postPostPostIdOperation",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postPostPostIdOperation",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postPostPostIdOperation": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -4386,7 +5868,33 @@
         "tags": ["Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getManageRewardDailyRecord",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getManageRewardDailyRecord",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getManageRewardDailyRecord": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -4487,7 +5995,33 @@
         "tags": ["Post", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postPostTopicTopicId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postPostTopicTopicId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postPostTopicTopicId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -4836,7 +6370,33 @@
         "tags": ["User", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getUserIdRecentTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getUserIdRecentTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getUserIdRecentTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -4935,7 +6495,33 @@
         "tags": ["User", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putUserIdOperation",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putUserIdOperation",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putUserIdOperation": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -4990,7 +6576,33 @@
         "tags": ["User", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteUserIdPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteUserIdPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteUserIdPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -5052,7 +6664,33 @@
         "tags": ["User", "Post", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getUserIdPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getUserIdPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getUserIdPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "read-only",
@@ -5160,7 +6798,33 @@
         "tags": ["User", "Moderation"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteUserIdTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteUserIdTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteUserIdTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "destructive",
@@ -5224,7 +6888,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMe",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMe",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMe": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -5260,7 +6950,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMe",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMe",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMe": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5301,7 +7017,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMePortrait",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMePortrait",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMePortrait": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5344,7 +7086,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeTheme",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeTheme",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeTheme": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5389,7 +7157,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeThemeSetting",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeThemeSetting",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeThemeSetting": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5430,7 +7224,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeTopicViewMode",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeTopicViewMode",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeTopicViewMode": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5486,7 +7306,33 @@
         "tags": ["Me", "User"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeFolloweeUserId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeFolloweeUserId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeFolloweeUserId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5529,7 +7375,33 @@
         "tags": ["Me", "User"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteMeFolloweeUserId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteMeFolloweeUserId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteMeFolloweeUserId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5574,7 +7446,33 @@
         "tags": ["Me", "User"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeFollowee",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeFollowee",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeFollowee": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -5642,7 +7540,33 @@
         "tags": ["Me", "User"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeFollower",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeFollower",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeFollower": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -5710,7 +7634,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeFolloweeTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeFolloweeTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeFolloweeTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -5787,7 +7737,33 @@
         "tags": ["Me", "Board"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeCustomBoardBoardId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeCustomBoardBoardId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeCustomBoardBoardId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5830,7 +7806,33 @@
         "tags": ["Me", "Board"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteMeCustomBoardBoardId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteMeCustomBoardBoardId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteMeCustomBoardBoardId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5875,7 +7877,33 @@
         "tags": ["Me", "Board", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeCustomBoardTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeCustomBoardTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeCustomBoardTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -5942,7 +7970,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeFavoriteTopicId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeFavoriteTopicId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeFavoriteTopicId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -5995,7 +8049,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteMeFavoriteTopicId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteMeFavoriteTopicId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteMeFavoriteTopicId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6040,7 +8120,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeFavoriteTopicGroup",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeFavoriteTopicGroup",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeFavoriteTopicGroup": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6076,7 +8182,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postMeFavoriteTopicGroup",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postMeFavoriteTopicGroup",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postMeFavoriteTopicGroup": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6124,7 +8256,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeFavoriteTopicGroup",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeFavoriteTopicGroup",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeFavoriteTopicGroup": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6178,7 +8336,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-deleteMeFavoriteTopicGroup",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-deleteMeFavoriteTopicGroup",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-deleteMeFavoriteTopicGroup": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6223,7 +8407,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeRecentTopic",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeRecentTopic",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeRecentTopic": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6290,7 +8500,33 @@
         "tags": ["Me", "Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeRecentPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeRecentPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeRecentPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6354,7 +8590,33 @@
         "tags": ["Me", "Post"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeHotPost",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeHotPost",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeHotPost": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6418,7 +8680,33 @@
         "tags": ["Me", "Topic"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeBrowsingRecord",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeBrowsingRecord",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeBrowsingRecord": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6482,7 +8770,33 @@
         "tags": ["Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeBrowsingHistory",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeBrowsingHistory",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeBrowsingHistory": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6525,7 +8839,33 @@
         "tags": ["Me", "User"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putMeTransferWealth",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putMeTransferWealth",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putMeTransferWealth": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6573,7 +8913,33 @@
         "tags": ["Me", "Message"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeUnreadCount",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeUnreadCount",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeUnreadCount": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6611,7 +8977,33 @@
         "tags": ["Me", "Message"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeAllMessageCount",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeAllMessageCount",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeAllMessageCount": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6649,7 +9041,33 @@
         "tags": ["Signin", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeSignin",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeSignin",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeSignin": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6685,7 +9103,33 @@
         "tags": ["Signin", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postMeSignin",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postMeSignin",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postMeSignin": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6738,7 +9182,33 @@
         "tags": ["Signin", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeSigninInMonth",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeSigninInMonth",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeSigninInMonth": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6805,7 +9275,33 @@
         "tags": ["Signin", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postMeMakeUpMissedSignin",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postMeMakeUpMissedSignin",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postMeMakeUpMissedSignin": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -6843,7 +9339,33 @@
         "tags": ["AnnualReview", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeAnnualReview2022",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeAnnualReview2022",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeAnnualReview2022": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6881,7 +9403,33 @@
         "tags": ["AnnualReview", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMeAnnualReviewYear",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMeAnnualReviewYear",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMeAnnualReviewYear": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -6933,7 +9481,33 @@
         "tags": ["Message"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMessageRecentContactUsers",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMessageRecentContactUsers",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMessageRecentContactUsers": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -7000,7 +9574,33 @@
         "tags": ["Message"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getMessageUserUserId",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getMessageUserUserId",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getMessageUserUserId": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -7079,7 +9679,33 @@
         "tags": ["Message"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postMessage",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postMessage",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postMessage": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -7120,7 +9746,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getNotificationSystem",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getNotificationSystem",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getNotificationSystem": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -7187,7 +9839,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getNotificationReply",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getNotificationReply",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getNotificationReply": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -7254,7 +9932,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-getNotificationAt",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-getNotificationAt",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-getNotificationAt": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "account-scoped",
@@ -7319,7 +10023,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postNotificationAt",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postNotificationAt",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postNotificationAt": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -7392,7 +10122,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putNotificationReadAllReply",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putNotificationReadAllReply",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putNotificationReadAllReply": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -7423,7 +10179,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putNotificationReadAllAt",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putNotificationReadAllAt",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putNotificationReadAllAt": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -7454,7 +10236,33 @@
         "tags": ["Notification"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-putNotificationReadAllSystem",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-putNotificationReadAllSystem",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-putNotificationReadAllSystem": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -7485,7 +10293,33 @@
         "tags": ["File"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postFile",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postFile",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postFile": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -7543,7 +10377,33 @@
         "tags": ["File", "Me"],
         "security": [
           {
-            "CC98_ACCESS_TOKEN": []
+            "CC98_ACCESS_TOKEN": [],
+            "x-apifox": {
+              "schemeGroups": [
+                {
+                  "id": "cc98AccessToken-postFilePortrait",
+                  "schemeIds": ["CC98_ACCESS_TOKEN"]
+                }
+              ],
+              "required": true,
+              "use": {
+                "id": "cc98AccessToken-postFilePortrait",
+                "configs": {
+                  "CC98_ACCESS_TOKEN": {
+                    "authConfigs": {
+                      "x-apifox": {
+                        "token": "{{CC98_ACCESS_TOKEN}}"
+                      }
+                    }
+                  }
+                }
+              },
+              "scopes": {
+                "cc98AccessToken-postFilePortrait": {
+                  "CC98_ACCESS_TOKEN": []
+                }
+              }
+            }
           }
         ],
         "x-cc98-risk": "write",
@@ -11601,7 +14461,7 @@
       "CC98_ACCESS_TOKEN": {
         "type": "http",
         "scheme": "bearer",
-        "description": "CC98 access token。Apifox 中可通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。"
+        "description": "CC98 access token。Apifox 中通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。"
       }
     }
   }

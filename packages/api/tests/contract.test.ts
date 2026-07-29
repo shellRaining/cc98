@@ -32,15 +32,40 @@ describe("API 契约基线", () => {
     expect(endpointCatalog).toHaveLength(136);
     expect(Object.keys(openapi.paths)).toHaveLength(115);
     expect(Object.keys(openIdOpenapi.paths)).toHaveLength(1);
-    expect(openapi.security).toEqual([{ CC98_ACCESS_TOKEN: [] }]);
+    expect(openapi.security).toEqual([
+      {
+        CC98_ACCESS_TOKEN: [],
+        "x-apifox": {
+          schemeGroups: [{ id: "cc98AccessToken", schemeIds: ["CC98_ACCESS_TOKEN"] }],
+          required: true,
+          use: {
+            id: "cc98AccessToken",
+            configs: {
+              CC98_ACCESS_TOKEN: {
+                authConfigs: {
+                  "x-apifox": { token: "{{CC98_ACCESS_TOKEN}}" },
+                },
+              },
+            },
+          },
+          scopes: {
+            cc98AccessToken: { CC98_ACCESS_TOKEN: [] },
+          },
+        },
+      },
+    ]);
     expect(openapi.components.securitySchemes).toEqual({
       CC98_ACCESS_TOKEN: {
         type: "http",
         scheme: "bearer",
-        description:
-          "CC98 access token。Apifox 中可通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。",
+        description: "CC98 access token。Apifox 中通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。",
       },
     });
+    expect(
+      openapi.paths["/topic/new"].get.security[0]["x-apifox"].use.configs.CC98_ACCESS_TOKEN
+        .authConfigs["x-apifox"].token,
+    ).toBe("{{CC98_ACCESS_TOKEN}}");
+    expect(openapi.paths["/config/global"].get.security).toEqual([]);
     expect(openIdOpenapi.security).toEqual([]);
     expect("securitySchemes" in openIdOpenapi.components).toBe(false);
   });

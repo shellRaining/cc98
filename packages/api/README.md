@@ -71,7 +71,7 @@ Vercel 项目接入仓库后，OpenAPI JSON 的预期生产域名为 `https://cc
 
 Apifox 应为两份规范分别创建 URL 数据源并选择不同的目标模块，不需要仓库侧的 Apifox CLI 同步。
 
-主 API 的 `CC98_ACCESS_TOKEN` 鉴权组件使用普通 HTTP Bearer。Apifox 导入后可在默认鉴权凭证中引用 `{{CC98_ACCESS_TOKEN}}`，并把真实 token 只写入该环境变量的本地值。OpenID 规范不包含鉴权组件。
+主 API 的 `CC98_ACCESS_TOKEN` 鉴权组件使用普通 HTTP Bearer，并通过 Apifox 的 `x-apifox` 扩展把默认 Token 设为 `{{CC98_ACCESS_TOKEN}}`。Apifox 数据源需要开启“导入 Security Scheme”，真实 token 只写入该环境变量的本地值。其他 OpenAPI 工具会忽略这个扩展，仍按标准 HTTP Bearer 处理；OpenID 规范不包含鉴权组件。
 
 独立 Vercel 项目的 Root Directory 设置为 `packages/api/openapi`。部署不安装依赖，也不生成页面，只把仓库中已经通过一致性检查的两份 JSON 复制到发布目录。
 
