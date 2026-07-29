@@ -31,8 +31,17 @@ describe("API 契约基线", () => {
     expect(endpointCatalog).toHaveLength(136);
     expect(Object.keys(openapi.paths)).toHaveLength(115);
     expect(Object.keys(openIdOpenapi.paths)).toHaveLength(1);
-    expect(openapi.security).toEqual([{ bearerAuth: [] }]);
+    expect(openapi.security).toEqual([{ CC98_ACCESS_TOKEN: [] }]);
+    expect(openapi.components.securitySchemes).toEqual({
+      CC98_ACCESS_TOKEN: {
+        type: "http",
+        scheme: "bearer",
+        description:
+          "CC98 access token。Apifox 中可通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。",
+      },
+    });
     expect(openIdOpenapi.security).toEqual([]);
+    expect("securitySchemes" in openIdOpenapi.components).toBe(false);
   });
 
   it("operationId 唯一且非空", () => {

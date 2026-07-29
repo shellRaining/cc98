@@ -6,6 +6,13 @@ import { createDocument } from "zod-openapi";
 import { operationRegistry } from "../src/operations/index.ts";
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const accessTokenSecuritySchemeName = "CC98_ACCESS_TOKEN";
+const accessTokenSecurityRequirement = { [accessTokenSecuritySchemeName]: [] };
+const accessTokenSecurityScheme = {
+  type: "http",
+  scheme: "bearer",
+  description: "CC98 access token。Apifox 中可通过 {{CC98_ACCESS_TOKEN}} 环境变量提供令牌值。",
+};
 const outputDirArgument = process.argv
   .find((argument) => argument.startsWith("--output-dir="))
   ?.slice("--output-dir=".length);
@@ -80,7 +87,7 @@ function operationsToPaths(operations, { includeOperationServers = true } = {}) 
           responseToOpenApi(response),
         ]),
       ),
-      security: operation.auth === "anonymous" ? [] : [{ bearerAuth: [] }],
+      security: operation.auth === "anonymous" ? [] : [accessTokenSecurityRequirement],
       "x-cc98-risk": operation.risk,
       "x-cc98-verification": operation.verificationStatus,
       "x-cc98-source": operation.sources,
@@ -94,6 +101,7 @@ function createOpenApiDocument({
   description,
   servers,
   security,
+  securitySchemes,
   operations,
   includeOperationServers,
 }) {
@@ -109,11 +117,7 @@ function createOpenApiDocument({
     servers,
     security,
     paths: operationsToPaths(operations, { includeOperationServers }),
-    components: {
-      securitySchemes: {
-        bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
-      },
-    },
+    ...(securitySchemes ? { components: { securitySchemes } } : {}),
   });
 }
 
@@ -128,7 +132,8 @@ const openapi = createOpenApiDocument({
   title: "CC98 API",
   description: "根据 CC98 前端调用与真实接口响应维护的公共 API 契约。",
   servers: [{ url: "https://api-v2.cc98.org", description: "CC98 正式 API" }],
-  security: [{ bearerAuth: [] }],
+  security: [accessTokenSecurityRequirement],
+  securitySchemes: { [accessTokenSecuritySchemeName]: accessTokenSecurityScheme },
   operations: apiOperations,
 });
 const openIdOpenapi = createOpenApiDocument({

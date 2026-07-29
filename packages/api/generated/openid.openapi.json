@@ -213,13 +213,6 @@
         "additionalProperties": {},
         "description": "OpenID Token 请求失败时的 OAuth 错误。"
       }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
     }
   }
 }
