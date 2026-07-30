@@ -236,7 +236,7 @@
     "summary": "上传文件",
     "tags": ["File"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -246,7 +246,7 @@
     "summary": "上传头像图片",
     "tags": ["File", "Me"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -516,7 +516,7 @@
     "summary": "使用补签卡补签",
     "tags": ["Signin", "Me"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -636,7 +636,7 @@
     "summary": "发送私信",
     "tags": ["Message"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -686,7 +686,7 @@
     "summary": "将全部 @ 提及通知标记为已读",
     "tags": ["Notification"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -696,7 +696,7 @@
     "summary": "将全部回复通知标记为已读",
     "tags": ["Notification"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -706,7 +706,7 @@
     "summary": "将全部系统通知标记为已读",
     "tags": ["Notification"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -816,7 +816,7 @@
     "summary": "按预设理由给帖子评分",
     "tags": ["Post"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -1086,7 +1086,7 @@
     "summary": "提交主题投票",
     "tags": ["Topic"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {

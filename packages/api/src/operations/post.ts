@@ -469,7 +469,7 @@ export const postOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
     description: "使用评分类型和预设理由 ID 给指定帖子提交正面或负面评分。",
   },

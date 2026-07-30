@@ -1588,7 +1588,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -4229,7 +4229,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -6816,7 +6816,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
@@ -7090,7 +7090,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,
@@ -7403,7 +7403,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
@@ -7434,7 +7434,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
@@ -7465,7 +7465,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "responses": {
           "200": {
@@ -7496,7 +7496,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "parameters": [
           {
@@ -7554,7 +7554,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": true,

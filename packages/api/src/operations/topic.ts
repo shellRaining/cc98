@@ -216,7 +216,7 @@ export const topicOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
     description: "为指定投票主题提交当前用户选择的一个或多个选项。",
   },
