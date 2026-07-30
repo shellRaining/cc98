@@ -566,7 +566,7 @@
     "summary": "执行今日签到",
     "tags": ["Signin", "Me"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {

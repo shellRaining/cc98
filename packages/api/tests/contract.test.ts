@@ -25,6 +25,7 @@ import {
   notificationPostBasicInfoSchema,
   serverTimeResponseSchema,
   sendMessageRequestSchema,
+  signinRewardSchema,
 } from "../src/index.ts";
 import type { ApiOperation } from "../src/operations/types.ts";
 
@@ -168,6 +169,24 @@ describe("API 契约基线", () => {
     ).toEqual({
       type: "array",
       items: { $ref: "#/components/schemas/BasicTopic" },
+    });
+  });
+
+  it("签到写请求返回本次获得的财富值", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/authenticated/postMeSignin.json"),
+        "utf8",
+      ),
+    );
+
+    expect(signinRewardSchema.parse(fixture)).toBe(fixture);
+    expect(
+      openapi.paths["/me/signin"].post.responses["200"].content["application/json"].schema,
+    ).toEqual({ $ref: "#/components/schemas/SigninReward" });
+    expect(openapi.components.schemas.SigninReward).toMatchObject({
+      type: "integer",
+      minimum: 0,
     });
   });
 

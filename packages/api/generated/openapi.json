@@ -6681,7 +6681,7 @@
       "post": {
         "operationId": "postMeSignin",
         "summary": "执行今日签到",
-        "description": "为当前用户执行当天签到，并可附带签到留言。",
+        "description": "为当前用户执行当天签到，并可附带签到留言。成功时返回本次获得的财富值。",
         "tags": ["Signin", "Me"],
         "security": [
           {
@@ -6689,7 +6689,7 @@
           }
         ],
         "x-cc98-risk": "write",
-        "x-cc98-verification": "unknown",
+        "x-cc98-verification": "verified-write",
         "x-cc98-source": ["legacy-openapi", "live-probe"],
         "requestBody": {
           "required": false,
@@ -6715,7 +6715,14 @@
         },
         "responses": {
           "200": {
-            "description": "签到请求已处理"
+            "description": "本次签到获得的财富值",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SigninReward"
+                }
+              }
+            }
           },
           "default": {
             "description": "API 错误码",
@@ -11093,6 +11100,12 @@
         "required": ["hasSignedInToday", "lastSignInCount", "lastSignInTime", "lastReward"],
         "additionalProperties": {},
         "description": "当前用户的签到状态。"
+      },
+      "SigninReward": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991,
+        "description": "执行签到后获得的财富值。"
       },
       "SigninRecord": {
         "type": "object",
