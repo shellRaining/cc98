@@ -478,9 +478,9 @@
     "operationId": "getTopicBasic",
     "method": "GET",
     "path": "/topic/basic",
-    "url": "https://api-v2.cc98.org/topic/basic?id=758",
+    "url": "https://api-v2.cc98.org/topic/basic?id=6572083",
     "status": 200,
-    "durationMs": 191,
+    "durationMs": 399,
     "contentType": "application/json; charset=utf-8",
     "bodyType": "array",
     "validation": {

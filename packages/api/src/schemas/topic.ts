@@ -180,6 +180,24 @@ export const topicSchema = z
   });
 export type Topic = z.infer<typeof topicSchema>;
 
+export const basicTopicSchema = topicSchema
+  .pick({
+    id: true,
+    boardId: true,
+    title: true,
+    state: true,
+    type: true,
+    isInternalOnly: true,
+    isVote: true,
+    contentType: true,
+  })
+  .required()
+  .meta({
+    id: "BasicTopic",
+    description: "批量补全帖子或通知关联信息时返回的主题基础信息。",
+  });
+export type BasicTopic = z.infer<typeof basicTopicSchema>;
+
 export const recommendedTopicSchema = z
   .looseObject({
     topic: topicSchema.optional().meta({ description: "推荐的主题概要。" }),

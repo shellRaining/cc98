@@ -746,7 +746,7 @@
     "summary": "编辑帖子",
     "tags": ["Post"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -776,7 +776,7 @@
     "summary": "点赞或点踩帖子",
     "tags": ["Post"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {
@@ -886,7 +886,7 @@
     "summary": "删除主题",
     "tags": ["Topic", "Moderation"],
     "risk": "destructive",
-    "verificationStatus": "unknown",
+    "verificationStatus": "permission-denied",
     "requiresAuthentication": true
   },
   {
@@ -1036,7 +1036,7 @@
     "summary": "回复主题",
     "tags": ["Topic", "Post"],
     "risk": "write",
-    "verificationStatus": "unknown",
+    "verificationStatus": "verified-write",
     "requiresAuthentication": true
   },
   {

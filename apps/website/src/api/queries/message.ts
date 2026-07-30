@@ -1,15 +1,15 @@
 import {
+  basicTopicSchema,
   boardSchema,
   messageCountsSchema,
   privateMessageSchema,
   recentContactSchema,
   replyOrAtNotificationSchema,
   systemNotificationSchema,
-  topicSchema,
+  type BasicTopic,
   type Board,
   type ReplyOrAtNotification,
   type SystemNotification,
-  type Topic,
 } from "@cc98/api";
 import { infiniteQueryOptions, queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
@@ -27,7 +27,7 @@ export interface EnrichedNotification {
   isRead: boolean;
   title: string | null;
   content: string | null;
-  topic: Topic | null;
+  topic: BasicTopic | null;
   board: Board | null;
   floor: number | null;
   userId: number | null;
@@ -55,7 +55,7 @@ async function enrichNotifications(
       : replyOrAtNotificationSchema.array().parse(rawItems);
   const topicIds = uniquePositive(items.map((item) => item.topicId));
   const topics = topicIds.length
-    ? topicSchema
+    ? basicTopicSchema
         .array()
         .parse(await typedGet<unknown[]>("/topic/basic", { query: { id: topicIds } }))
     : [];

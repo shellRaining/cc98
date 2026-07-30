@@ -7,6 +7,7 @@ import openapi from "../generated/openapi.json" with { type: "json" };
 import openIdOpenapi from "../generated/openid.openapi.json" with { type: "json" };
 import {
   endpointCatalog,
+  basicTopicSchema,
   boardEventPageSchema,
   boardSummarySchema,
   boardSchema,
@@ -137,6 +138,36 @@ describe("API 契约基线", () => {
     ).toEqual({
       type: "array",
       items: { $ref: "#/components/schemas/BoardSummary" },
+    });
+  });
+
+  it("批量主题概要使用独立的精确响应模型", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getTopicBasic.json"),
+        "utf8",
+      ),
+    );
+    const fields = [
+      "boardId",
+      "contentType",
+      "id",
+      "isInternalOnly",
+      "isVote",
+      "state",
+      "title",
+      "type",
+    ];
+    const schema = openapi.components.schemas.BasicTopic;
+
+    expect(basicTopicSchema.array().parse(fixture)).toEqual(fixture);
+    expect(Object.keys(schema.properties).sort()).toEqual(fields);
+    expect(schema.required?.toSorted()).toEqual(fields);
+    expect(
+      openapi.paths["/topic/basic"].get.responses["200"].content["application/json"].schema,
+    ).toEqual({
+      type: "array",
+      items: { $ref: "#/components/schemas/BasicTopic" },
     });
   });
 
