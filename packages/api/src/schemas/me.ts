@@ -54,6 +54,13 @@ export const signinInfoSchema = z
   .meta({ id: "SigninInfo", description: "当前用户的签到状态。" });
 export type SigninInfo = z.infer<typeof signinInfoSchema>;
 
+export const signinRewardSchema = z
+  .number()
+  .int()
+  .nonnegative()
+  .meta({ id: "SigninReward", description: "执行签到后获得的财富值。" });
+export type SigninReward = z.infer<typeof signinRewardSchema>;
+
 export const signinRecordSchema = z
   .looseObject({
     year: z.number().int().meta({ description: "签到年份。" }),

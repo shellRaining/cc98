@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { defineOperations } from "./types.ts";
 import {
+  basicTopicSchema,
   createPostRequestSchema,
   errorCodeSchema,
   numericIdResponseSchema,
@@ -103,7 +104,7 @@ export const topicOperations = defineOperations([
     },
     auth: "required",
     risk: "destructive",
-    verificationStatus: "unknown",
+    verificationStatus: "permission-denied",
     sources: ["legacy-openapi", "live-probe"],
     description: "删除指定主题及其回复。该操作需要主题管理权限。",
   },
@@ -150,7 +151,7 @@ export const topicOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
     description: "在指定主题中发表回复，也可通过 parentId 回复某一楼层。",
   },
@@ -215,7 +216,7 @@ export const topicOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
     description: "为指定投票主题提交当前用户选择的一个或多个选项。",
   },
@@ -861,7 +862,7 @@ export const topicOperations = defineOperations([
       "200": {
         description: "与给定 ID 对应的主题概要列表",
         contentType: "application/json",
-        schema: z.array(topicSchema),
+        schema: z.array(basicTopicSchema),
       },
       default: defaultErrorResponse,
     },

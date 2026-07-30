@@ -9,9 +9,9 @@ vi.mock("../src/lib/http.ts", () => ({
 describe("签到请求", () => {
   test("签到留言以字符串请求体提交", async () => {
     const request = vi.mocked(typedPost);
-    request.mockResolvedValue(undefined);
+    request.mockResolvedValue(1060);
 
-    await expect(postSignin("今日签到")).resolves.toBeUndefined();
+    await expect(postSignin("今日签到")).resolves.toBe(1060);
 
     expect(request).toHaveBeenCalledWith("/me/signin", "今日签到", {
       headers: { "Content-Type": "application/json" },

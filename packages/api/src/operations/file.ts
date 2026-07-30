@@ -43,7 +43,7 @@ export const fileOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
     description:
       "上传一个或多个附件，返回可嵌入主题、回复或私信内容的文件地址。图片默认由服务端压缩，可通过查询参数关闭压缩。",
@@ -74,7 +74,7 @@ export const fileOperations = defineOperations([
     },
     auth: "required",
     risk: "write",
-    verificationStatus: "unknown",
+    verificationStatus: "verified-write",
     sources: ["legacy-openapi", "live-probe"],
     description:
       "上传一张头像图片并返回文件地址。该接口只负责上传文件；客户端随后使用返回地址更新当前用户头像。",
