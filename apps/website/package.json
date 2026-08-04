@@ -18,6 +18,7 @@
     "@milkdown/crepe": "catalog:",
     "@milkdown/kit": "catalog:",
     "@tanstack/vue-query": "catalog:",
+    "@vue/devtools-api": "catalog:",
     "@vueuse/core": "catalog:",
     "@vueuse/integrations": "catalog:",
     "aplayer": "catalog:",
