@@ -42,5 +42,10 @@
       ]
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!assets/|sw\\.js$|manifest\\.webmanifest$|pwa-[^/]+\\.png$|apple-touch-icon\\.png$|favicon\\.ico$).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

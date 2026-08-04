@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import UnoCSS from "unocss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { appShellPlugin } from "./build/app-shell.js";
+import { createAppAssetCachePlugin } from "./build/runtime-cache.js";
 
 const pwaPlugins = VitePWA({
   injectRegister: "auto",
@@ -46,11 +47,10 @@ const pwaPlugins = VitePWA({
     runtimeCaching: [
       {
         urlPattern: /\/assets\/[^?]+\.(?:js|css|woff2?|ttf)$/,
-        handler: "NetworkFirst",
+        handler: "CacheFirst",
         options: {
           cacheName: "app-assets-v1",
-          cacheableResponse: { statuses: [200] },
-          networkTimeoutSeconds: 3,
+          plugins: [createAppAssetCachePlugin()],
           expiration: {
             maxEntries: 160,
             purgeOnQuotaError: true,
