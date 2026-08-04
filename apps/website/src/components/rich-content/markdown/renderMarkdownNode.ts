@@ -22,6 +22,8 @@ interface MarkdownRenderContext {
   footnotes: ReadonlyMap<string, FootnoteDefinition>;
   footnoteNumbers: ReadonlyMap<string, number>;
   options: Readonly<RichContentOptions>;
+  /** 当前主题是否为暗色，用于 AC 娘表情资源的主题适配。 */
+  isDark: boolean;
 }
 
 function normalizedIdentifier(identifier: string): string {
@@ -44,13 +46,27 @@ function renderLink(
     : h(Fragment, null, children);
 }
 
+/** CC98 官方 AC 娘资源路径，按主题在 ac 与 ac-dark 目录间切换，与 UBB 渲染端 UbbEmotion 一致。 */
+const AC_EMOTION_PATH = "/static/images/ac/";
+const AC_EMOTION_DARK_PATH = "/static/images/ac-dark/";
+
+function themeImageSource(source: string, isDark: boolean): string {
+  if (isDark && source.includes(AC_EMOTION_PATH)) {
+    return source.replace(AC_EMOTION_PATH, AC_EMOTION_DARK_PATH);
+  }
+  if (!isDark && source.includes(AC_EMOTION_DARK_PATH)) {
+    return source.replace(AC_EMOTION_DARK_PATH, AC_EMOTION_PATH);
+  }
+  return source;
+}
+
 function renderImage(
   source: string,
   alt: string | null | undefined,
   title: string | null | undefined,
   context: MarkdownRenderContext,
 ): VNodeChild {
-  const src = sanitizeImageUrl(source, context.options);
+  const src = sanitizeImageUrl(themeImageSource(source, context.isDark), context.options);
   if (!src) return alt || source;
   return h(UniverseImage, {
     src,
@@ -213,7 +229,11 @@ function renderMarkdownNode(node: Nodes, context: MarkdownRenderContext): VNodeC
   }
 }
 
-export function renderMarkdownRoot(root: Root, options: Readonly<RichContentOptions>): VNodeChild {
+export function renderMarkdownRoot(
+  root: Root,
+  options: Readonly<RichContentOptions>,
+  isDark = false,
+): VNodeChild {
   const definitions = new Map<string, Definition>();
   const footnotes = new Map<string, FootnoteDefinition>();
   const footnoteNumbers = new Map<string, number>();
@@ -238,5 +258,11 @@ export function renderMarkdownRoot(root: Root, options: Readonly<RichContentOpti
   };
   collectFootnoteReferences(root);
 
-  return renderMarkdownNode(root, { definitions, footnotes, footnoteNumbers, options });
+  return renderMarkdownNode(root, {
+    definitions,
+    footnotes,
+    footnoteNumbers,
+    options,
+    isDark,
+  });
 }
