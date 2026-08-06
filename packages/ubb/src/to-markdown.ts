@@ -10,7 +10,7 @@
  * - 表情标签：转为 CC98 官方资源的标准 Markdown 图片；权限标签剥除为空字符串。
  * - math/m/noubb/md：保留原文或转义后输出。
  */
-import { resolveUbbEmotionTag, type UbbEmotionDescriptor } from "./emotion.ts";
+import { resolveUbbEmotionTag, ubbEmotionDisplayName } from "./emotion.ts";
 import { parseUbb } from "./parser.ts";
 import { getTagMode, matchUbbRegexTagFamily } from "./tags.ts";
 import type { UbbNode } from "./types.ts";
@@ -116,7 +116,7 @@ function nodeToMarkdown(node: UbbNode): string {
   if (tag === "table") return tableToMarkdown(children);
 
   const emotion = resolveUbbEmotionTag(tag);
-  if (emotion) return markdownImage(emotionMarkdownAlt(emotion), emotion.src);
+  if (emotion) return markdownImage(ubbEmotionDisplayName(emotion), emotion.src);
 
   // 能识别标签族但编号无效时保留原始 UBB，避免迁移时静默丢内容
   if (matchUbbRegexTagFamily(tag)) return `[${tag}]`;
@@ -131,27 +131,6 @@ function nodeToMarkdown(node: UbbNode): string {
 
 function markdownImage(alt: string, source: string): string {
   return `![${alt}](${source})`;
-}
-
-function emotionMarkdownAlt(emotion: UbbEmotionDescriptor): string {
-  switch (emotion.family) {
-    case "em":
-      return `经典表情 ${emotion.code}`;
-    case "ac":
-      return `AC娘 ${emotion.code}`;
-    case "ms":
-      return `雀魂 ${emotion.code}`;
-    case "cc98":
-      return `CC98 ${emotion.code}`;
-    case "tb":
-      return `贴吧 ${emotion.code}`;
-    case "mahjong-animal":
-      return `麻将脸 动物 ${emotion.code}`;
-    case "mahjong-cartoon":
-      return `麻将脸 卡通 ${emotion.code}`;
-    case "mahjong-face":
-      return `麻将脸 ${emotion.code}`;
-  }
 }
 
 /**

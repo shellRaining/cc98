@@ -2,6 +2,7 @@
 import { defineComponent, h, type PropType } from "vue";
 import type { RichContentOptions } from "../types";
 import UniverseRoot from "../universe/UniverseRoot.vue";
+import { useThemeStore } from "../../../stores/theme";
 import { parseMarkdown } from "./remark";
 import { renderMarkdownRoot } from "./renderMarkdownNode";
 
@@ -18,9 +19,14 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const theme = useThemeStore();
     return () =>
       h(UniverseRoot, { contentType: "markdown", preserveWhitespace: false }, () =>
-        renderMarkdownRoot(parseMarkdown(props.content), props.options),
+        renderMarkdownRoot(
+          parseMarkdown(props.content),
+          props.options,
+          theme.effectiveMode === "dark",
+        ),
       );
   },
 });

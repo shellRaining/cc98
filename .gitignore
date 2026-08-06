@@ -31,3 +31,6 @@ apps/docs/.vitepress/cache/
 .artifacts/
 auth-state.json
 /.obsidian
+/.reasonix
+/.worktrees
+/reasonix.toml

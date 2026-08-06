@@ -146,4 +146,30 @@ describe("ContentRenderer", () => {
     expect(html).not.toContain('src="data:');
     expect(html).toContain("&lt;script&gt;");
   });
+
+  test("Markdown 中 AC 娘图片暗色模式替换为 ac-dark 资源", async () => {
+    const content = "![AC娘 01](https://www.cc98.org/static/images/ac/01.png)";
+    const light = await renderContent(content, "markdown", {}, "light");
+    expect(light).toContain("/static/images/ac/01.png");
+    expect(light).not.toContain("ac-dark");
+    const dark = await renderContent(content, "markdown", {}, "dark");
+    expect(dark).toContain("/static/images/ac-dark/01.png");
+    expect(dark).not.toContain("/static/images/ac/01.png");
+  });
+
+  test("Markdown 中非 AC 娘图片暗色模式不替换", async () => {
+    const content = "![CC98](https://www.cc98.org/static/images/CC98/CC9801.gif)";
+    const dark = await renderContent(content, "markdown", {}, "dark");
+    expect(dark).toContain("/static/images/CC98/CC9801.gif");
+    expect(dark).not.toContain("ac-dark");
+  });
+
+  test("Markdown 中 ac-dark 资源在亮色模式还原为白天版", async () => {
+    const content = "![AC娘 01](https://www.cc98.org/static/images/ac-dark/01.png)";
+    const light = await renderContent(content, "markdown", {}, "light");
+    expect(light).toContain("/static/images/ac/01.png");
+    expect(light).not.toContain("ac-dark");
+    const dark = await renderContent(content, "markdown", {}, "dark");
+    expect(dark).toContain("/static/images/ac-dark/01.png");
+  });
 });
