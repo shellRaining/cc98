@@ -131,6 +131,6 @@ UnoCSS 负责语义 token、简单原子样式和基础组件变体。组件专�
 仓库暂时分层使用 TypeScript：
 
 - `apps/website` 固定使用 TypeScript 6。Vue SFC 编译器解析 `defineProps` 等宏引用的外部类型时，仍依赖 TypeScript 7 已移除的编程接口。
-- `packages/api`、`packages/ubb` 和 `packages/utils` 通过 workspace catalog 使用 TypeScript 7。Vite+ 0.2.6 已包含 tsdown 0.22.13，构建配置仍根据运行平台显式解析 TypeScript 7 原生包中的 `tsc` 可执行文件，确保声明构建使用 workspace 选定的版本。声明构建只过滤 tsdown 固定的 TypeScript 7 实验性提示，其他 warning 保持可见。
+- `packages/api`、`packages/ubb` 和 `packages/utils` 通过 workspace catalog 使用 TypeScript 7。Vite+ 0.2.7 已包含 tsdown 0.22.14，构建配置仍根据运行平台显式解析 TypeScript 7 原生包中的 `tsc` 可执行文件，确保声明构建使用 workspace 选定的版本。声明构建只过滤 tsdown 固定的 TypeScript 7 实验性提示，其他 warning 保持可见。
 
 Vite+ 的 tsdown 条件已经满足。等 Vue SFC 工具链支持 TypeScript 7 后，再统一升级网站；届时删除 DTS 中显式配置的 `tsgo` 路径，并确认 `vp run ready` 全量通过。

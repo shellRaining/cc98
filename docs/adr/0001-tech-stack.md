@@ -11,26 +11,26 @@ Markdown 编辑与渲染两项选型已由 [0003](./0003-markdown-stack.md) 替�
 
 ## 决策
 
-| 类别          | 选型                                 | 理由                                                                                                |
-| ------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| 框架          | Vue 3.6 beta（vapor opt-in）         | 项目早期承担 beta 风险换取 Vapor Mode，热点组件优先迁 vapor                                         |
-| 客户端状态    | Pinia + persistedstate               | 替代 Redux，Vue 官方推荐，持久化插件替代手写 localStorage                                           |
-| 服务端状态    | @tanstack/vue-query                  | 帖子/楼层是"服务端状态"，缓存和去重由它接管，跟 react-query 同 monorepo 同步发版                    |
-| 路由          | Vue Router 5                         | SPA，hash 锚点跳转                                                                                  |
-| 无头组件      | Reka UI（不带 shadcn-vue）           | 心智模型和 Radix/Base UI 一致；不带 shadcn 避免引入它默认色板/圆角风格，自己写样式                  |
-| 原子 CSS      | UnoCSS                               | Anthony Fu（Vue 核心）维护，与 Vite 生态亲和度最高                                                  |
-| 虚拟滚动      | vue-virtual-scroller                 | DynamicScroller 专门处理楼层不定高（引用/图片/表情）                                                |
-| Markdown 编辑 | md-editor-v3                         | Vue 3 原生组件，内置图片粘贴上传、暗色模式、扩展插槽                                                |
-| Markdown 渲染 | markdown-it                          | 比 remark 轻，插件生态成熟                                                                          |
-| UBB 渲染      | 自写（`packages/ubb`，只读）         | 历史 49 个 tag handler 用 Vue 重写，只读不做编辑器                                                  |
-| UBB→MD 转换   | `packages/ubb` 内 `ubbToMarkdown`    | 编辑老帖时一次性转换                                                                                |
-| 数学公式      | KaTeX                                | 比 MathJax 快、包体小                                                                               |
-| 媒体播放      | APlayer + DPlayer + hls.js           | file.cc98.org 直链音视频；播放器集成内聚在富内容 `UniverseAudio`、`UniverseVideo` 和 `UniverseBili` |
-| 实时通信      | @microsoft/signalr                   | 消息推送，需要后端现有 hub                                                                          |
-| HTTP          | ofetch                               | 轻量、现代，Nuxt/Vue 生态原生                                                                       |
-| 边界校验      | Zod                                  | API 响应由 `@cc98/api` 公共 schema parse 后才进入业务                                               |
-| 工具库        | @vueuse/core + dayjs + nanoid + clsx | 不手写工具函数，优先用 VueUse                                                                       |
-| 主题          | CSS 变量 + `data-theme` 属性         | 零成本切换，配合 UnoCSS theme 映射                                                                  |
+| 类别          | 选型                              | 理由                                                                                                |
+| ------------- | --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 框架          | Vue 3.6 beta（vapor opt-in）      | 项目早期承担 beta 风险换取 Vapor Mode，热点组件优先迁 vapor                                         |
+| 客户端状态    | Pinia + persistedstate            | 替代 Redux，Vue 官方推荐，持久化插件替代手写 localStorage                                           |
+| 服务端状态    | @tanstack/vue-query               | 帖子/楼层是"服务端状态"，缓存和去重由它接管，跟 react-query 同 monorepo 同步发版                    |
+| 路由          | Vue Router 5                      | SPA，hash 锚点跳转                                                                                  |
+| 无头组件      | Reka UI（不带 shadcn-vue）        | 心智模型和 Radix/Base UI 一致；不带 shadcn 避免引入它默认色板/圆角风格，自己写样式                  |
+| 原子 CSS      | UnoCSS                            | Anthony Fu（Vue 核心）维护，与 Vite 生态亲和度最高                                                  |
+| 虚拟滚动      | vue-virtual-scroller              | DynamicScroller 专门处理楼层不定高（引用/图片/表情）                                                |
+| Markdown 编辑 | md-editor-v3                      | Vue 3 原生组件，内置图片粘贴上传、暗色模式、扩展插槽                                                |
+| Markdown 渲染 | markdown-it                       | 比 remark 轻，插件生态成熟                                                                          |
+| UBB 渲染      | 自写（`packages/ubb`，只读）      | 历史 49 个 tag handler 用 Vue 重写，只读不做编辑器                                                  |
+| UBB→MD 转换   | `packages/ubb` 内 `ubbToMarkdown` | 编辑老帖时一次性转换                                                                                |
+| 数学公式      | KaTeX                             | 比 MathJax 快、包体小                                                                               |
+| 媒体播放      | APlayer + DPlayer + hls.js        | file.cc98.org 直链音视频；播放器集成内聚在富内容 `UniverseAudio`、`UniverseVideo` 和 `UniverseBili` |
+| 实时通信      | @microsoft/signalr                | 消息推送，需要后端现有 hub                                                                          |
+| HTTP          | ofetch                            | 轻量、现代，Nuxt/Vue 生态原生                                                                       |
+| 边界校验      | Zod                               | API 响应由 `@cc98/api` 公共 schema parse 后才进入业务                                               |
+| 工具库        | @vueuse/core + dayjs + clsx       | 不手写工具函数，优先用 VueUse                                                                       |
+| 主题          | CSS 变量 + `data-theme` 属性      | 零成本切换，配合 UnoCSS theme 映射                                                                  |
 
 ## 关键约束：UBB 不能跳过
 
