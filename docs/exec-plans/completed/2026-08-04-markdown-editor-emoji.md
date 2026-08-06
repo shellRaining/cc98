@@ -20,7 +20,7 @@ Markdown 编辑器工具栏末尾增加"表情"按钮，点击弹出分类面板
 ## 非目标
 
 - 不加 Unicode emoji 面板（二期再议，另行计划）。
-- 不改 `packages/ubb` 的公共 API：表情枚举数据放 website 侧，编号规则与 `emotion.ts` 对齐并用 `resolveUbbEmotionTag` 校验。
+- ~~不改 `packages/ubb` 的公共 API：表情枚举数据放 website 侧，编号规则与 `emotion.ts` 对齐并用 `resolveUbbEmotionTag` 校验。~~ 2026-08-05 撤销，表情目录改由 ubb 导出，见决策记录。
 - 默认不替换 Crepe 全部内置图标，除非视觉验收发现风格不协调（见方案，预计不需要）。
 - 不涉及 UBB 内容编辑（本项目没有 UBB 编辑器）。
 
@@ -41,7 +41,7 @@ Crepe 的 `Icon` 组件通过 `innerHTML` 注入内联 SVG 字符串（DOMPurify
 
 新增 `components/markdown-editor/EmojiPanel.vue`：分类 tab + 表情网格，浮层渲染在 `markdown-editor__shell` 内（topBar 下方），点击外部关闭；样式用 DESIGN.md 的 token（`--cc98-color-*`）+ UnoCSS；编辑器 `disabled` 时不渲染。
 
-新增 `components/markdown-editor/emoji-data.ts`：按 `emotion.ts` 的合法范围生成全部表情描述符 `{ family, code, src, alt }`，alt 中文命名对齐 `to-markdown.ts` 的 `emotionMarkdownAlt`（`CC98 01`、`AC娘 01`、`麻将脸 动物 001` 等）。每个生成项用 `resolveUbbEmotionTag` 校验，保证枚举与解析器一致。
+新增 `components/markdown-editor/emoji-data.ts`：只放面板的 UI 配置（分类 tab 顺序、tab 文案、格子边长）与笑脸图标 SVG 常量，表情条目由 `packages/ubb` 的 `listUbbEmotions(family)` 提供，展示名由 `ubbEmotionDisplayName` 提供（`CC98 01`、`AC娘 01`、`麻将脸 动物 001` 等），与 `to-markdown.ts` 输出同源。
 
 ### 插入
 
@@ -52,7 +52,7 @@ Crepe 的 `Icon` 组件通过 `innerHTML` 注入内联 SVG 字符串（DOMPurify
 
 `modelValue` 的同步不需要额外处理：Milkdown 的 `markdownUpdated` 监听已存在，插入会自然触发 `update:modelValue`。
 
-### 表情枚举范围（与 `resolveUbbEmotionTag` 一致）
+### 表情枚举范围（`packages/ubb/src/emotion.ts` 的 `FAMILY_SPECS`）
 
 - em：`em00`–`em91`（`em\d{2}`，数值 ≤ 91）。
 - ac：`ac01`–`ac54`、`ac1001`–`ac1040`、`ac2001`–`ac2055`。
@@ -67,15 +67,14 @@ Crepe 的 `Icon` 组件通过 `innerHTML` 注入内联 SVG 字符串（DOMPurify
 2. 新增 `components/markdown-editor/EmojiPanel.vue`：面板 UI 与交互。✅
 3. 修改 `components/MarkdownEditor.vue`：`buildTopBar` 追加按钮、面板挂载与状态、`insertEmoji` 插入函数、按钮 aria-label（沿用 `labelCrepeControls` 模式）。✅
 4. 新增单测：枚举与 `resolveUbbEmotionTag`/`to-markdown` 输出一致；插入函数的 markdown 输出。✅
-5. 验证：`vp check`、`vp run -r test`、`vp run dev` 手动走查三处入口（发帖 / 回帖 / 编辑）。编译层验证完成，浏览器交互走查待用户执行。
+5. 验证：`vp check`、`vp run -r test`、agent-browser 走查面板与插入。✅
+6. 2026-08-05 简化重构：表情目录收归 `packages/ubb`，面板与测试按单一事实源收敛。✅
 
 ## 验证
 
-- `vp check`：format + lint + typecheck 通过（新增 4 个文件 + MarkdownEditor.vue）。
-- Vitest：新增 `tests/markdown-editor-emoji.test.ts` 4 个用例通过；全仓 295 个用例（website）+ 187（ubb）+ 21（api）全部通过。
-- `vp run -r build`、`knip --include files,exports,types`、`vp run website#check:colors` 均通过。
-- dev server 冒烟：首页与 MarkdownEditor.vue / EmojiPanel.vue / emoji-data.ts 模块编译加载正常（HTTP 200）。
-- 待用户本地走查：发帖页、回帖页、编辑页打开面板、切换分类、插入表情；预览与发布后渲染为图片；点击外部关闭面板；只读态无表情按钮；按钮图标与 topBar 其他按钮风格一致。
+- `vp run ready` 全绿：format + lint + typecheck + `check:colors` + `knip --include files,exports,types` + `vp run -r build` + `vp run -r test`（website 296、ubb 190、api 21 用例）。
+- 浏览器走查（临时挂载页 + agent-browser，走查后删除挂载页）：表情按钮弹出面板，8 个分类 tab 与 CC98 37 格图片正常加载；点击 CC98 01 插入 `![CC98 01](https://www.cc98.org/static/images/CC98/CC9801.gif)` 并自动关闭面板；按钮二次点击关闭、点击面板外关闭；暗色模式下 AC 娘格子与插入结果均为 `/ac-dark/01.png`。
+- 待用户在真实页面确认的剩余项：发帖页、回帖页、编辑页三处入口的实际观感，以及只读态无表情按钮。
 
 ## 进展与调整
 
@@ -95,9 +94,15 @@ Crepe 的 `Icon` 组件通过 `innerHTML` 注入内联 SVG 字符串（DOMPurify
   2. 面板不再铺满编辑器宽度，改为右上角表情按钮下方弹出的小框（宽 22rem、右对齐），带 160ms 淡入 + 上移 + 缩放动画（CSS animation，`transform-origin: top right`）。不用 Vue `<Transition>` 组件（oxfmt 解析该模板结构失败，改用 CSS animation 达到同样弹出效果）。
 - 2026-08-04 插入策略按用户确认调整为所见即所得：编辑器插入面板当前显示版本（暗色模式插入 ac-dark、亮色插入 ac），渲染端改为双向适配（暗色 `ac→ac-dark`、亮色 `ac-dark→ac`），任何主题下显示正确；提取公共函数 `resolveEmotionDisplaySrc` 供面板与编辑器共用。
 - 遗留：~~插入正文的表情 src 为白天版（与 UBB→Markdown 迁移输出一致）；Markdown 渲染端（`MarkdownRenderer.vue`）暂无 UBB 渲染那样的 ac-dark 主题替换，暗色模式下已发布的 Markdown 帖中 AC 娘仍显示白天版，属渲染端一致性问题，待确认是否纳入二期。~~ 已随所见即所得方案一并处理（插入随主题 + 渲染端双向适配），不再遗留。
+- 2026-08-05 用户 review 后做简化重构（`vp run ready` 全绿，浏览器实测通过，净 −214 行）：
+  1. 表情合法编号区间此前在 ubb 与面板各存一份，面板还把拼出的 tag 反解一遍来自检。现在区间集中到 `emotion.ts` 的 `FAMILY_SPECS`，导出 `listUbbEmotions`、`UBB_EMOTION_FAMILIES`、`ubbEmotionDisplayName`；`to-markdown.ts` 删掉 `emotionMarkdownAlt` switch 改调同一函数，展示名单一来源。
+  2. `emoji-data.ts` 从 124 行降到 36 行，只剩 UI 配置与图标常量。
+  3. 麻将脸的 `mahjongSubgroups` 派生结构删除，animal / cartoon / face 直接作为三个 tab，面板只剩一条渲染路径。
+  4. 手写的 pointerdown 闩锁（模块级标记 + `useEventListener(window, …)`）换成 VueUse 的 `onClickOutside(…, { ignore: [".milkdown-top-bar"] })`，按钮开关与外部关闭均实测正常。
+  5. 测试收敛为两个契约：面板分类列表与 ubb 权威列表一致（ubb 新增分类即失败）、AC 娘明暗资源解析；新增 `packages/ubb/tests/emotion.test.ts` 守 `listUbbEmotions` 与 `resolveUbbEmotionTag` 的一致性。
 
 ## 决策记录
 
 - 图标用 `heroicons:face-smile-solid` 提取的 SVG 常量，默认不替换 Crepe 内置图标。若走查发现风格不协调，替换全部内置图标作为后续选项。
-- 表情数据放 website 侧而非扩展 `packages/ubb`：ubb 保持只读解析器定位，website 侧枚举用 `resolveUbbEmotionTag` 校验即可保证一致。
+- 2026-08-05 推翻"表情数据放 website 侧"：表情编号区间是 ubb 解析器的固有知识，前端再抄一份就有两个事实源，且要靠反解自检来维持一致。改为 ubb 导出 `listUbbEmotions` / `ubbEmotionDisplayName`，website 只描述 UI 呈现。ubb 仍不含 UI 状态，只是从"只读解析"扩展为"表情目录 + 解析"。
 - 用 image 节点插入而非字符串拼接：与 Crepe 现有图片插入语义一致，避免手写 Markdown 与节点解析的差异。
