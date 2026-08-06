@@ -1,95 +1,51 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { listUbbEmotions, ubbEmotionDisplayName, type UbbEmotionDescriptor } from "@cc98/ubb";
+import { computed, ref } from "vue";
 import { useThemeStore } from "../../stores/theme";
-import {
-  emotionGroups,
-  mahjongSubgroups,
-  resolveEmotionDisplaySrc,
-  type EditorEmotion,
-} from "./emoji-data";
-
-const props = defineProps<{ open: boolean }>();
+import { emotionGroups, resolveEmotionDisplaySrc } from "./emoji-data";
 
 const emit = defineEmits<{
-  select: [emotion: EditorEmotion];
+  select: [emotion: UbbEmotionDescriptor];
 }>();
 
 const theme = useThemeStore();
-const activeKey = ref(emotionGroups[0]?.key ?? "");
-
-watch(
-  () => props.open,
-  (open) => {
-    if (open) activeKey.value = emotionGroups[0]?.key ?? "";
-  },
-);
-
-const activeGroup = computed(
-  () => emotionGroups.find((group) => group.key === activeKey.value) ?? emotionGroups[0],
-);
-
-/** 与面板展示一致：AC 娘在暗色模式使用 ac-dark 资源。 */
-function displaySrc(emotion: EditorEmotion): string {
-  return resolveEmotionDisplaySrc(emotion, theme.effectiveMode === "dark");
-}
-
-function select(emotion: EditorEmotion) {
-  emit("select", emotion);
-}
+const activeGroup = ref(emotionGroups[0]);
+const emotions = computed(() => listUbbEmotions(activeGroup.value.family));
 </script>
 
 <template>
-  <div v-if="open" class="emoji-panel" role="dialog" aria-label="选择表情">
+  <div class="emoji-panel" role="dialog" aria-label="选择表情">
     <div class="emoji-panel__tabs" role="tablist">
       <button
         v-for="group in emotionGroups"
-        :key="group.key"
+        :key="group.family"
         type="button"
         class="emoji-panel__tab"
-        :class="{ 'emoji-panel__tab--active': group.key === activeKey }"
+        :class="{ 'emoji-panel__tab--active': group.family === activeGroup.family }"
         role="tab"
-        :aria-selected="group.key === activeKey"
-        @click="activeKey = group.key"
+        :aria-selected="group.family === activeGroup.family"
+        @click="activeGroup = group"
       >
         {{ group.label }}
       </button>
     </div>
     <div class="emoji-panel__body">
-      <template v-if="activeGroup">
-        <template v-if="activeGroup.key === 'mahjong'">
-          <section
-            v-for="subgroup in mahjongSubgroups"
-            :key="subgroup.label"
-            class="emoji-panel__subgroup"
-          >
-            <h3 class="emoji-panel__subgroup-title">{{ subgroup.label }}</h3>
-            <div class="emoji-panel__grid emoji-panel__grid--mahjong">
-              <button
-                v-for="emotion in subgroup.emotions"
-                :key="emotion.src"
-                type="button"
-                class="emoji-panel__item"
-                :title="emotion.alt"
-                @click="select(emotion)"
-              >
-                <img :src="displaySrc(emotion)" :alt="emotion.alt" loading="lazy" />
-              </button>
-            </div>
-          </section>
-        </template>
-        <div v-else class="emoji-panel__grid" :class="`emoji-panel__grid--${activeGroup.key}`">
-          <button
-            v-for="emotion in activeGroup.emotions"
-            :key="emotion.src"
-            type="button"
-            class="emoji-panel__item"
-            :title="emotion.alt"
-            @click="select(emotion)"
-          >
-            <img :src="displaySrc(emotion)" :alt="emotion.alt" loading="lazy" />
-          </button>
-        </div>
-      </template>
+      <div class="emoji-panel__grid" :style="{ '--emoji-cell': activeGroup.cell }">
+        <button
+          v-for="emotion in emotions"
+          :key="emotion.src"
+          type="button"
+          class="emoji-panel__item"
+          :title="ubbEmotionDisplayName(emotion)"
+          @click="emit('select', emotion)"
+        >
+          <img
+            :src="resolveEmotionDisplaySrc(emotion, theme.effectiveMode === 'dark')"
+            :alt="ubbEmotionDisplayName(emotion)"
+            loading="lazy"
+          />
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -160,60 +116,24 @@ function select(emotion: EditorEmotion) {
   padding: 0.625rem;
 }
 
-.emoji-panel__subgroup-title {
-  margin: 0.375rem 0 0.375rem;
-  color: var(--cc98-color-text-caption);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-/* 网格尺寸沿用原 UBB 编辑器的习惯：AC 娘与 CC98/雀魂大图，麻将脸小图，其余适中。 */
+/* 格子尺寸沿用原 UBB 编辑器的习惯：AC 娘与 CC98/雀魂大图，麻将脸小图，其余适中。 */
 .emoji-panel__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--emoji-cell), 1fr));
   gap: 0.375rem;
-}
-
-.emoji-panel__grid--ac {
-  grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
-}
-
-.emoji-panel__grid--cc98,
-.emoji-panel__grid--ms {
-  grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
-}
-
-.emoji-panel__grid--mahjong {
-  grid-template-columns: repeat(auto-fill, minmax(2.5rem, 1fr));
 }
 
 .emoji-panel__item {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: var(--emoji-cell);
+  height: var(--emoji-cell);
   padding: 0.25rem;
   border: 1px solid transparent;
   border-radius: var(--cc98-radius-sm);
   background: none;
   cursor: pointer;
-}
-
-.emoji-panel__grid--ac .emoji-panel__item {
-  width: 4.75rem;
-  height: 4.125rem;
-}
-
-.emoji-panel__grid--cc98 .emoji-panel__item,
-.emoji-panel__grid--ms .emoji-panel__item {
-  width: 4rem;
-  height: 4rem;
-}
-
-.emoji-panel__grid--mahjong .emoji-panel__item {
-  width: 2.5rem;
-  height: 2.5rem;
 }
 
 .emoji-panel__item:hover {

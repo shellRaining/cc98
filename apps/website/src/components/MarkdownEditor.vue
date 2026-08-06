@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ubbEmotionDisplayName, type UbbEmotionDescriptor } from "@cc98/ubb";
 import { CrepeBuilder } from "@milkdown/crepe/builder";
 import { blockEdit } from "@milkdown/crepe/feature/block-edit";
 import { codeMirror } from "@milkdown/crepe/feature/code-mirror";
@@ -17,18 +18,21 @@ import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { uploadConfig } from "@milkdown/kit/plugin/upload";
 import { insertImageCommand, insertImageInputRule } from "@milkdown/kit/preset/commonmark";
 import { callCommand, replaceAll } from "@milkdown/kit/utils";
-import { useEventListener } from "@vueuse/core";
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onClickOutside } from "@vueuse/core";
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+  type ComponentPublicInstance,
+} from "vue";
 import { normalizeApiError } from "../lib/api-error";
 import { createLogger } from "../lib/logger";
 import { useThemeStore } from "../stores/theme";
 import { appendMarkdownBlock, createAttachmentMarkdown } from "./markdown-editor";
 import EmojiPanel from "./markdown-editor/EmojiPanel.vue";
-import {
-  emojiButtonIcon,
-  resolveEmotionDisplaySrc,
-  type EditorEmotion,
-} from "./markdown-editor/emoji-data";
+import { emojiButtonIcon, resolveEmotionDisplaySrc } from "./markdown-editor/emoji-data";
 import UiButton from "./ui/Button.vue";
 
 const props = withDefaults(
@@ -66,9 +70,7 @@ const attachmentUploading = ref(false);
 const uploadError = ref("");
 const currentMarkdown = ref(props.modelValue);
 const emojiPanelOpen = ref(false);
-const emojiPanelRoot = ref<HTMLElement | null>(null);
-/** 本次 pointerdown 由表情按钮触发时置位，外部点击监听消费后清除。 */
-let emojiButtonPointerDown = false;
+const emojiPanel = ref<ComponentPublicInstance | null>(null);
 const overLimit = computed(() => currentMarkdown.value.length > props.maxLength);
 const topBarLabels = [
   "加粗",
@@ -121,7 +123,7 @@ function replaceEditorMarkdown(markdown: string) {
   editor.value?.action(replaceAll(markdown));
 }
 
-function insertEmoji(emotion: EditorEmotion) {
+function insertEmoji(emotion: UbbEmotionDescriptor) {
   emojiPanelOpen.value = false;
   if (props.disabled || !editor.value) return;
   const src = resolveEmotionDisplaySrc(emotion, theme.effectiveMode === "dark");
@@ -129,7 +131,7 @@ function insertEmoji(emotion: EditorEmotion) {
     const view = ctx.get(editorViewCtx);
     const node = view.state.schema.nodes.image?.createAndFill({
       src,
-      alt: emotion.alt,
+      alt: ubbEmotionDisplayName(emotion),
     });
     if (!node) return;
     view.focus();
@@ -137,16 +139,9 @@ function insertEmoji(emotion: EditorEmotion) {
   });
 }
 
-useEventListener(window, "pointerdown", (event) => {
-  if (emojiButtonPointerDown) {
-    emojiButtonPointerDown = false;
-    return;
-  }
-  if (!emojiPanelOpen.value) return;
-  const target = event.target as Node;
-  if (emojiPanelRoot.value && !emojiPanelRoot.value.contains(target)) {
-    emojiPanelOpen.value = false;
-  }
+// 表情按钮在 topBar 内（面板之外），它的点击由 buildTopBar 的 onRun 负责开合，这里忽略。
+onClickOutside(emojiPanel, () => (emojiPanelOpen.value = false), {
+  ignore: [".milkdown-top-bar"],
 });
 
 async function uploadImageFiles(files: File[]): Promise<string[]> {
@@ -277,7 +272,6 @@ onMounted(async () => {
           active: () => false,
           onRun: () => {
             if (props.disabled) return;
-            emojiButtonPointerDown = true;
             emojiPanelOpen.value = !emojiPanelOpen.value;
           },
         });
@@ -372,9 +366,7 @@ onBeforeUnmount(() => {
       <p v-if="!editorReady && !uploadError" class="markdown-editor__loading">编辑器加载中…</p>
     </div>
 
-    <div ref="emojiPanelRoot">
-      <EmojiPanel :open="emojiPanelOpen" @select="insertEmoji" />
-    </div>
+    <EmojiPanel v-if="emojiPanelOpen" ref="emojiPanel" @select="insertEmoji" />
 
     <div class="markdown-editor__actions">
       <div class="flex flex-wrap items-center gap-1">
