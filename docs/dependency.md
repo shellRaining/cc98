@@ -10,6 +10,8 @@ workspace 通过 `pnpm-workspace.yaml` 的 catalog 集中管理共享依赖版�
 
 `catalogMode: prefer` 表示优先使用 catalog。当前 catalog 管理的核心依赖见该文件，包括 vue / vue-router / pinia / @tanstack/vue-query / reka-ui / unocss / ofetch / zod 等。
 
+Vercel 构建需要先安装 Vite+，因此根目录和 `apps/docs` 下的 `vercel.json` 都通过 `VP_VERSION` 固定安装版本。升级 catalog 中的 `vite-plus` 时，必须同步更新这两个安装命令，并确认 catalog 中的 `vite` 别名仍指向同版本的 Vite+ core。
+
 `packages/api` 使用 Zod 维护运行时契约，并由 `zod-openapi` 生成 OpenAPI 3.1 文档和可达组件引用。稳定 component ID 通过领域 schema 定义处的 `.meta({ id })` 维护，不另建集中映射。项目不自行实现 Zod 到 OpenAPI 的转换，也不引入 JSON Schema 到 Zod 的运行时转换依赖。
 
 `apps/website` 使用 `@milkdown/crepe` 的 Builder 与 feature 子路径按需组合 Markdown 编辑器，底层仍由 `@milkdown/kit` 提供 CommonMark、GFM、history、listener 和 upload。当前启用常驻工具栏、选区菜单、斜杠菜单、链接、列表、表格、基础 CodeMirror、LaTeX、占位符和光标能力；不启用 Crepe 完整默认入口、CodeMirror 完整语言数据包、AI 或 ImageBlock。阅读侧使用 `remark-parse`、`remark-gfm`、`remark-math` 与 `unified` 生成 MDAST。项目不依赖 `md-editor-v3` 或 `markdown-it`。升级 Milkdown、Crepe 与 remark 时，需要同时验证 Markdown 往返、MDAST renderer、公式、图片 alt、写作路由 chunk 和 URL 安全测试。
