@@ -1,132 +1,138 @@
 /**
  * UBB → Markdown 导出器。
  *
- * 先用 parseUbb 解析成 AST，再递归遍历 AST 生成 Markdown 字符串。
- *
- * 转换策略：
- * - Markdown 能表达的：b/i/del/url/img/quote/code/line → 对应 Markdown 语法。
- * - Markdown 无法表达的：u/size/color/font/align 等 → 剥除样式保留内容。
- * - 富媒体/站内语义：audio/video/bili → 链接；user/topic/board → @提及/站内链接。
- * - 表情标签：转为 CC98 官方资源的标准 Markdown 图片；权限标签剥除为空字符串。
- * - math/m/noubb/md：保留原文或转义后输出。
+ * 通过默认 UBB 注册表创建字符串 renderer。Markdown 能表达的标签转成对应语法，
+ * 样式标签保留内容，富媒体降级为链接，权限标签剥除。
  */
 import { resolveUbbEmotionTag, type UbbEmotionDescriptor } from "./emotion.ts";
-import { parseUbb } from "./parser.ts";
-import { getTagMode, matchUbbRegexTagFamily } from "./tags.ts";
+import { defaultUbbRegistry } from "./registry.ts";
+import { matchUbbRegexTagFamily } from "./tags.ts";
 import type { UbbNode } from "./types.ts";
 
-/**
- * 把 UBB 文本转成 Markdown 字符串。
- *
- * @param ubb UBB 原始文本。
- * @returns Markdown 字符串。
- */
+/** 默认的 UBB → Markdown renderer。 */
+export const ubbMarkdownRenderer = defaultUbbRegistry.createRenderer<string>({
+  text: (value) => value,
+  concat: (parts) => parts.join(""),
+  handlers: {
+    // 文字样式
+    b: ({ children }) => `**${children}**`,
+    i: ({ children }) => `_${children}_`,
+    u: ({ children }) => children,
+    del: ({ children }) => `~~${children}~~`,
+    english: ({ children }) => children,
+    left: ({ children }) => children,
+    center: ({ children }) => children,
+    right: ({ children }) => children,
+    size: ({ children }) => children,
+    color: ({ children }) => children,
+    font: ({ children }) => children,
+    align: ({ children }) => children,
+    cursor: ({ children }) => children,
+
+    // 链接 / 图片
+    url: ({ attrs, children }) => {
+      const address = attrs.positionals[0];
+      if (address) return children ? `[${children}](${address})` : `<${address}>`;
+      return `<${children}>`;
+    },
+    img: ({ attrs, text }) => markdownImage(attrs.named.title ?? "", text),
+
+    // 引用 / 代码 / 分割线
+    quote: ({ attrs, children }) => quoteToMarkdown(attrs.positionals[0], children),
+    quotex: ({ attrs, children }) => quoteToMarkdown(attrs.positionals[0], children),
+    code: ({ text }) => (text.includes("\n") ? "```\n" + text + "\n```" : "`" + text + "`"),
+    line: () => "\n---\n",
+
+    // 表格由 table handler 统一处理，结构标签在其他位置保留内容。
+    table: ({ node, render }) => tableToMarkdown(node.children, render),
+    tr: ({ children }) => children,
+    td: ({ children }) => children,
+    th: ({ children }) => children,
+
+    // Text 模式标签
+    md: ({ text }) => text,
+    noubb: ({ text }) => text.replace(/([[\]])/g, "\\$1"),
+    math: ({ text }) => text,
+    m: ({ text }) => text,
+
+    // 媒体
+    audio: ({ node, text }) => `[${node.tag}](${text})`,
+    mp3: ({ node, text }) => `[${node.tag}](${text})`,
+    video: ({ node, text }) => `[${node.tag}](${text})`,
+    bili: ({ node, text }) => `[${node.tag}](${text})`,
+    upload: ({ text }) => text,
+
+    // 站内链接
+    user: ({ attrs, children }) => `@${attrs.positionals[0] ?? children}`,
+    pm: ({ attrs, children }) => `@${attrs.positionals[0] ?? children}`,
+    topic: ({ attrs, children }) => {
+      const id = attrs.positionals[0] ?? "";
+      return `[${children || `帖子 ${id}`}](/topic/${id})`;
+    },
+    board: ({ attrs, children }) => {
+      const id = attrs.positionals[0] ?? "";
+      return `[${children || `板块 ${id}`}](/board/${id})`;
+    },
+
+    // 权限标签
+    needreply: () => "",
+    posteronly: () => "",
+    allowviewer: () => "",
+  },
+  fallback: ({ node, children }) => {
+    const emotion = resolveUbbEmotionTag(node.tag);
+    if (emotion) return markdownImage(emotionMarkdownAlt(emotion), emotion.src);
+
+    // 标签族已识别但编号无效时保留原始 UBB，避免静默丢内容。
+    if (matchUbbRegexTagFamily(node.tag)) return `[${node.tag}]`;
+    return children;
+  },
+  finalize: (result) => {
+    let output = result;
+    if (output.startsWith("\n---")) output = output.slice(1);
+    if (output.endsWith("---\n")) output = output.slice(0, -1);
+    return output;
+  },
+});
+
+/** 把 UBB 文本转成 Markdown 字符串。 */
 export function ubbToMarkdown(ubb: string): string {
-  const nodes = parseUbb(ubb);
-  let result = nodes.map(nodeToMarkdown).join("");
-
-  // [line] 产生的 \n---\n 在字符串首尾时去掉多余换行
-  if (result.startsWith("\n---")) result = result.slice(1);
-  if (result.endsWith("---\n")) result = result.slice(0, -1);
-
-  return result;
+  return ubbMarkdownRenderer.render(ubb);
 }
 
-/**
- * 递归把单个 AST 节点转成 Markdown。
- */
-function nodeToMarkdown(node: UbbNode): string {
-  if (node.type === "text") return node.value;
+function quoteToMarkdown(source: string | undefined, children: string): string {
+  const content = source ? `${source}：${children}` : children;
+  return content
+    .split("\n")
+    .map((line) => (line.trim() === "" ? ">" : `> ${line}`))
+    .join("\n");
+}
 
-  const { tag, attrs, children } = node;
-  const inner = children.map(nodeToMarkdown).join("");
+function tableToMarkdown(
+  children: readonly UbbNode[],
+  render: (nodes: readonly UbbNode[]) => string,
+): string {
+  const rows: string[][] = [];
 
-  // 加粗 / 斜体 / 删除线
-  if (tag === "b") return `**${inner}**`;
-  if (tag === "i") return `_${inner}_`;
-  if (tag === "del") return `~~${inner}~~`;
+  for (const child of children) {
+    if (child.type !== "tag" || child.tag !== "tr") continue;
 
-  // 链接
-  if (tag === "url") {
-    const addr = attrs.positionals[0];
-    if (addr) {
-      return inner ? `[${inner}](${addr})` : `<${addr}>`;
+    const cells: string[] = [];
+    for (const cell of child.children) {
+      if (cell.type === "tag" && (cell.tag === "td" || cell.tag === "th")) {
+        cells.push(render(cell.children));
+      }
     }
-    return `<${inner}>`;
+    if (cells.length > 0) rows.push(cells);
   }
 
-  // 图片
-  if (tag === "img") {
-    const alt = attrs.named.title ?? "";
-    return `![${alt}](${getTextContent(children)})`;
-  }
+  if (rows.length === 0) return "";
 
-  // 引用
-  if (tag === "quote" || tag === "quotex") {
-    const source = attrs.positionals[0];
-    const content = source ? `${source}：${inner}` : inner;
-    return content
-      .split("\n")
-      .map((line) => (line.trim() === "" ? ">" : `> ${line}`))
-      .join("\n");
-  }
-
-  // 代码（单行用行内代码，多行用围栏代码块）
-  if (tag === "code") {
-    const content = getTextContent(children);
-    return content.includes("\n") ? "```\n" + content + "\n```" : "`" + content + "`";
-  }
-
-  // 分割线（前后加换行，由 ubbToMarkdown 顶层清理首尾多余换行）
-  if (tag === "line") return "\n---\n";
-
-  // Markdown 内容原样输出
-  if (tag === "md") return getTextContent(children);
-
-  // noubb 转义方括号
-  if (tag === "noubb") {
-    return getTextContent(children).replace(/([[\]])/g, "\\$1");
-  }
-
-  // 媒体降级为链接
-  if (tag === "audio" || tag === "mp3" || tag === "video" || tag === "bili") {
-    return `[${tag}](${getTextContent(children)})`;
-  }
-
-  // upload 降级为纯地址
-  if (tag === "upload") return getTextContent(children);
-
-  // math/m 保留 LaTeX 原文
-  if (tag === "math" || tag === "m") return getTextContent(children);
-
-  // 站内链接
-  if (tag === "user" || tag === "pm") {
-    return `@${attrs.positionals[0] ?? inner}`;
-  }
-  if (tag === "topic") {
-    const id = attrs.positionals[0] ?? "";
-    return `[${inner || `帖子 ${id}`}](/topic/${id})`;
-  }
-  if (tag === "board") {
-    const id = attrs.positionals[0] ?? "";
-    return `[${inner || `板块 ${id}`}](/board/${id})`;
-  }
-
-  // 表格
-  if (tag === "table") return tableToMarkdown(children);
-
-  const emotion = resolveUbbEmotionTag(tag);
-  if (emotion) return markdownImage(emotionMarkdownAlt(emotion), emotion.src);
-
-  // 能识别标签族但编号无效时保留原始 UBB，避免迁移时静默丢内容
-  if (matchUbbRegexTagFamily(tag)) return `[${tag}]`;
-
-  // 权限标签（Empty 模式）剥除为空字符串
-  if (getTagMode(tag) === "empty") return "";
-
-  // 其他已知标签（u/size/color/font/align/left/center/right/english/cursor/tr/td/th）：
-  // 剥除样式保留内容
-  return inner;
+  return [
+    `| ${rows[0].join(" | ")} |`,
+    `| ${rows[0].map(() => "---").join(" | ")} |`,
+    ...rows.slice(1).map((row) => `| ${row.join(" | ")} |`),
+  ].join("\n");
 }
 
 function markdownImage(alt: string, source: string): string {
@@ -152,48 +158,4 @@ function emotionMarkdownAlt(emotion: UbbEmotionDescriptor): string {
     case "mahjong-face":
       return `麻将脸 ${emotion.code}`;
   }
-}
-
-/**
- * 把 table 的子节点（tr/td/th）转成 Markdown 表格。
- */
-function tableToMarkdown(children: UbbNode[]): string {
-  const rows: string[][] = [];
-
-  for (const child of children) {
-    if (child.type === "tag" && child.tag === "tr") {
-      const cells: string[] = [];
-      for (const cell of child.children) {
-        if (cell.type === "tag" && (cell.tag === "td" || cell.tag === "th")) {
-          cells.push(cell.children.map(nodeToMarkdown).join(""));
-        }
-      }
-      if (cells.length > 0) rows.push(cells);
-    }
-  }
-
-  if (rows.length === 0) return "";
-
-  const lines: string[] = [];
-  // 第一行作表头
-  lines.push(`| ${rows[0].join(" | ")} |`);
-  // 表头分隔行
-  lines.push(`| ${rows[0].map(() => "---").join(" | ")} |`);
-  // 数据行
-  for (let i = 1; i < rows.length; i++) {
-    lines.push(`| ${rows[i].join(" | ")} |`);
-  }
-
-  return lines.join("\n");
-}
-
-/**
- * 递归提取节点的纯文本内容。
- *
- * 用于 Text 模式标签（code/img/audio 等），其 children 为单个文本节点。
- */
-function getTextContent(children: UbbNode[]): string {
-  return children
-    .map((child) => (child.type === "text" ? child.value : getTextContent(child.children)))
-    .join("");
 }

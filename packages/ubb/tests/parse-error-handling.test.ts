@@ -1,7 +1,4 @@
 /**
- * UBB 容错场景单元测试（TDD 红灯阶段）。
- *
- * 本文件只写测试。parseUbb 当前为占位实现（throw），测试全部失败属于预期。
  * 各场景对应的 Core.tsx（Forum/Ubb/Core.tsx）容错机制：
  *
  * 1. 未闭合标签：root.close() 触发 forceClose（Core.tsx:349-376）。未关闭标签的

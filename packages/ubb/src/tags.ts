@@ -5,13 +5,21 @@
  * 老项目通过 handler 的 getTagMode 返回模式（Recursive/Text/Empty），
  * 新解析器用静态表 + 正则表替代，避免引入 handler 层。
  *
- * 三种模式：
+ * 四种模式：
  * - recursive：标签内部允许其它 UBB 标签，递归建树。
  * - text：标签内部只允许纯文字，内容作为单个文本节点（不递归）。
  * - empty：自闭合标签，children 恒为空；紧跟同名结束标签时忽略。
+ * - autoclose：可选结束标签。CC98 实际用法中 user/topic/board/pm 常不写
+ *   结束标签（`[user=张三]`），故解析阶段按 recursive 处理允许包裹内容；
+ *   forceClose 时若仍未关闭，不像 recursive 那样把 startTagString 降级为
+ *   文本（那会丢掉站内链接语义），而是保留为空标签节点、子段提升到父级。
+ *   与 empty 的区别：empty 永远无 children，autoclose 只在未关闭时才无。
  */
 
 export type TagMode = "recursive" | "text" | "empty" | "autoclose";
+
+/** 根据已归一化的小写标签名查询解析模式。 */
+export type UbbTagModeResolver = (tagName: string) => TagMode | null;
 
 /** 静态标签名 → 模式。 */
 export const UBB_STATIC_TAG_MODES = {
@@ -43,7 +51,7 @@ export const UBB_STATIC_TAG_MODES = {
   quote: "recursive",
   quotex: "recursive",
 
-  // 站内链接（AutoClose：可选结束标签，无结束时自闭合，有结束时包裹内容）
+  // 站内链接（AutoClose，模式说明见文件顶部）
   user: "autoclose",
   topic: "autoclose",
   board: "autoclose",
