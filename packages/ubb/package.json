@@ -2,7 +2,7 @@
   "name": "@cc98/ubb",
   "version": "0.0.0",
   "private": true,
-  "description": "CC98 UBB 渲染器（只读）与 UBB→Markdown 转换器",
+  "description": "CC98 UBB 解析器、泛型输出注册器与 HTML/Markdown 预设",
   "license": "MIT",
   "files": [
     "dist"

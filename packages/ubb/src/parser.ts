@@ -16,7 +16,7 @@
  */
 import type { UbbNode } from "./types.ts";
 import { type ParsedTag, parseTag, extractAttrs } from "./tag-data.ts";
-import { getTagMode } from "./tags.ts";
+import { getTagMode, type UbbTagModeResolver } from "./tags.ts";
 
 /** 文本 segment。 */
 interface TextSeg {
@@ -43,7 +43,11 @@ type Seg = TextSeg | TagSeg;
  * @param src UBB 原始文本。
  * @returns AST 节点数组。
  */
-export function parseUbb(src: string): UbbNode[] {
+export interface ParseUbbOptions {
+  readonly resolveTagMode?: UbbTagModeResolver;
+}
+
+export function parseUbb(src: string, options: ParseUbbOptions = {}): UbbNode[] {
   const root: TagSeg = {
     kind: "tag",
     tag: null,
@@ -54,7 +58,7 @@ export function parseUbb(src: string): UbbNode[] {
   };
   // 预计算小写版本，避免 findEndTag/checkEndTag 重复 toLowerCase（O(n²) → O(n)）
   const lowerSrc = src.toLowerCase();
-  buildSegments(src, lowerSrc, root);
+  buildSegments(src, lowerSrc, root, options.resolveTagMode ?? getTagMode);
   closeTag(root);
   return root.children.map(segToAst);
 }
@@ -67,7 +71,12 @@ export function parseUbb(src: string): UbbNode[] {
  * @param content 原始文本。
  * @param lowerContent content 的小写版本（用于大小写不敏感的结束标签匹配）。
  */
-function buildSegments(content: string, lowerContent: string, rootParent: TagSeg): void {
+function buildSegments(
+  content: string,
+  lowerContent: string,
+  rootParent: TagSeg,
+  resolveTagMode: UbbTagModeResolver,
+): void {
   let parent = rootParent;
   let cursor = 0;
 
@@ -113,7 +122,7 @@ function buildSegments(content: string, lowerContent: string, rootParent: TagSeg
         continue;
       }
 
-      const mode = getTagMode(tag.tagName);
+      const mode = resolveTagMode(tag.tagName);
       if (!mode) {
         // 未知标签，降级为文本
         addText(parent, tag.startTagString);
@@ -121,6 +130,8 @@ function buildSegments(content: string, lowerContent: string, rootParent: TagSeg
       }
 
       switch (mode) {
+        // autoclose 在解析阶段与 recursive 行为一致：都允许包裹内容、递归建树。
+        // 两者的差别在 forceClose（见下方 forceClose 函数的 autoclose 分支）。
         case "recursive":
         case "autoclose": {
           const newTag: TagSeg = {
@@ -245,7 +256,10 @@ function forceClose(rootSegment: Seg, newParent: TagSeg): void {
       continue;
     }
 
-    // 未关闭的 autoclose 标签：保留为空标签节点，子段提升到 newParent
+    // 未关闭的 autoclose 标签（user/topic/board/pm）：保留为空标签节点，
+    // 子段提升到 newParent。不降级为文本是为了保住站内链接语义——
+    // recursive 分支会把 [user=张三] 还原成纯文字，autoclose 这里保留节点，
+    // 让 to-html/to-markdown 仍能识别并输出链接。
     if (segment.tag !== null && segment.mode === "autoclose") {
       const autocloseTag: TagSeg = {
         kind: "tag",
