@@ -117,7 +117,7 @@ UnoCSS 负责语义 token、简单原子样式和基础组件变体。组件专�
 
 `components/rich-content/ContentRenderer.vue` 是页面入口，只接收原文、内容类型和渲染选项。
 
-- `ubb/` 调用 `@cc98/ubb` 生成的 AST，通过显式注册表分派标签。遍历状态由 `UbbRenderer` 在每次渲染时创建。
+- `ubb/` 通过 `@cc98/ubb` 的默认注册器解析 AST，并用包的泛型 renderer 登记 Vue 输出 handler（输出 `VNodeChild[]`），遍历由 renderer 统一完成。渲染状态（图片计数等）由 `UbbRenderer` 每次渲染创建，经 `Context` 透传给 handler。
 - `markdown/` 使用 `remark-parse` 与 `remark-gfm` 生成 MDAST，再逐个节点转换成 Vue 节点。原始 HTML 按文本显示，不进入 DOM。
 - `universe/` 放 UBB 和 Markdown 共用的图片、链接、代码块、引用、媒体和公式组件，不读取源格式 AST。
 - `security.ts` 是链接、图片和媒体 URL 的统一安全入口，语法适配层负责决定校验失败后的降级形式。

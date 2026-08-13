@@ -51,7 +51,7 @@ export function resolvePermissionMessage(tag: string, value?: string): MessageSe
   return settings[index];
 }
 
-export const renderPermissionTag: UbbTagRenderer = (node) => {
-  const setting = resolvePermissionMessage(node.tag, node.attrs.positionals[0]);
-  return setting ? h(UniverseMessageBar, setting) : `[${node.tag}]`;
+export const renderPermissionTag: UbbTagRenderer = ({ node, attrs }) => {
+  const setting = resolvePermissionMessage(node.tag, attrs.positionals[0]);
+  return setting ? [h(UniverseMessageBar, setting)] : [`[${node.tag}]`];
 };

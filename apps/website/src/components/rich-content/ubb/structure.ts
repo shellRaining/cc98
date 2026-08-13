@@ -39,45 +39,49 @@ function flattenQuoteChain(root: UbbTagNode): UbbTagNode[] {
   return [...normalized.layers, { ...root, children: normalized.nodes }];
 }
 
-export const renderQuoteTag: UbbTagRenderer = (node, context, renderChildren) => {
+export const renderQuoteTag: UbbTagRenderer = ({ node, render }) => {
   const layers = flattenQuoteChain(node);
   const quotes = layers.map((layer) =>
     h(UniverseQuote, { source: layer.attrs.positionals[0] || undefined }, () =>
-      renderChildren(layer, context),
+      render(layer.children),
     ),
   );
   return quotes.length === 1
-    ? quotes[0]
-    : h("div", { class: "my-3 max-h-[50rem] overflow-y-auto" }, quotes);
+    ? [quotes[0]]
+    : [h("div", { class: "my-3 max-h-[50rem] overflow-y-auto" }, quotes)];
 };
 
-export const renderDividerTag: UbbTagRenderer = () =>
-  h("hr", { class: "my-4 border-0 border-t border-cc98-border" });
+export const renderDividerTag: UbbTagRenderer = () => [
+  h("hr", { class: "my-4 border-0 border-t border-cc98-border" }),
+];
 
 function positiveSpan(value: string | undefined): number | undefined {
   const number = Number(value);
   return Number.isInteger(number) && number > 0 ? number : undefined;
 }
 
-export const renderTableTag: UbbTagRenderer = (node, context, renderChildren) => {
-  const children = renderChildren(node, context);
+export const renderTableTag: UbbTagRenderer = ({ node, attrs, children }) => {
   if (node.tag === "table") {
-    return h("div", { class: "rich-content-table-wrap my-3 overflow-x-auto" }, [
-      h("table", { class: "w-full border-collapse text-left" }, children),
-    ]);
+    return [
+      h("div", { class: "rich-content-table-wrap my-3 overflow-x-auto" }, [
+        h("table", { class: "w-full border-collapse text-left" }, children),
+      ]),
+    ];
   }
-  if (node.tag === "tr") return h("tr", children);
+  if (node.tag === "tr") return [h("tr", children)];
 
   const tag = node.tag === "th" ? "th" : "td";
-  const rowspan = positiveSpan(node.attrs.positionals[0]);
-  const colspan = positiveSpan(node.attrs.positionals[1]);
-  return h(
-    tag,
-    {
-      rowspan,
-      colspan,
-      class: "border border-cc98-border px-3 py-2 align-top",
-    },
-    children,
-  );
+  const rowspan = positiveSpan(attrs.positionals[0]);
+  const colspan = positiveSpan(attrs.positionals[1]);
+  return [
+    h(
+      tag,
+      {
+        rowspan,
+        colspan,
+        class: "border border-cc98-border px-3 py-2 align-top",
+      },
+      children,
+    ),
+  ];
 };
