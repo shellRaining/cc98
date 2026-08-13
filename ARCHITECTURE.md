@@ -56,7 +56,7 @@ flowchart LR
   remark --> universe
 ```
 
-`packages/ubb` 不依赖 Vue。`createUbbRegistry` 登记标签名和解析模式，`createRenderer<Output, Context>` 登记每个标签的输出 handler。默认 HTML 和 Markdown 导出器都是泛型 renderer 的字符串预设。`apps/website` 继续用自己的 Vue handler 解释 UBB AST，并集中处理 URL 安全、图片计数和媒体开关。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
+`packages/ubb` 不依赖 Vue。`createUbbRegistry` 登记标签名和解析模式，`createRenderer<Output, Context>` 登记每个标签的输出 handler。默认 HTML 和 Markdown 导出器都是泛型 renderer 的字符串预设。`apps/website` 通过同一泛型 renderer 注册 Vue handler 输出 VNode，并集中处理 URL 安全、图片计数和媒体开关。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
 
 ## 依赖方向
 

@@ -33,6 +33,7 @@
 
 | 执行计划                                                            | 说明                                                   |
 | ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `completed/2026-08-11-website-ubb-vnode-renderer.md`                | 网站 UBB Vue renderer 迁移到泛型 renderer 已完成       |
 | `completed/2026-08-10-ubb-generic-renderer.md`                      | UBB 标签注册器与泛型输出 renderer 重构已完成           |
 | `completed/2026-07-25-color-token-audit.md`                         | 全站颜色字面量迁移、自动检查和亮暗模式回归已完成       |
 | `completed/2026-07-25-installable-pwa.md`                           | 可安装 PWA、可靠首页应用外壳和访问后路由缓存已完成     |

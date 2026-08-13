@@ -1,6 +1,6 @@
-import { h } from "vue";
-import { getUbbTextContent } from "../text";
+import { h, type VNodeChild } from "vue";
 import { sanitizeImageUrl, sanitizeLinkUrl, sanitizeMediaUrl } from "../security";
+import type { UbbRenderContext } from "./context";
 import UniverseAudio from "../universe/UniverseAudio.vue";
 import UniverseBili from "../universe/UniverseBili.vue";
 import UniverseImage from "../universe/UniverseImage.vue";
@@ -15,50 +15,47 @@ function renderImage(
   source: string,
   title: string | undefined,
   hidden: boolean,
-  context: Parameters<UbbTagRenderer>[1],
-) {
+  context: UbbRenderContext,
+): VNodeChild[] {
   const safeSrc = sanitizeImageUrl(source, context.options);
-  if (!safeSrc || context.state.imageCount >= context.options.maxImageCount) return source;
+  if (!safeSrc || context.state.imageCount >= context.options.maxImageCount) return [source];
   context.state.imageCount += 1;
-  return h(UniverseImage, {
-    src: safeSrc,
-    alt: title ?? "",
-    title,
-    defaultVisible: !hidden,
-    allowToolbox: context.options.allowToolbox,
-    showCaption: Boolean(title),
-  });
+  return [
+    h(UniverseImage, {
+      src: safeSrc,
+      alt: title ?? "",
+      title,
+      defaultVisible: !hidden,
+      allowToolbox: context.options.allowToolbox,
+      showCaption: Boolean(title),
+    }),
+  ];
 }
 
-export const renderImageTag: UbbTagRenderer = (node, context) => {
-  const source = getUbbTextContent(node.children).trim();
-  return renderImage(
-    source,
-    node.attrs.named.title || undefined,
-    node.attrs.positionals[0] === "1",
-    context,
-  );
+export const renderImageTag: UbbTagRenderer = ({ attrs, text, context }) => {
+  const source = text.trim();
+  return renderImage(source, attrs.named.title || undefined, attrs.positionals[0] === "1", context);
 };
 
-export const renderUploadTag: UbbTagRenderer = (node, context) => {
-  const source = getUbbTextContent(node.children).trim();
-  const type = node.attrs.positionals[0]?.toLowerCase();
+export const renderUploadTag: UbbTagRenderer = ({ attrs, text, context }) => {
+  const source = text.trim();
+  const type = attrs.positionals[0]?.toLowerCase();
   if (type && IMAGE_UPLOAD_TYPES.has(type)) {
-    return renderImage(source, "上传图片", node.attrs.positionals[1] === "1", context);
+    return renderImage(source, "上传图片", attrs.positionals[1] === "1", context);
   }
 
   const href = sanitizeLinkUrl(source, context.options);
-  return href ? h(UniverseUpload, { href }) : source;
+  return href ? [h(UniverseUpload, { href })] : [source];
 };
 
-export const renderMediaTag: UbbTagRenderer = (node, context) => {
-  const source = getUbbTextContent(node.children).trim();
+export const renderMediaTag: UbbTagRenderer = ({ node, attrs, text, context }) => {
+  const source = text.trim();
   const url = sanitizeMediaUrl(source, context.options);
-  if (!url) return source;
+  if (!url) return [source];
   if (node.tag === "audio" || node.tag === "mp3") {
-    return h(UniverseAudio, { url, title: node.attrs.named.title || undefined });
+    return [h(UniverseAudio, { url, title: attrs.named.title || undefined })];
   }
-  return h(UniverseVideo, { url });
+  return [h(UniverseVideo, { url })];
 };
 
 interface BiliDescriptor {
@@ -88,14 +85,13 @@ function resolveBiliSource(source: string, requestedPage?: string): BiliDescript
   }
 }
 
-export const renderBiliTag: UbbTagRenderer = (node, context) => {
-  const source = getUbbTextContent(node.children).trim();
-  if (!context.options.allowMediaContent) return source;
-  const descriptor = resolveBiliSource(source, node.attrs.positionals[0]);
-  return descriptor ? h(UniverseBili, descriptor) : source;
+export const renderBiliTag: UbbTagRenderer = ({ attrs, text, context }) => {
+  const source = text.trim();
+  if (!context.options.allowMediaContent) return [source];
+  const descriptor = resolveBiliSource(source, attrs.positionals[0]);
+  return descriptor ? [h(UniverseBili, descriptor)] : [source];
 };
 
-export const renderMathTag: UbbTagRenderer = (node) => {
-  const content = getUbbTextContent(node.children);
-  return h(UniverseMath, { content, inline: node.tag === "m" });
+export const renderMathTag: UbbTagRenderer = ({ node, text }) => {
+  return [h(UniverseMath, { content: text, inline: node.tag === "m" })];
 };
