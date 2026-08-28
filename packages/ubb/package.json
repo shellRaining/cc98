@@ -10,6 +10,8 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
+    "./presets/html": "./dist/presets/html.mjs",
+    "./presets/markdown": "./dist/presets/markdown.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {

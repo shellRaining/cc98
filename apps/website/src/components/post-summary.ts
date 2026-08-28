@@ -1,5 +1,5 @@
 import { POST_CONTENT_TYPE, type PostContentType } from "@cc98/api";
-import { ubbToMarkdown } from "@cc98/ubb";
+import { ubbToMarkdown } from "@cc98/ubb/presets/markdown";
 
 export function postExcerpt(
   content: string | undefined,

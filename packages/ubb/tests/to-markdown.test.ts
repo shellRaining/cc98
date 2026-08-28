@@ -23,7 +23,7 @@
  * - 多行 quote：对内容按行拆分，每行加 `> ` 前缀，空行写成 `>`。
  */
 import { describe, expect, test } from "vite-plus/test";
-import { ubbToMarkdown } from "../src/index.ts";
+import { ubbToMarkdown } from "../presets/markdown.ts";
 
 /** 围栏代码块的三反引号。双引号字符串里反引号无需转义。 */
 const FENCE = "```";

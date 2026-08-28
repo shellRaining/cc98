@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useTitle } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { POST_CONTENT_TYPE, type EditPostRequest } from "@cc98/api";
-import { ubbToMarkdown } from "@cc98/ubb";
+import { ubbToMarkdown } from "@cc98/ubb/presets/markdown";
 import { useEditPostMutation, useUploadFilesMutation } from "../../api/mutations";
 import { boardQuery, boardTagsQuery, postOriginalQuery, topicQuery } from "../../api/queries";
 import MarkdownEditor from "../../components/MarkdownEditor.vue";

@@ -13,9 +13,9 @@ graph TD
   registry["registry.ts<br/>createUbbRegistry / defaultUbbRegistry"]
   renderer["renderer.ts<br/>泛型遍历器"]
   emotion["emotion.ts<br/>表情资源描述"]
-  toHtml["to-html.ts<br/>HTML 预设"]
-  toMarkdown["to-markdown.ts<br/>Markdown 预设"]
-  index["index.ts<br/>公共导出"]
+  toHtml["presets/html.ts<br/>HTML 预设入口"]
+  toMarkdown["presets/markdown.ts<br/>Markdown 预设入口"]
+  index["src/index.ts<br/>核心公共导出"]
 
   tagData --> parser
   tags --> parser
@@ -27,8 +27,6 @@ graph TD
   toHtml --> registry
   toMarkdown --> registry
   index --> registry
-  index --> toHtml
-  index --> toMarkdown
 ```
 
 ## 数据流
@@ -44,3 +42,4 @@ flowchart LR
 - `parseUbb` 用静态表加正则族把文本解析成纯数据 AST，不含渲染信息。
 - 遍历器按节点分派：文本节点走 `text()`，标签节点查 `handlers[tag]`，未命中走 `fallback`。handler 收到同一组参数：`node`、`attrs`、惰性 `children`、纯文本 `text`、`context`、子树 `render(nodes)`。
 - 公开的 `render(source)` 与 `renderNodes(nodes)` 在根输出完成后执行 `finalize`；子树 `render(nodes)` 不重复执行。
+- 根入口 `@cc98/ubb` 只导出解析与泛型 renderer API；字符串预设分别从 `@cc98/ubb/presets/html` 和 `@cc98/ubb/presets/markdown` 导入。

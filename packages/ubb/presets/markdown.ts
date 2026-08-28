@@ -4,10 +4,10 @@
  * 通过默认 UBB 注册表创建字符串 renderer。Markdown 能表达的标签转成对应语法，
  * 样式标签保留内容，富媒体降级为链接，权限标签剥除。
  */
-import { resolveUbbEmotionTag, type UbbEmotionDescriptor } from "./emotion.ts";
-import { defaultUbbRegistry } from "./registry.ts";
-import { matchUbbRegexTagFamily } from "./tags.ts";
-import type { UbbNode } from "./types.ts";
+import { resolveUbbEmotionTag, type UbbEmotionDescriptor } from "../src/emotion.ts";
+import { defaultUbbRegistry } from "../src/registry.ts";
+import { matchUbbRegexTagFamily } from "../src/tags.ts";
+import type { UbbNode } from "../src/types.ts";
 
 /** 默认的 UBB → Markdown renderer。 */
 export const ubbMarkdownRenderer = defaultUbbRegistry.createRenderer<string>({

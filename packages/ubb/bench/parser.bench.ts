@@ -1,6 +1,8 @@
 // oxlint-disable-next-line vite-plus/prefer-vite-plus-imports -- vite-plus/test 当前无法运行 bench 回调
 import { bench, describe } from "vitest";
-import { parseUbb, ubbToHtml, ubbToMarkdown } from "../src/index.ts";
+import { ubbToHtml } from "../presets/html.ts";
+import { ubbToMarkdown } from "../presets/markdown.ts";
+import { parseUbb } from "../src/index.ts";
 import {
   createDenseTagSample,
   createMixedSample,
