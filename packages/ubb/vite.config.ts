@@ -12,6 +12,11 @@ const tsgoPath = resolve(
 
 export default defineConfig({
   pack: {
+    entry: {
+      index: "./src/index.ts",
+      "presets/html": "./presets/html.ts",
+      "presets/markdown": "./presets/markdown.ts",
+    },
     dts: { tsgo: { path: tsgoPath } },
     exports: true,
     suppressWarnings: "TypeScript 7.0 does not yet have a stable API and is experimental.",

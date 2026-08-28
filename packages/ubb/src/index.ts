@@ -23,5 +23,3 @@ export {
   matchUbbRegexTagFamily,
 } from "./tags.ts";
 export type { TagMode, UbbRegexTagFamily, UbbStaticTagName, UbbTagModeResolver } from "./tags.ts";
-export { ubbMarkdownRenderer, ubbToMarkdown } from "./to-markdown.ts";
-export { ubbHtmlRenderer, ubbToHtml } from "./to-html.ts";
