@@ -28,7 +28,7 @@ agent-first 工作流：本文件是进入 `packages/ubb` 的目录（TOC），�
 - `src/parser.ts`：解析容错行为（未闭合、孤立结束、未知标签降级规则）
 - `src/registry.ts`、`src/renderer.ts`：注册与遍历核心，handler 的惰性 `children`、`text`、`context`、`render(nodes)`
 - `src/tag-data.ts`：标签字符串 tokenizer（逗号、等号、引号规则）
-- `src/to-html.ts`、`src/to-markdown.ts`：两个字符串预设（转义与 URL 白名单在 HTML 预设）
+- `presets/html.ts`、`presets/markdown.ts`：两个独立子路径字符串预设（转义与 URL 白名单在 HTML 预设）
 - `src/emotion.ts`：表情资源 URL 与编号规则
 - `tests/`：行为契约；`bench/`：性能基线
 

@@ -54,17 +54,12 @@ html.render("[spoiler=注意][b]隐藏内容[/b][/spoiler]");
 
 ## 默认预设
 
-包内提供完整的 CC98 标签表以及 HTML、Markdown 两个字符串 renderer：
+根入口提供完整的 CC98 标签表、解析器和泛型 renderer。HTML、Markdown 两个字符串预设使用独立子路径导入：
 
 ```ts
-import {
-  defaultUbbRegistry,
-  parseUbb,
-  ubbHtmlRenderer,
-  ubbMarkdownRenderer,
-  ubbToHtml,
-  ubbToMarkdown,
-} from "@cc98/ubb";
+import { defaultUbbRegistry, parseUbb } from "@cc98/ubb";
+import { ubbHtmlRenderer, ubbToHtml } from "@cc98/ubb/presets/html";
+import { ubbMarkdownRenderer, ubbToMarkdown } from "@cc98/ubb/presets/markdown";
 ```
 
 `ubbToHtml()` 和 `ubbToMarkdown()` 是两个预设 renderer 的快捷函数。`parseUbb()` 使用默认 CC98 标签表；自定义 registry 使用自己的标签表解析。
