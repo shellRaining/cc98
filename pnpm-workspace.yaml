@@ -12,43 +12,43 @@ catalog:
   vite-plus: 0.2.7
   vue: 3.6.0-beta.17
   vue-router: 5.2.0
-  pinia: 4.0.2
-  "@vue/devtools-api": ^8.1.5
+  pinia: 4.0.3
+  "@vue/devtools-api": ^8.2.1
   pinia-plugin-persistedstate: 4.7.1
-  "@tanstack/vue-query": 5.101.4
-  reka-ui: 2.10.1
+  "@tanstack/vue-query": 5.102.7
+  reka-ui: 2.10.4
   ofetch: 1.5.1
   zod: 4.4.3
-  katex: 0.18.1
-  "@microsoft/signalr": 10.0.0
-  vue-virtual-scroller: 3.0.4
+  katex: 0.18.4
+  "@microsoft/signalr": 10.0.11
+  vue-virtual-scroller: 3.0.5
   aplayer: 1.10.1
   dplayer: 1.27.1
-  hls.js: 1.6.16
+  hls.js: 1.7.1
   "@vue/runtime-core": 3.6.0-beta.17
-  unocss: 66.7.5
-  "@unocss/preset-attributify": 66.7.5
-  "@unocss/preset-typography": 66.7.5
+  unocss: 66.8.1
+  "@unocss/preset-attributify": 66.8.1
+  "@unocss/preset-typography": 66.8.1
   "@vitejs/plugin-vue": 6.0.8
   vite-plugin-pwa: 1.3.0
   "@vueuse/core": 14.4.0
   "@vueuse/integrations": 14.4.0
-  dayjs: 1.11.21
+  dayjs: 1.11.23
   clsx: 2.1.1
   pino: 10.3.1
-  zod-openapi: ^6.0.0
-  knip: ^6.31.0
-  "@unocss/preset-icons": 66.7.5
+  zod-openapi: ^6.0.1
+  knip: ^6.32.3
+  "@unocss/preset-icons": 66.8.1
   "@iconify-json/fa": 1.2.2
   "@iconify-json/heroicons": ^1.2.3
   vitepress: 2.0.0-alpha.18
   workbox-window: 7.4.1
-  "@milkdown/kit": 7.22.0
+  "@milkdown/kit": 7.22.1
   remark-gfm: 4.0.1
   remark-parse: 11.0.0
   unified: 11.0.5
   "@types/mdast": 4.0.4
-  "@milkdown/crepe": 7.22.0
+  "@milkdown/crepe": 7.22.1
   remark-math: 6.0.0
 overrides:
   vite: "catalog:"
@@ -64,29 +64,29 @@ allowBuilds:
   agent-browser: true
   vue-demi: true
 minimumReleaseAgeExclude:
-  - "@unocss/cli@66.7.5"
-  - "@unocss/config@66.7.5"
-  - "@unocss/core@66.7.5"
-  - "@unocss/extractor-arbitrary-variants@66.7.5"
-  - "@unocss/inspector@66.7.5"
-  - "@unocss/preset-attributify@66.7.5"
-  - "@unocss/preset-icons@66.7.5"
-  - "@unocss/preset-mini@66.7.5"
-  - "@unocss/preset-tagify@66.7.5"
-  - "@unocss/preset-typography@66.7.5"
-  - "@unocss/preset-uno@66.7.5"
-  - "@unocss/preset-web-fonts@66.7.5"
-  - "@unocss/preset-wind3@66.7.5"
-  - "@unocss/preset-wind4@66.7.5"
-  - "@unocss/preset-wind@66.7.5"
-  - "@unocss/rule-utils@66.7.5"
-  - "@unocss/transformer-attributify-jsx@66.7.5"
-  - "@unocss/transformer-compile-class@66.7.5"
-  - "@unocss/transformer-directives@66.7.5"
-  - "@unocss/transformer-variant-group@66.7.5"
-  - "@unocss/vite@66.7.5"
-  - unocss@66.7.5
-  - agent-browser@0.33.2
+  - "@unocss/cli@66.8.1"
+  - "@unocss/config@66.8.1"
+  - "@unocss/core@66.8.1"
+  - "@unocss/extractor-arbitrary-variants@66.8.1"
+  - "@unocss/inspector@66.8.1"
+  - "@unocss/preset-attributify@66.8.1"
+  - "@unocss/preset-icons@66.8.1"
+  - "@unocss/preset-mini@66.8.1"
+  - "@unocss/preset-tagify@66.8.1"
+  - "@unocss/preset-typography@66.8.1"
+  - "@unocss/preset-uno@66.8.1"
+  - "@unocss/preset-web-fonts@66.8.1"
+  - "@unocss/preset-wind3@66.8.1"
+  - "@unocss/preset-wind4@66.8.1"
+  - "@unocss/preset-wind@66.8.1"
+  - "@unocss/rule-utils@66.8.1"
+  - "@unocss/transformer-attributify-jsx@66.8.1"
+  - "@unocss/transformer-compile-class@66.8.1"
+  - "@unocss/transformer-directives@66.8.1"
+  - "@unocss/transformer-variant-group@66.8.1"
+  - "@unocss/vite@66.8.1"
+  - unocss@66.8.1
+  - agent-browser@0.35.1
   - "@voidzero-dev/vite-plus-core@0.2.7"
   - "@voidzero-dev/vite-plus-darwin-arm64@0.2.7"
   - "@voidzero-dev/vite-plus-darwin-x64@0.2.7"
