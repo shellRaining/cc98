@@ -90,7 +90,7 @@ apps 只依赖 packages 的公共导出（dist），不直接 import 内部源�
 | ------------- | ---------------------------------------------- |
 | 包管理        | pnpm 11 + workspace catalog                    |
 | 构建          | Vite+（`vp` CLI，底层 Vite + Rolldown）        |
-| 框架          | Vue 3.6（beta，vapor opt-in）                  |
+| 框架          | Vue 3.6（RC，vapor opt-in）                    |
 | 状态          | Pinia（客户端）+ @tanstack/vue-query（服务端） |
 | 路由          | Vue Router 5                                   |
 | 组件          | Reka UI（无头）+ UnoCSS                        |

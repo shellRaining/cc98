@@ -13,7 +13,7 @@ Markdown 编辑与渲染两项选型已由 [0003](./0003-markdown-stack.md) 替�
 
 | 类别          | 选型                              | 理由                                                                                                |
 | ------------- | --------------------------------- | --------------------------------------------------------------------------------------------------- |
-| 框架          | Vue 3.6 beta（vapor opt-in）      | 项目早期承担 beta 风险换取 Vapor Mode，热点组件优先迁 vapor                                         |
+| 框架          | Vue 3.6 RC（vapor opt-in）        | 项目早期承担预发布版风险换取 Vapor Mode，热点组件优先迁 vapor                                       |
 | 客户端状态    | Pinia + persistedstate            | 替代 Redux，Vue 官方推荐，持久化插件替代手写 localStorage                                           |
 | 服务端状态    | @tanstack/vue-query               | 帖子/楼层是"服务端状态"，缓存和去重由它接管，跟 react-query 同 monorepo 同步发版                    |
 | 路由          | Vue Router 5                      | SPA，hash 锚点跳转                                                                                  |
@@ -40,7 +40,7 @@ Markdown 编辑与渲染两项选型已由 [0003](./0003-markdown-stack.md) 替�
 
 ## 备选
 
-- **Vue 3.5 稳定版起步**：风险更小，但放弃 Vapor 先发优势。被推翻，接受 beta 风险。
+- **Vue 3.5 稳定版起步**：风险更小，但放弃 Vapor 先发优势。被推翻，接受预发布版风险。
 - **shadcn-vue + Reka UI**：被推翻，shadcn 自带 zinc 色板/圆角风格与论坛视觉语言冲突。
 - **Ark UI**：备选无头库，Vue 生态文档相对薄弱。
 - **Milkdown**：最初作为备选，已由 ADR 0003 采用。
@@ -59,7 +59,7 @@ Markdown 编辑与渲染两项选型已由 [0003](./0003-markdown-stack.md) 替�
 
 负面 / 风险：
 
-- Vue 3.6 beta API 可能在 GA 前变动，需要跟进 release note
+- Vue 3.6 RC API 仍可能在 GA 前变动，需要跟进 release note
 - APlayer/DPlayer 单作者维护，组件内聚在 apps/website，锁版本缓解
 - UBB 渲染器开发量约 1-2 周，是必做项不做则老帖乱码
 - Vue Router 已到 5.x，与文档中常见的 4.x 教程有差异
