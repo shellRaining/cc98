@@ -1,4 +1,128 @@
 {
-  "layers": 0,
-  "tags": []
+  "layers": 2,
+  "tags": [
+    {
+      "id": 15,
+      "name": "<redacted>",
+      "subTags": [
+        {
+          "id": 55,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 56,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 57,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 58,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 59,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 143,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 91,
+          "name": "<redacted>",
+          "subTags": []
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "name": "<redacted>",
+      "subTags": [
+        {
+          "id": 55,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 56,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 57,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 58,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 59,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 143,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 91,
+          "name": "<redacted>",
+          "subTags": []
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "<redacted>",
+      "subTags": [
+        {
+          "id": 55,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 56,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 57,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 58,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 59,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 143,
+          "name": "<redacted>",
+          "subTags": []
+        },
+        {
+          "id": 91,
+          "name": "<redacted>",
+          "subTags": []
+        }
+      ]
+    }
+  ]
 }

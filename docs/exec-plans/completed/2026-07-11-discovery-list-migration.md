@@ -7,7 +7,7 @@
 本计划对照以下两个项目整理：
 
 - 当前项目 `/Users/shellraining/Documents/cc98`：Vue 3 SPA，已经具备认证、请求封装、Zod schema、Vue Query 和富内容渲染。
-- 旧项目 `/Users/shellraining/Documents/Forum`：React 16 前端，用于核对页面入口、接口路径、数据字段和交互语义，不直接迁移组件与状态管理代码。
+- 旧论坛仓库（通过 `cc98.legacyForumPath` 定位）：React 16 前端，用于核对页面入口、接口路径、数据字段和交互语义，不直接迁移组件与状态管理代码。
 
 阶段 3 已完成：`BoardView` / `TopicView`、`TopicListItem`、`Pagination`、`PageState` 和登录回跳均可复用。本阶段直接在其上扩展发现类页面。
 
@@ -268,7 +268,7 @@ flowchart TD
 
 ## 阶段 4 已确认事项
 
-- 调研对象是当前 `cc98` 与同级旧 React 项目 `Forum`。
+- 调研对象是当前 `cc98` 与本机配置的旧 React 论坛仓库。
 - 阶段 3 已完成，共享列表与分页可直接复用。
 - 保留历史热门入口；阶段 4 首版不迁媒体新帖模式，后续高保真迁移已补齐经典、卡片和仅媒体三种视图。
 - 推荐页阶段 4 首版只做「换一批」；后续高保真迁移已补齐「上一批」和按用户隔离的本地批次缓存。

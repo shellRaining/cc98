@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { parseUbb } from "@cc98/ubb";
+import { defaultUbbRegistry } from "@cc98/ubb";
 import { computed } from "vue";
 import MarkdownRenderer from "./markdown/MarkdownRenderer.vue";
 import { resolveRichContentOptions } from "./options";
@@ -9,7 +9,9 @@ import UbbRenderer from "./ubb/UbbRenderer.vue";
 const props = defineProps<ContentRendererProps>();
 
 const resolvedOptions = computed(() => resolveRichContentOptions(props.options));
-const ubbNodes = computed(() => (props.type === "ubb" ? parseUbb(props.content) : []));
+const ubbNodes = computed(() =>
+  props.type === "ubb" ? defaultUbbRegistry.parse(props.content) : [],
+);
 </script>
 
 <template>

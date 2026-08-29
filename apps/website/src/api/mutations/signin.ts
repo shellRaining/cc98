@@ -1,12 +1,14 @@
-import { makeUpSigninResultSchema } from "@cc98/api";
+import { makeUpSigninResultSchema, signinRewardSchema } from "@cc98/api";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { typedPost } from "../../lib/http";
 import { queryKeys } from "../queries/index.ts";
 
-export function postSignin(content = "") {
-  return typedPost<unknown>("/me/signin", content, {
-    headers: { "Content-Type": "application/json" },
-  });
+export async function postSignin(content = "") {
+  return signinRewardSchema.parse(
+    await typedPost<unknown>("/me/signin", content, {
+      headers: { "Content-Type": "application/json" },
+    }),
+  );
 }
 
 export function useSigninMutation() {

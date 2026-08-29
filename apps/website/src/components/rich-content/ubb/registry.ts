@@ -1,4 +1,6 @@
-import { matchUbbRegexTagFamily, type UbbRegexTagFamily, type UbbStaticTagName } from "@cc98/ubb";
+import { defaultUbbRegistry, matchUbbRegexTagFamily, type UbbStaticTagName } from "@cc98/ubb";
+import type { VNodeChild } from "vue";
+import type { UbbRenderContext } from "./context";
 import { renderEmotionTag } from "./emotion";
 import { renderLiteralTag } from "./literal";
 import { renderSiteLinkTag, renderUrlTag } from "./link";
@@ -14,7 +16,7 @@ import { renderDividerTag, renderQuoteTag, renderTableTag } from "./structure";
 import { renderAlignmentTag, renderTextStyleTag } from "./textStyle";
 import type { UbbTagRenderer } from "./types";
 
-const staticTagRenderers = {
+const staticTagHandlers = {
   b: renderTextStyleTag,
   i: renderTextStyleTag,
   u: renderTextStyleTag,
@@ -56,18 +58,17 @@ const staticTagRenderers = {
   allowviewer: renderPermissionTag,
 } satisfies Record<UbbStaticTagName, UbbTagRenderer>;
 
-const regexFamilyRenderers = {
-  em: renderEmotionTag,
-  ac: renderEmotionTag,
-  ms: renderEmotionTag,
-  mahjong: renderEmotionTag,
-  cc98: renderEmotionTag,
-  tb: renderEmotionTag,
-} satisfies Record<UbbRegexTagFamily, UbbTagRenderer>;
-
-export function resolveUbbTagRenderer(tag: string): UbbTagRenderer | undefined {
-  const staticRenderer = staticTagRenderers[tag as UbbStaticTagName];
-  if (staticRenderer) return staticRenderer;
-  const family = matchUbbRegexTagFamily(tag);
-  return family ? regexFamilyRenderers[family] : undefined;
-}
+/**
+ * 网站的 Vue UBB renderer：输出 VNodeChild 数组。
+ * 标签解析模式来自 @cc98/ubb 的默认注册器，handler 键由 registry 泛型推导，
+ * 新增静态标签时类型系统会要求同步登记 handler。
+ */
+export const ubbVueRenderer = defaultUbbRegistry.createRenderer<VNodeChild[], UbbRenderContext>({
+  text: (value) => [value],
+  concat: (parts) => parts.flat(),
+  handlers: staticTagHandlers,
+  fallback: (props) => {
+    if (matchUbbRegexTagFamily(props.node.tag)) return renderEmotionTag(props);
+    return [`[${props.node.tag}]${props.text}[/${props.node.tag}]`];
+  },
+});

@@ -10,6 +10,26 @@
 
 实施过程中发现但不属于当前交付范围的问题，Agent 只向开发者反馈，不擅自扩展提交，也不自行写入项目文档；是否修复、记录或另开任务由开发者决定。
 
+## 本地工作区
+
+本地开发目录可以统一容纳 `cc98` 主仓库、旧 React 论坛 `Forum` 和 `worktrees/cc98/` 下的分支 worktree。外层目录只负责整理文件，不初始化 Git 仓库；`cc98` 与 `Forum` 保留各自的 Git 历史，worktree 继续由 `cc98` 的 Worktrunk 管理。
+
+Worktrunk 的用户配置可以按项目设置下面的路径模板，其中项目标识通过 `wt config show` 查询。配置只影响当前机器，不提交到项目仓库。
+
+```toml
+[projects."<项目标识>"]
+worktree-path = "{{ repo_path }}/../worktrees/{{ repo }}/{{ branch | sanitize }}"
+```
+
+旧论坛的位置写入 `cc98` 的本地 Git 配置：
+
+```bash
+git config --local --type=path cc98.legacyForumPath /absolute/path/to/Forum
+git config --local --type=path --get cc98.legacyForumPath
+```
+
+本地 Git 配置由主仓库和所有 worktree 共享，换机器后配置一次即可。项目文档只写旧论坛仓库内的相对路径，例如 `Forum/Ubb/Core.tsx`；需要访问文件时先读取 `cc98.legacyForumPath`，不依赖当前 worktree 与旧论坛的相对位置。
+
 ## 提交
 
 使用 Conventional Commits，格式 `<type>(<scope>): <摘要>`。type 必填（英文小写），scope 可选，摘要正文用中文，不加句号。

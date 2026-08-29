@@ -1,11 +1,6 @@
-import type { UbbTagNode } from "@cc98/ubb";
+import type { UbbTagHandler } from "@cc98/ubb";
 import type { VNodeChild } from "vue";
 import type { UbbRenderContext } from "./context";
 
-export type RenderUbbChildren = (node: UbbTagNode, context: UbbRenderContext) => VNodeChild[];
-
-export type UbbTagRenderer = (
-  node: UbbTagNode,
-  context: UbbRenderContext,
-  renderChildren: RenderUbbChildren,
-) => VNodeChild;
+/** 网站 UBB Vue renderer 的输出是 VNodeChild 数组，上下文是 UbbRenderContext。 */
+export type UbbTagRenderer = UbbTagHandler<VNodeChild[], UbbRenderContext>;

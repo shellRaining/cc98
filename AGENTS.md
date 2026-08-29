@@ -14,6 +14,8 @@ agent-first 工作流：人设计环境和意图，agent 执行。这份文件�
 
 需要隔离开发时，先按 `docs/collaborating.md` 选择语义化分支名，再使用 `wt switch --create <type>/<short-desc> --base=@ --no-cd --format json` 创建真实分支 worktree。禁止用 Agent 或工具名（如 `codex/`）作为固定前缀。读取返回的 `path` 后，所有命令和文件编辑都定向到该目录。不要使用 `-x codex` 启动另一个 Agent。新 worktree 不包含当前目录未提交的改动，任务依赖这些改动时继续使用当前目录。
 
+旧 React 论坛是本地参考仓库，不属于本 monorepo。每台机器克隆后使用 `git config --local --type=path cc98.legacyForumPath <旧论坛绝对路径>` 登记位置，读取时运行 `git config --local --type=path --get cc98.legacyForumPath`。该配置由主仓库及其所有 worktree 共享。文档和代码不得写入开发者目录的绝对路径，也不要假设旧论坛与当前 worktree 同级。
+
 ## 何时读什么
 
 开工前：
@@ -50,7 +52,7 @@ agent-first 工作流：人设计环境和意图，agent 执行。这份文件�
 
 ### 代码规范
 
-- 工具函数优先用 VueUse / dayjs / clsx / nanoid，不手写轮子
+- 工具函数优先用 VueUse / dayjs / clsx，不手写轮子
 - 复杂工作先写执行计划，不在 chat 里堆上下文
 - 工具函数和复杂逻辑处可以编写一定数量的注释，但禁止对显而易见的逻辑给出注释解释
 

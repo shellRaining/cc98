@@ -7,7 +7,7 @@
 - `packages/ubb` 的纯逻辑测试体系，用来固定老项目 UBB 解析行为。
 - `apps/website` 的日志入口，用成熟库承接控制台日志，后续再扩展上报、脱敏和观测。
 
-老项目 `/Users/shellraining/Documents/Forum` 中 UBB 实现集中在 `Ubb/Core.tsx` 和 `Ubb/UbbCodeExtension.tsx`。它有完整的 token、segment、handler 机制，但 handler 直接返回 ReactNode，并混有播放器、图片工具箱、Markdown、MathJax 等 UI 副作用。新项目是 Vue，因此本计划只抽取解析行为，不迁移 React 渲染模型。
+旧论坛仓库中 UBB 实现集中在 `Ubb/Core.tsx` 和 `Ubb/UbbCodeExtension.tsx`，仓库位置通过 `cc98.legacyForumPath` 定位。它有完整的 token、segment、handler 机制，但 handler 直接返回 ReactNode，并混有播放器、图片工具箱、Markdown、MathJax 等 UI 副作用。新项目是 Vue，因此本计划只抽取解析行为，不迁移 React 渲染模型。
 
 ## 非目标
 

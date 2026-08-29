@@ -2,7 +2,7 @@
 
 ## 背景
 
-复刻老 CC98 论坛前端，第一步是把全站 UBB 格式内容迁移到新系统。老项目 `/Users/shellraining/Documents/writable-project/Forum` 的 UBB 实现集中在 `Ubb/Core.tsx`（tokenizer + segment tree + handler 注册）和 `Ubb/UbbCodeExtension.tsx`（标签注册表），handler 直接返回 ReactNode 并混有播放器、MathJax 等 UI 副作用。新项目是 Vue，不迁移 React 渲染模型。
+复刻老 CC98 论坛前端，第一步是把全站 UBB 格式内容迁移到新系统。旧论坛仓库的 UBB 实现集中在 `Ubb/Core.tsx`（tokenizer + segment tree + handler 注册）和 `Ubb/UbbCodeExtension.tsx`（标签注册表），仓库位置通过 `cc98.legacyForumPath` 定位。handler 直接返回 ReactNode 并混有播放器、MathJax 等 UI 副作用。新项目是 Vue，不迁移 React 渲染模型。
 
 本子包的目标：提供框架无关的 UBB 解析层（文本 → AST）和双导出器（→ HTML / → Markdown），供 `apps/website` 的 Vue 渲染层和内容迁移脚本共用。
 

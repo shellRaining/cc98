@@ -23,10 +23,10 @@ vp run dev
 需要隔离开发时，当前 Agent 运行：
 
 ```bash
-wt switch --create codex/<task-name> --base=@ --no-cd --format json
+wt switch --create <type>/<short-desc> --base=@ --no-cd --format json
 ```
 
-Worktrunk 会返回新 worktree 的 `path`。Agent 之后必须把所有命令的工作目录和文件编辑路径切到该目录，并用 `git branch --show-current`、`git rev-parse --show-toplevel` 确认位置。不要使用 `-x codex`，它会启动另一个 Codex 进程，无法切换当前任务。
+分支名按任务意图选择 `feature/`、`fix/`、`docs/` 等前缀，具体约定见 `docs/collaborating.md`，不要使用 Agent 或工具名作为固定前缀。Worktrunk 会返回新 worktree 的 `path`。Agent 之后必须把所有命令的工作目录和文件编辑路径切到该目录，并用 `git branch --show-current`、`git rev-parse --show-toplevel` 确认位置。不要使用 `-x codex`，它会启动另一个 Codex 进程，无法切换当前任务。
 
 新 worktree 从已提交的 `HEAD` 创建，不包含当前目录尚未提交的改动。任务依赖这些改动时，应继续使用当前目录，不能直接创建 worktree。Worktrunk 会按 `.config/wt.toml` 复制 `.worktreeinclude` 中声明的本地文件，再运行 `vp install --frozen-lockfile --prefer-offline`。
 

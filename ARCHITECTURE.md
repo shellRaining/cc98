@@ -40,7 +40,7 @@ graph TD
 - `apps/website`：面向用户的 Web 应用（Vue 3.6 SPA）。内部分层见 `docs/frontend.md`
 - `apps/docs`：面向论坛用户的 VitePress 帮助站，使用默认主题和独立静态构建，不依赖主站运行
 - `packages/api`：CC98 API 的 Zod schema、operation registry、OpenAPI JSON 和验证工具
-- `packages/ubb`：UBB 解析器，核心产出是 AST（`parseUbb`），附带 HTML 和 Markdown 两个导出器。只读不做编辑器
+- `packages/ubb`：框架无关的 UBB 解析和输出工具。根入口提供标签注册器、AST 与泛型 renderer，HTML 和 Markdown 字符串预设使用独立子路径导出。只读不做编辑器
 - `packages/utils`：TypeScript 工具包脚手架，当前仅有占位代码，尚未投入使用
 
 网站的富内容渲染分为语法适配层和共享 UI 层：
@@ -56,7 +56,7 @@ flowchart LR
   remark --> universe
 ```
 
-`packages/ubb` 只负责解析和标签契约，不依赖 Vue。`apps/website` 解释 UBB AST 和 Markdown MDAST，并集中处理 URL 安全、图片计数、媒体开关等渲染策略。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
+`packages/ubb` 不依赖 Vue。`createUbbRegistry` 登记标签名和解析模式，`createRenderer<Output, Context>` 登记每个标签的输出 handler。默认 HTML 和 Markdown 导出器都是泛型 renderer 的字符串预设，分别从 `@cc98/ubb/presets/html` 和 `@cc98/ubb/presets/markdown` 导入。`apps/website` 通过同一泛型 renderer 注册 Vue handler 输出 VNode，并集中处理 URL 安全、图片计数和媒体开关。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
 
 ## 依赖方向
 
@@ -90,7 +90,7 @@ apps 只依赖 packages 的公共导出（dist），不直接 import 内部源�
 | ------------- | ---------------------------------------------- |
 | 包管理        | pnpm 11 + workspace catalog                    |
 | 构建          | Vite+（`vp` CLI，底层 Vite + Rolldown）        |
-| 框架          | Vue 3.6（beta，vapor opt-in）                  |
+| 框架          | Vue 3.6（RC，vapor opt-in）                    |
 | 状态          | Pinia（客户端）+ @tanstack/vue-query（服务端） |
 | 路由          | Vue Router 5                                   |
 | 组件          | Reka UI（无头）+ UnoCSS                        |

@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "layer": 1,
+    "tags": [
+      {
+        "id": 15,
+        "name": "<redacted>"
+      },
+      {
+        "id": 54,
+        "name": "<redacted>"
+      },
+      {
+        "id": 91,
+        "name": "<redacted>"
+      }
+    ]
+  },
+  {
+    "layer": 2,
+    "tags": [
+      {
+        "id": 55,
+        "name": "<redacted>"
+      },
+      {
+        "id": 56,
+        "name": "<redacted>"
+      },
+      {
+        "id": 57,
+        "name": "<redacted>"
+      },
+      {
+        "id": 58,
+        "name": "<redacted>"
+      },
+      {
+        "id": 59,
+        "name": "<redacted>"
+      },
+      {
+        "id": 143,
+        "name": "<redacted>"
+      },
+      {
+        "id": 91,
+        "name": "<redacted>"
+      }
+    ]
+  }
+]

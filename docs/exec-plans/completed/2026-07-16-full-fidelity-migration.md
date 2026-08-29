@@ -6,12 +6,12 @@
 
 阶段 0 至阶段 7 先完成了数据、路由、认证、阅读、写入和消息闭环。计划启动时，阶段 8 只完成了设计 token、主题状态和基础 UI 组件。这个顺序符合原路线图，但也留下了一个明显结果：功能已经能用，页面仍像一套通用论坛模板，旧 CC98 的信息密度、首页栏目、头部横幅、版面识别和用户中心入口没有迁过来。
 
-本计划以 2026-07-16 的线上 CC98、同级 `Forum` 仓库和当前 `apps/website` 为基线，记录全站差异、迁移顺序和验收方式。后续改动应持续更新这份文档，不再把“样式收尾”当成一次批量换颜色任务。
+本计划以 2026-07-16 的线上 CC98、本机配置的旧论坛仓库和当前 `apps/website` 为基线，记录全站差异、迁移顺序和验收方式。后续改动应持续更新这份文档，不再把“样式收尾”当成一次批量换颜色任务。
 
 调研基线：
 
 - 原站：`https://www.cc98.org/`，桌面视口 1440×1000，线上默认使用夏季皮肤。
-- 旧前端源码：同级 `Forum`，重点参考 `Components/MainPage.tsx`、`Components/Header.tsx`、`Components/Board/`、`Components/Topic/`、`Components/UserCenter/`、`Styles/MainPage.scss` 和 `Styles/Site.scss`。
+- 旧前端源码：通过 `cc98.legacyForumPath` 定位，重点参考 `Components/MainPage.tsx`、`Components/Header.tsx`、`Components/Board/`、`Components/Topic/`、`Components/UserCenter/`、`Styles/MainPage.scss` 和 `Styles/Site.scss`。
 - 当前实现：`main` 分支 `5ac2eba`，本地 `http://localhost:5173/`。
 - 浏览器证据：`.artifacts/browser/2026-07-16-full-fidelity-migration/`，该目录只存本地截图和临时报告，不提交。
 

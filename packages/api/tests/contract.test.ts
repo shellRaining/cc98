@@ -7,7 +7,9 @@ import openapi from "../generated/openapi.json" with { type: "json" };
 import openIdOpenapi from "../generated/openid.openapi.json" with { type: "json" };
 import {
   endpointCatalog,
+  basicTopicSchema,
   boardEventPageSchema,
+  boardSummarySchema,
   boardSchema,
   createPostRequestSchema,
   favoriteTopicGroupSchema,
@@ -21,7 +23,9 @@ import {
   userOperationRequestSchema,
   messageCountsSchema,
   notificationPostBasicInfoSchema,
+  serverTimeResponseSchema,
   sendMessageRequestSchema,
+  signinRewardSchema,
 } from "../src/index.ts";
 import type { ApiOperation } from "../src/operations/types.ts";
 
@@ -66,6 +70,16 @@ describe("API 契约基线", () => {
     expect(index.specialOffer?.length).toBeGreaterThan(0);
   });
 
+  it("服务器时间响应保留完整成功包装", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getConfigNow.json"),
+        "utf8",
+      ),
+    );
+    expect(serverTimeResponseSchema.parse(fixture)).toEqual(fixture);
+  });
+
   it("用户中心分页响应保留页码元数据", () => {
     const page = {
       data: [],
@@ -94,6 +108,85 @@ describe("API 契约基线", () => {
     expect(boardSchema.parse({ id: 763, bigPaper: null })).toMatchObject({
       id: 763,
       bigPaper: null,
+    });
+  });
+
+  it("版面概要不混入详情字段", async () => {
+    const boardAllFixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getBoardAll.json"),
+        "utf8",
+      ),
+    );
+    const boardSearchFixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getBoardSearch.json"),
+        "utf8",
+      ),
+    );
+    const summary = boardSummarySchema.parse(boardAllFixture[0].boards[0]);
+    const summaryProperties = openapi.components.schemas.BoardSummary.properties;
+
+    expect(summary.showShareTip).toBeTypeOf("boolean");
+    expect(boardSummarySchema.array().safeParse(boardSearchFixture).success).toBe(true);
+    expect(summaryProperties).toHaveProperty("showShareTip");
+    expect(summaryProperties).not.toHaveProperty("logoUri");
+    expect(openapi.components.schemas.BoardGroup.properties.boards.items).toEqual({
+      $ref: "#/components/schemas/BoardSummary",
+    });
+    expect(
+      openapi.paths["/board/search"].get.responses["200"].content["application/json"].schema,
+    ).toEqual({
+      type: "array",
+      items: { $ref: "#/components/schemas/BoardSummary" },
+    });
+  });
+
+  it("批量主题概要使用独立的精确响应模型", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/anonymous/getTopicBasic.json"),
+        "utf8",
+      ),
+    );
+    const fields = [
+      "boardId",
+      "contentType",
+      "id",
+      "isInternalOnly",
+      "isVote",
+      "state",
+      "title",
+      "type",
+    ];
+    const schema = openapi.components.schemas.BasicTopic;
+
+    expect(basicTopicSchema.array().parse(fixture)).toEqual(fixture);
+    expect(Object.keys(schema.properties).sort()).toEqual(fields);
+    expect(schema.required?.toSorted()).toEqual(fields);
+    expect(
+      openapi.paths["/topic/basic"].get.responses["200"].content["application/json"].schema,
+    ).toEqual({
+      type: "array",
+      items: { $ref: "#/components/schemas/BasicTopic" },
+    });
+  });
+
+  it("签到写请求返回本次获得的财富值", async () => {
+    const fixture = JSON.parse(
+      await readFile(
+        resolve(import.meta.dirname, "../fixtures/authenticated/postMeSignin.json"),
+        "utf8",
+      ),
+    );
+
+    expect(signinRewardSchema.parse(fixture)).toBe(fixture);
+    expect(
+      openapi.paths["/me/signin"].post.responses["200"].content["application/json"].schema,
+    ).toEqual({ $ref: "#/components/schemas/SigninReward" });
+    expect(openapi.components.schemas.SigninReward).toMatchObject({
+      type: "integer",
+      minimum: 0,
     });
   });
 
@@ -153,7 +246,7 @@ describe("API 契约基线", () => {
     ).toMatchObject({ floor: 20, boardId: 10 });
   });
 
-  it("Token operation 使用真实运行时契约和可展开的 OpenAPI 表单", () => {
+  it("Token operation 使用 grant_type 判别两种表单", () => {
     expect(
       tokenRequestSchema.safeParse({
         client_id: "client",
@@ -183,7 +276,14 @@ describe("API 契约基线", () => {
       openIdOpenapi.paths["/connect/token"].post.requestBody.content[
         "application/x-www-form-urlencoded"
       ].schema,
-    ).toEqual({ $ref: "#/components/schemas/TokenFormRequest" });
+    ).toEqual({ $ref: "#/components/schemas/TokenRequest" });
+    expect(openIdOpenapi.components.schemas.TokenRequest).toMatchObject({
+      oneOf: [
+        { $ref: "#/components/schemas/PasswordTokenRequest" },
+        { $ref: "#/components/schemas/RefreshTokenRequest" },
+      ],
+      discriminator: { propertyName: "grant_type" },
+    });
   });
 
   it("现有探测报告中的 operation 都属于 registry", () => {

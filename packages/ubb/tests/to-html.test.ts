@@ -24,7 +24,7 @@
  * ubbToHtml 尚未实现，测试会先失败，等实现后通过。
  */
 import { describe, expect, test } from "vite-plus/test";
-import { ubbToHtml } from "../src/index.ts";
+import { ubbToHtml } from "../presets/html.ts";
 
 describe("基础文字样式", () => {
   test("[b]text[/b] 转 strong", () => {

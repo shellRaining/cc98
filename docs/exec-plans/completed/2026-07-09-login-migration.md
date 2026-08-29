@@ -4,7 +4,7 @@
 
 逐步复刻老 CC98 前端，第一阶段目标：登录体系迁移到能访问所有帖子。老项目登录体系已调研完毕（见下方"协议事实"），本计划在新项目（Vue 3 SPA）精确还原登录行为。
 
-## 协议事实（来自 /Users/shellraining/Documents/Forum 调研）
+## 协议事实（来自旧论坛仓库调研）
 
 OAuth2 Password Grant，对接独立 IdentityServer4。
 

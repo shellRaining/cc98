@@ -117,7 +117,7 @@ UnoCSS 负责语义 token、简单原子样式和基础组件变体。组件专�
 
 `components/rich-content/ContentRenderer.vue` 是页面入口，只接收原文、内容类型和渲染选项。
 
-- `ubb/` 调用 `@cc98/ubb` 生成的 AST，通过显式注册表分派标签。遍历状态由 `UbbRenderer` 在每次渲染时创建。
+- `ubb/` 通过 `@cc98/ubb` 的默认注册器解析 AST，并用包的泛型 renderer 登记 Vue 输出 handler（输出 `VNodeChild[]`），遍历由 renderer 统一完成。渲染状态（图片计数等）由 `UbbRenderer` 每次渲染创建，经 `Context` 透传给 handler。
 - `markdown/` 使用 `remark-parse` 与 `remark-gfm` 生成 MDAST，再逐个节点转换成 Vue 节点。原始 HTML 按文本显示，不进入 DOM。
 - `universe/` 放 UBB 和 Markdown 共用的图片、链接、代码块、引用、媒体和公式组件，不读取源格式 AST。
 - `security.ts` 是链接、图片和媒体 URL 的统一安全入口，语法适配层负责决定校验失败后的降级形式。
@@ -131,6 +131,6 @@ UnoCSS 负责语义 token、简单原子样式和基础组件变体。组件专�
 仓库暂时分层使用 TypeScript：
 
 - `apps/website` 固定使用 TypeScript 6。Vue SFC 编译器解析 `defineProps` 等宏引用的外部类型时，仍依赖 TypeScript 7 已移除的编程接口。
-- `packages/api`、`packages/ubb` 和 `packages/utils` 通过 workspace catalog 使用 TypeScript 7。Vite+ 0.2.6 已包含 tsdown 0.22.13，构建配置仍根据运行平台显式解析 TypeScript 7 原生包中的 `tsc` 可执行文件，确保声明构建使用 workspace 选定的版本。声明构建只过滤 tsdown 固定的 TypeScript 7 实验性提示，其他 warning 保持可见。
+- `packages/api`、`packages/ubb` 和 `packages/utils` 通过 workspace catalog 使用 TypeScript 7。Vite+ 0.3.0 已包含满足当前构建需求的 tsdown，构建配置仍根据运行平台显式解析 TypeScript 7 原生包中的 `tsc` 可执行文件，确保声明构建使用 workspace 选定的版本。声明构建只过滤 tsdown 固定的 TypeScript 7 实验性提示，其他 warning 保持可见。
 
 Vite+ 的 tsdown 条件已经满足。等 Vue SFC 工具链支持 TypeScript 7 后，再统一升级网站；届时删除 DTS 中显式配置的 `tsgo` 路径，并确认 `vp run ready` 全量通过。
