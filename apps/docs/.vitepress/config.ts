@@ -35,6 +35,7 @@ export default defineConfig({
       {
         text: "账号与消息",
         items: [
+          { text: "认识登录中心与应用授权", link: "/account/login-authorization" },
           { text: "管理个人内容", link: "/account/personal-content" },
           { text: "查看通知和私信", link: "/messages/overview" },
         ],
