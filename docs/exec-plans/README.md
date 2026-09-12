@@ -35,6 +35,7 @@
 | ------------------------------------------------------------------- | ------------------------------------------------------ |
 | `completed/2026-08-11-website-ubb-vnode-renderer.md`                | 网站 UBB Vue renderer 迁移到泛型 renderer 已完成       |
 | `completed/2026-08-10-ubb-generic-renderer.md`                      | UBB 标签注册器与泛型输出 renderer 重构已完成           |
+| `completed/2026-07-26-pwa-version-skew.md`                          | 部署切换后的懒加载失败、主动更新检查和错误缓存修复完成 |
 | `completed/2026-07-25-color-token-audit.md`                         | 全站颜色字面量迁移、自动检查和亮暗模式回归已完成       |
 | `completed/2026-07-25-installable-pwa.md`                           | 可安装 PWA、可靠首页应用外壳和访问后路由缓存已完成     |
 | `completed/2026-07-24-seasonal-dark-themes.md`                      | 春季、夏季和秋季暗色调色板与视觉回归已完成             |
