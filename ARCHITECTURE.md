@@ -88,7 +88,7 @@ apps 只依赖 packages 的公共导出（dist），不直接 import 内部源�
 
 | 类别          | 选型                                           |
 | ------------- | ---------------------------------------------- |
-| 包管理        | pnpm 11 + workspace catalog                    |
+| 包管理        | pnpm 12 + workspace catalog                    |
 | 构建          | Vite+（`vp` CLI，底层 Vite + Rolldown）        |
 | 框架          | Vue 3.6（RC，vapor opt-in）                    |
 | 状态          | Pinia（客户端）+ @tanstack/vue-query（服务端） |
