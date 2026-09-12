@@ -11,6 +11,7 @@
     "agent-browser": "0.37.1",
     "knip": "catalog:",
     "portless": "0.15.6",
+    "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {
