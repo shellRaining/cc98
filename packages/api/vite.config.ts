@@ -12,7 +12,8 @@ const tsgoPath = resolve(
 
 export default defineConfig({
   pack: {
-    dts: { sourcemap: true, tsgo: { path: tsgoPath } },
+    deps: { resolveDepSubpath: true },
+    dts: { generator: "tsgo", sourcemap: true, tsgo: { path: tsgoPath } },
     exports: false,
     suppressWarnings: "TypeScript 7.0 does not yet have a stable API and is experimental.",
   },

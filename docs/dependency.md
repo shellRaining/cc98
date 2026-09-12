@@ -16,6 +16,8 @@ workspace 通过 `pnpm-workspace.yaml` 的 catalog 集中管理共享依赖版�
 
 项目当前使用 Zod 4。对象 schema 优先使用 `z.object()`、`z.looseObject()` 和 `z.strictObject()` 明确表达 strip、保留未知字段和拒绝未知字段三种行为，不使用 legacy 的 `.passthrough()` 或 `.strict()` 链式方法。schema 自身的 OpenAPI 元数据使用 `schema.meta()`；只有元数据无法与定义放在一起或需要跨模块统一管理时，才使用 `z.globalRegistry`。
 
+Zod 4.6 起，可空 schema 在生成的 OpenAPI 中由 `type: ["number", "null"]` 改为 `anyOf: [{ type: "number" }, { type: "null" }]`。`generated/openapi.json` 是 Zod schema 的派生产物，升级 Zod 后必须重跑 `vp run --filter @cc98/api generate` 并提交产物，否则 `@cc98/api#test` 的 `check-generated.mjs` 会失败。
+
 ## 工具库优先
 
 写工具函数前先查：

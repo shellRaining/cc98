@@ -8,9 +8,10 @@
     "prepare": "vp config"
   },
   "devDependencies": {
-    "agent-browser": "0.35.1",
+    "agent-browser": "0.37.1",
     "knip": "catalog:",
     "portless": "0.15.6",
+    "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {
@@ -23,5 +24,5 @@
   "engines": {
     "node": ">=22.18.0 <25"
   },
-  "packageManager": "pnpm@11.10.0"
+  "packageManager": "pnpm@12.4.1"
 }
