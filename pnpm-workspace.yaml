@@ -10,25 +10,24 @@ catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.3.0
   vitest: 4.1.11
   vite-plus: 0.3.0
-  vue: 3.6.0-rc.6
-  vue-router: 5.3.0
+  vue: 3.6.0-rc.8
+  vue-router: 5.3.1
   pinia: 4.0.3
   "@vue/devtools-api": ^8.2.1
   pinia-plugin-persistedstate: 4.7.1
-  "@tanstack/vue-query": 5.102.7
+  "@tanstack/vue-query": 5.102.8
   reka-ui: 2.10.4
   ofetch: 1.5.1
-  zod: 4.4.3
-  katex: 0.18.4
+  zod: 4.6.2
+  katex: 0.18.7
   "@microsoft/signalr": 10.0.11
   vue-virtual-scroller: 3.0.5
   aplayer: 1.10.1
   dplayer: 1.27.1
-  hls.js: 1.7.1
-  "@vue/runtime-core": 3.6.0-rc.6
-  unocss: 66.8.1
-  "@unocss/preset-attributify": 66.8.1
-  "@unocss/preset-typography": 66.8.1
+  hls.js: 1.7.3
+  unocss: 66.10.2
+  "@unocss/preset-attributify": 66.10.2
+  "@unocss/preset-typography": 66.10.2
   "@vitejs/plugin-vue": 6.0.8
   vite-plugin-pwa: 1.3.0
   "@vueuse/core": 14.4.0
@@ -36,12 +35,12 @@ catalog:
   dayjs: 1.11.23
   clsx: 2.1.1
   pino: 10.3.1
-  zod-openapi: ^6.0.1
-  knip: ^6.32.3
-  "@unocss/preset-icons": 66.8.1
+  zod-openapi: ^6.0.2
+  knip: ^6.35.1
+  "@unocss/preset-icons": 66.10.2
   "@iconify-json/fa": 1.2.2
   "@iconify-json/heroicons": ^1.2.3
-  vitepress: 2.0.0-alpha.19
+  vitepress: 2.0.0-alpha.20
   workbox-window: 7.4.1
   "@milkdown/kit": 7.22.1
   remark-gfm: 4.0.1
@@ -64,29 +63,29 @@ allowBuilds:
   agent-browser: true
   vue-demi: true
 minimumReleaseAgeExclude:
-  - "@unocss/cli@66.8.1"
-  - "@unocss/config@66.8.1"
-  - "@unocss/core@66.8.1"
-  - "@unocss/extractor-arbitrary-variants@66.8.1"
-  - "@unocss/inspector@66.8.1"
-  - "@unocss/preset-attributify@66.8.1"
-  - "@unocss/preset-icons@66.8.1"
-  - "@unocss/preset-mini@66.8.1"
-  - "@unocss/preset-tagify@66.8.1"
-  - "@unocss/preset-typography@66.8.1"
-  - "@unocss/preset-uno@66.8.1"
-  - "@unocss/preset-web-fonts@66.8.1"
-  - "@unocss/preset-wind3@66.8.1"
-  - "@unocss/preset-wind4@66.8.1"
-  - "@unocss/preset-wind@66.8.1"
-  - "@unocss/rule-utils@66.8.1"
-  - "@unocss/transformer-attributify-jsx@66.8.1"
-  - "@unocss/transformer-compile-class@66.8.1"
-  - "@unocss/transformer-directives@66.8.1"
-  - "@unocss/transformer-variant-group@66.8.1"
-  - "@unocss/vite@66.8.1"
-  - unocss@66.8.1
-  - agent-browser@0.35.1
+  - "@unocss/cli@66.10.2"
+  - "@unocss/config@66.10.2"
+  - "@unocss/core@66.10.2"
+  - "@unocss/extractor-arbitrary-variants@66.10.2"
+  - "@unocss/inspector@66.10.2"
+  - "@unocss/preset-attributify@66.10.2"
+  - "@unocss/preset-icons@66.10.2"
+  - "@unocss/preset-mini@66.10.2"
+  - "@unocss/preset-tagify@66.10.2"
+  - "@unocss/preset-typography@66.10.2"
+  - "@unocss/preset-uno@66.10.2"
+  - "@unocss/preset-web-fonts@66.10.2"
+  - "@unocss/preset-wind3@66.10.2"
+  - "@unocss/preset-wind4@66.10.2"
+  - "@unocss/preset-wind@66.10.2"
+  - "@unocss/rule-utils@66.10.2"
+  - "@unocss/transformer-attributify-jsx@66.10.2"
+  - "@unocss/transformer-compile-class@66.10.2"
+  - "@unocss/transformer-directives@66.10.2"
+  - "@unocss/transformer-variant-group@66.10.2"
+  - "@unocss/vite@66.10.2"
+  - unocss@66.10.2
+  - agent-browser@0.37.1
   - "@voidzero-dev/vite-plus-core@0.3.0"
   - "@voidzero-dev/vite-plus-darwin-arm64@0.3.0"
   - "@voidzero-dev/vite-plus-darwin-x64@0.3.0"
@@ -97,15 +96,16 @@ minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus-win32-arm64-msvc@0.3.0"
   - "@voidzero-dev/vite-plus-win32-x64-msvc@0.3.0"
   - vite-plus@0.3.0
-  - vue@3.6.0-rc.6
-  - "@vue/runtime-core@3.6.0-rc.6"
-  - "@vue/compiler-core@3.6.0-rc.6"
-  - "@vue/compiler-dom@3.6.0-rc.6"
-  - "@vue/compiler-sfc@3.6.0-rc.6"
-  - "@vue/compiler-ssr@3.6.0-rc.6"
-  - "@vue/compiler-vapor@3.6.0-rc.6"
-  - "@vue/reactivity@3.6.0-rc.6"
-  - "@vue/runtime-dom@3.6.0-rc.6"
-  - "@vue/runtime-vapor@3.6.0-rc.6"
-  - "@vue/server-renderer@3.6.0-rc.6"
-  - "@vue/shared@3.6.0-rc.6"
+  - vue@3.6.0-rc.8
+  - "@vue/runtime-core@3.6.0-rc.8"
+  - "@vue/compiler-core@3.6.0-rc.8"
+  - "@vue/compiler-dom@3.6.0-rc.8"
+  - "@vue/compiler-sfc@3.6.0-rc.8"
+  - "@vue/compiler-ssr@3.6.0-rc.8"
+  - "@vue/compiler-vapor@3.6.0-rc.8"
+  - "@vue/reactivity@3.6.0-rc.8"
+  - "@vue/runtime-dom@3.6.0-rc.8"
+  - "@vue/runtime-vapor@3.6.0-rc.8"
+  - "@vue/server-renderer@3.6.0-rc.8"
+  - "@vue/shared@3.6.0-rc.8"
+  - hls.js@1.7.3

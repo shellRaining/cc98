@@ -7610,14 +7610,7 @@
           },
           "content": {
             "description": "展示内容或摘要，主要用于推荐阅读；不适用时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "url": {
             "description": "点击配置项后跳转的站内或站外地址。",
@@ -7625,14 +7618,7 @@
           },
           "imageUrl": {
             "description": "展示图片地址；不需要图片的栏目中可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "enable": {
             "description": "配置项是否启用。",
@@ -7652,14 +7638,7 @@
           },
           "expiredTime": {
             "description": "配置项的过期时间；没有过期时间时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "visibility": {
             "description": "可见性：0 为全部可见，1 为仅登录用户可见，2 为仅未登录用户可见。",
@@ -8052,14 +8031,7 @@
         "properties": {
           "EmailAddress": {
             "description": "新的邮箱地址；传入 null 表示清空。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "Gender": {
             "description": "新的性别编号。",
@@ -8067,47 +8039,19 @@
           },
           "Introduction": {
             "description": "新的个人简介；传入 null 表示清空。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "QQ": {
             "description": "新的 QQ 号码；传入 null 表示清空。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "SignatureCode": {
             "description": "新的个性签名，使用 CC98 UBB 格式；传入 null 表示清空。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "Birthday": {
             "description": "新的生日字符串；传入 null 表示清空。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "DisplayTitleId": {
             "description": "新的展示头衔 ID。",
@@ -8286,14 +8230,7 @@
           },
           "signInTopicId": {
             "description": "签到主题 ID；未配置签到主题时可能为空。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "todayCount": {
             "description": "论坛今日发帖数。",
@@ -8528,14 +8465,7 @@
           },
           "authorName": {
             "description": "主题作者用户名；匿名主题中可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "authorUserId": {
             "description": "主题作者用户 ID；匿名主题当前返回 -1。",
@@ -8670,14 +8600,7 @@
           },
           "description": {
             "description": "版面简介；未配置时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "topicCount": {
             "description": "版面主题总数。",
@@ -8727,25 +8650,11 @@
           },
           "description": {
             "description": "版面简介；未配置时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "logoUri": {
             "description": "版面图标地址；未配置独立图标时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "topicCount": {
             "description": "版面主题总数。",
@@ -8808,14 +8717,7 @@
           },
           "lastPostContent": {
             "description": "版面最新回复内容；没有可用内容时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "allowPostOnly": {
             "description": "版面发帖限制状态码；0 与 2 的具体权限差异尚未确认。",
@@ -8835,14 +8737,7 @@
           },
           "bigPaper": {
             "description": "版面大字报内容，使用 CC98 UBB 格式；未配置时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "topicAuthorPermissions": {
             "description": "版面对主题作者开放的管理权限标识列表，具体取值尚未确认。",
@@ -8888,25 +8783,11 @@
           },
           "userId": {
             "description": "主题作者用户 ID；匿名主题中可能为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "userName": {
             "description": "主题作者用户名；匿名主题中可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "userInfo": {
             "description": "主题作者摘要；当前真实主题列表中仅观察到 null，内部字段尚未确认。",
@@ -8963,25 +8844,11 @@
           },
           "lastPostUser": {
             "description": "最后回复者用户名；没有回复者信息时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "lastPostContent": {
             "description": "最后回复内容摘要；可能包含原始 UBB 片段。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "topState": {
             "description": "主题置顶状态：0 为未置顶，2 为版面固顶，4 为全站固顶；其他取值含义尚未确认。",
@@ -9024,25 +8891,11 @@
           },
           "tag1": {
             "description": "主题第一层标签 ID；未选择时可能为 null 或 0。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "tag2": {
             "description": "主题第二层标签 ID；未选择时可能为 null 或 0。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "isInternalOnly": {
             "description": "主题是否仅允许从校园内网访问。",
@@ -9162,14 +9015,7 @@
           },
           "color": {
             "description": "主题标题颜色；未指定时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           }
         },
         "additionalProperties": {},
@@ -9196,14 +9042,7 @@
           },
           "resultFloor": {
             "description": "公布中奖名单的楼层；尚未开奖或异常中止时可能为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           }
         },
         "additionalProperties": {},
@@ -9358,26 +9197,12 @@
             "description": "发生版务操作的版面 ID。"
           },
           "targetUserName": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "版务操作对象的用户名；匿名或没有明确对象时可能为 null。"
+            "description": "版务操作对象的用户名；匿名或没有明确对象时可能为 null。",
+            "type": ["string", "null"]
           },
           "operatorUserName": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "执行版务操作的用户名；部分系统记录可能为 null。"
+            "description": "执行版务操作的用户名；部分系统记录可能为 null。",
+            "type": ["string", "null"]
           },
           "content": {
             "type": "string",
@@ -9460,14 +9285,7 @@
           },
           "title": {
             "description": "帖子标题；普通回复通常为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "content": {
             "description": "帖子正文原文，需要根据 contentType 解析。",
@@ -9496,25 +9314,11 @@
           },
           "userId": {
             "description": "发帖用户 ID；匿名或无法提供用户信息时可能为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "userName": {
             "description": "发帖用户名或匿名标识；无法提供时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "ip": {
             "description": "发帖 IP 信息，内容可能随当前用户权限而变化。",
@@ -9571,14 +9375,7 @@
           },
           "parentId": {
             "description": "被回复或引用的帖子 ID；没有指定父帖子时可能为 0 或 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "state": {
             "description": "帖子状态编号，具体取值含义尚未确认。",
@@ -9611,25 +9408,11 @@
           },
           "lastUpdateTime": {
             "description": "帖子最后编辑时间；未编辑时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "lastUpdateAuthor": {
             "description": "最后编辑帖子的用户名或匿名标识；未编辑时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "isMe": {
             "description": "帖子是否由当前登录用户发布。",
@@ -9848,14 +9631,7 @@
           },
           "targetUserName": {
             "description": "操作涉及的目标用户名；不涉及具体用户时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "time": {
             "type": "string",
@@ -9934,14 +9710,7 @@
           },
           "content": {
             "description": "推荐主题的正文摘要；没有可用摘要时可能为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           }
         },
         "additionalProperties": {},
@@ -10115,69 +9884,27 @@
               },
               "birthday": {
                 "description": "生日；未填写或因隐私设置不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "photourl": {
                 "description": "旧版个人资料图片地址；当前响应中未观察到该字段。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "introduction": {
                 "description": "个人简介；未填写时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "signatureCode": {
                 "description": "个性签名，使用 CC98 UBB 格式；未设置时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "emailAddress": {
                 "description": "邮箱地址；未填写或因隐私设置不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "qq": {
                 "description": "QQ 号码；未填写或因隐私设置不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "postCount": {
                 "description": "用户发表的主题和回复数量。",
@@ -10209,14 +9936,7 @@
               },
               "customTitle": {
                 "description": "旧版自定义头衔；当前响应中未观察到该字段。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "lockState": {
                 "description": "账号状态：0 为正常，1 为锁定，2 为屏蔽，3 为全站 TP。",
@@ -10259,14 +9979,7 @@
               },
               "displayTitleId": {
                 "description": "当前展示的用户头衔 ID；未选择时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["number", "null"]
               },
               "fanCount": {
                 "description": "关注该用户的人数。",
@@ -10333,25 +10046,11 @@
               },
               "lastIpAddress": {
                 "description": "最后登录 IP 地址；不可见或没有记录时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "phoneNumber": {
                 "description": "绑定的手机号码；未绑定或不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "hasPhoneNumber": {
                 "description": "用户是否已绑定手机号码。",
@@ -10386,14 +10085,7 @@
               },
               "watermarkId": {
                 "description": "用户水印标识；未设置时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "allowWechatNotify": {
                 "description": "微信通知设置编号，具体取值含义尚未确认。",
@@ -10596,69 +10288,27 @@
               },
               "birthday": {
                 "description": "生日；未填写或因隐私设置不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "photourl": {
                 "description": "旧版个人资料图片地址；当前响应中未观察到该字段。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "introduction": {
                 "description": "个人简介；未填写时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "signatureCode": {
                 "description": "个性签名，使用 CC98 UBB 格式；未设置时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "emailAddress": {
                 "description": "邮箱地址；未填写或因隐私设置不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "qq": {
                 "description": "QQ 号码；未填写或因隐私设置不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "postCount": {
                 "description": "用户发表的主题和回复数量。",
@@ -10690,14 +10340,7 @@
               },
               "customTitle": {
                 "description": "旧版自定义头衔；当前响应中未观察到该字段。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "lockState": {
                 "description": "账号状态：0 为正常，1 为锁定，2 为屏蔽，3 为全站 TP。",
@@ -10740,14 +10383,7 @@
               },
               "displayTitleId": {
                 "description": "当前展示的用户头衔 ID；未选择时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["number", "null"]
               },
               "fanCount": {
                 "description": "关注该用户的人数。",
@@ -10814,25 +10450,11 @@
               },
               "lastIpAddress": {
                 "description": "最后登录 IP 地址；不可见或没有记录时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "phoneNumber": {
                 "description": "绑定的手机号码；未绑定或不可见时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "hasPhoneNumber": {
                 "description": "用户是否已绑定手机号码。",
@@ -10867,14 +10489,7 @@
               },
               "watermarkId": {
                 "description": "用户水印标识；未设置时可能为 null。",
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "null"]
               },
               "allowWechatNotify": {
                 "description": "微信通知设置编号，具体取值含义尚未确认。",
@@ -11211,113 +10826,43 @@
           },
           "mostReplyTopicId": {
             "description": "该年回复数最多的主题 ID；没有可用主题时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "mostReplyTopicCount": {
             "description": "回复数最多主题的回复数量；没有可用主题时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "mostViewTopicId": {
             "description": "该年浏览量最高的主题 ID；没有可用主题时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "mostViewTopicCount": {
             "description": "浏览量最高主题的浏览次数；没有可用主题时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "mostReceiveLikePostId": {
             "description": "该年获赞最多的帖子 ID；没有可用帖子时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "mostReceiveLikePostCount": {
             "description": "获赞最多帖子的点赞数量；没有可用帖子时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "board1": {
             "description": "年度活跃度排名第一的版面 ID；没有数据时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "board2": {
             "description": "年度活跃度排名第二的版面 ID；没有数据时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "board3": {
             "description": "年度活跃度排名第三的版面 ID；没有数据时为 null。",
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["number", "null"]
           },
           "latestPostTime": {
             "description": "该年最晚一次发言的时间；没有发言时为 null。",
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": ["string", "null"]
           },
           "postCount06": {
             "description": "0:00 至 6:00 的发言数量。",
@@ -11573,26 +11118,12 @@
             "description": "通知类型编号：0 为全站系统通知，1 为个人系统通知，2 为回复通知；其他取值含义尚未确认。"
           },
           "topicId": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "关联主题 ID；不关联主题时为 null。"
+            "description": "关联主题 ID；不关联主题时为 null。",
+            "type": ["number", "null"]
           },
           "postId": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "关联帖子 ID；不关联具体帖子时为 null。"
+            "description": "关联帖子 ID；不关联具体帖子时为 null。",
+            "type": ["number", "null"]
           },
           "time": {
             "type": "string",
