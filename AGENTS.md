@@ -20,7 +20,7 @@ agent-first 工作流：人设计环境和意图，agent 执行。这份文件�
 
 开工前：
 
-- `ARCHITECTURE.md`：顶层架构地图和分层边界
+- `docs/ARCHITECTURE.md`：顶层架构地图和分层边界
 - `docs/collaborating.md`：分支、提交、PR、Review、文档同步
 
 收尾前：
@@ -32,7 +32,7 @@ agent-first 工作流：人设计环境和意图，agent 执行。这份文件�
 
 - `docs/frontend.md`：前端工程规范
 - `apps/docs/README.md`：用户文档站的内容、构建和发布约定
-- `DESIGN.md`：设计语言与视觉 token（根目录，遵循 Google DESIGN.md 规范）。修改界面样式、主题、皮肤或组件视觉前必读，新增和调整 token 按其中的生命周期规则执行
+- `docs/DESIGN.md`：设计语言与视觉 token（遵循 Google DESIGN.md 规范）。修改界面样式、主题、皮肤或组件视觉前必读，新增和调整 token 按其中的生命周期规则执行
 - `docs/security.md`：应用安全（XSS / CSRF / auth / secrets）
 - `docs/dependency.md`：依赖和供应链安全
 - `docs/adr/`：架构决策记录，遇到重大架构抉择时写一条

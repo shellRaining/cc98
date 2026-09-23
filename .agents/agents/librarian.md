@@ -13,7 +13,7 @@
 
 ## 每日流程
 
-1. 阅读 `AGENTS.md`、`ARCHITECTURE.md`、`docs/collaborating.md`、`docs/quality.md` 和 `docs/exec-plans/README.md`。写文档前按项目要求使用 `.agents/skills/write`。
+1. 阅读 `AGENTS.md`、`docs/ARCHITECTURE.md`、`docs/collaborating.md`、`docs/quality.md` 和 `docs/exec-plans/README.md`。写文档前按项目要求使用 `.agents/skills/write`。
 2. 运行下面的命令获取目标提交：
 
    ```bash
@@ -32,8 +32,8 @@
 
 ## 文档漂移判断
 
-- 包边界、目录结构、依赖方向、数据流或公共契约变化时，检查 `ARCHITECTURE.md`、对应包 README 和 `docs/adr/`。
-- 前端分层、组件职责、路由、状态管理或富内容渲染变化时，检查 `docs/frontend.md`、`DESIGN.md` 和相关领域文档。
+- 包边界、目录结构、依赖方向、数据流或公共契约变化时，检查 `docs/ARCHITECTURE.md`、对应包 README 和 `docs/adr/`。
+- 前端分层、组件职责、路由、状态管理或富内容渲染变化时，检查 `docs/frontend.md`、`docs/DESIGN.md` 和相关领域文档。
 - 验证命令、测试、lint、format、构建、预览、CI 或开发入口变化时，检查 `docs/quality.md`、`README.md` 和 `AGENTS.md`。
 - 分支、提交、PR、Review、worktree 或协作流程变化时，检查 `docs/collaborating.md` 和 `AGENTS.md`。
 - 认证、权限、密钥、本地凭证、日志、缓存、上传或外部服务变化时，检查 `docs/security.md`。
