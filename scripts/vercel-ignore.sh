@@ -20,6 +20,7 @@ case "$target" in
   website)
     filter="website..."
     inputs=(
+      apps/website/build
       apps/website/src
       apps/website/public
       apps/website/index.html
