@@ -1,6 +1,9 @@
 import { describe, expect, test } from "vite-plus/test";
-import { parseUbb } from "../src/index.ts";
+import { cc98Registry } from "../cc98/index.ts";
+
 import { tag, tagBoth, tagNamed, tagPos, txt } from "./helpers.ts";
+
+const parseUbb = (source: string) => cc98Registry.parse(source);
 
 describe("属性边界", () => {
   test("同时保留多个位置参数和命名参数", () => {

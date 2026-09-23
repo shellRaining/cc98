@@ -2,13 +2,16 @@
 import { bench, describe } from "vitest";
 import { ubbToHtml } from "../presets/html.ts";
 import { ubbToMarkdown } from "../presets/markdown.ts";
-import { parseUbb } from "../src/index.ts";
+import { cc98Registry } from "../cc98/index.ts";
+
 import {
   createDenseTagSample,
   createMixedSample,
   createPlainTextSample,
   formatUtf8Size,
 } from "./samples.ts";
+
+const parseUbb = (source: string) => cc98Registry.parse(source);
 
 const plainText = createPlainTextSample(200);
 const mixedSmall = createMixedSample(10);

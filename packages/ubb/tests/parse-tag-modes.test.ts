@@ -1,6 +1,9 @@
 import { describe, expect, test } from "vite-plus/test";
-import { parseUbb } from "../src/index.ts";
+import { cc98Registry } from "../cc98/index.ts";
+
 import { tag, tagPos, txt } from "./helpers.ts";
+
+const parseUbb = (source: string) => cc98Registry.parse(source);
 
 const recursiveTextTags = ["b", "i", "u", "del", "english", "left", "center", "right"];
 

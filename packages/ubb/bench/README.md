@@ -1,6 +1,6 @@
 # UBB 解析器 Benchmark
 
-性能基准覆盖 `parseUbb`、`ubbToMarkdown`、`ubbToHtml` 三个 API。常规微基准使用 Vitest benchmark，大输入和异常输入使用独立 Node.js 进程，避免不同样本共享堆状态。
+性能基准覆盖 `cc98Registry.parse`、`ubbToMarkdown`、`ubbToHtml`。常规微基准使用 Vitest benchmark，大输入和异常输入使用独立 Node.js 进程，避免不同样本共享堆状态。
 
 ## 运行
 
@@ -42,7 +42,7 @@ vp run @cc98/ubb#bench:large -- --json
 ```bash
 # 1. 构建项目产物和对比脚本需要的 CJS 入口
 vp pack --filter @cc98/ubb
-vp dlx esbuild packages/ubb/src/index.ts --bundle --format=cjs --platform=node --outfile=packages/ubb/dist/index.cjs
+vp dlx esbuild packages/ubb/cc98/index.ts --bundle --format=cjs --platform=node --outfile=packages/ubb/dist/cc98.cjs
 
 # 2. 安装隔离的对比依赖
 cd packages/ubb/bench

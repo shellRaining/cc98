@@ -1,6 +1,7 @@
 import { parseUbb } from "./parser.ts";
 import { createUbbRenderer, type UbbRenderer, type UbbRendererOptions } from "./renderer.ts";
-import { getTagMode, UBB_STATIC_TAG_MODES, type TagMode, type UbbTagModeResolver } from "./tags.ts";
+import { type TagMode, type UbbTagModeResolver } from "./parser.ts";
+import type { UbbTagParser } from "./tag-data.ts";
 import type { UbbNode } from "./types.ts";
 
 export type UbbTagModes = Readonly<Record<string, TagMode>>;
@@ -12,6 +13,8 @@ type NormalizeUbbTagModes<Tags extends UbbTagModes> = {
 export interface UbbRegistryOptions {
   /** 精确标签未命中时使用，可用于内置正则标签族。 */
   readonly resolveUnknownTag?: UbbTagModeResolver;
+  /** 自定义 [标签头] 中的名称和参数；默认支持 [tag] 与 [tag=value]。 */
+  readonly parseTag?: UbbTagParser;
 }
 
 export interface UbbRegistry<Tags extends UbbTagModes = UbbTagModes> {
@@ -56,7 +59,8 @@ function createRegistry<Tags extends UbbTagModes>(
     return tagModes.get(normalizedName) ?? resolveUnknownTag?.(normalizedName) ?? null;
   };
 
-  const parse = (source: string): UbbNode[] => parseUbb(source, { resolveTagMode });
+  const parse = (source: string): UbbNode[] =>
+    parseUbb(source, { resolveTagMode, parseTag: options.parseTag });
 
   const registry: UbbRegistry<Tags> = {
     register<const Name extends string, const Mode extends TagMode>(name: Name, mode: Mode) {
@@ -99,7 +103,3 @@ export function createUbbRegistry<const InitialTags extends UbbTagModes = {}>(
 
   return createRegistry<NormalizeUbbTagModes<InitialTags>>(tagModes, options);
 }
-
-export const defaultUbbRegistry = createUbbRegistry(UBB_STATIC_TAG_MODES, {
-  resolveUnknownTag: getTagMode,
-});

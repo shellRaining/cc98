@@ -15,6 +15,7 @@ export default defineConfig({
     deps: { resolveDepSubpath: true },
     entry: {
       index: "./src/index.ts",
+      cc98: "./cc98/index.ts",
       "presets/html": "./presets/html.ts",
       "presets/markdown": "./presets/markdown.ts",
     },

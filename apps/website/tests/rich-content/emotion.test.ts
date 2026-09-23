@@ -1,4 +1,4 @@
-import { resolveUbbEmotionTag } from "@cc98/ubb";
+import { resolveUbbEmotionTag } from "@cc98/ubb/cc98";
 import { describe, expect, test } from "vite-plus/test";
 
 describe("UBB 表情标签族", () => {

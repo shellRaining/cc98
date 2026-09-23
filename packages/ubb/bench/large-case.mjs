@@ -1,5 +1,7 @@
 import { performance } from "node:perf_hooks";
-import { parseUbb } from "../dist/index.mjs";
+import { cc98Registry } from "../dist/cc98.mjs";
+
+const parseUbb = (source) => cc98Registry.parse(source);
 
 const mixedParagraph = [
   "[b]标题文字[/b]这里是正文内容，包含一些[i]斜体[/i]和[u]下划线[/u]以及[del]删除线[/del]。",

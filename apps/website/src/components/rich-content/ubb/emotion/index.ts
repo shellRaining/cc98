@@ -1,5 +1,5 @@
 import { h } from "vue";
-import { resolveUbbEmotionTag } from "@cc98/ubb";
+import { resolveUbbEmotionTag } from "@cc98/ubb/cc98";
 import { getOriginalUbbTag } from "../../text";
 import type { UbbTagRenderer } from "../types";
 import UbbEmotion from "./UbbEmotion.vue";

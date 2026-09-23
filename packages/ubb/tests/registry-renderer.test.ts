@@ -6,7 +6,22 @@ const joinStrings = (outputs: readonly string[]): string => outputs.join("");
 
 describe("UBB 注册表渲染器", () => {
   test("recursive 标签可读取属性、纯文本和递归渲染后的 children", () => {
-    const renderer = createUbbRegistry()
+    const renderer = createUbbRegistry(
+      {},
+      {
+        parseTag: (source) => {
+          const [tag, ...params] = source.split(",");
+          const [name, value] = tag.split("=");
+          return {
+            name,
+            attrs: {
+              positionals: value === undefined ? [] : [value],
+              named: Object.fromEntries(params.map((param) => param.split("="))),
+            },
+          };
+        },
+      },
+    )
       .register("panel", "recursive")
       .createRenderer<string>({
         text: textToString,
@@ -228,5 +243,37 @@ describe("UBB 注册表渲染器", () => {
     expect(renderer.render("前[missing=1,title=标题]正文[/missing]后")).toBe(
       "前[missing=1,title=标题]正文[/missing]后",
     );
+  });
+
+  test("默认参数只拆首个等号，CC98 专属标签不被识别", () => {
+    const registry = createUbbRegistry().register("link", "recursive");
+    expect(registry.parse("[link=https://example.org/?a=1,b=2]内容[/link][em01]")).toEqual([
+      {
+        type: "tag",
+        tag: "link",
+        attrs: { positionals: ["https://example.org/?a=1,b=2"], named: {} },
+        children: [{ type: "text", value: "内容" }],
+      },
+      { type: "text", value: "[em01]" },
+    ]);
+  });
+
+  test("自定义标签头解析失败时按原文保留，其他标签仍可解析", () => {
+    const registry = createUbbRegistry(
+      { item: "empty" },
+      {
+        parseTag: (source) => {
+          if (!source.startsWith("item:")) return null;
+          const value = source.slice("item:".length);
+          if (!value) throw new Error("缺少编号");
+          return { name: "item", attrs: { positionals: [value], named: {} } };
+        },
+      },
+    );
+    expect(registry.parse("[item:42][item:][item=3]")).toEqual([
+      { type: "tag", tag: "item", attrs: { positionals: ["42"], named: {} }, children: [] },
+      { type: "text", value: "[item:]" },
+      { type: "text", value: "[item=3]" },
+    ]);
   });
 });
