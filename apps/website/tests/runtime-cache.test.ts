@@ -1,3 +1,4 @@
+import { runInNewContext } from "node:vm";
 import { describe, expect, test } from "vite-plus/test";
 import { createAppAssetCachePlugin } from "../build/runtime-cache.ts";
 
@@ -25,6 +26,28 @@ async function reusable(url: string, contentType: string, status = 200): Promise
 }
 
 describe("应用资源运行时缓存", () => {
+  test("缓存回调序列化到 Service Worker 后仍能独立执行", async () => {
+    const request = new Request("https://example.com/assets/page-123.js");
+    const response = new Response("content", {
+      headers: { "Content-Type": "application/javascript" },
+    });
+    const html = new Response("<html></html>", { headers: { "Content-Type": "text/html" } });
+    const cacheWillUpdate = runInNewContext(`(${plugin.cacheWillUpdate.toString()})`, {
+      URL,
+    }) as typeof plugin.cacheWillUpdate;
+    const cachedResponseWillBeUsed = runInNewContext(
+      `(${plugin.cachedResponseWillBeUsed.toString()})`,
+      { URL },
+    ) as typeof plugin.cachedResponseWillBeUsed;
+
+    await expect(cacheWillUpdate({ request, response })).resolves.toBe(response);
+    await expect(cacheWillUpdate({ request, response: html })).resolves.toBeNull();
+    await expect(cachedResponseWillBeUsed({ request, cachedResponse: response })).resolves.toBe(
+      response,
+    );
+    await expect(cachedResponseWillBeUsed({ request, cachedResponse: html })).resolves.toBeNull();
+  });
+
   test("只缓存类型正确的脚本和样式", async () => {
     await expect(
       cacheable("https://example.com/assets/page-123.js", "application/javascript"),
