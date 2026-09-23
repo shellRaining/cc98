@@ -12,7 +12,8 @@
  *    此对比是"各自默认行为"下的吞吐量参考，不是"同等产出"的严格对比。
  */
 const { parse: bbobParse } = require("@bbob/parser");
-const { parseUbb } = require("../dist/index.cjs");
+const { cc98Registry } = require("../dist/cc98.cjs");
+const parseUbb = (source) => cc98Registry.parse(source);
 
 // ---- 生成 UBB 文本片段（与 samples.ts 的混合样本相同）----
 

@@ -16,10 +16,7 @@
  *   与 empty 的区别：empty 永远无 children，autoclose 只在未关闭时才无。
  */
 
-export type TagMode = "recursive" | "text" | "empty" | "autoclose";
-
-/** 根据已归一化的小写标签名查询解析模式。 */
-export type UbbTagModeResolver = (tagName: string) => TagMode | null;
+import type { TagMode } from "../src/parser.ts";
 
 /** 静态标签名 → 模式。 */
 export const UBB_STATIC_TAG_MODES = {

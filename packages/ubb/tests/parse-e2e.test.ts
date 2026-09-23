@@ -7,8 +7,11 @@
  * 每个测试包含一段接近真实帖子的 UBB 文本，断言完整的 AST 输出。
  */
 import { describe, expect, test } from "vite-plus/test";
-import { parseUbb } from "../src/index.ts";
+import { cc98Registry } from "../cc98/index.ts";
+
 import { txt, tag, tagPos } from "./helpers.ts";
+
+const parseUbb = (source: string) => cc98Registry.parse(source);
 
 describe("E2E：富文本自我介绍帖", () => {
   test("混合文字样式 + 表情 + 链接 + 嵌套", () => {

@@ -9,10 +9,10 @@
  *    危险协议（javascript:/data:）替换为 #。
  * 3. style/colspan/rowspan 等属性值也转义，防止跳出属性边界。
  */
-import { defaultUbbRegistry } from "../src/registry.ts";
+import { cc98Registry } from "../cc98/index.ts";
 
 /** 默认的 UBB → HTML renderer。 */
-export const ubbHtmlRenderer = defaultUbbRegistry.createRenderer<string>({
+export const ubbHtmlRenderer = cc98Registry.createRenderer<string>({
   text: escapeHtml,
   concat: (parts) => parts.join(""),
   handlers: {

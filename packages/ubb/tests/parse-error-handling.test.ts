@@ -21,8 +21,11 @@
  * “上文[line]下文”三分段的行为一致）。
  */
 import { describe, expect, test } from "vite-plus/test";
-import { parseUbb } from "../src/index.ts";
+import { cc98Registry } from "../cc98/index.ts";
+
 import { txt, tag, tagPos } from "./helpers.ts";
+
+const parseUbb = (source: string) => cc98Registry.parse(source);
 
 describe("未闭合标签（forceClose 降级为文本）", () => {
   test("[b] 未闭合：startTagString 降级，子内容提升为兄弟文本", () => {

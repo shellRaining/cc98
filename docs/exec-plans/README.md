@@ -33,6 +33,7 @@
 
 | 执行计划                                                            | 说明                                                   |
 | ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `completed/2026-09-23-ubb-generalization.md`                        | 通用 UBB 解析与 CC98 预设分离已完成                    |
 | `completed/2026-08-11-website-ubb-vnode-renderer.md`                | 网站 UBB Vue renderer 迁移到泛型 renderer 已完成       |
 | `completed/2026-08-10-ubb-generic-renderer.md`                      | UBB 标签注册器与泛型输出 renderer 重构已完成           |
 | `completed/2026-07-26-pwa-version-skew.md`                          | 部署切换后的懒加载失败、主动更新检查和错误缓存修复完成 |

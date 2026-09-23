@@ -3,7 +3,7 @@ import {
   UBB_STATIC_TAG_NAMES,
   type UbbRegexTagFamily,
   type UbbStaticTagName,
-} from "@cc98/ubb";
+} from "@cc98/ubb/cc98";
 import { createPinia } from "pinia";
 import { createSSRApp, h } from "vue";
 import { describe, expect, test } from "vite-plus/test";

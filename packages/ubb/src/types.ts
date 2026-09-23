@@ -2,7 +2,7 @@
  * UBB AST 节点类型定义。
  *
  * parseUbb 把 UBB 文本解析成这棵纯数据树，不包含任何渲染信息。
- * 导出器（toHtml / toMarkdown）和 Vue 渲染层各自遍历这棵树产出输出。
+ * 字符串导出器和 Vue 渲染层各自遍历这棵树产出输出。
  */
 
 /**
@@ -33,13 +33,13 @@ export type UbbTagNode = {
 /**
  * 标签属性。
  *
- * CC98 的 UBB 参数模型有两种形态（移植自 Core.tsx 的 UbbTagData）：
+ * 参数模型有两种形态，具体拆分规则由标签头解析函数决定：
  *
  * - 无名位置参数：`[color=red]` 的 red、`[upload=jpg,1]` 的 jpg 和 1。
- *   按出现顺序存入 positionals 数组，老代码用 tagData.value(0)、value(1) 按索引读取。
+ *   按出现顺序存入 positionals 数组。多个位置参数属于 CC98 预设的规则。
  *
  * - 命名参数：`[img=1,title=封面]` 的 title=封面。
- *   存入 named 对象，老代码用 tagData.value('title') 按名称读取。
+ *   存入 named 对象。命名参数属于 CC98 预设的规则。
  *
  * 示例：
  *   [b]                 → { positionals: [], named: {} }

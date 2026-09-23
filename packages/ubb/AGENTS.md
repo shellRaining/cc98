@@ -4,7 +4,7 @@ agent-first 工作流：本文件是进入 `packages/ubb` 的目录（TOC），�
 
 ## 定位
 
-框架无关的 CC98 UBB 解析与输出工具。注册器定义标签方言，泛型 renderer 把 AST 转成调用方选择的输出类型，包内提供 HTML 和 Markdown 字符串预设。只读解析，不做编辑器。
+框架无关的 UBB 解析与输出工具。注册器定义标签和参数解析方式，泛型 renderer 把 AST 转成调用方选择的输出类型；CC98 规则和 HTML、Markdown 预设按需导入。只读解析，不做编辑器。
 
 ## 常用命令
 
@@ -24,18 +24,18 @@ agent-first 工作流：本文件是进入 `packages/ubb` 的目录（TOC），�
 
 按需：
 
-- `src/tags.ts`：静态标签模式表与正则标签族（em/ac/ms/mahjong/cc98/tb）
+- `cc98/tags.ts`：静态标签模式表与正则标签族（em/ac/ms/mahjong/cc98/tb）
 - `src/parser.ts`：解析容错行为（未闭合、孤立结束、未知标签降级规则）
 - `src/registry.ts`、`src/renderer.ts`：注册与遍历核心，handler 的惰性 `children`、`text`、`context`、`render(nodes)`
-- `src/tag-data.ts`：标签字符串 tokenizer（逗号、等号、引号规则）
+- `src/tag-data.ts`：简单标签头参数规则；`cc98/tag-data.ts`：旧论坛 tokenizer（逗号、等号、引号规则）
 - `presets/html.ts`、`presets/markdown.ts`：两个独立子路径字符串预设（转义与 URL 白名单在 HTML 预设）
-- `src/emotion.ts`：表情资源 URL 与编号规则
+- `cc98/emotion.ts`：表情资源 URL 与编号规则
 - `tests/`：行为契约；`bench/`：性能基线
 
 ## 核心约束
 
 - 框架无关：`src/` 不依赖 Vue，只产出纯数据 AST；`vue` 仅作为 peerDependency 为 VNode 输出消费方声明。
-- 解析与输出分离：registry 只登记标签名和 TagMode，renderer 只登记 handler。新增标签 = 在 `tags.ts` 登记模式 + 在各预设补 handler；自定义 registry 不受默认表影响。
+- 解析与输出分离：registry 登记标签名、TagMode 和可选的参数解析函数，renderer 登记 handler。根入口不依赖 CC98；CC98 规则在 `cc98/`，预设补 handler 后才改变输出。
 - 不可变：`register()` 返回新 registry，旧实例不变；renderer 创建后冻结。
 - 安全：默认 HTML 预设负责文本、属性转义和 URL 协议白名单；自定义 handler 返回的字符串属于受信任代码，预设不约束。
 - 容错优先：未知标签、未闭合标签、孤立结束标签、参数异常一律降级为纯文本，不抛错。

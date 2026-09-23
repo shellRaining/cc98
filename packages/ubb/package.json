@@ -10,6 +10,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
+    "./cc98": "./dist/cc98.mjs",
     "./presets/html": "./dist/presets/html.mjs",
     "./presets/markdown": "./dist/presets/markdown.mjs",
     "./package.json": "./package.json"

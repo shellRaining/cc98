@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { UbbEmotionDescriptor } from "@cc98/ubb";
+import type { UbbEmotionDescriptor } from "@cc98/ubb/cc98";
 import { useThemeStore } from "../../../../stores/theme";
 
 const props = defineProps<{

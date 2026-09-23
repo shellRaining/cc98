@@ -1,7 +1,7 @@
 /**
  * UBB 解析器核心。
  *
- * 移植自 Forum/Ubb/Core.tsx 的 buildSegmentsCore + tryHandleEndTag + forceClose。
+ * 建树和容错逻辑移植自 Forum/Ubb/Core.tsx 的 buildSegmentsCore + tryHandleEndTag + forceClose。
  * 两阶段：
  * 1. buildSegments：把字符串解析成中间 segment 树（含容错处理）。
  * 2. segment 树 → AST（UbbNode[]）。
@@ -15,8 +15,15 @@
  * - 标签解析异常（parseTag 抛错）：原始 [tagString] 降级为纯文字。
  */
 import type { UbbNode } from "./types.ts";
-import { type ParsedTag, parseTag, extractAttrs } from "./tag-data.ts";
-import { getTagMode, type UbbTagModeResolver } from "./tags.ts";
+import { parseUbbTag, type UbbTagData, type UbbTagParser } from "./tag-data.ts";
+
+export type TagMode = "recursive" | "text" | "empty" | "autoclose";
+export type UbbTagModeResolver = (tagName: string) => TagMode | null;
+
+interface ParsedTag extends UbbTagData {
+  readonly startTagString: string;
+  readonly endTagString: string;
+}
 
 /** 文本 segment。 */
 interface TextSeg {
@@ -29,7 +36,7 @@ interface TagSeg {
   readonly kind: "tag";
   readonly tag: ParsedTag | null;
   /** 标签模式，root 哨兵为 null。 */
-  mode: import("./tags.ts").TagMode | null;
+  mode: TagMode | null;
   children: Seg[];
   closed: boolean;
   parent: TagSeg | null;
@@ -45,6 +52,7 @@ type Seg = TextSeg | TagSeg;
  */
 export interface ParseUbbOptions {
   readonly resolveTagMode?: UbbTagModeResolver;
+  readonly parseTag?: UbbTagParser;
 }
 
 export function parseUbb(src: string, options: ParseUbbOptions = {}): UbbNode[] {
@@ -58,7 +66,13 @@ export function parseUbb(src: string, options: ParseUbbOptions = {}): UbbNode[] 
   };
   // 预计算小写版本，避免 findEndTag/checkEndTag 重复 toLowerCase（O(n²) → O(n)）
   const lowerSrc = src.toLowerCase();
-  buildSegments(src, lowerSrc, root, options.resolveTagMode ?? getTagMode);
+  buildSegments(
+    src,
+    lowerSrc,
+    root,
+    options.resolveTagMode ?? (() => null),
+    options.parseTag ?? parseUbbTag,
+  );
   closeTag(root);
   return root.children.map(segToAst);
 }
@@ -76,6 +90,7 @@ function buildSegments(
   lowerContent: string,
   rootParent: TagSeg,
   resolveTagMode: UbbTagModeResolver,
+  parseTag: UbbTagParser,
 ): void {
   let parent = rootParent;
   let cursor = 0;
@@ -116,13 +131,21 @@ function buildSegments(
 
     // 开始标签：尝试解析
     try {
-      const tag = parseTag(tagString);
-      if (!tag) {
+      const parsed = parseTag(tagString);
+      if (!parsed || !parsed.name || /[\s[\]/]/.test(parsed.name)) {
         addText(parent, `[${tagString}]`);
         continue;
       }
+      const name = parsed.name.toLowerCase();
 
-      const mode = resolveTagMode(tag.tagName);
+      const tag: ParsedTag = {
+        ...parsed,
+        name,
+        startTagString: `[${tagString}]`,
+        endTagString: `[/` + name + `]`,
+      };
+
+      const mode = resolveTagMode(tag.name);
       if (!mode) {
         // 未知标签，降级为文本
         addText(parent, tag.startTagString);
@@ -147,7 +170,7 @@ function buildSegments(
           break;
         }
         case "text": {
-          const endIdx = findEndTag(lowerContent, tag.tagName, cursor);
+          const endIdx = findEndTag(lowerContent, tag.name, cursor);
           if (endIdx === -1) {
             // 未找到结束标签，降级为文本
             addText(parent, tag.startTagString);
@@ -177,7 +200,7 @@ function buildSegments(
           };
           parent.children.push(newTag);
           // 如果紧跟同名结束标签则跳过
-          const endTagLen = checkEndTag(lowerContent, tag.tagName, cursor);
+          const endTagLen = checkEndTag(lowerContent, tag.name, cursor);
           if (endTagLen > 0) {
             cursor += endTagLen;
           }
@@ -201,7 +224,7 @@ function buildSegments(
 function tryHandleEndTag(tagName: string, parent: TagSeg): TagSeg {
   let p: TagSeg | null = parent;
   while (p && p.tag !== null) {
-    if (p.tag.tagName === tagName) {
+    if (p.tag.name === tagName) {
       closeTag(p);
       return p.parent!;
     }
@@ -346,8 +369,8 @@ function segToAst(seg: Seg): UbbNode {
     const tag = top.seg.tag!;
     const node: UbbNode = {
       type: "tag",
-      tag: tag.tagName,
-      attrs: extractAttrs(tag),
+      tag: tag.name,
+      attrs: tag.attrs,
       children: top.results,
     };
 
