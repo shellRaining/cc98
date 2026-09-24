@@ -54,6 +54,7 @@ agent-browser skills get dogfood # 系统性 QA、问题复现和证据采集时
 - agent-browser 会话按 worktree 隔离，优先使用 `agent-browser session id --scope worktree --prefix cc98` 生成稳定会话名。
 - 登录、路由、权限、真实接口、富内容渲染和用户交互发生变化时，需要补浏览器验证。
 - 验证通过后，UI 状态使用截图记录；多步骤交互、时序问题和 bug 复现使用录屏记录。
+- 录屏前先打开目标页面并确认状态，用 `agent-browser record start .artifacts/browser/{YYYY-MM-DD-任务名}/videos/demo.webm` 开始录制，完成操作后运行 `agent-browser record stop` 保存。默认 30 fps；拖拽、滚动或动画等短时动态演示使用 `agent-browser record start .artifacts/browser/{YYYY-MM-DD-任务名}/videos/demo.webm --fps 60`，长时间录制可降低帧率以控制文件大小。录屏依赖系统 `ffmpeg`，缺失时运行 `vp exec agent-browser doctor` 检查。
 - 演示录屏按用户行为设置有范围的停留时间，不把每一步写成相同的固定延迟；页面扫视、提示阅读和最终状态应比普通点击反馈停留更久。
 - 截图、录屏和临时报告按任务分子目录写入 `.artifacts/browser/`，不提交到仓库。需要放进 Issue 或 PR 时，按 `.agents/skills/github-image-upload/` 的流程上传为 GitHub 附件。结构如下：
   ```

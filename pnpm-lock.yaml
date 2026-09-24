@@ -305,8 +305,8 @@ importers:
   .:
     devDependencies:
       agent-browser:
-        specifier: 0.37.1
-        version: 0.37.1
+        specifier: 0.38.1
+        version: 0.38.1
       knip:
         specifier: 'catalog:'
         version: 6.35.1
@@ -3161,8 +3161,8 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
 
-  agent-browser@0.37.1:
-    resolution: {integrity: sha512-NDojTSXrIq7zS090T0VwI1uzBryZWvewgxXvS0swj8/5GGnziBZLmyhEkfETO8n4n3DsJpZbZkq9F/MV2rIQKw==}
+  agent-browser@0.38.1:
+    resolution: {integrity: sha512-k58FCz0yUOCANoNkMiqJe+H2y6r6sUZazqXsWF+MYq1iRC42PjtLcBoag6SSTOD/FRQppvPDvE5HDYEhclvnhw==}
     engines: {node: '>=24.0.0', pnpm: '>=11.0.0'}
     hasBin: true
 
@@ -8495,7 +8495,7 @@ snapshots:
       - supports-color
     optional: true
 
-  agent-browser@0.37.1: {}
+  agent-browser@0.38.1: {}
 
   ajv@8.20.0:
     dependencies:
