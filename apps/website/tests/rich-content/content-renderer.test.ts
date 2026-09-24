@@ -172,4 +172,29 @@ describe("ContentRenderer", () => {
     const dark = await renderContent(content, "markdown", {}, "dark");
     expect(dark).toContain("/static/images/ac-dark/01.png");
   });
+
+  test("Markdown 论坛表情在正文行内显示，普通图片仍使用图片容器", async () => {
+    const html = await renderContent(
+      "前![AC娘 01](https://www.cc98.org/static/images/ac/01.png)后 ![普通图片](https://example.com/photo.png)",
+      "markdown",
+    );
+    expect(html).toMatch(/前<img[^>]*class="inline-block max-w-full align-middle"[^>]*>后/);
+    expect(html.match(/<figure/g)).toHaveLength(1);
+    expect(html).toContain('alt="AC娘 01"');
+  });
+
+  test("外站同名路径及官方目录中的非表情图片不随主题改写", async () => {
+    const content = [
+      "![外站](https://example.com/static/images/ac/01.png)",
+      "![外站暗色](https://example.com/static/images/ac-dark/01.png)",
+      "![非表情](https://www.cc98.org/static/images/ac/photo.png)",
+    ].join(" ");
+    for (const mode of ["light", "dark"] as const) {
+      const html = await renderContent(content, "markdown", {}, mode);
+      expect(html).toContain('src="https://example.com/static/images/ac/01.png"');
+      expect(html).toContain('src="https://example.com/static/images/ac-dark/01.png"');
+      expect(html).toContain('src="https://www.cc98.org/static/images/ac/photo.png"');
+      expect(html.match(/<figure/g)).toHaveLength(3);
+    }
+  });
 });

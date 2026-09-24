@@ -1,3 +1,4 @@
+import { listUbbEmotions, UBB_EMOTION_FAMILIES, type UbbEmotionDescriptor } from "@cc98/ubb/cc98";
 import type {
   Definition,
   FootnoteDefinition,
@@ -46,18 +47,21 @@ function renderLink(
     : h(Fragment, null, children);
 }
 
-/** CC98 官方 AC 娘资源路径，按主题在 ac 与 ac-dark 目录间切换，与 UBB 渲染端 UbbEmotion 一致。 */
-const AC_EMOTION_PATH = "/static/images/ac/";
-const AC_EMOTION_DARK_PATH = "/static/images/ac-dark/";
+let emotionBySource: Map<string, UbbEmotionDescriptor> | undefined;
 
-function themeImageSource(source: string, isDark: boolean): string {
-  if (isDark && source.includes(AC_EMOTION_PATH)) {
-    return source.replace(AC_EMOTION_PATH, AC_EMOTION_DARK_PATH);
+function findEmotion(source: string): UbbEmotionDescriptor | undefined {
+  if (!emotionBySource) {
+    emotionBySource = new Map();
+    for (const family of UBB_EMOTION_FAMILIES) {
+      for (const emotion of listUbbEmotions(family)) {
+        emotionBySource.set(emotion.src, emotion);
+        if (family === "ac") {
+          emotionBySource.set(emotion.src.replace("/ac/", "/ac-dark/"), emotion);
+        }
+      }
+    }
   }
-  if (!isDark && source.includes(AC_EMOTION_DARK_PATH)) {
-    return source.replace(AC_EMOTION_DARK_PATH, AC_EMOTION_PATH);
-  }
-  return source;
+  return emotionBySource.get(source);
 }
 
 function renderImage(
@@ -66,8 +70,21 @@ function renderImage(
   title: string | null | undefined,
   context: MarkdownRenderContext,
 ): VNodeChild {
-  const src = sanitizeImageUrl(themeImageSource(source, context.isDark), context.options);
+  const src = sanitizeImageUrl(source, context.options);
   if (!src) return alt || source;
+  const emotion = findEmotion(src);
+  if (emotion) {
+    const isDarkAc = emotion.family === "ac" && context.isDark;
+    return h("img", {
+      src: isDarkAc ? emotion.src.replace("/ac/", "/ac-dark/") : emotion.src,
+      alt: alt ?? "",
+      title: title ?? undefined,
+      loading: "lazy",
+      decoding: "async",
+      class: "inline-block max-w-full align-middle",
+      style: isDarkAc ? { maxWidth: "min(100%, 150px)" } : undefined,
+    });
+  }
   return h(UniverseImage, {
     src,
     alt: alt ?? "",
