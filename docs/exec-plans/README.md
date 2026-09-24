@@ -27,9 +27,7 @@
 
 ## 进行中的计划
 
-| 执行计划                                     | 说明                                        |
-| -------------------------------------------- | ------------------------------------------- |
-| `active/2026-08-04-markdown-editor-emoji.md` | Markdown 编辑器表情输入，计划已评审，待实施 |
+当前没有进行中的计划。
 
 ## 已完成的计划
 
@@ -38,6 +36,7 @@
 | `completed/2026-09-23-ubb-generalization.md`                        | 通用 UBB 解析与 CC98 预设分离已完成                    |
 | `completed/2026-08-11-website-ubb-vnode-renderer.md`                | 网站 UBB Vue renderer 迁移到泛型 renderer 已完成       |
 | `completed/2026-08-10-ubb-generic-renderer.md`                      | UBB 标签注册器与泛型输出 renderer 重构已完成           |
+| `completed/2026-08-04-markdown-editor-emoji.md`                     | 编辑器表情面板已落地，表情目录收归 `packages/ubb`      |
 | `completed/2026-07-26-pwa-version-skew.md`                          | 部署切换后的懒加载失败、主动更新检查和错误缓存修复完成 |
 | `completed/2026-07-25-color-token-audit.md`                         | 全站颜色字面量迁移、自动检查和亮暗模式回归已完成       |
 | `completed/2026-07-25-installable-pwa.md`                           | 可安装 PWA、可靠首页应用外壳和访问后路由缓存已完成     |
