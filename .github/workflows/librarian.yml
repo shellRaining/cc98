@@ -92,7 +92,7 @@ jobs:
         with:
           openai-api-key: ${{ secrets.NEWAPI_CODEX_TOKEN }}
           responses-api-endpoint: https://api.shellraining.xyz/v1/responses
-          model: gpt-5.6-sol-fast
+          model: gpt-6-sol
           prompt-file: .agents/agents/librarian.md
           codex-args: '["--ephemeral"]'
           safety-strategy: drop-sudo
