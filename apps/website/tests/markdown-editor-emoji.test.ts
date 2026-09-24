@@ -1,4 +1,4 @@
-import { listUbbEmotions, resolveUbbEmotionTag, UBB_EMOTION_FAMILIES } from "@cc98/ubb";
+import { listUbbEmotions, resolveUbbEmotionTag, UBB_EMOTION_FAMILIES } from "@cc98/ubb/cc98";
 import { describe, expect, test } from "vite-plus/test";
 import {
   emotionGroups,
