@@ -1,6 +1,7 @@
 import { basicUserSchema, topicSchema, userSchema } from "@cc98/api";
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
+import { fetchMissingByIds } from "./batch";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
 export const userByIdQuery = (userId: number, authScope: AuthScope, enabled = true) =>
@@ -51,10 +52,11 @@ export const usersByIdsQuery = (ids: number[], enabled = true) => {
   const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
   return queryOptions({
     queryKey: queryKeys.usersByIds(normalizedIds),
-    queryFn: async () => {
-      const data = await typedGet<unknown[]>("/user/basic", { query: { id: normalizedIds } });
-      return basicUserSchema.array().parse(data);
-    },
+    queryFn: ({ client }) =>
+      fetchMissingByIds(client, queryKeys.usersByIdsRoot, normalizedIds, async (batch) => {
+        const data = await typedGet<unknown[]>("/user/basic", { query: { id: batch } });
+        return basicUserSchema.array().parse(data);
+      }),
     enabled: enabled && normalizedIds.length > 0,
     staleTime: 5 * 60 * 1000,
     placeholderData: normalizedIds.length > 0 ? keepPreviousData : undefined,
@@ -65,10 +67,16 @@ export const fullUsersByIdsQuery = (ids: number[], authScope: AuthScope, enabled
   const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
   return queryOptions({
     queryKey: queryKeys.fullUsersByIds(normalizedIds, authScope),
-    queryFn: async () => {
-      const data = await typedGet<unknown[]>("/user", { query: { id: normalizedIds } });
-      return userSchema.array().parse(data);
-    },
+    queryFn: ({ client }) =>
+      fetchMissingByIds(
+        client,
+        ["users", "full-batch", authScope],
+        normalizedIds,
+        async (batch) => {
+          const data = await typedGet<unknown[]>("/user", { query: { id: batch } });
+          return userSchema.array().parse(data);
+        },
+      ),
     enabled: enabled && normalizedIds.length > 0,
     staleTime: 5 * 60 * 1000,
   });

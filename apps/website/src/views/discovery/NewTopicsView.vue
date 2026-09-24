@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useIntersectionObserver, useTitle, useWindowScroll } from "@vueuse/core";
-import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useInfiniteQuery, useQuery, useQueryClient, type InfiniteData } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import { useSetTopicViewModeMutation } from "../../api/mutations";
 import {
@@ -109,8 +109,14 @@ function switchMode(mode: NewTopicViewMode) {
   setTopicViewMode.mutate(newTopicViewPreference(mode));
 }
 
-function refresh() {
-  void queryClient.resetQueries({ queryKey: options.value.queryKey, exact: true });
+async function refresh() {
+  if (query.isFetching.value) return;
+  const queryKey = options.value.queryKey;
+  await queryClient.cancelQueries({ queryKey, exact: true });
+  queryClient.setQueryData<InfiniteData<unknown[]>>(queryKey, (data) =>
+    data ? { pages: data.pages.slice(0, 1), pageParams: data.pageParams.slice(0, 1) } : data,
+  );
+  await queryClient.invalidateQueries({ queryKey, exact: true });
 }
 
 function goLogin() {

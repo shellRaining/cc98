@@ -86,6 +86,7 @@ export const queryKeys = {
   ) => ["user", id, "moderation-posts", days, from, size, authScope] as const,
   userModerationPostsRoot: (id: number) => ["user", id, "moderation-posts"] as const,
   usersByIds: (ids: number[]) => ["users", "batch", ...ids] as const,
+  usersByIdsRoot: ["users", "batch"] as const,
   fullUsersByIds: (ids: number[], authScope: AuthScope) =>
     ["users", "full-batch", authScope, ...ids] as const,
   boardsByIds: (ids: number[]) => ["boards", "batch", ...ids] as const,

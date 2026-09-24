@@ -15,6 +15,7 @@ import {
 } from "@cc98/api";
 import { keepPreviousData, queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
+import { fetchMissingByIds } from "./batch";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
 export const homepageIndexQuery = queryOptions({
@@ -253,10 +254,11 @@ export const boardsByIdsQuery = (ids: number[], enabled = true) => {
   const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
   return queryOptions({
     queryKey: queryKeys.boardsByIds(normalizedIds),
-    queryFn: async () => {
-      const data = await typedGet<unknown[]>("/board/", { query: { id: normalizedIds } });
-      return boardSchema.array().parse(data);
-    },
+    queryFn: ({ client }) =>
+      fetchMissingByIds(client, queryKeys.boardsByIdsRoot, normalizedIds, async (batch) => {
+        const data = await typedGet<unknown[]>("/board/", { query: { id: batch } });
+        return boardSchema.array().parse(data);
+      }),
     enabled: enabled && normalizedIds.length > 0,
     staleTime: 5 * 60 * 1000,
     placeholderData: normalizedIds.length > 0 ? keepPreviousData : undefined,

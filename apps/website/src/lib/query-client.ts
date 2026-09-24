@@ -1,4 +1,5 @@
 import { MutationCache, QueryCache, QueryClient } from "@tanstack/vue-query";
+import { FetchError } from "ofetch";
 import { createLogger, logErrorOnce } from "./logger";
 
 const queryLogger = createLogger("query");
@@ -26,7 +27,12 @@ export function createQueryClient(): QueryClient {
         staleTime: 60 * 1000,
         gcTime: 5 * 60 * 1000,
         refetchOnWindowFocus: false,
-        retry: 1,
+        retry: (failureCount, error) => {
+          if (failureCount >= 1) return false;
+          if (!(error instanceof FetchError)) return false;
+          const status = error.statusCode ?? error.status;
+          return status === 408 || status == null || status >= 500;
+        },
       },
       mutations: {
         retry: 0,

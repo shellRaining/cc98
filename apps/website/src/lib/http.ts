@@ -14,7 +14,7 @@ function describeRequest(request: RequestInfo | URL): string {
 const apiFetch: $Fetch = ofetch.create({
   baseURL: BASE_URL,
   retry: 1,
-  retryStatusCodes: [408, 429, 500, 502, 503, 504],
+  retryStatusCodes: [408, 500, 502, 503, 504],
   async onRequest({ options }) {
     const token = await ensureValidAccessToken();
     if (token) {
