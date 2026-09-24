@@ -1,3 +1,4 @@
+import { listUbbEmotions, UBB_EMOTION_FAMILIES, type UbbEmotionDescriptor } from "@cc98/ubb/cc98";
 import type {
   Definition,
   FootnoteDefinition,
@@ -22,6 +23,8 @@ interface MarkdownRenderContext {
   footnotes: ReadonlyMap<string, FootnoteDefinition>;
   footnoteNumbers: ReadonlyMap<string, number>;
   options: Readonly<RichContentOptions>;
+  /** 当前主题是否为暗色，用于 AC 娘表情资源的主题适配。 */
+  isDark: boolean;
 }
 
 function normalizedIdentifier(identifier: string): string {
@@ -44,6 +47,23 @@ function renderLink(
     : h(Fragment, null, children);
 }
 
+let emotionBySource: Map<string, UbbEmotionDescriptor> | undefined;
+
+function findEmotion(source: string): UbbEmotionDescriptor | undefined {
+  if (!emotionBySource) {
+    emotionBySource = new Map();
+    for (const family of UBB_EMOTION_FAMILIES) {
+      for (const emotion of listUbbEmotions(family)) {
+        emotionBySource.set(emotion.src, emotion);
+        if (family === "ac") {
+          emotionBySource.set(emotion.src.replace("/ac/", "/ac-dark/"), emotion);
+        }
+      }
+    }
+  }
+  return emotionBySource.get(source);
+}
+
 function renderImage(
   source: string,
   alt: string | null | undefined,
@@ -52,6 +72,19 @@ function renderImage(
 ): VNodeChild {
   const src = sanitizeImageUrl(source, context.options);
   if (!src) return alt || source;
+  const emotion = findEmotion(src);
+  if (emotion) {
+    const isDarkAc = emotion.family === "ac" && context.isDark;
+    return h("img", {
+      src: isDarkAc ? emotion.src.replace("/ac/", "/ac-dark/") : emotion.src,
+      alt: alt ?? "",
+      title: title ?? undefined,
+      loading: "lazy",
+      decoding: "async",
+      class: "inline-block max-w-full align-middle",
+      style: isDarkAc ? { maxWidth: "min(100%, 150px)" } : undefined,
+    });
+  }
   return h(UniverseImage, {
     src,
     alt: alt ?? "",
@@ -213,7 +246,11 @@ function renderMarkdownNode(node: Nodes, context: MarkdownRenderContext): VNodeC
   }
 }
 
-export function renderMarkdownRoot(root: Root, options: Readonly<RichContentOptions>): VNodeChild {
+export function renderMarkdownRoot(
+  root: Root,
+  options: Readonly<RichContentOptions>,
+  isDark = false,
+): VNodeChild {
   const definitions = new Map<string, Definition>();
   const footnotes = new Map<string, FootnoteDefinition>();
   const footnoteNumbers = new Map<string, number>();
@@ -238,5 +275,11 @@ export function renderMarkdownRoot(root: Root, options: Readonly<RichContentOpti
   };
   collectFootnoteReferences(root);
 
-  return renderMarkdownNode(root, { definitions, footnotes, footnoteNumbers, options });
+  return renderMarkdownNode(root, {
+    definitions,
+    footnotes,
+    footnoteNumbers,
+    options,
+    isDark,
+  });
 }

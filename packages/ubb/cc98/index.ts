@@ -2,8 +2,13 @@ import { createUbbRegistry } from "../src/registry.ts";
 import { parseTag, extractAttrs } from "./tag-data.ts";
 import { getTagMode, UBB_STATIC_TAG_MODES } from "./tags.ts";
 
-export { resolveUbbEmotionTag } from "./emotion.ts";
-export type { UbbEmotionDescriptor } from "./emotion.ts";
+export {
+  listUbbEmotions,
+  resolveUbbEmotionTag,
+  ubbEmotionDisplayName,
+  UBB_EMOTION_FAMILIES,
+} from "./emotion.ts";
+export type { UbbEmotionDescriptor, UbbEmotionFamily } from "./emotion.ts";
 export {
   UBB_REGEX_TAG_FAMILIES,
   UBB_STATIC_TAG_MODES,
