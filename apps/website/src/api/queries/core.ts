@@ -13,7 +13,7 @@ import {
   voteInfoSchema,
   type PostRatingType,
 } from "@cc98/api";
-import { queryOptions } from "@tanstack/vue-query";
+import { keepPreviousData, queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
@@ -259,5 +259,6 @@ export const boardsByIdsQuery = (ids: number[], enabled = true) => {
     },
     enabled: enabled && normalizedIds.length > 0,
     staleTime: 5 * 60 * 1000,
+    placeholderData: normalizedIds.length > 0 ? keepPreviousData : undefined,
   });
 };

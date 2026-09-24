@@ -1,5 +1,5 @@
 import { basicUserSchema, topicSchema, userSchema } from "@cc98/api";
-import { infiniteQueryOptions, queryOptions } from "@tanstack/vue-query";
+import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
@@ -57,6 +57,7 @@ export const usersByIdsQuery = (ids: number[], enabled = true) => {
     },
     enabled: enabled && normalizedIds.length > 0,
     staleTime: 5 * 60 * 1000,
+    placeholderData: normalizedIds.length > 0 ? keepPreviousData : undefined,
   });
 };
 
