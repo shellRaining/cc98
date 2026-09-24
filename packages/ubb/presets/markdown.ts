@@ -6,7 +6,7 @@
  */
 import {
   resolveUbbEmotionTag,
-  type UbbEmotionDescriptor,
+  ubbEmotionDisplayName,
   cc98Registry,
   matchUbbRegexTagFamily,
 } from "../cc98/index.ts";
@@ -84,7 +84,7 @@ export const ubbMarkdownRenderer = cc98Registry.createRenderer<string>({
   },
   fallback: ({ node, children }) => {
     const emotion = resolveUbbEmotionTag(node.tag);
-    if (emotion) return markdownImage(emotionMarkdownAlt(emotion), emotion.src);
+    if (emotion) return markdownImage(ubbEmotionDisplayName(emotion), emotion.src);
 
     // 标签族已识别但编号无效时保留原始 UBB，避免静默丢内容。
     if (matchUbbRegexTagFamily(node.tag)) return `[${node.tag}]`;
@@ -140,25 +140,4 @@ function tableToMarkdown(
 
 function markdownImage(alt: string, source: string): string {
   return `![${alt}](${source})`;
-}
-
-function emotionMarkdownAlt(emotion: UbbEmotionDescriptor): string {
-  switch (emotion.family) {
-    case "em":
-      return `经典表情 ${emotion.code}`;
-    case "ac":
-      return `AC娘 ${emotion.code}`;
-    case "ms":
-      return `雀魂 ${emotion.code}`;
-    case "cc98":
-      return `CC98 ${emotion.code}`;
-    case "tb":
-      return `贴吧 ${emotion.code}`;
-    case "mahjong-animal":
-      return `麻将脸 动物 ${emotion.code}`;
-    case "mahjong-cartoon":
-      return `麻将脸 卡通 ${emotion.code}`;
-    case "mahjong-face":
-      return `麻将脸 ${emotion.code}`;
-  }
 }
