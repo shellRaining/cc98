@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useTitle, useWindowScroll } from "@vueuse/core";
+import { useIntersectionObserver, useTitle, useWindowScroll } from "@vueuse/core";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
 import { useSetTopicViewModeMutation } from "../../api/mutations";
@@ -36,6 +36,7 @@ const user = useUserStore();
 const queryClient = useQueryClient();
 const setTopicViewMode = useSetTopicViewModeMutation();
 const showProfile = ref(true);
+const loadMoreTarget = ref<HTMLElement | null>(null);
 const { y } = useWindowScroll({ behavior: "smooth" });
 
 useTitle("查看新帖 - CC98 论坛");
@@ -118,9 +119,17 @@ function goLogin() {
 }
 
 function loadMore() {
-  if (!query.hasNextPage.value || query.isFetchingNextPage.value) return;
+  if (!query.hasNextPage.value || query.isFetching.value) return;
   void query.fetchNextPage();
 }
+
+useIntersectionObserver(
+  loadMoreTarget,
+  ([entry]) => {
+    if (entry?.isIntersecting && !query.isError.value) loadMore();
+  },
+  { rootMargin: "240px 0px" },
+);
 
 function formatCount(value: number | undefined) {
   if (value == null) return "—";
@@ -267,14 +276,14 @@ function formatCount(value: number | undefined) {
         </aside>
       </div>
 
-      <LoadMore
-        :has-more="Boolean(query.hasNextPage.value)"
-        :loading="query.isFetchingNextPage.value"
-        @load-more="loadMore"
-      />
-      <p v-if="!query.hasNextPage.value" class="new-topics-end">
-        无法加载更多了，小水怡情，可不要沉迷哦~
-      </p>
+      <div ref="loadMoreTarget">
+        <LoadMore
+          :has-more="Boolean(query.hasNextPage.value)"
+          :loading="query.isFetchingNextPage.value"
+          exhausted-message="无法加载更多了，小水怡情，可不要沉迷哦~"
+          @load-more="loadMore"
+        />
+      </div>
     </template>
 
     <button v-if="y > 234" type="button" class="new-topics-to-top" @click="y = 0">回到顶部</button>
@@ -479,11 +488,6 @@ function formatCount(value: number | undefined) {
 .new-topic-board-card p {
   color: var(--cc98-color-text-muted);
   font-size: 0.8rem;
-}
-
-.new-topics-end {
-  text-align: center;
-  color: var(--cc98-color-text-muted);
 }
 
 .new-topics-to-top {
