@@ -17,10 +17,18 @@ import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { uploadConfig } from "@milkdown/kit/plugin/upload";
 import { insertImageCommand, insertImageInputRule } from "@milkdown/kit/preset/commonmark";
 import { callCommand, replaceAll } from "@milkdown/kit/utils";
+import { useEventListener } from "@vueuse/core";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { normalizeApiError } from "../lib/api-error";
 import { createLogger } from "../lib/logger";
+import { useThemeStore } from "../stores/theme";
 import { appendMarkdownBlock, createAttachmentMarkdown } from "./markdown-editor";
+import EmojiPanel from "./markdown-editor/EmojiPanel.vue";
+import {
+  emojiButtonIcon,
+  resolveEmotionDisplaySrc,
+  type EditorEmotion,
+} from "./markdown-editor/emoji-data";
 import UiButton from "./ui/Button.vue";
 
 const props = withDefaults(
@@ -46,6 +54,7 @@ const emit = defineEmits<{
 }>();
 
 const logger = createLogger("markdown-editor");
+const theme = useThemeStore();
 const editorRoot = ref<HTMLDivElement | null>(null);
 const imageInput = ref<HTMLInputElement | null>(null);
 const attachmentInput = ref<HTMLInputElement | null>(null);
@@ -56,6 +65,10 @@ const imageUploading = ref(false);
 const attachmentUploading = ref(false);
 const uploadError = ref("");
 const currentMarkdown = ref(props.modelValue);
+const emojiPanelOpen = ref(false);
+const emojiPanelRoot = ref<HTMLElement | null>(null);
+/** 本次 pointerdown 由表情按钮触发时置位，外部点击监听消费后清除。 */
+let emojiButtonPointerDown = false;
 const overLimit = computed(() => currentMarkdown.value.length > props.maxLength);
 const topBarLabels = [
   "加粗",
@@ -71,6 +84,7 @@ const topBarLabels = [
   "公式",
   "引用",
   "分隔线",
+  "表情",
 ] as const;
 const selectionToolbarLabels = [
   "加粗",
@@ -106,6 +120,34 @@ function replaceEditorMarkdown(markdown: string) {
   currentMarkdown.value = markdown;
   editor.value?.action(replaceAll(markdown));
 }
+
+function insertEmoji(emotion: EditorEmotion) {
+  emojiPanelOpen.value = false;
+  if (props.disabled || !editor.value) return;
+  const src = resolveEmotionDisplaySrc(emotion, theme.effectiveMode === "dark");
+  editor.value.action((ctx) => {
+    const view = ctx.get(editorViewCtx);
+    const node = view.state.schema.nodes.image?.createAndFill({
+      src,
+      alt: emotion.alt,
+    });
+    if (!node) return;
+    view.focus();
+    view.dispatch(view.state.tr.replaceSelectionWith(node));
+  });
+}
+
+useEventListener(window, "pointerdown", (event) => {
+  if (emojiButtonPointerDown) {
+    emojiButtonPointerDown = false;
+    return;
+  }
+  if (!emojiPanelOpen.value) return;
+  const target = event.target as Node;
+  if (emojiPanelRoot.value && !emojiPanelRoot.value.contains(target)) {
+    emojiPanelOpen.value = false;
+  }
+});
 
 async function uploadImageFiles(files: File[]): Promise<string[]> {
   uploadError.value = "";
@@ -229,6 +271,17 @@ onMounted(async () => {
         { label: "标题 2", level: 2 },
         { label: "标题 3", level: 3 },
       ],
+      buildTopBar: (builder) => {
+        builder.addGroup("emoji", "表情").addItem("emoji", {
+          icon: emojiButtonIcon,
+          active: () => false,
+          onRun: () => {
+            if (props.disabled) return;
+            emojiButtonPointerDown = true;
+            emojiPanelOpen.value = !emojiPanelOpen.value;
+          },
+        });
+      },
     });
 
   instance.setReadonly(props.disabled);
@@ -299,6 +352,7 @@ watch(
 watch(
   () => props.disabled,
   (disabled) => {
+    if (disabled) emojiPanelOpen.value = false;
     crepe.value?.setReadonly(disabled);
   },
 );
@@ -316,6 +370,10 @@ onBeforeUnmount(() => {
     <div class="markdown-editor__shell">
       <div ref="editorRoot" />
       <p v-if="!editorReady && !uploadError" class="markdown-editor__loading">编辑器加载中…</p>
+    </div>
+
+    <div ref="emojiPanelRoot">
+      <EmojiPanel :open="emojiPanelOpen" @select="insertEmoji" />
     </div>
 
     <div class="markdown-editor__actions">
@@ -364,6 +422,10 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.markdown-editor {
+  position: relative;
+}
+
 .markdown-editor__shell {
   position: relative;
   overflow: hidden;
