@@ -8,7 +8,7 @@
     "prepare": "vp config"
   },
   "devDependencies": {
-    "agent-browser": "0.37.1",
+    "agent-browser": "0.38.1",
     "knip": "catalog:",
     "portless": "0.15.6",
     "vite": "catalog:",
