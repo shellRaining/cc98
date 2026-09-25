@@ -267,6 +267,7 @@ export const router = createRouter({
     if (_to.hash) {
       const floorHash = normalizeFloorHash(_to.hash);
       if (floorHash) return false;
+      if (_to.name === "user-center-settings" && _to.hash === "#reading-style") return false;
       return { el: _to.hash };
     }
     return { top: 0 };

@@ -2,7 +2,8 @@
 import type { ChangeUserRequest } from "@cc98/api";
 import { useQuery } from "@tanstack/vue-query";
 import { useObjectUrl } from "@vueuse/core";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, nextTick, reactive, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import {
   useSetTopicViewModeMutation,
   useUpdatePortraitMutation,
@@ -26,6 +27,7 @@ const updateProfile = useUpdateProfileMutation();
 const updatePortrait = useUpdatePortraitMutation();
 const updateTopicViewMode = useSetTopicViewModeMutation();
 const user = useUserStore();
+const route = useRoute();
 
 const form = reactive({
   gender: 1,
@@ -84,6 +86,16 @@ watch(
   () => meQuery.data.value?.topicViewMode,
   (mode) => {
     readingStyle.value = resolveNewTopicViewMode(mode);
+  },
+  { immediate: true },
+);
+
+watch(
+  [() => route.hash, () => !!meQuery.data.value],
+  async ([hash, ready]) => {
+    if (hash !== "#reading-style" || !ready) return;
+    await nextTick();
+    document.getElementById("reading-style")?.scrollIntoView();
   },
   { immediate: true },
 );
