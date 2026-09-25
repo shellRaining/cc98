@@ -36,10 +36,8 @@ export const newTopicsInfiniteQuery = (
       return topicSchema.array().parse(data);
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _pages, lastPageParam) => {
-      if (lastPage.length < size || lastPageParam + size >= 500) return undefined;
-      return lastPageParam + size;
-    },
+    getNextPageParam: (lastPage, _pages, lastPageParam) =>
+      lastPage.length < size ? undefined : lastPageParam + size,
     enabled: enabled && authScope !== "anonymous",
   });
 
