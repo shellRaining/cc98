@@ -3,18 +3,28 @@ import type { ChangeUserRequest } from "@cc98/api";
 import { useQuery } from "@tanstack/vue-query";
 import { useObjectUrl } from "@vueuse/core";
 import { computed, reactive, ref, watch } from "vue";
-import { useUpdatePortraitMutation, useUpdateProfileMutation } from "../../api/mutations";
+import {
+  useSetTopicViewModeMutation,
+  useUpdatePortraitMutation,
+  useUpdateProfileMutation,
+} from "../../api/mutations";
 import { currentUserQuery, displayTitlesQuery } from "../../api/queries";
 import PageState from "../../components/PageState.vue";
 import { DEFAULT_AVATAR_URL, resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
 import { useUserStore } from "../../stores/user";
+import {
+  newTopicViewPreference,
+  resolveNewTopicViewMode,
+  type NewTopicViewMode,
+} from "../discovery/new-topics";
 import { joinBirthday, splitBirthday, validateProfileSettings } from "./settings";
 
 const meQuery = useQuery(currentUserQuery);
 const titlesQuery = useQuery(displayTitlesQuery);
 const updateProfile = useUpdateProfileMutation();
 const updatePortrait = useUpdatePortraitMutation();
+const updateTopicViewMode = useSetTopicViewModeMutation();
 const user = useUserStore();
 
 const form = reactive({
@@ -30,6 +40,9 @@ const form = reactive({
 });
 const profileMessage = ref("");
 const avatarMessage = ref("");
+const readingStyle = ref<NewTopicViewMode>("classic");
+const readingStyleMessage = ref("");
+const profileInitialized = ref(false);
 const selectedAvatar = ref<File | null>(null);
 const avatarPreview = useObjectUrl(selectedAvatar);
 
@@ -51,7 +64,8 @@ const availableTitles = computed(() => {
 watch(
   () => meQuery.data.value,
   (me) => {
-    if (!me) return;
+    if (!me || profileInitialized.value) return;
+    profileInitialized.value = true;
     const birthday = splitBirthday(me.birthday);
     form.gender = me.gender ?? 1;
     form.birthdayYear = birthday.year;
@@ -62,6 +76,14 @@ watch(
     form.email = me.emailAddress ?? "";
     form.introduction = me.introduction ?? "";
     form.signature = me.signatureCode ?? "";
+  },
+  { immediate: true },
+);
+
+watch(
+  () => meQuery.data.value?.topicViewMode,
+  (mode) => {
+    readingStyle.value = resolveNewTopicViewMode(mode);
   },
   { immediate: true },
 );
@@ -148,6 +170,16 @@ function resetProfile() {
   form.introduction = me.introduction ?? "";
   form.signature = me.signatureCode ?? "";
   profileMessage.value = "";
+}
+
+async function saveReadingStyle() {
+  readingStyleMessage.value = "";
+  try {
+    await updateTopicViewMode.mutateAsync(newTopicViewPreference(readingStyle.value));
+    readingStyleMessage.value = "阅读样式已保存";
+  } catch (error) {
+    readingStyleMessage.value = normalizeApiError(error).message;
+  }
 }
 </script>
 
@@ -252,6 +284,28 @@ function resetProfile() {
           <small>*不超过 100 字</small>
         </span>
       </label>
+    </section>
+
+    <section id="reading-style" class="user-settings__section user-settings-reading">
+      <h2>新帖阅读样式</h2>
+      <label>
+        <span>展示方式：</span>
+        <select v-model="readingStyle">
+          <option value="classic">经典列表</option>
+          <option value="card">卡片列表</option>
+        </select>
+      </label>
+      <button
+        type="button"
+        class="is-primary"
+        :disabled="updateTopicViewMode.isPending.value"
+        @click="saveReadingStyle"
+      >
+        保存阅读样式
+      </button>
+      <p v-if="readingStyleMessage" class="user-settings__message" role="status">
+        {{ readingStyleMessage }}
+      </p>
     </section>
 
     <section class="user-settings-submit">
@@ -426,6 +480,21 @@ function resetProfile() {
 
 .user-settings-introduction small {
   color: var(--cc98-color-text-muted);
+}
+
+.user-settings-reading label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-settings-reading select {
+  min-height: 1.875rem;
+  border: 1px solid var(--cc98-color-border);
+  background: var(--cc98-color-surface);
+  color: var(--cc98-color-text);
+  font: inherit;
 }
 
 .user-settings-submit {

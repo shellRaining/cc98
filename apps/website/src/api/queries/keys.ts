@@ -60,8 +60,7 @@ export const queryKeys = {
   postOriginal: (postId: number, authScope: AuthScope) =>
     ["post", postId, "original", authScope] as const,
   hotTopics: (period: HotPeriod) => ["topic", "hot", period] as const,
-  newTopics: (mode: "all" | "media", size: number, authScope: AuthScope) =>
-    ["topic", "new", mode, size, authScope] as const,
+  newTopics: (size: number, authScope: AuthScope) => ["topic", "new", size, authScope] as const,
   focusTopics: (
     mode: "board" | "user" | "favorite",
     boardId: number,

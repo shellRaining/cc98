@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useIntersectionObserver, useTitle, useWindowScroll } from "@vueuse/core";
+import { computed, onMounted, ref } from "vue";
+import { useIntersectionObserver, useMediaQuery, useTitle, useWindowScroll } from "@vueuse/core";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useRoute, useRouter } from "vue-router";
-import { useSetTopicViewModeMutation } from "../../api/mutations";
 import {
   boardsByIdsQuery,
   currentUserQuery,
@@ -12,6 +11,7 @@ import {
   recommendedTopicsQuery,
   usersByIdsQuery,
 } from "../../api/queries";
+import { queryKeys } from "../../api/queries/keys";
 import NewTopicCard from "./components/NewTopicCard.vue";
 import NewTopicClassicItem from "./components/NewTopicClassicItem.vue";
 import FullPageStatus from "../../components/FullPageStatus.vue";
@@ -19,13 +19,9 @@ import LoadMore from "../../components/LoadMore.vue";
 import PageState from "../../components/PageState.vue";
 import { ANONYMOUS_TOPIC_AVATAR_URL, resolveAvatarUrl } from "../../components/user/avatar";
 import { normalizeApiError } from "../../lib/api-error";
-import {
-  newTopicsPath,
-  newTopicViewPreference,
-  resolveNewTopicViewMode,
-  type NewTopicViewMode,
-} from "./new-topics";
+import { resolveNewTopicViewMode } from "./new-topics";
 import { dedupeTopicsById, uniqueTopicBoardIds, uniqueTopicUserIds } from "./topics";
+import { useBatchedLookup } from "./use-batched-lookup";
 import { saveLoginRedirect } from "../../lib/login-redirect";
 import { useUserStore } from "../../stores/user";
 
@@ -34,8 +30,8 @@ const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
 const queryClient = useQueryClient();
-const setTopicViewMode = useSetTopicViewModeMutation();
 const showProfile = ref(true);
+const showCardSidebars = useMediaQuery("(min-width: 1001px)");
 const loadMoreTarget = ref<HTMLElement | null>(null);
 const { y } = useWindowScroll({ behavior: "smooth" });
 
@@ -43,44 +39,68 @@ useTitle("查看新帖 - CC98 论坛");
 
 const authScope = computed(() => user.user?.id ?? "anonymous");
 const canLoad = computed(() => user.isLoggedIn);
-const { data: me } = useQuery({ ...currentUserQuery, enabled: () => user.isLoggedIn });
-const viewMode = computed(() =>
-  resolveNewTopicViewMode(route.query.view, me.value?.topicViewMode ?? 0),
-);
-const queryMode = computed(() => (viewMode.value === "media" ? "media" : "all"));
-const options = computed(() =>
-  newTopicsInfiniteQuery(queryMode.value, authScope.value, PAGE_SIZE, canLoad.value),
-);
+const {
+  data: me,
+  isPending: mePending,
+  error: meError,
+} = useQuery({
+  ...currentUserQuery,
+  enabled: () => user.isLoggedIn,
+});
+const viewMode = computed(() => resolveNewTopicViewMode(me.value?.topicViewMode));
+const options = computed(() => newTopicsInfiniteQuery(authScope.value, PAGE_SIZE, canLoad.value));
 const query = useInfiniteQuery(options);
 const topics = computed(() =>
   dedupeTopicsById(query.data.value?.pages.flatMap((page) => page) ?? []),
 );
 
-const boardIds = computed(() => uniqueTopicBoardIds(topics.value));
+const customBoardIds = computed(() => me.value?.customBoards ?? []);
+const boardIds = computed(() => {
+  if (!me.value) return [];
+  return [
+    ...new Set([
+      ...uniqueTopicBoardIds(topics.value),
+      ...(viewMode.value === "card" && showCardSidebars.value ? customBoardIds.value : []),
+    ]),
+  ];
+});
 const authorIds = computed(() => uniqueTopicUserIds(topics.value));
-const boardsOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
-const authorsOptions = computed(() => usersByIdsQuery(authorIds.value, authorIds.value.length > 0));
-const { data: boards } = useQuery(boardsOptions);
-const { data: authors } = useQuery(authorsOptions);
-const { data: tags } = useQuery(globalTagsQuery);
-const boardMap = computed(() => new Map((boards.value ?? []).map((board) => [board.id, board])));
-const authorMap = computed(
-  () => new Map((authors.value ?? []).map((author) => [author.id, author])),
+const {
+  records: boardMap,
+  error: boardError,
+  retry: retryBoards,
+} = useBatchedLookup(boardIds, queryKeys.boardsByIdsRoot, (ids) =>
+  queryClient.fetchQuery(boardsByIdsQuery(ids)),
 );
+const {
+  records: authorMap,
+  error: authorError,
+  retry: retryAuthors,
+} = useBatchedLookup(authorIds, ["users", "batch"], (ids) =>
+  queryClient.fetchQuery(usersByIdsQuery(ids)),
+);
+const { data: tags } = useQuery(globalTagsQuery);
 const tagMap = computed(() => new Map((tags.value ?? []).map((tag) => [tag.id, tag.name])));
 
-const customBoardIds = computed(() => me.value?.customBoards ?? []);
-const customBoardsOptions = computed(() =>
-  boardsByIdsQuery(customBoardIds.value, customBoardIds.value.length > 0),
+const customBoards = computed(() =>
+  customBoardIds.value.flatMap((id) => {
+    const board = boardMap.value.get(id);
+    return board ? [board] : [];
+  }),
 );
-const { data: customBoards } = useQuery(customBoardsOptions);
 const recommendationsOptions = computed(() =>
-  recommendedTopicsQuery(authScope.value, 0, 6, canLoad.value && viewMode.value !== "classic"),
+  recommendedTopicsQuery(
+    authScope.value,
+    0,
+    6,
+    canLoad.value && viewMode.value === "card" && showCardSidebars.value,
+  ),
 );
 const { data: recommendations } = useQuery(recommendationsOptions);
 const recommendedTopics = computed(() =>
   (recommendations.value ?? []).flatMap((item) => (item.topic ? [item.topic] : [])),
 );
+const lookupError = computed(() => boardError.value || authorError.value);
 
 const pageError = computed(() => {
   if (!user.isLoggedIn) return normalizeApiError({ status: 401 });
@@ -89,7 +109,7 @@ const pageError = computed(() => {
 });
 const stateKind = computed(() => {
   if (pageError.value?.kind === "unauthorized") return "unauthorized" as const;
-  if (query.isPending.value) return "loading" as const;
+  if (query.isPending.value || (mePending.value && !meError.value)) return "loading" as const;
   if (pageError.value?.kind === "forbidden") return "forbidden" as const;
   if (pageError.value?.kind === "not-found") return "not-found" as const;
   if (pageError.value) return "error" as const;
@@ -103,15 +123,20 @@ function topicTags(topic: { tag1?: number | null; tag2?: number | null }) {
   );
 }
 
-function switchMode(mode: NewTopicViewMode) {
-  if (mode === viewMode.value) return;
-  void router.push(newTopicsPath(mode));
-  setTopicViewMode.mutate(newTopicViewPreference(mode));
-}
-
 function refresh() {
   void queryClient.resetQueries({ queryKey: options.value.queryKey, exact: true });
+  retryMetadata();
 }
+
+function retryMetadata() {
+  void retryBoards();
+  void retryAuthors();
+}
+
+onMounted(() => {
+  const updatedAt = queryClient.getQueryState(options.value.queryKey)?.dataUpdatedAt;
+  if (updatedAt && Date.now() - updatedAt > 60 * 1000) refresh();
+});
 
 function goLogin() {
   saveLoginRedirect(route.fullPath);
@@ -149,29 +174,9 @@ function formatCount(value: number | undefined) {
     </nav>
 
     <div class="new-topics-toolbar">
-      <div class="new-topics-toolbar__modes" aria-label="新帖视图">
-        <button
-          type="button"
-          :class="{ 'is-active': viewMode === 'classic' }"
-          @click="switchMode('classic')"
-        >
-          经典模式
-        </button>
-        <button
-          type="button"
-          :class="{ 'is-active': viewMode === 'card' }"
-          @click="switchMode('card')"
-        >
-          卡片模式
-        </button>
-        <button
-          type="button"
-          :class="{ 'is-active': viewMode === 'media' }"
-          @click="switchMode('media')"
-        >
-          只看媒体
-        </button>
-      </div>
+      <RouterLink class="new-topics-toolbar__settings" to="/usercenter/settings#reading-style">
+        阅读样式设置
+      </RouterLink>
       <button
         type="button"
         class="new-topics-refresh"
@@ -192,6 +197,10 @@ function formatCount(value: number | undefined) {
     />
 
     <template v-else>
+      <div v-if="lookupError" class="new-topics-lookup-error" role="status">
+        部分头像或版面名称暂时无法加载。
+        <button type="button" @click="retryMetadata">重试</button>
+      </div>
       <div v-if="viewMode === 'classic'" class="new-topic-classic-list">
         <NewTopicClassicItem
           v-for="topic in topics"
@@ -204,7 +213,7 @@ function formatCount(value: number | undefined) {
       </div>
 
       <div v-else class="new-topic-card-layout">
-        <aside class="new-topic-card-layout__left">
+        <aside v-if="showCardSidebars" class="new-topic-card-layout__left">
           <section class="new-topic-profile-card">
             <div class="new-topic-profile-card__background" />
             <div class="new-topic-profile-card__identity">
@@ -262,7 +271,7 @@ function formatCount(value: number | undefined) {
           />
         </div>
 
-        <aside class="new-topic-card-layout__right">
+        <aside v-if="showCardSidebars" class="new-topic-card-layout__right">
           <section class="new-topic-missed-card">
             <h2>你可能错过</h2>
             <ul>
@@ -321,12 +330,7 @@ function formatCount(value: number | undefined) {
   margin-bottom: 1rem;
 }
 
-.new-topics-toolbar__modes {
-  display: flex;
-  gap: 1rem;
-}
-
-.new-topics-toolbar__modes button,
+.new-topics-toolbar__settings,
 .new-topics-refresh {
   min-width: 6rem;
   padding: 0.375rem 0.75rem;
@@ -339,8 +343,7 @@ function formatCount(value: number | undefined) {
   cursor: pointer;
 }
 
-.new-topics-toolbar__modes button:hover,
-.new-topics-toolbar__modes button.is-active,
+.new-topics-toolbar__settings:hover,
 .new-topics-refresh:hover {
   background: var(--cc98-color-primary-fill);
   color: var(--cc98-color-on-primary);
@@ -355,6 +358,19 @@ function formatCount(value: number | undefined) {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.new-topics-lookup-error {
+  margin-bottom: 1rem;
+  color: var(--cc98-color-text-muted);
+}
+
+.new-topics-lookup-error button {
+  border: 0;
+  background: transparent;
+  color: var(--cc98-color-primary);
+  font: inherit;
+  cursor: pointer;
 }
 
 .new-topic-card-layout {
