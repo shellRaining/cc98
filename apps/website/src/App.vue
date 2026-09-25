@@ -4,11 +4,14 @@ import { watch } from "vue";
 import PwaStatusBanner from "./components/PwaStatusBanner.vue";
 import DefaultLayout from "./layouts/DefaultLayout.vue";
 import { currentUserQuery } from "./api/queries";
+import { useAutoSignin } from "./composables/useAutoSignin";
 import { useUserStore } from "./stores/user";
 import { useThemeStore } from "./stores/theme";
 
 const userStore = useUserStore();
 const themeStore = useThemeStore();
+
+useAutoSignin();
 
 // 登录后从服务端回填皮肤与日夜规则；未登录时 enabled 为 false，不触发请求
 const { data: me } = useQuery({

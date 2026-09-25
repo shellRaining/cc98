@@ -14,6 +14,7 @@ import {
 } from "../api/queries";
 import PageState from "../components/PageState.vue";
 import { normalizeApiError } from "../lib/api-error";
+import { useAutoSigninStore } from "../stores/auto-signin";
 import { useUserStore } from "../stores/user";
 
 type CalendarStatus = "signed" | "makeup" | "missed" | "future";
@@ -30,6 +31,7 @@ const WEEKDAYS = ["星期一", "星期二", "星期三", "星期四", "星期五
 const route = useRoute();
 const router = useRouter();
 const user = useUserStore();
+const autoSignin = useAutoSigninStore();
 const content = ref("");
 const signinFeedback = ref("");
 const makeupFeedback = ref("");
@@ -180,6 +182,10 @@ function makeUpMissedSignin() {
       @retry="infoQuery.refetch()"
     />
     <template v-else-if="infoQuery.data.value">
+      <label class="signin-page__auto">
+        <input v-model="autoSignin.enabled" type="checkbox" />
+        <span>开启自动签到（登录后访问论坛时自动完成当日签到）</span>
+      </label>
       <div v-if="infoQuery.data.value.hasSignedInToday" class="signin-page__signed">
         <p>你已经连续签到了{{ infoQuery.data.value.lastSignInCount }}天</p>
         <p>上次签到时间是{{ lastSigninTime }}</p>
@@ -350,6 +356,20 @@ function makeUpMissedSignin() {
 
 .signin-page__rewards {
   margin: 0.5rem 0 1.5rem 2rem;
+}
+
+.signin-page__auto {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--cc98-color-text-muted);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.signin-page__auto input {
+  cursor: pointer;
 }
 
 .signin-page__signed {
