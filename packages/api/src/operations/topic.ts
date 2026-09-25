@@ -747,7 +747,8 @@ export const topicOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
-    description: "分页返回全站最新主题，供经典列表和卡片列表使用。具体排序规则由服务端决定。",
+    description:
+      "分页返回全站最新主题，供经典列表和卡片列表使用。具体排序规则由服务端决定。受全站用户级限流约束（实测容量 1、约每 0.8 秒补充一个令牌）：并发或间隔过近会返回空响应体的 403，约 1 秒后自动恢复，客户端应串行调用并对 403 延迟重试。",
   },
   {
     method: "GET",
@@ -768,7 +769,8 @@ export const topicOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-authenticated",
     sources: ["legacy-openapi", "live-probe"],
-    description: "分页返回适合媒体卡片展示的最新主题，mediaContent 中可能包含缩略图或音视频信息。",
+    description:
+      "分页返回适合媒体卡片展示的最新主题，mediaContent 中可能包含缩略图或音视频信息。受全站用户级限流约束（实测容量 1、约每 0.8 秒补充一个令牌）：并发或间隔过近会返回空响应体的 403，约 1 秒后自动恢复，客户端应串行调用并对 403 延迟重试。",
   },
   {
     method: "GET",

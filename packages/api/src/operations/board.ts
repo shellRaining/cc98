@@ -73,7 +73,7 @@ export const boardOperations = defineOperations([
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
     description:
-      "批量查询一个或多个版面，返回值字段与 /board/{boardId} 相同。适合已有多个版面 ID 时一次补齐收藏、主题记录等列表中的版面资料，避免逐个请求。不存在的 ID 会被忽略，全部 ID 均不存在时返回 404；调用方应按 id 关联结果，不应依赖响应顺序。",
+      "批量查询一个或多个版面，返回值字段与 /board/{boardId} 相同。适合已有多个版面 ID 时一次补齐收藏、主题记录等列表中的版面资料，避免逐个请求。不存在的 ID 会被忽略，全部 ID 均不存在时返回 404；调用方应按 id 关联结果，不应依赖响应顺序。受全站用户级限流约束（实测容量 1、约每 0.8 秒补充一个令牌）：并发或间隔过近会返回空响应体的 403，约 1 秒后自动恢复，客户端应串行调用并对 403 延迟重试。",
   },
   {
     method: "GET",

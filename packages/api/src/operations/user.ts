@@ -102,7 +102,8 @@ export const userOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
-    description: "按照一个或多个用户 ID 批量返回用户详细资料。不存在的用户不会出现在结果中。",
+    description:
+      "按照一个或多个用户 ID 批量返回用户详细资料。不存在的用户不会出现在结果中。受全站用户级限流约束（实测容量 1、约每 0.8 秒补充一个令牌）：并发或间隔过近会返回空响应体的 403，约 1 秒后自动恢复，客户端应串行调用并对 403 延迟重试。",
   },
   {
     method: "GET",
@@ -170,7 +171,8 @@ export const userOperations = defineOperations([
     risk: "read-only",
     verificationStatus: "verified-anonymous",
     sources: ["legacy-openapi", "live-probe"],
-    description: "按照一个或多个用户 ID 批量返回用户 ID、用户名和头像地址。",
+    description:
+      "按照一个或多个用户 ID 批量返回用户 ID、用户名和头像地址。受全站用户级限流约束（实测容量 1、约每 0.8 秒补充一个令牌）：并发或间隔过近会返回空响应体的 403，约 1 秒后自动恢复，客户端应串行调用并对 403 延迟重试。列表页常与主题接口同时触发本接口，尤其注意不要并发。",
   },
   {
     method: "GET",
