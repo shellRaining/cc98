@@ -45,9 +45,10 @@
 
 - `vp check`、`vp run ready` 通过。网站 313 项测试通过，文档站构建通过。
 - 使用项目凭证登录当前 worktree 后，旧 `?view=media` 链接只请求 `/topic/new`。真实接口的第一页、第二页分别发起一次版面和作者批量查询；第二批版面新增 6 个 ID、作者新增 18 个 ID，与第一批均无重复。
+- 真实账号原始 `topicViewMode` 为 0。在设置页保存卡片列表时，`PUT /me/topic-view-mode?mode=1` 返回 200；旧媒体链接显示卡片列表，仍只请求 `/topic/new`。验收后保存经典列表，`PUT /me/topic-view-mode?mode=0` 返回 200；刷新设置页后保持经典列表。
 - 使用本地假 API 验证阅读样式写入 1、版面查询失败后的重试入口。浏览器本地更新 `/me` 查询缓存后，经典列表与卡片列表切换不重新请求 `/topic/new`；切换到卡片桌面布局只补查侧栏版面和推荐内容。
 - 把两页新帖缓存标记为超过一分钟后，返回新帖页只从 `from=0` 发起一次刷新。390px 宽度下卡片侧栏收起且页面没有水平溢出。
-- 浏览器截图留在 `.artifacts/browser/2026-09-25-new-topics-reading-flow/screenshots/`，不提交论坛内容截图。
+- 浏览器截图留在 `.artifacts/browser/2026-09-25-new-topics-reading-flow/screenshots/`，不提交论坛内容截图。`gh image check-token` 返回 302，GitHub 网页会话失效，暂时无法附到 PR。
 
 ## 遗留项
 

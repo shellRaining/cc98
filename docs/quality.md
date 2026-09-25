@@ -65,6 +65,7 @@ agent-browser skills get dogfood # 系统性 QA、问题复现和证据采集时
   ```
   任务名与 `docs/exec-plans/` 下的执行计划文件名对齐；无对应执行计划时用简短的任务描述。跑 dogfood 时把 `OUTPUT_DIR` 指向对应任务目录，不要用默认的 `./dogfood-output/`。
 - 认证信息使用 `agent-browser` 的会话或认证存储，不把密码、Cookie、token 和 auth state 写进脚本或仓库。
+- 需要真实登录验收时，使用当前 worktree 中被 Git 忽略的 `.cc98-credentials.local`；字段和复制规则见已完成的开发环境计划“本地凭证”。不要在命令输出、截图或报告中记录凭证。
 
 ### 回归测试
 
