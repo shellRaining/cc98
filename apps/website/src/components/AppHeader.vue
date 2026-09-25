@@ -201,6 +201,7 @@ function updateSearchKind(value: string | number) {
 <style scoped>
 .site-header {
   position: relative;
+  z-index: 30;
   height: 3rem;
   margin-bottom: 1.25rem;
   background: var(--cc98-color-primary-fill);
@@ -260,11 +261,13 @@ function updateSearchKind(value: string | number) {
 }
 
 .site-header__topbar {
-  position: absolute;
+  position: fixed;
   inset: 0 0 auto;
   z-index: 10;
   height: 3rem;
-  background: var(--cc98-color-topbar);
+  background:
+    linear-gradient(var(--cc98-color-topbar), var(--cc98-color-topbar)),
+    var(--cc98-color-primary-fill);
   color: var(--cc98-color-on-primary);
 }
 
@@ -286,6 +289,7 @@ function updateSearchKind(value: string | number) {
 
 .site-header__left {
   min-width: 0;
+  flex: 1;
   gap: 0.9rem;
 }
 
@@ -332,7 +336,9 @@ function updateSearchKind(value: string | number) {
   display: flex;
   align-items: center;
   width: 32rem;
+  min-width: 0;
   height: 1.5rem;
+  flex: 0 1 32rem;
   margin-left: 1rem;
   overflow: hidden;
   padding-inline: 1rem;
@@ -604,13 +610,108 @@ function updateSearchKind(value: string | number) {
 @media (max-width: 1180px) {
   .header-search {
     width: 22rem;
+    flex-basis: 22rem;
   }
 }
 
-@media (max-width: 1000px) {
-  .site-header__nav,
-  .header-search,
+@media (max-width: 1080px) {
+  .site-header,
+  .site-header__topbar {
+    height: 6rem;
+  }
+
+  .site-header--home {
+    height: var(--cc98-banner-height);
+  }
+
+  .site-header__row {
+    display: grid;
+    height: 6rem;
+    row-gap: 0;
+    grid-template-areas:
+      "brand . account"
+      "nav search search";
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    grid-template-rows: 3rem 3rem;
+  }
+
+  .site-header__left {
+    display: contents;
+  }
+
+  .site-header__brand {
+    grid-area: brand;
+  }
+
+  .site-header__nav {
+    grid-area: nav;
+  }
+
+  .header-search {
+    width: auto;
+    max-width: none;
+    grid-area: search;
+  }
+
+  .site-header__account {
+    grid-area: account;
+  }
+
   .site-header__separator {
+    display: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .site-header,
+  .site-header__topbar {
+    height: 7.25rem;
+  }
+
+  .site-header--home {
+    height: var(--cc98-banner-height);
+  }
+
+  .site-header__row {
+    height: 7.25rem;
+    grid-template-areas:
+      "brand account"
+      "nav nav"
+      "search search";
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 3rem 2rem 2.25rem;
+  }
+
+  .site-header__nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+  }
+
+  .site-header__nav a {
+    flex: none;
+  }
+
+  .header-search {
+    height: 1.75rem;
+    margin-left: 0;
+  }
+
+  .site-header__account {
+    gap: 0.5rem;
+  }
+
+  .site-header__user span {
+    max-width: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 340px) {
+  .site-header__brand span {
     display: none;
   }
 }
