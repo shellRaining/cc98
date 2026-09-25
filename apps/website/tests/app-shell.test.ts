@@ -45,7 +45,6 @@ describe("应用外壳构建清单", () => {
         facadeModuleId: "/repo/apps/website/src/views/HomeView.vue",
         imports: ["assets/shared.js"],
         css: ["assets/HomeView.css"],
-        assets: ["assets/forum-stats-mascot.webp"],
         isDynamicEntry: true,
       }),
       "assets/TopicView.js": chunk("assets/TopicView.js", {
@@ -57,7 +56,6 @@ describe("应用外壳构建清单", () => {
     expect(collectAppShellEntries(bundle)).toEqual([
       "assets/HomeView.css",
       "assets/HomeView.js",
-      "assets/forum-stats-mascot.webp",
       "assets/index.css",
       "assets/index.js",
       "assets/shared.css",
