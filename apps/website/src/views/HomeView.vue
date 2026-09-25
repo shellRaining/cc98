@@ -3,7 +3,6 @@ import type { HomepageTopicItem } from "../components/home/model";
 import { computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { homepageIndexQuery, hotTopicsQuery } from "../api/queries";
-import HomeForumStats from "../components/home/HomeForumStats.vue";
 import HomeRecommendedReading from "../components/home/HomeRecommendedReading.vue";
 import HomeTopicPanel from "../components/home/HomeTopicPanel.vue";
 import PageState from "../components/PageState.vue";
@@ -101,25 +100,10 @@ const pageError = computed(() => (error.value ? normalizeApiError(error.value) :
         </template>
       </HomeTopicPanel>
     </div>
-
-    <HomeForumStats
-      class="home-floating-stats"
-      :today-posts="index.todayCount"
-      :today-topics="index.todayTopicCount"
-      :topics="index.topicCount"
-      :posts="index.postCount"
-      :online="index.onlineUserCount"
-      :users="index.userCount"
-      :latest-user="index.lastUserName"
-    />
   </div>
 </template>
 
 <style scoped>
-.home-page {
-  position: relative;
-}
-
 .home-hot-topic-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -133,20 +117,9 @@ const pageError = computed(() => (error.value ? normalizeApiError(error.value) :
   margin-top: 2rem;
 }
 
-.home-floating-stats {
-  position: fixed;
-  top: 18rem;
-  right: calc((100vw - 100%) / -2);
-  z-index: 20;
-}
-
 @media (max-width: 640px) {
   .home-hot-topic-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .home-floating-stats {
-    top: 13rem;
   }
 }
 </style>

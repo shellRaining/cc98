@@ -74,23 +74,6 @@ const pwaPlugins = VitePWA({
           },
         },
       },
-      {
-        urlPattern: /\/assets\/forum-stats-mascot-[^/]+\.webp$/,
-        handler: "CacheFirst",
-        options: {
-          cacheName: "skin-mascots-v1",
-          cacheableResponse: {
-            headers: {
-              "Content-Type": "image/webp",
-            },
-            statuses: [200],
-          },
-          expiration: {
-            maxEntries: 12,
-            purgeOnQuotaError: true,
-          },
-        },
-      },
     ],
   },
 });
