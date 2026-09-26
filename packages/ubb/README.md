@@ -30,7 +30,7 @@ const html = ubb.createRenderer<string>({
 html.render("[spoiler=注意][b]隐藏内容[/b][/spoiler]");
 ```
 
-`register()` 返回新的 registry，原实例不会改变。标签名会转成小写，重复注册会抛错。四种解析模式分别是：
+`register()` 返回新的 registry，原实例不会改变。标签名会转成小写，重复注册会抛错。`parse()` 在内部按注册规则判断标签模式。四种解析模式分别是：
 
 - `recursive`：内部继续解析 UBB。
 - `text`：内部保持纯文本。
