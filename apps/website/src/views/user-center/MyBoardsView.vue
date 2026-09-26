@@ -3,7 +3,7 @@ import type { Board } from "@cc98/api";
 import { useQuery } from "@tanstack/vue-query";
 import { computed, ref, watch } from "vue";
 import { useFollowBoardMutation, useUnfollowBoardMutation } from "../../api/mutations";
-import { boardsByIdsQuery, currentUserQuery } from "../../api/queries";
+import { boardDetailsByIdsQuery, currentUserQuery } from "../../api/queries";
 import BoardIcon from "../../components/board/BoardIcon.vue";
 import PageState from "../../components/PageState.vue";
 import { normalizeApiError } from "../../lib/api-error";
@@ -15,7 +15,9 @@ const {
   refetch: refetchMe,
 } = useQuery(currentUserQuery);
 const boardIds = computed(() => me.value?.customBoards ?? []);
-const boardOptions = computed(() => boardsByIdsQuery(boardIds.value, boardIds.value.length > 0));
+const boardOptions = computed(() =>
+  boardDetailsByIdsQuery(boardIds.value, me.value?.id ?? "anonymous", boardIds.value.length > 0),
+);
 const {
   data: boards,
   error: boardsError,
@@ -112,7 +114,7 @@ async function toggleBoard(board: Board & { id: number }) {
   <div class="user-content-page user-followed-boards">
     <PageState v-if="(mePending || boardsPending) && rows.length === 0" kind="loading" />
     <PageState
-      v-else-if="meError || boardsError"
+      v-else-if="meError || (boardsError && rows.length === 0)"
       kind="error"
       :message="normalizeApiError(meError || boardsError).message"
       show-retry

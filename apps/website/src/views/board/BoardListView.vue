@@ -17,9 +17,9 @@ const boardGroups = computed(() =>
 </script>
 
 <template>
-  <PageState v-if="isPending" kind="loading" />
+  <PageState v-if="isPending && !data" kind="loading" />
   <PageState
-    v-else-if="error"
+    v-else-if="error && !data"
     kind="error"
     message="版面列表加载失败，请稍后重试。"
     show-retry

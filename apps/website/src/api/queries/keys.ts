@@ -60,8 +60,7 @@ export const queryKeys = {
   postOriginal: (postId: number, authScope: AuthScope) =>
     ["post", postId, "original", authScope] as const,
   hotTopics: (period: HotPeriod) => ["topic", "hot", period] as const,
-  newTopics: (mode: "all" | "media", size: number, authScope: AuthScope) =>
-    ["topic", "new", mode, size, authScope] as const,
+  newTopics: (size: number, authScope: AuthScope) => ["topic", "new", size, authScope] as const,
   focusTopics: (
     mode: "board" | "user" | "favorite",
     boardId: number,
@@ -89,6 +88,8 @@ export const queryKeys = {
   fullUsersByIds: (ids: number[], authScope: AuthScope) =>
     ["users", "full-batch", authScope, ...ids] as const,
   boardsByIds: (ids: number[]) => ["boards", "batch", ...ids] as const,
+  boardDetailsByIds: (ids: number[], authScope: AuthScope) =>
+    ["boards", "details", authScope, ...ids] as const,
   meRecentTopics: (from: number, size: number, authScope: AuthScope) =>
     ["me", "recent-topics", from, size, authScope] as const,
   meRecentTopicsRoot: ["me", "recent-topics"] as const,
@@ -118,6 +119,7 @@ export const queryKeys = {
   meFollowingRoot: ["me", "relations", "following"] as const,
   usersByIdRoot: (id: number) => ["user", "id", id] as const,
   boardsByIdsRoot: ["boards", "batch"] as const,
+  boardDetailsByIdsRoot: ["boards", "details"] as const,
   boardRoot: (id: number) => ["board", id] as const,
   unreadCounts: (authScope: AuthScope) => ["messages", "unread", authScope] as const,
   unreadCountsRoot: ["messages", "unread"] as const,

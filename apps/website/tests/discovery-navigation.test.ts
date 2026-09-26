@@ -2,7 +2,6 @@ import { describe, expect, test } from "vite-plus/test";
 import { focusPath, resolveFocusBoardId, resolveFocusMode } from "../src/views/discovery/focus.ts";
 import { isHotPeriod } from "../src/views/discovery/hot-topics.ts";
 import {
-  newTopicsPath,
   newTopicViewPreference,
   resolveNewTopicViewMode,
 } from "../src/views/discovery/new-topics.ts";
@@ -39,12 +38,10 @@ describe("发现页导航", () => {
   test("解析热门和新帖视图", () => {
     expect(isHotPeriod("monthly")).toBe(true);
     expect(isHotPeriod("daily")).toBe(false);
-    expect(resolveNewTopicViewMode(undefined, 1)).toBe("card");
-    expect(resolveNewTopicViewMode("media", 0)).toBe("media");
+    expect(resolveNewTopicViewMode(1)).toBe("card");
+    expect(resolveNewTopicViewMode(2)).toBe("classic");
     expect(newTopicViewPreference("classic")).toBe(0);
     expect(newTopicViewPreference("card")).toBe(1);
-    expect(newTopicsPath("classic")).toBe("/newtopics");
-    expect(newTopicsPath("media")).toBe("/newtopics?view=media");
   });
 
   test("解析关注页状态", () => {

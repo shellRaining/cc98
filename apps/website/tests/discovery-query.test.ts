@@ -14,7 +14,7 @@ describe("发现查询缓存键", () => {
       queryKeys.searchTopics("a", null, 20, 1),
     );
     expect(queryKeys.hotTopics("weekly")).not.toEqual(queryKeys.hotTopics("monthly"));
-    expect(queryKeys.newTopics("all", 20, 1)).not.toEqual(queryKeys.newTopics("media", 20, 1));
+    expect(queryKeys.newTopics(20, 1)).not.toEqual(queryKeys.newTopics(20, 2));
     expect(queryKeys.focusTopics("board", 0, 20, 1)).not.toEqual(
       queryKeys.focusTopics("board", 81, 20, 1),
     );

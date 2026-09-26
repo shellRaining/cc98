@@ -219,7 +219,7 @@ export function useUnfollowBoardMutation() {
       );
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.currentUser }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.boardsByIdsRoot }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.boardDetailsByIdsRoot }),
         queryClient.invalidateQueries({ queryKey: queryKeys.boardRoot(boardId) }),
       ]);
     },
@@ -247,7 +247,7 @@ export function useFollowBoardMutation() {
       );
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.currentUser }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.boardsByIdsRoot }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.boardDetailsByIdsRoot }),
         queryClient.invalidateQueries({ queryKey: queryKeys.boardRoot(boardId) }),
       ]);
     },

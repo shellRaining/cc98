@@ -21,16 +21,11 @@ export const globalTagsQuery = queryOptions({
   staleTime: 30 * 60 * 1000,
 });
 
-export const newTopicsInfiniteQuery = (
-  mode: "all" | "media",
-  authScope: AuthScope,
-  size = 20,
-  enabled = true,
-) =>
+export const newTopicsInfiniteQuery = (authScope: AuthScope, size = 20, enabled = true) =>
   infiniteQueryOptions({
-    queryKey: queryKeys.newTopics(mode, size, authScope),
+    queryKey: queryKeys.newTopics(size, authScope),
     queryFn: async ({ pageParam }) => {
-      const data = await typedGet<unknown[]>(mode === "media" ? "/topic/new-media" : "/topic/new", {
+      const data = await typedGet<unknown[]>("/topic/new", {
         query: { from: pageParam, size },
       });
       return topicSchema.array().parse(data);
@@ -39,6 +34,8 @@ export const newTopicsInfiniteQuery = (
     getNextPageParam: (lastPage, _pages, lastPageParam) =>
       lastPage.length < size ? undefined : lastPageParam + size,
     enabled: enabled && authScope !== "anonymous",
+    staleTime: 60 * 1000,
+    refetchOnMount: false,
   });
 
 export const recommendedTopicsQuery = (

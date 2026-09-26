@@ -12,9 +12,12 @@ import {
   topicSchema,
   voteInfoSchema,
   type PostRatingType,
+  type Board,
+  type BoardGroup,
 } from "@cc98/api";
-import { keepPreviousData, queryOptions } from "@tanstack/vue-query";
+import { queryOptions, type QueryClient } from "@tanstack/vue-query";
 import { typedGet } from "../../lib/http";
+import { boardsById, bundledBoardGroups, selectBoards } from "../board-directory";
 import { queryKeys, type AuthScope } from "./keys.ts";
 
 export const homepageIndexQuery = queryOptions({
@@ -50,7 +53,9 @@ export const boardsQuery = queryOptions({
     const data = await typedGet<unknown[]>("/board/all");
     return boardGroupSchema.array().parse(data);
   },
-  staleTime: 30 * 60 * 1000,
+  initialData: bundledBoardGroups,
+  staleTime: Infinity,
+  gcTime: Infinity,
 });
 
 export const boardQuery = (boardId: number, authScope: AuthScope, enabled = true) =>
@@ -253,12 +258,47 @@ export const boardsByIdsQuery = (ids: number[], enabled = true) => {
   const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
   return queryOptions({
     queryKey: queryKeys.boardsByIds(normalizedIds),
+    queryFn: async ({ client }: { client: QueryClient }) => {
+      const directory = boardsById(
+        client.getQueryData<BoardGroup[]>(queryKeys.boards) ?? bundledBoardGroups,
+      );
+      const unknownIds = normalizedIds.filter((id) => !directory.has(id));
+      const fetched = unknownIds.length
+        ? boardSchema
+            .array()
+            .parse(await typedGet<unknown[]>("/board/", { query: { id: unknownIds } }))
+        : [];
+      const fetchedById = new Map(fetched.map((board) => [board.id, board]));
+      return normalizedIds.flatMap((id) => {
+        const board = fetchedById.get(id) ?? directory.get(id);
+        return board ? [board] : [];
+      });
+    },
+    enabled: enabled && normalizedIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+    placeholderData:
+      normalizedIds.length > 0
+        ? (previous: Board[] | undefined) =>
+            previous ?? selectBoards(bundledBoardGroups, normalizedIds)
+        : undefined,
+  });
+};
+
+export const boardDetailsByIdsQuery = (ids: number[], authScope: AuthScope, enabled = true) => {
+  const normalizedIds = [...new Set(ids.filter((id) => id > 0))];
+  const bundledBoards = selectBoards(bundledBoardGroups, normalizedIds);
+  return queryOptions({
+    queryKey: queryKeys.boardDetailsByIds(normalizedIds, authScope),
     queryFn: async () => {
       const data = await typedGet<unknown[]>("/board/", { query: { id: normalizedIds } });
       return boardSchema.array().parse(data);
     },
     enabled: enabled && normalizedIds.length > 0,
     staleTime: 5 * 60 * 1000,
-    placeholderData: normalizedIds.length > 0 ? keepPreviousData : undefined,
+    placeholderData:
+      normalizedIds.length > 0
+        ? (previous: Board[] | undefined) =>
+            previous ?? (bundledBoards.length > 0 ? bundledBoards : undefined)
+        : undefined,
   });
 };
