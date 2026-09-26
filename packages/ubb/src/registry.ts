@@ -22,7 +22,6 @@ export interface UbbRegistry<Tags extends UbbTagModes = UbbTagModes> {
     name: Name,
     mode: Mode,
   ): UbbRegistry<Tags & Readonly<Record<Lowercase<Name>, Mode>>>;
-  resolveTagMode(tagName: string): TagMode | null;
   parse(source: string): UbbNode[];
   createRenderer<Output, Context = void>(
     options: UbbRendererOptions<Tags, Output, Context>,
@@ -74,7 +73,6 @@ function createRegistry<Tags extends UbbTagModes>(
       nextTagModes.set(normalizedName, mode);
       return createRegistry(nextTagModes, options);
     },
-    resolveTagMode,
     parse,
     createRenderer<Output, Context = void>(
       rendererOptions: UbbRendererOptions<Tags, Output, Context>,

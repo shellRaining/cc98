@@ -56,7 +56,7 @@ flowchart LR
   remark --> universe
 ```
 
-`packages/ubb` 不依赖 Vue。`createUbbRegistry` 登记标签名、解析模式和可选的标签头参数解析函数，默认不识别任何标签；`createRenderer<Output, Context>` 登记每个标签的输出 handler。CC98 的标签表、参数规则和表情资源由 `cc98Registry` 提供，HTML 和 Markdown 导出器是使用该规则的字符串预设，分别从 `@cc98/ubb/presets/html` 和 `@cc98/ubb/presets/markdown` 导入。`apps/website` 通过同一泛型 renderer 注册 Vue handler 输出 VNode，并集中处理 URL 安全、图片计数和媒体开关。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
+`packages/ubb` 不依赖 Vue。`createUbbRegistry` 登记标签名、解析模式和可选的标签头参数解析函数，默认不识别任何标签；`registry.parse()` 在内部按注册规则判断标签模式，`createRenderer<Output, Context>` 登记每个标签的输出 handler。CC98 的标签表、参数规则和表情资源由 `cc98Registry` 提供，HTML 和 Markdown 导出器是使用该规则的字符串预设，分别从 `@cc98/ubb/presets/html` 和 `@cc98/ubb/presets/markdown` 导入。`apps/website` 通过同一泛型 renderer 注册 Vue handler 输出 VNode，并集中处理 URL 安全、图片计数和媒体开关。Markdown 编辑器使用 Milkdown，编辑和阅读共享 remark 语法体系。
 
 ## 依赖方向
 
