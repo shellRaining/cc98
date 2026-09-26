@@ -33,6 +33,7 @@
 
 | 执行计划                                                            | 说明                                                   |
 | ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `completed/2026-09-26-board-directory-cache.md`                     | 完整版面目录已供全站复用并在启动时刷新                 |
 | `completed/2026-09-25-new-topics-reading-flow.md`                   | 新帖阅读样式与关联资料请求重构已完成                   |
 | `completed/2026-09-23-ubb-generalization.md`                        | 通用 UBB 解析与 CC98 预设分离已完成                    |
 | `completed/2026-08-11-website-ubb-vnode-renderer.md`                | 网站 UBB Vue renderer 迁移到泛型 renderer 已完成       |

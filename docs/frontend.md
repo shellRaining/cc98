@@ -84,6 +84,12 @@ graph TD
 - `api/queries/`：vue-query queryOptions。`core.ts` 负责站点配置与阅读，`discovery.ts` 负责发现入口，`user.ts` 负责公开用户，`me.ts` 负责当前用户，统一从 `index.ts` 导出
 - `api/mutations/`：用户中心等写操作与缓存同步，依赖 http 和 query key
 
+### 版面目录
+
+`api/board-directory.json` 保存公开 `/board/all` 的完整分组和版面概要，作为 `boardsQuery` 的初始数据。应用启动时后台刷新一次，成功后更新 Vue Query 缓存；刷新失败时继续显示随版本打包的目录。目录缓存保留到当前应用实例结束，不另存入 Pinia 或浏览器存储。
+
+只需要版面名称、分组或概要的页面从 `boardsQuery` 和 `boardsByIdsQuery` 读取数据。`boardsByIdsQuery` 先查共享目录，只为未收录的 ID 请求 `/board/`。需要当前用户关注状态、权限、公告或独立 `logoUri` 的页面继续使用版面详情查询，不能从公开目录推断这些字段。新增或迁移版面查询时先确认页面实际使用了哪些字段。
+
 ## 路由域与组件所有权
 
 `annual-review/`、`board/`、`discovery/`、`messages/`、`site-manage/`、`topic/`、`user-center/`、`user-manage/` 和 `writing/` 按路由族组织。路由入口放在域目录根部，只被该路由族使用的 SFC 放入域内 `components/`。导航解析、表单校验和展示模型使用 `navigation.ts`、`form.ts`、`time.ts` 等职责名称，不新建宽泛的 `helpers.ts` 或 `utils.ts`。

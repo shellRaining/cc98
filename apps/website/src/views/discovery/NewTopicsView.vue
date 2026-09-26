@@ -5,12 +5,14 @@ import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { useRoute, useRouter } from "vue-router";
 import {
   boardsByIdsQuery,
+  boardsQuery,
   currentUserQuery,
   globalTagsQuery,
   newTopicsInfiniteQuery,
   recommendedTopicsQuery,
   usersByIdsQuery,
 } from "../../api/queries";
+import { boardsById } from "../../api/board-directory";
 import { queryKeys } from "../../api/queries/keys";
 import NewTopicCard from "./components/NewTopicCard.vue";
 import NewTopicClassicItem from "./components/NewTopicClassicItem.vue";
@@ -64,14 +66,20 @@ const boardIds = computed(() => {
     ]),
   ];
 });
+const { data: boardGroups } = useQuery(boardsQuery);
+const directoryBoards = computed(() => boardsById(boardGroups.value ?? []));
+const unknownBoardIds = computed(() =>
+  boardIds.value.filter((id) => !directoryBoards.value.has(id)),
+);
 const authorIds = computed(() => uniqueTopicUserIds(topics.value));
 const {
-  records: boardMap,
+  records: extraBoards,
   error: boardError,
   retry: retryBoards,
-} = useBatchedLookup(boardIds, queryKeys.boardsByIdsRoot, (ids) =>
+} = useBatchedLookup(unknownBoardIds, queryKeys.boardsByIdsRoot, (ids) =>
   queryClient.fetchQuery(boardsByIdsQuery(ids)),
 );
+const boardMap = computed(() => new Map([...extraBoards.value, ...directoryBoards.value]));
 const {
   records: authorMap,
   error: authorError,
@@ -100,7 +108,9 @@ const { data: recommendations } = useQuery(recommendationsOptions);
 const recommendedTopics = computed(() =>
   (recommendations.value ?? []).flatMap((item) => (item.topic ? [item.topic] : [])),
 );
-const lookupError = computed(() => boardError.value || authorError.value);
+const lookupError = computed(
+  () => (unknownBoardIds.value.length > 0 ? boardError.value : null) || authorError.value,
+);
 
 const pageError = computed(() => {
   if (!user.isLoggedIn) return normalizeApiError({ status: 401 });

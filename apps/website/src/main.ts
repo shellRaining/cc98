@@ -9,6 +9,7 @@ import App from "./App.vue";
 import { router } from "./router";
 import { createLogger, logErrorOnce } from "./lib/logger";
 import { createQueryClient } from "./lib/query-client";
+import { boardsQuery, queryKeys } from "./api/queries";
 import { useThemeStore } from "./stores/theme";
 
 import "virtual:uno.css";
@@ -17,6 +18,7 @@ import "./styles/skins.css";
 
 const app = createApp(App);
 const pinia = createPinia();
+const queryClient = createQueryClient();
 const runtimeLogger = createLogger("runtime");
 pinia.use(piniaPluginPersistedstate);
 
@@ -49,9 +51,14 @@ window.addEventListener("unhandledrejection", (event) => {
 
 app.use(pinia);
 app.use(router);
-app.use(VueQueryPlugin, { queryClient: createQueryClient() });
+app.use(VueQueryPlugin, { queryClient });
 app.use(VueVirtualScroller);
 
 useThemeStore().apply();
 
 app.mount("#app");
+
+void queryClient
+  .fetchQuery({ ...boardsQuery, staleTime: 0 })
+  .then(() => queryClient.invalidateQueries({ queryKey: queryKeys.boardsByIdsRoot }))
+  .catch(() => undefined);
