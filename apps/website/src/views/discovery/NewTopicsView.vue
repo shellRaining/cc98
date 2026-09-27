@@ -184,9 +184,6 @@ function formatCount(value: number | undefined) {
     </nav>
 
     <div class="new-topics-toolbar">
-      <RouterLink class="new-topics-toolbar__settings" to="/usercenter/settings#reading-style">
-        阅读样式设置
-      </RouterLink>
       <button
         type="button"
         class="new-topics-refresh"
@@ -336,11 +333,10 @@ function formatCount(value: number | undefined) {
   display: flex;
   min-height: 2.25rem;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: 1rem;
 }
 
-.new-topics-toolbar__settings,
 .new-topics-refresh {
   min-width: 6rem;
   padding: 0.375rem 0.75rem;
@@ -353,7 +349,6 @@ function formatCount(value: number | undefined) {
   cursor: pointer;
 }
 
-.new-topics-toolbar__settings:hover,
 .new-topics-refresh:hover {
   background: var(--cc98-color-primary-fill);
   color: var(--cc98-color-on-primary);
