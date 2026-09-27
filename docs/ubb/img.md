@@ -35,7 +35,7 @@ Markdown 的 `![]()` 没有这些历史语义。它只有 `src`、`alt` 和可�
 
 ```txt
 [img=1,title=封面]https://example.com/a.png[/img]
-  -> parseUbb
+  -> cc98Registry.parse
   -> UbbImageRenderer
   -> UniverseImage
 

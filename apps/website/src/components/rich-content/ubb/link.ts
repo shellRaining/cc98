@@ -3,18 +3,18 @@ import { sanitizeLinkUrl } from "../security";
 import UniverseLink from "../universe/UniverseLink.vue";
 import type { UbbTagRenderer } from "./types";
 
-export const renderUrlTag: UbbTagRenderer = ({ attrs, text, children, context }) => {
-  const source = attrs.positionals[0] ?? text;
+export const renderUrlTag: UbbTagRenderer = ({ attrs, textContent, content, context }) => {
+  const source = attrs.positionals[0] ?? textContent;
   const href = sanitizeLinkUrl(source, context.options);
-  if (!href) return children;
+  if (!href) return content;
 
-  return [h(UniverseLink, { href }, () => (children.length > 0 ? children : href))];
+  return [h(UniverseLink, { href }, () => (content.length > 0 ? content : href))];
 };
 
-export const renderSiteLinkTag: UbbTagRenderer = ({ node, attrs, text, children }) => {
-  const content = text.trim();
-  const value = (attrs.positionals[0] ?? content).trim();
-  if (!value) return children;
+export const renderSiteLinkTag: UbbTagRenderer = ({ node, attrs, textContent, content }) => {
+  const label = textContent.trim();
+  const value = (attrs.positionals[0] ?? label).trim();
+  if (!value) return content;
 
   if (node.tag === "pm") {
     return [h("span", { class: "text-cc98-primary" }, `@${value}`)];
@@ -28,9 +28,9 @@ export const renderSiteLinkTag: UbbTagRenderer = ({ node, attrs, text, children 
         : node.tag === "board"
           ? `/list/${encodeURIComponent(value)}`
           : null;
-  if (!route) return [content || value];
+  if (!route) return [label || value];
 
   const fallback =
     node.tag === "user" ? `@${value}` : node.tag === "topic" ? `帖子 ${value}` : `板块 ${value}`;
-  return [h(UniverseLink, { href: route }, () => (children.length > 0 ? children : fallback))];
+  return [h(UniverseLink, { href: route }, () => (content.length > 0 ? content : fallback))];
 };

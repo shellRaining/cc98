@@ -1,35 +1,33 @@
 import { describe, expect, test } from "vite-plus/test";
 import { createUbbRegistry, type UbbNode } from "../src/index.ts";
+import { withoutRaw } from "./helpers.ts";
 
 const textToString = (value: string): string => value;
 const joinStrings = (outputs: readonly string[]): string => outputs.join("");
 
 describe("UBB 注册表渲染器", () => {
-  test("recursive 标签可读取属性、纯文本和递归渲染后的 children", () => {
-    const renderer = createUbbRegistry(
-      {},
-      {
-        parseTag: (source) => {
-          const [tag, ...params] = source.split(",");
-          const [name, value] = tag.split("=");
-          return {
-            name,
-            attrs: {
-              positionals: value === undefined ? [] : [value],
-              named: Object.fromEntries(params.map((param) => param.split("="))),
-            },
-          };
-        },
+  test("recursive 标签可读取属性、纯文本和递归渲染后的 content", () => {
+    const renderer = createUbbRegistry({
+      parseTag: (source) => {
+        const [tag, ...params] = source.split(",");
+        const [name, value] = tag.split("=");
+        return {
+          name,
+          attrs: {
+            positionals: value === undefined ? [] : [value],
+            named: Object.fromEntries(params.map((param) => param.split("="))),
+          },
+        };
       },
-    )
+    })
       .register("panel", "recursive")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
-          panel: ({ attrs, children, text }) => {
+          panel: ({ attrs, content, textContent }) => {
             const label = attrs.named.title || attrs.positionals[0] || "panel";
-            return `<${label} data-text="${text}">${children}</${label}>`;
+            return `<${label} data-text="${textContent}">${content}</${label}>`;
           },
         },
       });
@@ -43,10 +41,10 @@ describe("UBB 注册表渲染器", () => {
     const renderer = createUbbRegistry()
       .register("literal", "text")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
-          literal: ({ text }) => `{${text}}`,
+          literal: ({ textContent }) => `{${textContent}}`,
         },
       });
 
@@ -57,7 +55,7 @@ describe("UBB 注册表渲染器", () => {
     const renderer = createUbbRegistry()
       .register("break", "empty")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
           break: ({ node }) => `<${node.tag}>`,
@@ -71,10 +69,10 @@ describe("UBB 注册表渲染器", () => {
     const renderer = createUbbRegistry()
       .register("mention", "autoclose")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
-          mention: ({ attrs, text }) => `@${attrs.positionals[0] ?? text}`,
+          mention: ({ attrs, textContent }) => `@${attrs.positionals[0] ?? textContent}`,
         },
       });
 
@@ -83,20 +81,20 @@ describe("UBB 注册表渲染器", () => {
     );
   });
 
-  test("children 是按需计算且只计算一次的 getter", () => {
+  test("content 是按需计算且只计算一次的 getter", () => {
     let textRenderCount = 0;
     const renderer = createUbbRegistry()
       .register("drop", "recursive")
       .register("repeat", "recursive")
       .createRenderer<string>({
-        text: (value) => {
+        renderText: (value) => {
           textRenderCount += 1;
           return value;
         },
         concat: joinStrings,
         handlers: {
-          drop: ({ text }) => `[已省略 ${text.length} 字]`,
-          repeat: (input) => `${input.children}|${input.children}`,
+          drop: ({ textContent }) => `[已省略 ${textContent.length} 字]`,
+          repeat: (input) => `${input.content}|${input.content}`,
         },
       });
 
@@ -115,13 +113,13 @@ describe("UBB 注册表渲染器", () => {
     const renderer = createUbbRegistry()
       .register("token", "recursive")
       .createRenderer<Segment[]>({
-        text: (value) => [{ kind: "text", value }],
+        renderText: (value) => [{ kind: "text", value }],
         concat: (outputs) => outputs.flatMap((output) => output),
         handlers: {
-          token: ({ node, attrs, text }) => [
+          token: ({ node, attrs, textContent }) => [
             {
               kind: "tag",
-              value: `${node.tag}:${attrs.positionals[0] ?? "default"}:${text}`,
+              value: `${node.tag}:${attrs.positionals[0] ?? "default"}:${textContent}`,
             },
           ],
         },
@@ -139,6 +137,7 @@ describe("UBB 注册表渲染器", () => {
         type: "tag",
         tag: "token",
         attrs: { positionals: ["manual"], named: {} },
+        raw: { open: "[token=manual]", close: "[/token]" },
         children: [{ type: "text", value: "乙" }],
       },
     ];
@@ -148,7 +147,7 @@ describe("UBB 注册表渲染器", () => {
     ]);
   });
 
-  test("Context 会传给文本、拼接、handler 和 finalize，内部 render 不重复 finalize", () => {
+  test("Context 会传给文本、拼接、handler 和 finalize，内部 renderNodes 不重复 finalize", () => {
     interface RenderContext {
       prefix: string;
       separator: string;
@@ -159,11 +158,11 @@ describe("UBB 注册表渲染器", () => {
     const renderer = createUbbRegistry()
       .register("repeat", "recursive")
       .createRenderer<string, RenderContext>({
-        text: (value, context) => `${context.prefix}${value}`,
+        renderText: (value, context) => `${context.prefix}${value}`,
         concat: (outputs, context) => outputs.join(context.separator),
         handlers: {
-          repeat: ({ node, context, render }) =>
-            Array.from({ length: context.repeat }, () => render(node.children)).join("+"),
+          repeat: ({ node, context, renderNodes }) =>
+            Array.from({ length: context.repeat }, () => renderNodes(node.children)).join("+"),
         },
         finalize: (output, context) => {
           context.finalizeCount += 1;
@@ -187,14 +186,14 @@ describe("UBB 注册表渲染器", () => {
       .register("handled", "recursive")
       .register("unhandled", "recursive")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
-          handled: ({ children }) => `<handled>${children}</handled>`,
+          handled: ({ content }) => `<handled>${content}</handled>`,
         },
-        fallback: ({ node, attrs, children, text }) => {
+        fallback: ({ node, attrs, content, textContent }) => {
           fallbackCount += 1;
-          return `<${node.tag} value="${attrs.positionals[0] ?? ""}" text="${text}">${children}</${node.tag}>`;
+          return `<${node.tag} value="${attrs.positionals[0] ?? ""}" text="${textContent}">${content}</${node.tag}>`;
         },
       });
 
@@ -211,19 +210,19 @@ describe("UBB 注册表渲染器", () => {
     const leftRenderer = createUbbRegistry()
       .register("leftonly", "recursive")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
-          leftonly: ({ children }) => `<left>${children}</left>`,
+          leftonly: ({ content }) => `<left>${content}</left>`,
         },
       });
     const rightRenderer = createUbbRegistry()
       .register("rightonly", "recursive")
       .createRenderer<string>({
-        text: textToString,
+        renderText: textToString,
         concat: joinStrings,
         handlers: {
-          rightonly: ({ children }) => `<right>${children}</right>`,
+          rightonly: ({ content }) => `<right>${content}</right>`,
         },
       });
 
@@ -235,7 +234,7 @@ describe("UBB 注册表渲染器", () => {
 
   test("未注册标签保持原始文本，不吞掉属性、正文或结束标签", () => {
     const renderer = createUbbRegistry().createRenderer<string>({
-      text: textToString,
+      renderText: textToString,
       concat: joinStrings,
       handlers: {},
     });
@@ -247,7 +246,9 @@ describe("UBB 注册表渲染器", () => {
 
   test("默认参数只拆首个等号，CC98 专属标签不被识别", () => {
     const registry = createUbbRegistry().register("link", "recursive");
-    expect(registry.parse("[link=https://example.org/?a=1,b=2]内容[/link][em01]")).toEqual([
+    expect(
+      withoutRaw(registry.parse("[link=https://example.org/?a=1,b=2]内容[/link][em01]")),
+    ).toEqual([
       {
         type: "tag",
         tag: "link",
@@ -259,21 +260,83 @@ describe("UBB 注册表渲染器", () => {
   });
 
   test("自定义标签头解析失败时按原文保留，其他标签仍可解析", () => {
-    const registry = createUbbRegistry(
-      { item: "empty" },
-      {
-        parseTag: (source) => {
-          if (!source.startsWith("item:")) return null;
-          const value = source.slice("item:".length);
-          if (!value) throw new Error("缺少编号");
-          return { name: "item", attrs: { positionals: [value], named: {} } };
-        },
+    const registry = createUbbRegistry({
+      tags: { item: "empty" },
+      parseTag: (source) => {
+        if (!source.startsWith("item:")) return null;
+        const value = source.slice("item:".length);
+        if (!value) throw new Error("缺少编号");
+        return { name: "item", attrs: { positionals: [value], named: {} } };
       },
-    );
-    expect(registry.parse("[item:42][item:][item=3]")).toEqual([
+    });
+    expect(withoutRaw(registry.parse("[item:42][item:][item=3]"))).toEqual([
       { type: "tag", tag: "item", attrs: { positionals: ["42"], named: {} }, children: [] },
       { type: "text", value: "[item:]" },
       { type: "text", value: "[item=3]" },
     ]);
+  });
+});
+
+describe("UBB 标签族", () => {
+  const registry = createUbbRegistry({
+    tags: { star: "empty" },
+    families: { icon: { pattern: /^(?:star|icon)\d+$/, mode: "empty" } },
+  })
+    .registerFamily("digits", /^\d+$/, "empty")
+    .registerFamily("wide", /^(?:icon\d+|\d+)$/, "empty");
+
+  test("精确标签优先，其余按登记顺序匹配第一个标签族", () => {
+    expect(withoutRaw(registry.parse("[star][ICON1][42]"))).toEqual([
+      { type: "tag", tag: "star", attrs: { positionals: [], named: {} }, children: [] },
+      {
+        type: "tag",
+        tag: "icon1",
+        family: "icon",
+        attrs: { positionals: [], named: {} },
+        children: [],
+      },
+      {
+        type: "tag",
+        tag: "42",
+        family: "digits",
+        attrs: { positionals: [], named: {} },
+        children: [],
+      },
+    ]);
+  });
+
+  test("handler 按族名登记，收到具体标签名", () => {
+    const renderer = registry.createRenderer<string>({
+      renderText: textToString,
+      concat: joinStrings,
+      handlers: {
+        star: () => "★",
+        icon: ({ node }) => `<${node.family}:${node.tag}>`,
+        digits: ({ node }) => `#${node.tag}`,
+        wide: () => "不会命中",
+      },
+    });
+
+    expect(renderer.render("[star][icon7][star2][3]")).toBe("★<icon:icon7><icon:star2>#3");
+  });
+
+  test("没有 fallback 时类型要求覆盖全部标签族", () => {
+    // @ts-expect-error 缺少 wide 族的 handler
+    const renderer = registry.createRenderer<string>({
+      renderText: textToString,
+      concat: joinStrings,
+      handlers: { star: () => "", icon: () => "", digits: () => "" },
+    });
+    expect(renderer.render("[icon1]")).toBe("");
+  });
+
+  test("标签和标签族共用名称空间", () => {
+    expect(() => registry.register("ICON", "empty")).toThrow("已注册");
+    expect(() => registry.registerFamily("star", /^x$/, "empty")).toThrow("已注册");
+  });
+
+  test("拒绝依赖 lastIndex 的正则标志", () => {
+    expect(() => registry.registerFamily("g", /^g\d$/g, "empty")).toThrow("g 或 y");
+    expect(() => registry.registerFamily("y", /^y\d$/y, "empty")).toThrow("g 或 y");
   });
 });

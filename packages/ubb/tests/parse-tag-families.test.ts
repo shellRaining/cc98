@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vite-plus/test";
 import { cc98Registry } from "../cc98/index.ts";
 
-import { tag, tagPos, txt } from "./helpers.ts";
+import { tag, tagPos, txt, withoutRaw } from "./helpers.ts";
 
-const parseUbb = (source: string) => cc98Registry.parse(source);
+const parseUbb = (source: string) => withoutRaw(cc98Registry.parse(source));
 
 describe("Text 标签族", () => {
   test.each(["code", "md", "noubb", "img", "audio", "mp3", "video", "upload", "bili", "math", "m"])(

@@ -16,8 +16,8 @@ export default defineConfig({
     entry: {
       index: "./src/index.ts",
       cc98: "./cc98/index.ts",
-      "presets/html": "./presets/html.ts",
-      "presets/markdown": "./presets/markdown.ts",
+      "cc98/html": "./cc98/html.ts",
+      "cc98/markdown": "./cc98/markdown.ts",
     },
     dts: { generator: "tsgo", tsgo: { path: tsgoPath } },
     exports: true,

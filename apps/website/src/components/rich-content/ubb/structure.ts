@@ -39,11 +39,11 @@ function flattenQuoteChain(root: UbbTagNode): UbbTagNode[] {
   return [...normalized.layers, { ...root, children: normalized.nodes }];
 }
 
-export const renderQuoteTag: UbbTagRenderer = ({ node, render }) => {
+export const renderQuoteTag: UbbTagRenderer = ({ node, renderNodes }) => {
   const layers = flattenQuoteChain(node);
   const quotes = layers.map((layer) =>
     h(UniverseQuote, { source: layer.attrs.positionals[0] || undefined }, () =>
-      render(layer.children),
+      renderNodes(layer.children),
     ),
   );
   return quotes.length === 1
@@ -60,15 +60,15 @@ function positiveSpan(value: string | undefined): number | undefined {
   return Number.isInteger(number) && number > 0 ? number : undefined;
 }
 
-export const renderTableTag: UbbTagRenderer = ({ node, attrs, children }) => {
+export const renderTableTag: UbbTagRenderer = ({ node, attrs, content }) => {
   if (node.tag === "table") {
     return [
       h("div", { class: "rich-content-table-wrap my-3 overflow-x-auto" }, [
-        h("table", { class: "w-full border-collapse text-left" }, children),
+        h("table", { class: "w-full border-collapse text-left" }, content),
       ]),
     ];
   }
-  if (node.tag === "tr") return [h("tr", children)];
+  if (node.tag === "tr") return [h("tr", content)];
 
   const tag = node.tag === "th" ? "th" : "td";
   const rowspan = positiveSpan(attrs.positionals[0]);
@@ -81,7 +81,7 @@ export const renderTableTag: UbbTagRenderer = ({ node, attrs, children }) => {
         colspan,
         class: "border border-cc98-border px-3 py-2 align-top",
       },
-      children,
+      content,
     ),
   ];
 };

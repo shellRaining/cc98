@@ -1,6 +1,6 @@
 {
   "name": "@cc98/ubb",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "CC98 UBB 解析器、泛型输出注册器与 HTML/Markdown 预设",
   "license": "MIT",
@@ -11,8 +11,8 @@
   "exports": {
     ".": "./dist/index.mjs",
     "./cc98": "./dist/cc98.mjs",
-    "./presets/html": "./dist/presets/html.mjs",
-    "./presets/markdown": "./dist/presets/markdown.mjs",
+    "./cc98/html": "./dist/cc98/html.mjs",
+    "./cc98/markdown": "./dist/cc98/markdown.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -28,10 +28,6 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "catalog:",
-    "vue": "catalog:"
-  },
-  "peerDependencies": {
-    "vue": "^3.5.0"
+    "vitest": "catalog:"
   }
 }

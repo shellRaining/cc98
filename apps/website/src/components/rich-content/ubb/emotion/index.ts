@@ -5,7 +5,7 @@ import type { UbbTagRenderer } from "../types";
 import UbbEmotion from "./UbbEmotion.vue";
 
 export const renderEmotionTag: UbbTagRenderer = ({ node, context }) => {
-  if (!context.options.allowEmotion) return [getOriginalUbbTag(node.tag)];
+  if (!context.options.allowEmotion) return [getOriginalUbbTag(node)];
   const emotion = resolveUbbEmotionTag(node.tag);
-  return emotion ? [h(UbbEmotion, { emotion })] : [getOriginalUbbTag(node.tag)];
+  return emotion ? [h(UbbEmotion, { emotion })] : [getOriginalUbbTag(node)];
 };

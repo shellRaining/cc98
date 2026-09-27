@@ -1,4 +1,4 @@
-import { cc98Registry, matchUbbRegexTagFamily, type UbbStaticTagName } from "@cc98/ubb/cc98";
+import { cc98Registry, type UbbStaticTagName, type UbbTagFamilyName } from "@cc98/ubb/cc98";
 import type { VNodeChild } from "vue";
 import type { UbbRenderContext } from "./context";
 import { renderEmotionTag } from "./emotion";
@@ -58,17 +58,22 @@ const staticTagHandlers = {
   allowviewer: renderPermissionTag,
 } satisfies Record<UbbStaticTagName, UbbTagRenderer>;
 
+const familyHandlers = {
+  em: renderEmotionTag,
+  ac: renderEmotionTag,
+  ms: renderEmotionTag,
+  mahjong: renderEmotionTag,
+  cc98: renderEmotionTag,
+  tb: renderEmotionTag,
+} satisfies Record<UbbTagFamilyName, UbbTagRenderer>;
+
 /**
  * 网站的 Vue UBB renderer：输出 VNodeChild 数组。
  * 标签解析模式来自 @cc98/ubb 的默认注册器，handler 键由 registry 泛型推导，
- * 新增静态标签时类型系统会要求同步登记 handler。
+ * 新增静态标签或标签族时类型系统会要求同步登记 handler。
  */
 export const ubbVueRenderer = cc98Registry.createRenderer<VNodeChild[], UbbRenderContext>({
-  text: (value) => [value],
+  renderText: (value) => [value],
   concat: (parts) => parts.flat(),
-  handlers: staticTagHandlers,
-  fallback: (props) => {
-    if (matchUbbRegexTagFamily(props.node.tag)) return renderEmotionTag(props);
-    return [`[${props.node.tag}]${props.text}[/${props.node.tag}]`];
-  },
+  handlers: { ...staticTagHandlers, ...familyHandlers },
 });

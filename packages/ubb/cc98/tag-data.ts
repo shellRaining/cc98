@@ -20,6 +20,7 @@
  * - String：设置当前值（lastValue）。
  * - 第一个参数特殊处理：若 name 为 null，则把 value 当作 tagName（name=value, value=null）。
  */
+import type { UbbTagParser } from "../src/tag-data.ts";
 import type { UbbAttrs } from "../src/types.ts";
 
 /** 符号类型。 */
@@ -32,7 +33,7 @@ interface TagParameter {
 }
 
 /** 解析后的标签数据。 */
-export interface ParsedTag {
+interface ParsedTag {
   /** 标签名（已小写归一化）。 */
   tagName: string;
   /** 原始标签字符串（方括号内的内容，未归一化）。 */
@@ -51,7 +52,7 @@ export interface ParsedTag {
  * @param tagString 方括号内的原始字符串，如 "color=red"。
  * @returns 解析结果；无法解析时返回 null。
  */
-export function parseTag(tagString: string): ParsedTag | null {
+function parseTag(tagString: string): ParsedTag | null {
   if (!tagString) return null;
 
   const tokens = tokenize(tagString);
@@ -197,7 +198,7 @@ function convertTokens(tokens: Token[], tagString: string): TagParameter[] {
  * - parameters[1..n]：name 非 null → named[name]=value；name 为 null → positionals.push(value)。
  * - null value 统一转为空字符串（仅在非首位位置参数出现时）。
  */
-export function extractAttrs(tag: ParsedTag): UbbAttrs {
+function extractAttrs(tag: ParsedTag): UbbAttrs {
   const positionals: string[] = [];
   const named: Record<string, string> = {};
 
@@ -216,3 +217,9 @@ export function extractAttrs(tag: ParsedTag): UbbAttrs {
 
   return { positionals, named };
 }
+
+/** 旧论坛的标签头语法：逗号分隔参数，等号分隔名称和值，引号包裹整段值。 */
+export const parseCc98Tag: UbbTagParser = (source) => {
+  const tag = parseTag(source);
+  return tag ? { name: tag.tagName, attrs: extractAttrs(tag) } : null;
+};

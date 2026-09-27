@@ -111,10 +111,10 @@ OpenID 的 `POST /connect/token` 使用 `application/x-www-form-urlencoded`。�
 
 ```ts
 import { POST_CONTENT_TYPE, type Post } from "@cc98/api";
-import { parseUbb } from "@cc98/ubb";
+import { cc98Registry } from "@cc98/ubb/cc98";
 
 function parsePostContent(post: Post) {
-  if (post.contentType === POST_CONTENT_TYPE.ubb) return parseUbb(post.content ?? "");
+  if (post.contentType === POST_CONTENT_TYPE.ubb) return cc98Registry.parse(post.content ?? "");
   return post.content ?? "";
 }
 ```

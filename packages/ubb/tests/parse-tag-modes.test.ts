@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vite-plus/test";
 import { cc98Registry } from "../cc98/index.ts";
 
-import { tag, tagPos, txt } from "./helpers.ts";
+import { familyTag, tag, tagPos, txt, withoutRaw } from "./helpers.ts";
 
-const parseUbb = (source: string) => cc98Registry.parse(source);
+const parseUbb = (source: string) => withoutRaw(cc98Registry.parse(source));
 
 const recursiveTextTags = ["b", "i", "u", "del", "english", "left", "center", "right"];
 
@@ -34,14 +34,18 @@ describe("递归标签模式", () => {
 });
 
 describe("Empty 标签模式", () => {
-  test.each(["em01", "ac1001", "ms01", "cc9801", "tb01", "a:001"])(
-    "%s 自闭合且不吞后续内容",
-    (name) => {
-      expect(parseUbb(`前[${name}]后`)).toEqual([txt("前"), tag(name), txt("后")]);
-    },
-  );
+  test.each([
+    ["em01", "em"],
+    ["ac1001", "ac"],
+    ["ms01", "ms"],
+    ["cc9801", "cc98"],
+    ["tb01", "tb"],
+    ["a:001", "mahjong"],
+  ])("%s 属于 %s 族，自闭合且不吞后续内容", (name, family) => {
+    expect(parseUbb(`前[${name}]后`)).toEqual([txt("前"), familyTag(name, family), txt("后")]);
+  });
 
   test("紧随的同名结束标签被忽略", () => {
-    expect(parseUbb("[em01][/em01]后")).toEqual([tag("em01"), txt("后")]);
+    expect(parseUbb("[em01][/em01]后")).toEqual([familyTag("em01", "em"), txt("后")]);
   });
 });

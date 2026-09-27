@@ -1,7 +1,7 @@
 import {
-  UBB_REGEX_TAG_FAMILIES,
+  UBB_TAG_FAMILY_NAMES,
   UBB_STATIC_TAG_NAMES,
-  type UbbRegexTagFamily,
+  type UbbTagFamilyName,
   type UbbStaticTagName,
 } from "@cc98/ubb/cc98";
 import { createPinia } from "pinia";
@@ -81,7 +81,7 @@ const staticCases: StaticCase[] = [
 ];
 
 const regexCases: Array<{
-  family: UbbRegexTagFamily;
+  family: UbbTagFamilyName;
   tag: string;
   sourcePart: string;
 }> = [
@@ -109,9 +109,7 @@ describe("全部 UBB 标签渲染契约", () => {
   });
 
   test("正则标签样本覆盖解析器导出的完整家族", () => {
-    expect(regexCases.map((item) => item.family).sort()).toEqual(
-      [...UBB_REGEX_TAG_FAMILIES].sort(),
-    );
+    expect(regexCases.map((item) => item.family).sort()).toEqual([...UBB_TAG_FAMILY_NAMES].sort());
   });
 
   test.each(regexCases)("渲染正则标签族 $family", async ({ tag, sourcePart }) => {
@@ -119,5 +117,11 @@ describe("全部 UBB 标签渲染契约", () => {
     expect(html).toContain("<img");
     expect(html).toContain(sourcePart);
     expect(html).not.toContain(`[${tag}]`);
+  });
+
+  test("编号无效的表情按原文显示", async () => {
+    const html = await renderContent("[AC00][/ac00]");
+    expect(html).toContain("[AC00][/ac00]");
+    expect(html).not.toContain("<img");
   });
 });

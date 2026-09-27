@@ -3,7 +3,7 @@
  *
  * 移植自 Forum/Ubb/UbbCodeExtension.tsx 的 handler 注册表。
  * 老项目通过 handler 的 getTagMode 返回模式（Recursive/Text/Empty），
- * 新解析器用静态表 + 正则表替代，避免引入 handler 层。
+ * 新解析器用静态表 + 标签族表替代，避免引入 handler 层。
  *
  * 四种模式：
  * - recursive：标签内部允许其它 UBB 标签，递归建树。
@@ -16,7 +16,8 @@
  *   与 empty 的区别：empty 永远无 children，autoclose 只在未关闭时才无。
  */
 
-import type { TagMode } from "../src/parser.ts";
+import type { UbbTagMode } from "../src/parser.ts";
+import type { UbbTagFamily } from "../src/registry.ts";
 
 /** 静态标签名 → 模式。 */
 export const UBB_STATIC_TAG_MODES = {
@@ -72,7 +73,7 @@ export const UBB_STATIC_TAG_MODES = {
   needreply: "empty",
   posteronly: "empty",
   allowviewer: "empty",
-} as const satisfies Record<string, TagMode>;
+} as const satisfies Record<string, UbbTagMode>;
 
 export type UbbStaticTagName = keyof typeof UBB_STATIC_TAG_MODES;
 
@@ -80,47 +81,18 @@ export const UBB_STATIC_TAG_NAMES = Object.freeze(
   Object.keys(UBB_STATIC_TAG_MODES) as UbbStaticTagName[],
 );
 
-export type UbbRegexTagFamily = "em" | "ac" | "ms" | "mahjong" | "cc98" | "tb";
+/** 表情标签族。按声明顺序匹配，编号是否有对应资源由 emotion.ts 判断。 */
+export const UBB_TAG_FAMILIES = {
+  em: { pattern: /^em\d{2}$/, mode: "empty" },
+  ac: { pattern: /^ac(?:\d{2}|\d{4})$/, mode: "empty" },
+  ms: { pattern: /^ms\d{2}$/, mode: "empty" },
+  mahjong: { pattern: /^[acf]:\d{3}$/, mode: "empty" },
+  cc98: { pattern: /^cc98\d{2}$/, mode: "empty" },
+  tb: { pattern: /^tb\d{2}$/, mode: "empty" },
+} as const satisfies Record<string, UbbTagFamily>;
 
-/** 正则标签名 → 模式。按优先级排序，先匹配先返回。 */
-const regexTags: ReadonlyArray<{
-  family: UbbRegexTagFamily;
-  pattern: RegExp;
-  mode: TagMode;
-}> = [
-  { family: "em", pattern: /^em\d{2}$/, mode: "empty" },
-  { family: "ac", pattern: /^ac(?:\d{2}|\d{4})$/, mode: "empty" },
-  { family: "ms", pattern: /^ms\d{2}$/, mode: "empty" },
-  { family: "mahjong", pattern: /^[acf]:\d{3}$/, mode: "empty" },
-  { family: "cc98", pattern: /^cc98\d{2}$/, mode: "empty" },
-  { family: "tb", pattern: /^tb\d{2}$/, mode: "empty" },
-];
+export type UbbTagFamilyName = keyof typeof UBB_TAG_FAMILIES;
 
-export const UBB_REGEX_TAG_FAMILIES = Object.freeze(
-  regexTags.map(({ family }) => family),
-) as readonly UbbRegexTagFamily[];
-
-export function matchUbbRegexTagFamily(tagName: string): UbbRegexTagFamily | null {
-  for (const { family, pattern } of regexTags) {
-    if (pattern.test(tagName)) return family;
-  }
-
-  return null;
-}
-
-/**
- * 查询标签的模式。
- *
- * @param tagName 已小写归一化的标签名。
- * @returns 标签模式；未知标签返回 null（主解析器将其降级为文本）。
- */
-export function getTagMode(tagName: string): TagMode | null {
-  const staticMode = UBB_STATIC_TAG_MODES[tagName as UbbStaticTagName];
-  if (staticMode) return staticMode;
-
-  for (const { pattern, mode } of regexTags) {
-    if (pattern.test(tagName)) return mode;
-  }
-
-  return null;
-}
+export const UBB_TAG_FAMILY_NAMES = Object.freeze(
+  Object.keys(UBB_TAG_FAMILIES) as UbbTagFamilyName[],
+);

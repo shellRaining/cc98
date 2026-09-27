@@ -9,9 +9,9 @@
 import { describe, expect, test } from "vite-plus/test";
 import { cc98Registry } from "../cc98/index.ts";
 
-import { txt, tag, tagPos } from "./helpers.ts";
+import { familyTag, txt, tag, tagPos, withoutRaw } from "./helpers.ts";
 
-const parseUbb = (source: string) => cc98Registry.parse(source);
+const parseUbb = (source: string) => withoutRaw(cc98Registry.parse(source));
 
 describe("E2E：富文本自我介绍帖", () => {
   test("混合文字样式 + 表情 + 链接 + 嵌套", () => {
@@ -28,7 +28,7 @@ describe("E2E：富文本自我介绍帖", () => {
     expect(parseUbb(ubb)).toEqual([
       tag("b", [txt("大家好")]),
       txt("，我是新来的。"),
-      tag("em01"),
+      familyTag("em01", "em"),
       txt("\n\n"),
       tag("i", [txt("今天天气不错")]),
       txt("，分享一下我的"),
@@ -36,9 +36,9 @@ describe("E2E：富文本自我介绍帖", () => {
       txt("。\n\n"),
       tagPos("size", ["5"], [tagPos("color", ["red"], [txt("重要通知")])]),
       txt("\n\n"),
-      tag("ac01"),
-      tag("ac02"),
-      tag("ac03"),
+      familyTag("ac01", "ac"),
+      familyTag("ac02", "ac"),
+      familyTag("ac03", "ac"),
     ]);
   });
 });
@@ -205,11 +205,11 @@ describe("E2E：复杂混合帖（压力测试）", () => {
         ]),
       ]),
       txt("\n\n"),
-      tag("ac01"),
+      familyTag("ac01", "ac"),
       txt(" "),
-      tag("em01"),
+      familyTag("em01", "em"),
       txt(" "),
-      tag("cc9801"),
+      familyTag("cc9801", "cc98"),
       txt("\n\n看这个视频："),
       tag("bili", [txt("BV1xx911y7xz")]),
     ]);

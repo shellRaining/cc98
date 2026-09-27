@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vite-plus/test";
 import { cc98Registry } from "../cc98/index.ts";
 
-import { tag, tagBoth, tagNamed, tagPos, txt } from "./helpers.ts";
+import { familyTag, tag, tagBoth, tagNamed, tagPos, txt, withoutRaw } from "./helpers.ts";
 
-const parseUbb = (source: string) => cc98Registry.parse(source);
+const parseUbb = (source: string) => withoutRaw(cc98Registry.parse(source));
 
 describe("属性边界", () => {
   test("同时保留多个位置参数和命名参数", () => {
@@ -31,7 +31,7 @@ describe("组合结构", () => {
     expect(parseUbb("[b]粗[/b][code][i]字面量[/i][/code][em01]尾")).toEqual([
       tag("b", [txt("粗")]),
       tag("code", [txt("[i]字面量[/i]")]),
-      tag("em01"),
+      familyTag("em01", "em"),
       txt("尾"),
     ]);
   });
@@ -47,5 +47,30 @@ describe("文本和空节点边界", () => {
   test("空标签和纯换行保持稳定 AST", () => {
     expect(parseUbb("[b][i][/i][/b]")).toEqual([tag("b", [tag("i")])]);
     expect(parseUbb("\n\n\n")).toEqual([txt("\n\n\n")]);
+  });
+});
+
+describe("合并相邻文本", () => {
+  const parseMerged = (source: string) =>
+    withoutRaw(cc98Registry.configure({ mergeAdjacentText: true }).parse(source));
+
+  test("默认保留降级文本各自的节点", () => {
+    expect(parseUbb("价格[约[b]100[/b]")).toEqual([
+      txt("价格"),
+      txt("[约[b]"),
+      txt("100"),
+      txt("[/b]"),
+    ]);
+  });
+
+  test("开启后根层级和标签内部的相邻文本都合并，标签仍是分隔点", () => {
+    expect(parseMerged("价格[约[b]100[/b]")).toEqual([txt("价格[约[b]100[/b]")]);
+    expect(parseMerged("甲[foo]乙[b]丙[i]丁[/b]戊[line]己")).toEqual([
+      txt("甲[foo]乙"),
+      tag("b", [txt("丙[i]丁")]),
+      txt("戊"),
+      tag("line"),
+      txt("己"),
+    ]);
   });
 });

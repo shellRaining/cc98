@@ -1,5 +1,6 @@
 import { h } from "vue";
 import UniverseMessageBar from "../universe/UniverseMessageBar.vue";
+import { getOriginalUbbTag } from "../text";
 import type { UbbTagRenderer } from "./types";
 
 interface MessageSetting {
@@ -53,5 +54,5 @@ export function resolvePermissionMessage(tag: string, value?: string): MessageSe
 
 export const renderPermissionTag: UbbTagRenderer = ({ node, attrs }) => {
   const setting = resolvePermissionMessage(node.tag, attrs.positionals[0]);
-  return setting ? [h(UniverseMessageBar, setting)] : [`[${node.tag}]`];
+  return setting ? [h(UniverseMessageBar, setting)] : [getOriginalUbbTag(node)];
 };

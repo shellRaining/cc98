@@ -2,7 +2,7 @@
  * UBB AST 节点类型定义。
  *
  * parseUbb 把 UBB 文本解析成这棵纯数据树，不包含任何渲染信息。
- * 字符串导出器和 Vue 渲染层各自遍历这棵树产出输出。
+ * 字符串预设和消费方的框架渲染层各自遍历这棵树产出输出。
  */
 
 /**
@@ -24,10 +24,29 @@ export type UbbTagNode = {
   type: "tag";
   /** 标签名，已归一化为小写。如 "b"、"url"、"ac01"。 */
   tag: string;
+  /**
+   * 所属标签族名，如 "ac01" 的 "ac"。解析结果中精确标签的值为 undefined，
+   * 键始终存在以保持对象形状一致，大文本解析时明显更快。
+   */
+  family?: string;
   /** 标签属性。 */
   attrs: UbbAttrs;
+  /** 开始、结束标签的原文，可用于把节点无损还原成 UBB。 */
+  raw: UbbTagRaw;
   /** 子节点。Empty 标签恒为空数组。 */
   children: UbbNode[];
+};
+
+/**
+ * 标签原文，保留大小写、空白和参数写法。
+ *
+ *   [URL=a.com]x[/Url]  → { open: "[URL=a.com]", close: "[/Url]" }
+ *   [user=张三]         → { open: "[user=张三]", close: null }
+ */
+export type UbbTagRaw = {
+  open: string;
+  /** 实际写出的结束标签；empty 标签没有紧跟结束标签、autoclose 标签未闭合时为 null。 */
+  close: string | null;
 };
 
 /**

@@ -32,13 +32,13 @@ function renderImage(
   ];
 }
 
-export const renderImageTag: UbbTagRenderer = ({ attrs, text, context }) => {
-  const source = text.trim();
+export const renderImageTag: UbbTagRenderer = ({ attrs, textContent, context }) => {
+  const source = textContent.trim();
   return renderImage(source, attrs.named.title || undefined, attrs.positionals[0] === "1", context);
 };
 
-export const renderUploadTag: UbbTagRenderer = ({ attrs, text, context }) => {
-  const source = text.trim();
+export const renderUploadTag: UbbTagRenderer = ({ attrs, textContent, context }) => {
+  const source = textContent.trim();
   const type = attrs.positionals[0]?.toLowerCase();
   if (type && IMAGE_UPLOAD_TYPES.has(type)) {
     return renderImage(source, "上传图片", attrs.positionals[1] === "1", context);
@@ -48,8 +48,8 @@ export const renderUploadTag: UbbTagRenderer = ({ attrs, text, context }) => {
   return href ? [h(UniverseUpload, { href })] : [source];
 };
 
-export const renderMediaTag: UbbTagRenderer = ({ node, attrs, text, context }) => {
-  const source = text.trim();
+export const renderMediaTag: UbbTagRenderer = ({ node, attrs, textContent, context }) => {
+  const source = textContent.trim();
   const url = sanitizeMediaUrl(source, context.options);
   if (!url) return [source];
   if (node.tag === "audio" || node.tag === "mp3") {
@@ -85,13 +85,13 @@ function resolveBiliSource(source: string, requestedPage?: string): BiliDescript
   }
 }
 
-export const renderBiliTag: UbbTagRenderer = ({ attrs, text, context }) => {
-  const source = text.trim();
+export const renderBiliTag: UbbTagRenderer = ({ attrs, textContent, context }) => {
+  const source = textContent.trim();
   if (!context.options.allowMediaContent) return [source];
   const descriptor = resolveBiliSource(source, attrs.positionals[0]);
   return descriptor ? [h(UniverseBili, descriptor)] : [source];
 };
 
-export const renderMathTag: UbbTagRenderer = ({ node, text }) => {
-  return [h(UniverseMath, { content: text, inline: node.tag === "m" })];
+export const renderMathTag: UbbTagRenderer = ({ node, textContent }) => {
+  return [h(UniverseMath, { content: textContent, inline: node.tag === "m" })];
 };

@@ -33,7 +33,6 @@ case "$target" in
       packages/api/tsconfig.json
       packages/api/vite.config.ts
       packages/ubb/cc98
-      packages/ubb/presets
       packages/ubb/src
       packages/ubb/package.json
       packages/ubb/tsconfig.json

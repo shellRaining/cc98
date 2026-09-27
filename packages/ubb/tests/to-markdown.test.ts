@@ -23,7 +23,7 @@
  * - 多行 quote：对内容按行拆分，每行加 `> ` 前缀，空行写成 `>`。
  */
 import { describe, expect, test } from "vite-plus/test";
-import { ubbToMarkdown } from "../presets/markdown.ts";
+import { ubbToMarkdown } from "../cc98/markdown.ts";
 
 /** 围栏代码块的三反引号。双引号字符串里反引号无需转义。 */
 const FENCE = "```";
@@ -241,6 +241,7 @@ describe("表情和权限标签", () => {
     expect(ubbToMarkdown("[ac00]")).toBe("[ac00]");
     expect(ubbToMarkdown("[em92]")).toBe("[em92]");
     expect(ubbToMarkdown("[c:020]")).toBe("[c:020]");
+    expect(ubbToMarkdown("[AC00][/ac00]")).toBe("[AC00][/ac00]");
   });
 
   test("[needreply]/[posteronly]/[allowviewer] 权限标签剥除为空字符串", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vite-plus/test";
-import { ubbToHtml } from "../presets/html.ts";
-import { ubbToMarkdown } from "../presets/markdown.ts";
+import { ubbToHtml } from "../cc98/html.ts";
+import { ubbToMarkdown } from "../cc98/markdown.ts";
 
 const mixedPost = [
   "[quote=用户A][b]原帖[/b][/quote]",

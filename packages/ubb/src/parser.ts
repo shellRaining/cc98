@@ -17,10 +17,18 @@
 import type { UbbNode } from "./types.ts";
 import { parseUbbTag, type UbbTagData, type UbbTagParser } from "./tag-data.ts";
 
-export type TagMode = "recursive" | "text" | "empty" | "autoclose";
-export type UbbTagModeResolver = (tagName: string) => TagMode | null;
+export type UbbTagMode = "recursive" | "text" | "empty" | "autoclose";
+
+/** 标签名解析结果；family 仅在由标签族匹配时存在。 */
+export interface UbbTagSpec {
+  readonly mode: UbbTagMode;
+  readonly family?: string;
+}
+
+type UbbTagResolver = (tagName: string) => UbbTagSpec | null;
 
 interface ParsedTag extends UbbTagData {
+  readonly family?: string;
   readonly startTagString: string;
   readonly endTagString: string;
 }
@@ -36,9 +44,11 @@ interface TagSeg {
   readonly kind: "tag";
   readonly tag: ParsedTag | null;
   /** 标签模式，root 哨兵为 null。 */
-  mode: TagMode | null;
+  mode: UbbTagMode | null;
   children: Seg[];
   closed: boolean;
+  /** 实际匹配到的结束标签原文，保留大小写；没有结束标签时为 null。 */
+  closeRaw: string | null;
   parent: TagSeg | null;
 }
 
@@ -51,8 +61,9 @@ type Seg = TextSeg | TagSeg;
  * @returns AST 节点数组。
  */
 export interface ParseUbbOptions {
-  readonly resolveTagMode?: UbbTagModeResolver;
+  readonly resolveTag?: UbbTagResolver;
   readonly parseTag?: UbbTagParser;
+  readonly mergeAdjacentText?: boolean;
 }
 
 export function parseUbb(src: string, options: ParseUbbOptions = {}): UbbNode[] {
@@ -62,6 +73,7 @@ export function parseUbb(src: string, options: ParseUbbOptions = {}): UbbNode[] 
     mode: null,
     children: [],
     closed: false,
+    closeRaw: null,
     parent: null,
   };
   // 预计算小写版本，避免 findEndTag/checkEndTag 重复 toLowerCase（O(n²) → O(n)）
@@ -70,11 +82,11 @@ export function parseUbb(src: string, options: ParseUbbOptions = {}): UbbNode[] 
     src,
     lowerSrc,
     root,
-    options.resolveTagMode ?? (() => null),
+    options.resolveTag ?? (() => null),
     options.parseTag ?? parseUbbTag,
   );
   closeTag(root);
-  return root.children.map(segToAst);
+  return segmentsToAst(root, options.mergeAdjacentText ?? false);
 }
 
 /**
@@ -89,7 +101,7 @@ function buildSegments(
   content: string,
   lowerContent: string,
   rootParent: TagSeg,
-  resolveTagMode: UbbTagModeResolver,
+  resolveTag: UbbTagResolver,
   parseTag: UbbTagParser,
 ): void {
   let parent = rootParent;
@@ -124,8 +136,7 @@ function buildSegments(
     // 检测结束标签 [/xxx]
     const endMatch = tagString.match(/^\/(.+)$/i);
     if (endMatch) {
-      const endTagName = endMatch[1].toLowerCase();
-      parent = tryHandleEndTag(endTagName, parent);
+      parent = tryHandleEndTag(endMatch[1].toLowerCase(), `[${tagString}]`, parent);
       continue;
     }
 
@@ -138,19 +149,21 @@ function buildSegments(
       }
       const name = parsed.name.toLowerCase();
 
+      const spec = resolveTag(name);
+      if (!spec) {
+        // 未知标签，降级为文本
+        addText(parent, `[${tagString}]`);
+        continue;
+      }
+      const mode = spec.mode;
+
       const tag: ParsedTag = {
         ...parsed,
         name,
+        family: spec.family,
         startTagString: `[${tagString}]`,
         endTagString: `[/` + name + `]`,
       };
-
-      const mode = resolveTagMode(tag.name);
-      if (!mode) {
-        // 未知标签，降级为文本
-        addText(parent, tag.startTagString);
-        continue;
-      }
 
       switch (mode) {
         // autoclose 在解析阶段与 recursive 行为一致：都允许包裹内容、递归建树。
@@ -163,6 +176,7 @@ function buildSegments(
             mode,
             children: [],
             closed: false,
+            closeRaw: null,
             parent,
           };
           parent.children.push(newTag);
@@ -176,34 +190,35 @@ function buildSegments(
             addText(parent, tag.startTagString);
           } else {
             const innerContent = content.slice(cursor, endIdx);
+            const closeEnd = endIdx + tag.endTagString.length;
             const newTag: TagSeg = {
               kind: "tag",
               tag,
               mode,
               children: innerContent ? [{ kind: "text", value: innerContent } as TextSeg] : [],
               closed: true,
+              closeRaw: content.slice(endIdx, closeEnd),
               parent,
             };
             parent.children.push(newTag);
-            cursor = endIdx + tag.endTagString.length;
+            cursor = closeEnd;
           }
           break;
         }
         case "empty": {
+          // 如果紧跟同名结束标签则一并消费
+          const endTagLen = checkEndTag(lowerContent, tag.name, cursor);
           const newTag: TagSeg = {
             kind: "tag",
             tag,
             mode,
             children: [],
             closed: true,
+            closeRaw: endTagLen > 0 ? content.slice(cursor, cursor + endTagLen) : null,
             parent,
           };
           parent.children.push(newTag);
-          // 如果紧跟同名结束标签则跳过
-          const endTagLen = checkEndTag(lowerContent, tag.name, cursor);
-          if (endTagLen > 0) {
-            cursor += endTagLen;
-          }
+          cursor += endTagLen;
           break;
         }
       }
@@ -219,19 +234,20 @@ function buildSegments(
  *
  * 移植自 Core.tsx tryHandleEndTag（1153-1171 行）。
  * 从 parent 向上遍历，找到同名标签则 close()，返回其 parent。
- * 找不到则把 [/tagName] 作为文本添加到 parent。
+ * 找不到则把结束标签原文作为文本添加到 parent。
  */
-function tryHandleEndTag(tagName: string, parent: TagSeg): TagSeg {
+function tryHandleEndTag(tagName: string, raw: string, parent: TagSeg): TagSeg {
   let p: TagSeg | null = parent;
   while (p && p.tag !== null) {
     if (p.tag.name === tagName) {
       closeTag(p);
+      p.closeRaw = raw;
       return p.parent!;
     }
     p = p.parent;
   }
   // 没找到匹配的开始标签
-  addText(parent, `[/${tagName}]`);
+  addText(parent, raw);
   return parent;
 }
 
@@ -290,6 +306,7 @@ function forceClose(rootSegment: Seg, newParent: TagSeg): void {
         mode: segment.mode,
         children: [],
         closed: true,
+        closeRaw: null,
         parent: newParent,
       };
       newParent.children.push(autocloseTag);
@@ -334,20 +351,15 @@ function addText(parent: TagSeg, value: string): void {
 }
 
 /**
- * 把 segment 转成 AST 节点。
+ * 把 root 的子 segment 转成 AST 节点数组。
  *
  * 使用显式栈的后序遍历，避免极端嵌套深度下的栈溢出。
  */
-function segToAst(seg: Seg): UbbNode {
-  // 文本节点直接返回
-  if (seg.kind === "text") {
-    return { type: "text", value: seg.value };
-  }
-
+function segmentsToAst(root: TagSeg, mergeText: boolean): UbbNode[] {
   type Frame = { seg: TagSeg; results: UbbNode[]; nextChild: number };
-  const stack: Frame[] = [{ seg: seg as TagSeg, results: [], nextChild: 0 }];
+  const stack: Frame[] = [{ seg: root, results: [], nextChild: 0 }];
 
-  while (stack.length > 0) {
+  while (true) {
     const top = stack[stack.length - 1];
 
     // 还有子节点未处理
@@ -356,31 +368,35 @@ function segToAst(seg: Seg): UbbNode {
       top.nextChild++;
 
       if (child.kind === "text") {
-        top.results.push({ type: "text", value: child.value });
+        pushText(top.results, child.value, mergeText);
       } else {
         // 标签子节点入栈，下一轮处理
-        stack.push({ seg: child as TagSeg, results: [], nextChild: 0 });
+        stack.push({ seg: child, results: [], nextChild: 0 });
       }
       continue;
     }
 
-    // 所有子节点处理完，创建标签 AST 节点
     stack.pop();
+    if (stack.length === 0) return top.results;
+
+    // 所有子节点处理完，创建标签 AST 节点
     const tag = top.seg.tag!;
-    const node: UbbNode = {
+    stack[stack.length - 1].results.push({
       type: "tag",
       tag: tag.name,
+      family: tag.family,
       attrs: tag.attrs,
+      raw: { open: tag.startTagString, close: top.seg.closeRaw },
       children: top.results,
-    };
-
-    if (stack.length > 0) {
-      stack[stack.length - 1].results.push(node);
-    } else {
-      return node;
-    }
+    });
   }
+}
 
-  // 不可达
-  throw new Error("segToAst: 意外的执行路径");
+function pushText(results: UbbNode[], value: string, merge: boolean): void {
+  const last = results[results.length - 1];
+  if (merge && last?.type === "text") {
+    results[results.length - 1] = { type: "text", value: last.value + value };
+  } else {
+    results.push({ type: "text", value });
+  }
 }
