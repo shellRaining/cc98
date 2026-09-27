@@ -7,13 +7,12 @@
     "dev": "vp dev",
     "build": "tsc && vp build",
     "preview": "vp preview",
-    "test": "vp run @cc98/ubb#build && vp test",
+    "test": "vp run ubb-core#build && vp test",
     "check": "vp check && node scripts/check-color-tokens.mjs",
     "check:colors": "node scripts/check-color-tokens.mjs"
   },
   "dependencies": {
     "@cc98/api": "workspace:*",
-    "@cc98/ubb": "workspace:*",
     "@microsoft/signalr": "catalog:",
     "@milkdown/crepe": "catalog:",
     "@milkdown/kit": "catalog:",
@@ -35,6 +34,7 @@
     "remark-gfm": "catalog:",
     "remark-math": "catalog:",
     "remark-parse": "catalog:",
+    "ubb-core": "workspace:*",
     "unified": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:",

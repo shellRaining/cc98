@@ -1,4 +1,4 @@
-import type { UbbEmotionDescriptor, UbbEmotionFamily } from "@cc98/ubb/cc98";
+import type { UbbEmotionDescriptor, UbbEmotionFamily } from "ubb-core/cc98";
 
 /**
  * 表情面板的分类配置。表情数据（编号、资源地址、展示名）来自 packages/ubb，

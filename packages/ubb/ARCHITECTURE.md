@@ -1,4 +1,4 @@
-# @cc98/ubb 架构
+# ubb-core 架构
 
 框架无关的 UBB 解析与输出工具。注册器指定标签和标签头参数解析方式，泛型 renderer 把 AST 转成调用方选择的输出类型。CC98 规则及其 HTML、Markdown 输出是显式预设。只读解析，不做编辑器。
 
@@ -45,4 +45,4 @@ flowchart LR
 - 根入口不导出底层 `parseUbb`，解析只能经过注册器。`registry.parse` 使用注册器的精确标签、标签族和 `parseTag`：精确标签优先，未命中时按登记顺序匹配标签族。CC98 预设提供旧论坛参数 tokenizer、静态表与表情标签族。解析后的 AST 不含渲染信息，标签节点带开始、结束标签原文 `raw`，命中标签族的节点带 `family`。
 - 遍历器按节点分派：文本节点走 `renderText()`，标签节点按 `family ?? tag` 查 handler，未命中走 `fallback`。handler 收到同一组参数：`node`、`attrs`、惰性渲染结果 `content`、纯文本 `textContent`、`context`、子树 `renderNodes(nodes)`。
 - 公开的 `render(source)` 与 `renderNodes(nodes)` 在根输出完成后执行 `finalize`；handler 内的 `renderNodes(nodes)` 不重复执行。
-- 根入口 `@cc98/ubb` 只导出通用解析与泛型 renderer API；`@cc98/ubb/cc98` 提供 CC98 解析规则和表情资源；字符串预设分别从 `@cc98/ubb/cc98/html` 和 `@cc98/ubb/cc98/markdown` 导入。
+- 根入口 `ubb-core` 只导出通用解析与泛型 renderer API；`ubb-core/cc98` 提供 CC98 解析规则和表情资源；字符串预设分别从 `ubb-core/cc98/html` 和 `ubb-core/cc98/markdown` 导入。

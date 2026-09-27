@@ -1,4 +1,4 @@
-import { listUbbEmotions, UBB_EMOTION_FAMILIES, type UbbEmotionDescriptor } from "@cc98/ubb/cc98";
+import { listUbbEmotions, UBB_EMOTION_FAMILIES, type UbbEmotionDescriptor } from "ubb-core/cc98";
 import type {
   Definition,
   FootnoteDefinition,

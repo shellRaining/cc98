@@ -1,4 +1,4 @@
-import type { UbbTagHandler } from "@cc98/ubb";
+import type { UbbTagHandler } from "ubb-core";
 import type { VNodeChild } from "vue";
 import type { UbbRenderContext } from "./context";
 

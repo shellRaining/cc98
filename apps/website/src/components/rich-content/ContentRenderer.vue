@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cc98Registry } from "@cc98/ubb/cc98";
+import { cc98Registry } from "ubb-core/cc98";
 import { computed } from "vue";
 import MarkdownRenderer from "./markdown/MarkdownRenderer.vue";
 import { resolveRichContentOptions } from "./options";

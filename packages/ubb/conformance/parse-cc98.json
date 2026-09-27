@@ -1,0 +1,725 @@
+{
+  "schema": "ubb-conformance/1",
+  "specVersion": "1.0.0",
+  "kind": "parse-cc98",
+  "cases": [
+    {
+      "name": "static-recursive",
+      "input": "[b]x[/b]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "color-position",
+      "input": "[color=red]x[/color]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "color",
+          "family": null,
+          "attrs": {
+            "positionals": ["red"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[color=red]",
+            "close": "[/color]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "upload-two-positionals",
+      "input": "[upload=jpg,1]x[/upload]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "upload",
+          "family": null,
+          "attrs": {
+            "positionals": ["jpg", "1"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[upload=jpg,1]",
+            "close": "[/upload]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "img-named-attr",
+      "input": "[img=1,title=封面]src[/img]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "img",
+          "family": null,
+          "attrs": {
+            "positionals": ["1"],
+            "named": {
+              "title": "封面"
+            }
+          },
+          "raw": {
+            "open": "[img=1,title=封面]",
+            "close": "[/img]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "src"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "url-equals-in-value",
+      "input": "[url=https://x.com?a=b&t=1]t[/url]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "url",
+          "family": null,
+          "attrs": {
+            "positionals": ["https://x.com?a=b&t=1"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[url=https://x.com?a=b&t=1]",
+            "close": "[/url]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "t"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "url-comma-splits-value",
+      "input": "[url=https://a.com,1]x[/url]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "url",
+          "family": null,
+          "attrs": {
+            "positionals": ["https://a.com", "1"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[url=https://a.com,1]",
+            "close": "[/url]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "quoted-value",
+      "input": "[quote=\"用户 A\"]q[/quote]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "quote",
+          "family": null,
+          "attrs": {
+            "positionals": ["用户 A"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[quote=\"用户 A\"]",
+            "close": "[/quote]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "single-quoted-value",
+      "input": "[quote='用户']q[/quote]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "quote",
+          "family": null,
+          "attrs": {
+            "positionals": ["用户"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[quote='用户']",
+            "close": "[/quote]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "whitespace-skipped",
+      "input": "[ size = 5 ]x[/size]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[ size = 5 ]"
+        },
+        {
+          "type": "text",
+          "value": "x"
+        },
+        {
+          "type": "text",
+          "value": "[/size]"
+        }
+      ]
+    },
+    {
+      "name": "uppercase-tag",
+      "input": "[COLOR=red]x[/color]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "color",
+          "family": null,
+          "attrs": {
+            "positionals": ["red"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[COLOR=red]",
+            "close": "[/color]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "em-family",
+      "input": "[em01]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "em01",
+          "family": "em",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[em01]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "ac-family-four-digit",
+      "input": "[ac1001]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "ac1001",
+          "family": "ac",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[ac1001]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "ms-family",
+      "input": "[ms01]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "ms01",
+          "family": "ms",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[ms01]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "mahjong-family",
+      "input": "[a:001]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "a:001",
+          "family": "mahjong",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[a:001]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "tb-family",
+      "input": "[tb33]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "tb33",
+          "family": "tb",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[tb33]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "cc98-family",
+      "input": "[cc9801]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "cc9801",
+          "family": "cc98",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[cc9801]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "family-invalid-code",
+      "input": "[em9]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[em9]"
+        }
+      ]
+    },
+    {
+      "name": "user-autoclose",
+      "input": "[user=张三]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "user",
+          "family": null,
+          "attrs": {
+            "positionals": ["张三"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[user=张三]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "user-autoclose-wrapped",
+      "input": "[user=张三]名字[/user]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "user",
+          "family": null,
+          "attrs": {
+            "positionals": ["张三"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[user=张三]",
+            "close": "[/user]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "名字"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "code-text-mode",
+      "input": "[code]a[b]c[/code]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[code]",
+            "close": "[/code]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "a[b]c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "noubb",
+      "input": "[noubb][b]x[/b][/noubb]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "noubb",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[noubb]",
+            "close": "[/noubb]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "[b]x[/b]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "math",
+      "input": "[math]E=mc^2[/math]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "math",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[math]",
+            "close": "[/math]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "E=mc^2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "md-heading",
+      "input": "[md]# 标题[/md]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "md",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[md]",
+            "close": "[/md]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "# 标题"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bili",
+      "input": "[bili]BV1xx411c7mD[/bili]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "bili",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[bili]",
+            "close": "[/bili]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "BV1xx411c7mD"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "size-empty-value",
+      "input": "[size=]x[/size]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "size",
+          "family": null,
+          "attrs": {
+            "positionals": [""],
+            "named": {}
+          },
+          "raw": {
+            "open": "[size=]",
+            "close": "[/size]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "table-cell-positionals",
+      "input": "[table][tr][td=2,3]c[/td][/tr][/table]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "table",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[table]",
+            "close": "[/table]"
+          },
+          "children": [
+            {
+              "type": "tag",
+              "tag": "tr",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[tr]",
+                "close": "[/tr]"
+              },
+              "children": [
+                {
+                  "type": "tag",
+                  "tag": "td",
+                  "family": null,
+                  "attrs": {
+                    "positionals": ["2", "3"],
+                    "named": {}
+                  },
+                  "raw": {
+                    "open": "[td=2,3]",
+                    "close": "[/td]"
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "value": "c"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "quotex",
+      "input": "[quotex=来源]x[/quotex]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "quotex",
+          "family": null,
+          "attrs": {
+            "positionals": ["来源"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[quotex=来源]",
+            "close": "[/quotex]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "line-empty",
+      "input": "[line]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "line",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[line]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "needreply-empty",
+      "input": "[needreply]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "needreply",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[needreply]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "tokenizer-error-double-equals",
+      "input": "[a==b]x",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[a==b]"
+        },
+        {
+          "type": "text",
+          "value": "x"
+        }
+      ]
+    },
+    {
+      "name": "tokenizer-error-consecutive-values",
+      "input": "[a b]x",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[a b]"
+        },
+        {
+          "type": "text",
+          "value": "x"
+        }
+      ]
+    }
+  ]
+}

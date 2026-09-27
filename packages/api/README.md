@@ -107,11 +107,11 @@ OpenID 的 `POST /connect/token` 使用 `application/x-www-form-urlencoded`。�
 
 ## 帖子内容
 
-`POST_CONTENT_TYPE.ubb` 的值为 `0`，`POST_CONTENT_TYPE.markdown` 的值为 `1`。UBB 内容可以交给同仓库的 `@cc98/ubb`：
+`POST_CONTENT_TYPE.ubb` 的值为 `0`，`POST_CONTENT_TYPE.markdown` 的值为 `1`。UBB 内容可以交给同仓库的 `ubb-core`：
 
 ```ts
 import { POST_CONTENT_TYPE, type Post } from "@cc98/api";
-import { cc98Registry } from "@cc98/ubb/cc98";
+import { cc98Registry } from "ubb-core/cc98";
 
 function parsePostContent(post: Post) {
   if (post.contentType === POST_CONTENT_TYPE.ubb) return cc98Registry.parse(post.content ?? "");
@@ -119,7 +119,7 @@ function parsePostContent(post: Post) {
 }
 ```
 
-`@cc98/ubb` 只负责 UBB 解析与导出，不决定 URL 安全、图片数量或媒体播放策略。这些规则应由最终渲染应用处理。
+`ubb-core` 只负责 UBB 解析与导出，不决定 URL 安全、图片数量或媒体播放策略。这些规则应由最终渲染应用处理。
 
 ## 修改契约
 

@@ -1,11 +1,11 @@
-# @cc98/ubb
+# ubb-core
 
 框架无关的 UBB 解析和输出工具。自己注册标签，或使用包内的 CC98 标签规则；同一份解析结果可以输出字符串、VNode 或其他结果。
 
 ## 注册标签并创建 renderer
 
 ```ts
-import { createUbbRegistry } from "@cc98/ubb";
+import { createUbbRegistry } from "ubb-core";
 
 const ubb = createUbbRegistry()
   .register("b", "recursive")
@@ -104,12 +104,12 @@ const html = ubb.createRenderer<string>({
 
 ## CC98 预设
 
-CC98 标签和表情规则从 `@cc98/ubb/cc98` 导入。它沿用旧论坛的逗号、等号、引号参数语法，表情登记为 `em`、`ac`、`ms`、`mahjong`、`cc98`、`tb` 六个标签族；HTML、Markdown 输出从独立子路径导入：
+CC98 标签和表情规则从 `ubb-core/cc98` 导入。它沿用旧论坛的逗号、等号、引号参数语法，表情登记为 `em`、`ac`、`ms`、`mahjong`、`cc98`、`tb` 六个标签族；HTML、Markdown 输出从独立子路径导入：
 
 ```ts
-import { cc98Registry } from "@cc98/ubb/cc98";
-import { ubbHtmlRenderer, ubbToHtml } from "@cc98/ubb/cc98/html";
-import { ubbMarkdownRenderer, ubbToMarkdown } from "@cc98/ubb/cc98/markdown";
+import { cc98Registry } from "ubb-core/cc98";
+import { ubbHtmlRenderer, ubbToHtml } from "ubb-core/cc98/html";
+import { ubbMarkdownRenderer, ubbToMarkdown } from "ubb-core/cc98/markdown";
 
 const nodes = cc98Registry.parse("[color=red]正文[/color]");
 ```
@@ -117,7 +117,7 @@ const nodes = cc98Registry.parse("[color=red]正文[/color]");
 CC98 规则也可以拆开复用。`parseCc98Tag` 是旧论坛的标签头解析函数，可以配给自己的标签集；`unregister()` 移除一个标签或标签族，`configure()` 替换 `parseTag` 等解析配置，两者都返回新的注册器：
 
 ```ts
-import { cc98Registry, parseCc98Tag } from "@cc98/ubb/cc98";
+import { cc98Registry, parseCc98Tag } from "ubb-core/cc98";
 
 // 自己的标签，沿用 CC98 的参数写法
 const forum = createUbbRegistry({ tags: { spoiler: "recursive" }, parseTag: parseCc98Tag });

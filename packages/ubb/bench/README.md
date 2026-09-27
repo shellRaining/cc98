@@ -7,7 +7,7 @@
 ### 常规微基准
 
 ```bash
-vp run @cc98/ubb#bench -- --run
+vp run ubb-core#bench -- --run
 ```
 
 Vitest 会负责预热和重复采样，输出吞吐量、均值、分位数、误差范围和样本数。当前样本覆盖纯文本、常规混合标签、高节点密度内容，以及 Markdown、HTML 两种导出器。
@@ -15,7 +15,7 @@ Vitest 会负责预热和重复采样，输出吞吐量、均值、分位数、�
 ### 大输入和异常输入
 
 ```bash
-vp run @cc98/ubb#bench:large
+vp run ubb-core#bench:large
 ```
 
 runner 会先构建 `dist`，再为每个样本启动独立进程。输出包括 UTF-8 输入字节数、AST 节点数、median、p95、heapUsed 增量和 RSS 增量。
@@ -32,7 +32,7 @@ runner 会先构建 `dist`，再为每个样本启动独立进程。输出包括
 大输入结果也可以输出 JSON，便于保存到外部报告：
 
 ```bash
-vp run @cc98/ubb#bench:large -- --json
+vp run ubb-core#bench:large -- --json
 ```
 
 ### 与 `@bbob/parser` 对比
@@ -41,7 +41,7 @@ vp run @cc98/ubb#bench:large -- --json
 
 ```bash
 # 1. 构建项目产物和对比脚本需要的 CJS 入口
-vp pack --filter @cc98/ubb
+vp pack --filter ubb-core
 vp dlx esbuild packages/ubb/cc98/index.ts --bundle --format=cjs --platform=node --outfile=packages/ubb/dist/cc98.cjs
 
 # 2. 安装隔离的对比依赖

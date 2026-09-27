@@ -1,4 +1,4 @@
-import type { UbbNode, UbbTagNode } from "@cc98/ubb";
+import type { UbbNode, UbbTagNode } from "ubb-core";
 import { h } from "vue";
 import UniverseQuote from "../universe/UniverseQuote.vue";
 import type { UbbTagRenderer } from "./types";

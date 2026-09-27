@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ubbEmotionDisplayName, type UbbEmotionDescriptor } from "@cc98/ubb/cc98";
+import { ubbEmotionDisplayName, type UbbEmotionDescriptor } from "ubb-core/cc98";
 import { CrepeBuilder } from "@milkdown/crepe/builder";
 import { blockEdit } from "@milkdown/crepe/feature/block-edit";
 import { codeMirror } from "@milkdown/crepe/feature/code-mirror";

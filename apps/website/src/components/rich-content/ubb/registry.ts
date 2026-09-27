@@ -1,4 +1,4 @@
-import { cc98Registry, type UbbStaticTagName, type UbbTagFamilyName } from "@cc98/ubb/cc98";
+import { cc98Registry, type UbbStaticTagName, type UbbTagFamilyName } from "ubb-core/cc98";
 import type { VNodeChild } from "vue";
 import type { UbbRenderContext } from "./context";
 import { renderEmotionTag } from "./emotion";
@@ -69,7 +69,7 @@ const familyHandlers = {
 
 /**
  * 网站的 Vue UBB renderer：输出 VNodeChild 数组。
- * 标签解析模式来自 @cc98/ubb 的默认注册器，handler 键由 registry 泛型推导，
+ * 标签解析模式来自 ubb-core 的默认注册器，handler 键由 registry 泛型推导，
  * 新增静态标签或标签族时类型系统会要求同步登记 handler。
  */
 export const ubbVueRenderer = cc98Registry.createRenderer<VNodeChild[], UbbRenderContext>({

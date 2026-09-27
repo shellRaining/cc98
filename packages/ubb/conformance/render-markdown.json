@@ -1,0 +1,207 @@
+{
+  "schema": "ubb-conformance/1",
+  "specVersion": "1.0.0",
+  "kind": "render-markdown",
+  "cases": [
+    {
+      "name": "bold",
+      "input": "[b]x[/b]",
+      "expected": "**x**"
+    },
+    {
+      "name": "italic",
+      "input": "[i]x[/i]",
+      "expected": "_x_"
+    },
+    {
+      "name": "underline-passthrough",
+      "input": "[u]x[/u]",
+      "expected": "x"
+    },
+    {
+      "name": "strikethrough",
+      "input": "[del]x[/del]",
+      "expected": "~~x~~"
+    },
+    {
+      "name": "style-tags-passthrough",
+      "input": "[size=5][color=red][font=Arial]x[/font][/color][/size]",
+      "expected": "x"
+    },
+    {
+      "name": "url-with-label",
+      "input": "[url=/topic/123]相关帖子[/url]",
+      "expected": "[相关帖子](/topic/123)"
+    },
+    {
+      "name": "url-empty-content",
+      "input": "[url=https://a.com][/url]",
+      "expected": "<https://a.com>"
+    },
+    {
+      "name": "url-no-attr",
+      "input": "[url]https://a.com[/url]",
+      "expected": "<https://a.com>"
+    },
+    {
+      "name": "img",
+      "input": "[img=1,title=封面]https://a.com/x.png[/img]",
+      "expected": "![封面](https://a.com/x.png)"
+    },
+    {
+      "name": "quote-with-source-multiline",
+      "input": "[quote=用户A]行1\n行2[/quote]",
+      "expected": "> 用户A：行1\n> 行2"
+    },
+    {
+      "name": "quote-blank-line",
+      "input": "[quote]a\n\nb[/quote]",
+      "expected": "> a\n>\n> b"
+    },
+    {
+      "name": "quote-no-source",
+      "input": "[quote]q[/quote]",
+      "expected": "> q"
+    },
+    {
+      "name": "code-inline",
+      "input": "[code]x`y[/code]",
+      "expected": "`x`y`"
+    },
+    {
+      "name": "code-block",
+      "input": "[code]a\nb[/code]",
+      "expected": "```\na\nb\n```"
+    },
+    {
+      "name": "line-leading-finalize",
+      "input": "[line]",
+      "expected": "---"
+    },
+    {
+      "name": "line-mid-text",
+      "input": "a[line]b",
+      "expected": "a\n---\nb"
+    },
+    {
+      "name": "line-trailing-finalize",
+      "input": "a[line]",
+      "expected": "a\n---"
+    },
+    {
+      "name": "table",
+      "input": "[table][tr][th]姓名[/th][th]分数[/th][/tr][tr][td]张三[/td][td]90[/td][/tr][/table]",
+      "expected": "| 姓名 | 分数 |\n| --- | --- |\n| 张三 | 90 |"
+    },
+    {
+      "name": "table-ignores-non-tr",
+      "input": "[table][b]x[/b][tr][td]1[/td][/tr][/table]",
+      "expected": "| 1 |\n| --- |"
+    },
+    {
+      "name": "md-passthrough",
+      "input": "[md]# 标题[/md]",
+      "expected": "# 标题"
+    },
+    {
+      "name": "noubb-escapes-brackets",
+      "input": "[noubb][b]x[/b][/noubb]",
+      "expected": "\\[b\\]x\\[/b\\]"
+    },
+    {
+      "name": "math-passthrough",
+      "input": "[math]E=mc^2[/math]",
+      "expected": "E=mc^2"
+    },
+    {
+      "name": "audio-link",
+      "input": "[audio]https://a.com/x.mp3[/audio]",
+      "expected": "[audio](https://a.com/x.mp3)"
+    },
+    {
+      "name": "video-link",
+      "input": "[video]https://a.com/x.mp4[/video]",
+      "expected": "[video](https://a.com/x.mp4)"
+    },
+    {
+      "name": "bili-link",
+      "input": "[bili]BV1xx411c7mD[/bili]",
+      "expected": "[bili](BV1xx411c7mD)"
+    },
+    {
+      "name": "upload-passthrough",
+      "input": "[upload=jpg,1]f.jpg[/upload]",
+      "expected": "f.jpg"
+    },
+    {
+      "name": "user-attr",
+      "input": "[user=张三]",
+      "expected": "@张三"
+    },
+    {
+      "name": "user-content",
+      "input": "[user=张三]名字[/user]",
+      "expected": "@张三"
+    },
+    {
+      "name": "pm",
+      "input": "[pm=张三]",
+      "expected": "@张三"
+    },
+    {
+      "name": "topic",
+      "input": "[topic=123]标题[/topic]",
+      "expected": "[标题](/topic/123)"
+    },
+    {
+      "name": "topic-no-content",
+      "input": "[topic=123][/topic]",
+      "expected": "[帖子 123](/topic/123)"
+    },
+    {
+      "name": "board",
+      "input": "[board=42]板块名[/board]",
+      "expected": "[板块名](/board/42)"
+    },
+    {
+      "name": "emotion-em",
+      "input": "[em01]",
+      "expected": "![经典表情 01](https://www.cc98.org/static/images/em/em01.gif)"
+    },
+    {
+      "name": "emotion-em-zero",
+      "input": "[em00]",
+      "expected": "![经典表情 00](https://www.cc98.org/static/images/em/em00.gif)"
+    },
+    {
+      "name": "emotion-ac-four-digit",
+      "input": "[ac1001]",
+      "expected": "![AC娘 1001](https://www.cc98.org/static/images/ac/1001.png)"
+    },
+    {
+      "name": "emotion-mahjong",
+      "input": "[a:001]",
+      "expected": "![麻将脸 动物 001](https://www.cc98.org/static/images/mahjong/animal2017/001.png)"
+    },
+    {
+      "name": "emotion-cc98-png",
+      "input": "[cc9815]",
+      "expected": "![CC98 15](https://www.cc98.org/static/images/CC98/CC9815.png)"
+    },
+    {
+      "name": "emotion-invalid-keeps-raw",
+      "input": "[em99]",
+      "expected": "[em99]"
+    },
+    {
+      "name": "permission-stripped",
+      "input": "[needreply]x[/needreply][posteronly][/posteronly][allowviewer][/allowviewer]",
+      "expected": "x[/needreply]"
+    },
+    {
+      "name": "mixed-post",
+      "input": "[quote=用户A][b]原帖[/b][/quote]\n[size=5][color=red]回复正文[/color][/size] [em01]\n[url=/topic/123]相关帖子[/url]\n[table][tr][th]姓名[/th][th]分数[/th][/tr][tr][td]张三[/td][td]90[/td][/tr][/table]\n[code]const answer = 42;[/code]",
+      "expected": "> 用户A：**原帖**\n回复正文 ![经典表情 01](https://www.cc98.org/static/images/em/em01.gif)\n[相关帖子](/topic/123)\n| 姓名 | 分数 |\n| --- | --- |\n| 张三 | 90 |\n`const answer = 42;`"
+    }
+  ]
+}

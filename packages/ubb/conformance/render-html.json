@@ -1,0 +1,197 @@
+{
+  "schema": "ubb-conformance/1",
+  "specVersion": "1.0.0",
+  "kind": "render-html",
+  "cases": [
+    {
+      "name": "plain-escape",
+      "input": "a < b & c \"q\"",
+      "expected": "a &lt; b &amp; c &quot;q&quot;"
+    },
+    {
+      "name": "script-injection",
+      "input": "<script>alert(1)</script>",
+      "expected": "&lt;script&gt;alert(1)&lt;/script&gt;"
+    },
+    {
+      "name": "bold",
+      "input": "[b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "nested-styles",
+      "input": "[size=5][color=red]正文[/color][/size]",
+      "expected": "<span style=\"font-size: 5pt\"><span style=\"color: red\">正文</span></span>"
+    },
+    {
+      "name": "font-attr-escape",
+      "input": "[font=Arial\" onclick=\"x]f[/font]",
+      "expected": "<span style=\"font-family: Arial&quot; onclick=&quot;x\">f</span>"
+    },
+    {
+      "name": "url-relative",
+      "input": "[url=/topic/123]相关[/url]",
+      "expected": "<a href=\"/topic/123\">相关</a>"
+    },
+    {
+      "name": "url-javascript-scheme",
+      "input": "[url=javascript:alert(1)]点我[/url]",
+      "expected": "<a href=\"#\">点我</a>"
+    },
+    {
+      "name": "url-data-scheme",
+      "input": "[url=data:text/html,x]d[/url]",
+      "expected": "<a href=\"#\">d</a>"
+    },
+    {
+      "name": "url-mailto",
+      "input": "[url=mailto:a@b.com]mail[/url]",
+      "expected": "<a href=\"mailto:a@b.com\">mail</a>"
+    },
+    {
+      "name": "url-uses-text-when-no-attr",
+      "input": "[url]https://a.com[/url]",
+      "expected": "<a href=\"https://a.com\">https://a.com</a>"
+    },
+    {
+      "name": "url-content-escaped",
+      "input": "[url=/x]<b>标签</b>[/url]",
+      "expected": "<a href=\"/x\">&lt;b&gt;标签&lt;/b&gt;</a>"
+    },
+    {
+      "name": "img",
+      "input": "[img=1,title=封面]https://a.com/x.png[/img]",
+      "expected": "<img src=\"https://a.com/x.png\" alt=\"封面\">"
+    },
+    {
+      "name": "img-title-escape",
+      "input": "[img=1,title=a\"b]u[/img]",
+      "expected": "<img src=\"#\" alt=\"a&quot;b\">"
+    },
+    {
+      "name": "quote-with-source",
+      "input": "[quote=用户A]原帖[/quote]",
+      "expected": "<blockquote><cite>用户A：</cite>原帖</blockquote>"
+    },
+    {
+      "name": "quote-no-source",
+      "input": "[quote]原帖[/quote]",
+      "expected": "<blockquote>原帖</blockquote>"
+    },
+    {
+      "name": "code-escape",
+      "input": "[code]const x = 1 < 2;[/code]",
+      "expected": "<pre><code>const x = 1 &lt; 2;</code></pre>"
+    },
+    {
+      "name": "line",
+      "input": "[line]",
+      "expected": "<hr>"
+    },
+    {
+      "name": "table",
+      "input": "[table][tr][th]姓名[/th][th]分数[/th][/tr][tr][td]张三[/td][td]90[/td][/tr][/table]",
+      "expected": "<table><tr><th>姓名</th><th>分数</th></tr><tr><td>张三</td><td>90</td></tr></table>"
+    },
+    {
+      "name": "table-cell-span",
+      "input": "[table][tr][td=2,3]c[/td][/tr][/table]",
+      "expected": "<table><tr><td rowspan=\"2\" colspan=\"3\">c</td></tr></table>"
+    },
+    {
+      "name": "md-span",
+      "input": "[md]# t[/md]",
+      "expected": "<div class=\"ubb-md\"># t</div>"
+    },
+    {
+      "name": "noubb-passthrough",
+      "input": "[noubb]<b>x</b>[/noubb]",
+      "expected": "&lt;b&gt;x&lt;/b&gt;"
+    },
+    {
+      "name": "math-span",
+      "input": "[math]E=mc^2[/math]",
+      "expected": "<span class=\"ubb-math\">E=mc^2</span>"
+    },
+    {
+      "name": "audio",
+      "input": "[audio]https://a.com/x.mp3[/audio]",
+      "expected": "<audio src=\"https://a.com/x.mp3\" controls></audio>"
+    },
+    {
+      "name": "video",
+      "input": "[video]https://a.com/x.mp4[/video]",
+      "expected": "<video src=\"https://a.com/x.mp4\" controls></video>"
+    },
+    {
+      "name": "bili",
+      "input": "[bili]BV1xx411c7mD[/bili]",
+      "expected": "<a href=\"https://www.bilibili.com/video/BV1xx411c7mD\">bili:BV1xx411c7mD</a>"
+    },
+    {
+      "name": "upload",
+      "input": "[upload=jpg,1]https://a.com/f.jpg[/upload]",
+      "expected": "<a href=\"https://a.com/f.jpg\">下载文件</a>"
+    },
+    {
+      "name": "user-attr",
+      "input": "[user=张三]",
+      "expected": "<a href=\"/user/张三\">@张三</a>"
+    },
+    {
+      "name": "user-wrapped",
+      "input": "[user=张三]名字[/user]",
+      "expected": "<a href=\"/user/名字\">@名字</a>"
+    },
+    {
+      "name": "topic",
+      "input": "[topic=123]标题[/topic]",
+      "expected": "<a href=\"/topic/123\">标题</a>"
+    },
+    {
+      "name": "topic-no-content",
+      "input": "[topic=123][/topic]",
+      "expected": "<a href=\"/topic/123\">帖子 123</a>"
+    },
+    {
+      "name": "board",
+      "input": "[board=42]板块名[/board]",
+      "expected": "<a href=\"/board/42\">板块名</a>"
+    },
+    {
+      "name": "pm",
+      "input": "[pm=张三]",
+      "expected": "<span class=\"ubb-pm\">@张三</span>"
+    },
+    {
+      "name": "emotion-stripped",
+      "input": "[em01]",
+      "expected": ""
+    },
+    {
+      "name": "emotion-invalid-code-stripped",
+      "input": "[em99]",
+      "expected": ""
+    },
+    {
+      "name": "permission-tags-stripped",
+      "input": "[needreply]x[/needreply][posteronly][/posteronly][allowviewer][/allowviewer]",
+      "expected": "x[/needreply]"
+    },
+    {
+      "name": "unknown-fallback-keeps-content",
+      "input": "[xyz][b]x[/b][/xyz]",
+      "expected": "[xyz]<strong>x</strong>[/xyz]"
+    },
+    {
+      "name": "unclosed-degrades",
+      "input": "[b]x",
+      "expected": "[b]x"
+    },
+    {
+      "name": "mixed-post",
+      "input": "[quote=用户A][b]原帖[/b][/quote]\n[size=5][color=red]回复正文[/color][/size] [em01]\n[url=/topic/123]相关帖子[/url]\n[table][tr][th]姓名[/th][th]分数[/th][/tr][tr][td]张三[/td][td]90[/td][/tr][/table]\n[code]const answer = 42;[/code]\n<script>alert(1)</script>",
+      "expected": "<blockquote><cite>用户A：</cite><strong>原帖</strong></blockquote>\n<span style=\"font-size: 5pt\"><span style=\"color: red\">回复正文</span></span> \n<a href=\"/topic/123\">相关帖子</a>\n<table><tr><th>姓名</th><th>分数</th></tr><tr><td>张三</td><td>90</td></tr></table>\n<pre><code>const answer = 42;</code></pre>\n&lt;script&gt;alert(1)&lt;/script&gt;"
+    }
+  ]
+}

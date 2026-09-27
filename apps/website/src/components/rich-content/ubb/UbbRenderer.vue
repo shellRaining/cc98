@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { UbbNode } from "@cc98/ubb";
+import type { UbbNode } from "ubb-core";
 import { defineComponent, h, type PropType } from "vue";
 import type { RichContentOptions } from "../types";
 import UniverseRoot from "../universe/UniverseRoot.vue";

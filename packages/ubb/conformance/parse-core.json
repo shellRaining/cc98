@@ -1,0 +1,1008 @@
+{
+  "schema": "ubb-conformance/1",
+  "specVersion": "1.0.0",
+  "kind": "parse-core",
+  "registry": {
+    "tags": {
+      "b": "recursive",
+      "i": "recursive",
+      "u": "recursive",
+      "color": "recursive",
+      "size": "recursive",
+      "url": "recursive",
+      "quote": "recursive",
+      "spoiler": "recursive",
+      "code": "text",
+      "md": "text",
+      "noubb": "text",
+      "line": "empty",
+      "em00": "empty",
+      "user": "autoclose"
+    },
+    "families": [
+      {
+        "name": "em",
+        "pattern": "^em\\d{2}$",
+        "mode": "empty"
+      },
+      {
+        "name": "ga",
+        "pattern": "^ga\\d+$",
+        "mode": "empty"
+      },
+      {
+        "name": "gb",
+        "pattern": "^g[a-z]\\d+$",
+        "mode": "empty"
+      }
+    ],
+    "parseTag": "default",
+    "mergeAdjacentText": false
+  },
+  "cases": [
+    {
+      "name": "plain-text",
+      "input": "hello world",
+      "expected": [
+        {
+          "type": "text",
+          "value": "hello world"
+        }
+      ]
+    },
+    {
+      "name": "cjk-text",
+      "input": "你好，世界",
+      "expected": [
+        {
+          "type": "text",
+          "value": "你好，世界"
+        }
+      ]
+    },
+    {
+      "name": "bold",
+      "input": "[b]bold[/b]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "bold"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "case-insensitive-tag",
+      "input": "[B]x[/B]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[B]",
+            "close": "[/B]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attr-position",
+      "input": "[color=red]x[/color]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "color",
+          "family": null,
+          "attrs": {
+            "positionals": ["red"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[color=red]",
+            "close": "[/color]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attr-empty-value",
+      "input": "[color=]x[/color]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "color",
+          "family": null,
+          "attrs": {
+            "positionals": [""],
+            "named": {}
+          },
+          "raw": {
+            "open": "[color=]",
+            "close": "[/color]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "attr-value-with-equals",
+      "input": "[url=https://a.com?x=1&y=2]link[/url]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "url",
+          "family": null,
+          "attrs": {
+            "positionals": ["https://a.com?x=1&y=2"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[url=https://a.com?x=1&y=2]",
+            "close": "[/url]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "link"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tag-with-value",
+      "input": "[b=bold]x[/b]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": ["bold"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b=bold]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown-tag-degrades",
+      "input": "[xyz]content[/xyz]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[xyz]"
+        },
+        {
+          "type": "text",
+          "value": "content"
+        },
+        {
+          "type": "text",
+          "value": "[/xyz]"
+        }
+      ]
+    },
+    {
+      "name": "unregistered-in-harness",
+      "input": "[table][tr][/tr][/table]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[table]"
+        },
+        {
+          "type": "text",
+          "value": "[tr]"
+        },
+        {
+          "type": "text",
+          "value": "[/tr]"
+        },
+        {
+          "type": "text",
+          "value": "[/table]"
+        }
+      ]
+    },
+    {
+      "name": "nested",
+      "input": "[b]a[i]b[/i]c[/b]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "a"
+            },
+            {
+              "type": "tag",
+              "tag": "i",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[i]",
+                "close": "[/i]"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "b"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "value": "c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "same-name-nested",
+      "input": "[b]a[b]c[/b]d[/b]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "a"
+            },
+            {
+              "type": "tag",
+              "tag": "b",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[b]",
+                "close": "[/b]"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "c"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "value": "d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "quote-nested",
+      "input": "[quote][quote]inner[/quote]outer[/quote]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "quote",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[quote]",
+            "close": "[/quote]"
+          },
+          "children": [
+            {
+              "type": "tag",
+              "tag": "quote",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[quote]",
+                "close": "[/quote]"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "inner"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "value": "outer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unclosed-recursive",
+      "input": "[b]hello",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[b]"
+        },
+        {
+          "type": "text",
+          "value": "hello"
+        }
+      ]
+    },
+    {
+      "name": "unclosed-nested",
+      "input": "[b]a[i]b",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[b]"
+        },
+        {
+          "type": "text",
+          "value": "a"
+        },
+        {
+          "type": "text",
+          "value": "[i]"
+        },
+        {
+          "type": "text",
+          "value": "b"
+        }
+      ]
+    },
+    {
+      "name": "unclosed-nested-merged",
+      "input": "[b]a[i]b",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "text",
+          "value": "[b]a[i]b"
+        }
+      ]
+    },
+    {
+      "name": "orphan-end-tag",
+      "input": "[/b]tail",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[/b]"
+        },
+        {
+          "type": "text",
+          "value": "tail"
+        }
+      ]
+    },
+    {
+      "name": "misnesting",
+      "input": "[b][i]x[/b][/i]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "[i]"
+            },
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "[/i]"
+        }
+      ]
+    },
+    {
+      "name": "text-mode",
+      "input": "[code]a[b]c[/code]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[code]",
+            "close": "[/code]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "a[b]c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "text-mode-case-insensitive-end",
+      "input": "[CODE]a[/code]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[CODE]",
+            "close": "[/code]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "text-mode-unclosed",
+      "input": "[code]abc",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[code]"
+        },
+        {
+          "type": "text",
+          "value": "abc"
+        }
+      ]
+    },
+    {
+      "name": "text-mode-empty",
+      "input": "[code][/code]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[code]",
+            "close": "[/code]"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "text-mode-inner-partial-end",
+      "input": "[md]x[/ncode]y[/md]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "md",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[md]",
+            "close": "[/md]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x[/ncode]y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "text-mode-nested-same-name",
+      "input": "[md]a[md]b[/md]c[/md]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "md",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[md]",
+            "close": "[/md]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "a[md]b"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "c"
+        },
+        {
+          "type": "text",
+          "value": "[/md]"
+        }
+      ]
+    },
+    {
+      "name": "empty-tag",
+      "input": "[line]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "line",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[line]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "empty-tag-with-end",
+      "input": "[line][/line]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "line",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[line]",
+            "close": "[/line]"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "empty-tag-with-other-end",
+      "input": "[line][/b]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "line",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[line]",
+            "close": null
+          },
+          "children": []
+        },
+        {
+          "type": "text",
+          "value": "[/b]"
+        }
+      ]
+    },
+    {
+      "name": "autoclose-unclosed",
+      "input": "[user=张三]hello",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "user",
+          "family": null,
+          "attrs": {
+            "positionals": ["张三"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[user=张三]",
+            "close": null
+          },
+          "children": []
+        },
+        {
+          "type": "text",
+          "value": "hello"
+        }
+      ]
+    },
+    {
+      "name": "autoclose-with-end",
+      "input": "[user=张三][b]hi[/b][/user]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "user",
+          "family": null,
+          "attrs": {
+            "positionals": ["张三"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[user=张三]",
+            "close": "[/user]"
+          },
+          "children": [
+            {
+              "type": "tag",
+              "tag": "b",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[b]",
+                "close": "[/b]"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "hi"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "autoclose-unclosed-nested",
+      "input": "[user=1][b]x",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "user",
+          "family": null,
+          "attrs": {
+            "positionals": ["1"],
+            "named": {}
+          },
+          "raw": {
+            "open": "[user=1]",
+            "close": null
+          },
+          "children": []
+        },
+        {
+          "type": "text",
+          "value": "[b]"
+        },
+        {
+          "type": "text",
+          "value": "x"
+        }
+      ]
+    },
+    {
+      "name": "family-match",
+      "input": "[em01]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "em01",
+          "family": "em",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[em01]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "family-exact-priority",
+      "input": "[em00]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "em00",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[em00]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "family-order-first-wins",
+      "input": "[ga1]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "ga1",
+          "family": "ga",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[ga1]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "family-second",
+      "input": "[gx1]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "gx1",
+          "family": "gb",
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[gx1]",
+            "close": null
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "family-no-match-three-digits",
+      "input": "[em999]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[em999]"
+        }
+      ]
+    },
+    {
+      "name": "no-close-bracket",
+      "input": "a[b",
+      "expected": [
+        {
+          "type": "text",
+          "value": "a[b"
+        }
+      ]
+    },
+    {
+      "name": "empty-brackets",
+      "input": "[]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[]"
+        }
+      ]
+    },
+    {
+      "name": "slash-only",
+      "input": "[/]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[/]"
+        }
+      ]
+    },
+    {
+      "name": "name-with-slash-rejected",
+      "input": "[a/b]x",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[a/b]"
+        },
+        {
+          "type": "text",
+          "value": "x"
+        }
+      ]
+    },
+    {
+      "name": "name-with-space-rejected",
+      "input": "[b x]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[b x]"
+        }
+      ]
+    },
+    {
+      "name": "mixed-roots",
+      "input": "a[b]c[/b]d[e]f[/e]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "a"
+        },
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "c"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "d"
+        },
+        {
+          "type": "text",
+          "value": "[e]"
+        },
+        {
+          "type": "text",
+          "value": "f"
+        },
+        {
+          "type": "text",
+          "value": "[/e]"
+        }
+      ]
+    },
+    {
+      "name": "degraded-adjacent-texts",
+      "input": "价格[约[b]100[/b]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "价格"
+        },
+        {
+          "type": "text",
+          "value": "[约[b]"
+        },
+        {
+          "type": "text",
+          "value": "100"
+        },
+        {
+          "type": "text",
+          "value": "[/b]"
+        }
+      ]
+    },
+    {
+      "name": "degraded-adjacent-texts-merged",
+      "input": "价格[约[b]100[/b]",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "text",
+          "value": "价格[约[b]100[/b]"
+        }
+      ]
+    }
+  ]
+}
