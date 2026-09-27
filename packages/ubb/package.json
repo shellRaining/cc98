@@ -1,13 +1,31 @@
 {
-  "name": "@cc98/ubb",
+  "name": "ubb-core",
   "version": "1.0.0",
-  "private": true,
   "description": "CC98 UBB 解析器、泛型输出注册器与 HTML/Markdown 预设",
+  "keywords": [
+    "bbcode",
+    "cc98",
+    "forum",
+    "html",
+    "markdown",
+    "parser",
+    "renderer",
+    "ubb"
+  ],
+  "homepage": "https://github.com/shellRaining/cc98/tree/main/packages/ubb#readme",
+  "bugs": "https://github.com/shellRaining/cc98/issues",
   "license": "MIT",
+  "author": "CC98 contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shellRaining/cc98.git",
+    "directory": "packages/ubb"
+  },
   "files": [
     "dist"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",
     "./cc98": "./dist/cc98.mjs",
@@ -21,7 +39,8 @@
     "bench:large": "vp pack && node bench/large-runner.mjs",
     "dev": "vp pack --watch",
     "test": "vp test",
-    "check": "vp check"
+    "check": "vp check",
+    "prepublishOnly": "vp test && vp pack"
   },
   "devDependencies": {
     "@types/node": "catalog:",
