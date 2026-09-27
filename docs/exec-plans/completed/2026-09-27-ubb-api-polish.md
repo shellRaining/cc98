@@ -49,7 +49,7 @@ createUbbRegistry({
 
 - 精确标签优先，未命中时按登记顺序匹配标签族；族名与标签名共用 handler 命名空间，重名时抛错。
 - 标签族正则不允许 `g`、`y` 标志，避免 `test()` 受 `lastIndex` 影响。
-- 标签节点新增 `family` 与 `raw: { open: string; close: string | null }`。renderer 先按 `family`、再按 `tag` 查找 handler。
+- 标签节点新增 `family` 与 `raw: { open: string; close: string | null }`。renderer 用 `family ?? tag` 作为 handler 键，未命中时走 `fallback`。
 - renderer 选项 `text` 改为 `renderText`；handler 参数 `children` 改为 `content`、`text` 改为 `textContent`、`render` 改为 `renderNodes`；`TagMode` 改为 `UbbTagMode`。
 
 ## 实施步骤
@@ -63,6 +63,10 @@ createUbbRegistry({
 - [x] 移除根入口 `parseUbb`
 - [x] 版本号 `1.0.0`
 - [x] 移除 `vue` 依赖声明
+
+## 结果
+
+九项目标均已落地。通用入口只暴露注册器和泛型 renderer，CC98 规则与 HTML、Markdown 预设通过 `cc98/` 子路径导出；包版本为 `1.0.0`，不再声明 Vue 依赖。
 
 ## 验证
 
