@@ -8983,9 +8983,13 @@
               {
                 "type": "number",
                 "const": 4
+              },
+              {
+                "type": "number",
+                "const": 5
               }
             ],
-            "description": "主题卡片的媒体类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片。"
+            "description": "主题卡片的内容类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片，5 为抽奖。"
           },
           "mediaContent": {
             "description": "主题卡片使用的媒体摘要；普通主题可能为 null。",
@@ -9768,9 +9772,13 @@
               {
                 "type": "number",
                 "const": 4
+              },
+              {
+                "type": "number",
+                "const": 5
               }
             ],
-            "description": "主题卡片的媒体类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片。"
+            "description": "主题卡片的内容类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片，5 为抽奖。"
           }
         },
         "required": [

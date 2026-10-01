@@ -2,9 +2,10 @@ import { z } from "zod";
 import { postContentTypeSchema } from "./post.ts";
 
 export const topicContentTypeSchema = z
-  .union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4)])
+  .union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)])
   .meta({
-    description: "主题卡片的媒体类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片。",
+    description:
+      "主题卡片的内容类型：0 为普通主题，1 为投票，2 为视频，3 为音频，4 为图片，5 为抽奖。",
   });
 export type TopicContentType = z.infer<typeof topicContentTypeSchema>;
 
