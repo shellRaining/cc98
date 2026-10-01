@@ -60,6 +60,8 @@ flowchart LR
 
 ## 依赖方向
 
+UBB 扫描与建树分离：扫描器保留原文偏移，解析器使用 frame 栈直接构造 AST；CC98 显式启用带引号的标签头规则。泛型 renderer 保留惰性子树输出，默认限制 128 层标签调用，网站在超限时展示完整 UBB 原文。
+
 ```mermaid
 graph LR
   apps["apps/*"] --> packages["packages/*"]

@@ -13,6 +13,12 @@ const ubbNodes = computed(() => (props.type === "ubb" ? cc98Registry.parse(props
 </script>
 
 <template>
-  <UbbRenderer v-if="type === 'ubb'" :key="content" :nodes="ubbNodes" :options="resolvedOptions" />
+  <UbbRenderer
+    v-if="type === 'ubb'"
+    :key="content"
+    :source="content"
+    :nodes="ubbNodes"
+    :options="resolvedOptions"
+  />
   <MarkdownRenderer v-else :content="content" :options="resolvedOptions" />
 </template>

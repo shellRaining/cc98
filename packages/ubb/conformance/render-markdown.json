@@ -1,6 +1,6 @@
 {
   "schema": "ubb-conformance/1",
-  "specVersion": "1.1.0",
+  "specVersion": "2.0.0",
   "kind": "render-markdown",
   "cases": [
     {
@@ -243,6 +243,31 @@
       "name": "quoted-commas",
       "input": "[quote=\"a,b=c\"]x[/quote]",
       "expected": "> a,b=c：x"
+    },
+    {
+      "name": "quoted-bracket",
+      "input": "[url=\"https://a.test/a]b\"]甲[/url]尾",
+      "expected": "[甲](https://a.test/a]b)尾"
+    },
+    {
+      "name": "double-quote-escapes",
+      "input": "[font=\"a\"\"b\"\"c\"]甲[/font]",
+      "expected": "甲"
+    },
+    {
+      "name": "single-quote-escapes",
+      "input": "[font='a''b''c']甲[/font]",
+      "expected": "甲"
+    },
+    {
+      "name": "unclosed-quote-recovery",
+      "input": "[font=\"未闭合][b]恢复[/b][/font]尾",
+      "expected": "**恢复**尾"
+    },
+    {
+      "name": "unicode-text-tail",
+      "input": "İ[code]甲[/CoDe]乙😀",
+      "expected": "İ`甲`乙😀"
     },
     {
       "name": "unclosed-quote",
@@ -667,20 +692,17 @@
     {
       "name": "unicode-304-prefix",
       "input": "İ[code]x[/code]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
-      "expected": "İ`x[`"
+      "expected": "İ`x`"
     },
     {
       "name": "unicode-304-content",
       "input": "[code]İ[/code]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
-      "expected": "`İ[`"
+      "expected": "`İ`"
     },
     {
       "name": "unicode-304-empty",
       "input": "İ[line][/line]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
-      "expected": "İ\n---\n[/line]"
+      "expected": "İ\n---"
     },
     {
       "name": "static-b",

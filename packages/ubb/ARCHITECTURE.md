@@ -10,7 +10,8 @@ graph TD
   tagData["src/tag-data.ts<br/>默认参数解析"]
   cc98Data["cc98/tag-data.ts<br/>旧论坛参数 tokenizer"]
   tags["cc98/tags.ts<br/>CC98 标签模式 + 表情标签族"]
-  parser["parser.ts<br/>segment 树 → AST"]
+   lexer["lexer.ts<br/>原文边界与结束标签索引"]
+   parser["parser.ts<br/>frame 栈直接构造 AST"]
   registry["registry.ts<br/>createUbbRegistry"]
   renderer["renderer.ts<br/>泛型遍历器"]
   emotion["cc98/emotion.ts<br/>表情资源描述"]
@@ -18,7 +19,8 @@ graph TD
   toMarkdown["cc98/markdown.ts<br/>Markdown 预设入口"]
   index["src/index.ts<br/>核心公共导出"]
 
-  tagData --> parser
+   tagData --> parser
+   lexer --> parser
   cc98Data --> cc98["cc98/index.ts<br/>cc98Registry"]
   tags --> cc98
   cc98 --> registry
@@ -46,3 +48,7 @@ flowchart LR
 - 遍历器按节点分派：文本节点走 `renderText()`，标签节点按 `family ?? tag` 查 handler，未命中走 `fallback`。handler 收到同一组参数：`node`、`attrs`、惰性渲染结果 `content`、纯文本 `textContent`、`context`、子树 `renderNodes(nodes)`。
 - 公开的 `render(source)` 与 `renderNodes(nodes)` 在根输出完成后执行 `finalize`；handler 内的 `renderNodes(nodes)` 不重复执行。
 - 根入口 `ubb-core` 只导出通用解析与泛型 renderer API；`ubb-core/cc98` 提供 CC98 解析规则和表情资源；字符串预设分别从 `ubb-core/cc98/html` 和 `ubb-core/cc98/markdown` 导入。
+
+扫描器按需读取标签头，偏移始终来自原文；通用 registry 默认使用 literal 边界，CC98 使用 quoted。text 模式首次需要结束标签时建立本次输入的索引，不重扫失败余文。解析器用活跃同名 frame 链处理闭合，未闭合段通过显式栈一次展开，不再创建第二棵 AST。
+
+renderer 使用共享惰性 getter，每个 handler 参数独立保存缓存；内部 renderNodes 支持解构和重入。默认最多 128 层标签调用，超限抛出 UbbRenderDepthError。网站捕获后用原始输入展示全文。纯文本提取为迭代遍历。

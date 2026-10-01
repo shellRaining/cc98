@@ -1,6 +1,6 @@
 # UBB 一致性语料
 
-语言无关的行为规范测试集。TS 参考实现（本包）生成期望值，Rust、Go、C# 实现必须通过同一份 JSON。当前基线固定 `739181057294` 的行为；已知历史边界也保留，相关用例有 `note`，不由移植实现自行修正。
+语言无关的行为规范测试集。TS 参考实现（本包）生成期望值。当前规范为 2.0.0，修正 Unicode 原文偏移并升级 CC98 引号边界和转义规则；历史 `__proto__` 参数行为仍保留。Rust、Go、C# 本轮未同步，旧仓库的 1.1.0 固定副本不能宣称符合新规范。
 
 ## 文件
 
@@ -39,6 +39,7 @@ render 用例 `{ name, input, expected }`，`expected` 为完整输出字符串�
 - `families`：有序数组，`pattern` 使用锚点、ASCII 字符类和量词；数字写成 `[0-9]`，不依赖不同正则引擎的 `\d` 语义。实现方可以编译或使用等价谓词，保持顺序和精确标签优先级
 - `parseTag`：`"default"`（`[tag]` / `[tag=value]`）或 `"cc98"`（旧论坛 tokenizer）
 - `mergeAdjacentText`：文件级默认值，用例可用 `mergeAdjacentText` 覆盖
+- `tagSyntax`：可选 `literal` / `quoted`，缺省为 literal；控制标签头边界，与 parseTag 参数转换分别配置
 
 `parse-cc98.json` 与 render 文件不声明 registry，一律使用实现自带的 CC98 预设（静态标签表 + 六个表情标签族 + CC98 tokenizer）。
 

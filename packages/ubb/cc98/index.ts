@@ -23,4 +23,5 @@ export const cc98Registry = createUbbRegistry({
   tags: UBB_STATIC_TAG_MODES,
   families: UBB_TAG_FAMILIES,
   parseTag: parseCc98Tag,
+  tagSyntax: "quoted",
 });

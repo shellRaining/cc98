@@ -63,6 +63,11 @@ export function boundaryCases(): InputCase[] {
       note: "兼容 JS 普通对象属性赋值：__proto__ 字符串赋值不产生自有属性。",
     },
     { name: "quoted-commas", input: '[quote="a,b=c"]x[/quote]' },
+    { name: "quoted-bracket", input: '[url="https://a.test/a]b"]甲[/url]尾' },
+    { name: "double-quote-escapes", input: '[font="a""b""c"]甲[/font]' },
+    { name: "single-quote-escapes", input: "[font='a''b''c']甲[/font]" },
+    { name: "unclosed-quote-recovery", input: '[font="未闭合][b]恢复[/b][/font]尾' },
+    { name: "unicode-text-tail", input: "İ[code]甲[/CoDe]乙😀" },
     { name: "unclosed-quote", input: '[quote="a,b]x[/quote]' },
     { name: "empty-positionals", input: "[td=,,]x[/td]" },
     { name: "misnested-autoclose", input: "[b][user=x][i]a[/b]b[/i]" },
@@ -94,14 +99,10 @@ export function boundaryCases(): InputCase[] {
     );
   }
   for (const char of ["K", "Ⱥ", "ẞ", "Σ", "𐐀", "😀", "İ"]) {
-    const note =
-      char === "İ"
-        ? "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。"
-        : undefined;
     cases.push(
-      { name: `unicode-${char.codePointAt(0)}-prefix`, input: `${char}[code]x[/code]`, note },
-      { name: `unicode-${char.codePointAt(0)}-content`, input: `[code]${char}[/code]`, note },
-      { name: `unicode-${char.codePointAt(0)}-empty`, input: `${char}[line][/line]`, note },
+      { name: `unicode-${char.codePointAt(0)}-prefix`, input: `${char}[code]x[/code]` },
+      { name: `unicode-${char.codePointAt(0)}-content`, input: `[code]${char}[/code]` },
+      { name: `unicode-${char.codePointAt(0)}-empty`, input: `${char}[line][/line]` },
     );
   }
   for (const tag of [
@@ -175,6 +176,11 @@ export function configurationCases(base: RegistrySpec): InputCase[] {
       registry: { ...base, parseTag: "cc98" },
     },
     { name: "registry-empty", input: "[b]x[/b]", registry: { ...base, tags: {}, families: [] } },
+    {
+      name: "registry-quoted-head",
+      input: '[quote="a]b"]x[/quote]',
+      registry: { ...base, parseTag: "cc98", tagSyntax: "quoted" },
+    },
     {
       name: "registry-custom-text",
       input: "[spoiler][b]x[/b][/spoiler]",

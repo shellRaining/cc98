@@ -1,6 +1,6 @@
 {
   "schema": "ubb-conformance/1",
-  "specVersion": "1.1.0",
+  "specVersion": "2.0.0",
   "kind": "parse-core",
   "registry": {
     "tags": {
@@ -1175,6 +1175,143 @@
               "value": "x"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "quoted-bracket",
+      "input": "[url=\"https://a.test/a]b\"]甲[/url]尾",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "url",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "\"https://a.test/a"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[url=\"https://a.test/a]",
+            "close": "[/url]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "b\"]甲"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "尾"
+        }
+      ]
+    },
+    {
+      "name": "double-quote-escapes",
+      "input": "[font=\"a\"\"b\"\"c\"]甲[/font]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[font=\"a\"\"b\"\"c\"]"
+        },
+        {
+          "type": "text",
+          "value": "甲"
+        },
+        {
+          "type": "text",
+          "value": "[/font]"
+        }
+      ]
+    },
+    {
+      "name": "single-quote-escapes",
+      "input": "[font='a''b''c']甲[/font]",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[font='a''b''c']"
+        },
+        {
+          "type": "text",
+          "value": "甲"
+        },
+        {
+          "type": "text",
+          "value": "[/font]"
+        }
+      ]
+    },
+    {
+      "name": "unclosed-quote-recovery",
+      "input": "[font=\"未闭合][b]恢复[/b][/font]尾",
+      "expected": [
+        {
+          "type": "text",
+          "value": "[font=\"未闭合]"
+        },
+        {
+          "type": "tag",
+          "tag": "b",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[b]",
+            "close": "[/b]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "恢复"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "[/font]"
+        },
+        {
+          "type": "text",
+          "value": "尾"
+        }
+      ]
+    },
+    {
+      "name": "unicode-text-tail",
+      "input": "İ[code]甲[/CoDe]乙😀",
+      "expected": [
+        {
+          "type": "text",
+          "value": "İ"
+        },
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[code]",
+            "close": "[/CoDe]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "乙😀"
         }
       ]
     },
@@ -3377,7 +3514,6 @@
     {
       "name": "unicode-304-prefix",
       "input": "İ[code]x[/code]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
       "expected": [
         {
           "type": "text",
@@ -3393,12 +3529,12 @@
           },
           "raw": {
             "open": "[code]",
-            "close": "/code]"
+            "close": "[/code]"
           },
           "children": [
             {
               "type": "text",
-              "value": "x["
+              "value": "x"
             }
           ]
         }
@@ -3407,7 +3543,6 @@
     {
       "name": "unicode-304-content",
       "input": "[code]İ[/code]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
       "expected": [
         {
           "type": "tag",
@@ -3419,12 +3554,12 @@
           },
           "raw": {
             "open": "[code]",
-            "close": "/code]"
+            "close": "[/code]"
           },
           "children": [
             {
               "type": "text",
-              "value": "İ["
+              "value": "İ"
             }
           ]
         }
@@ -3433,7 +3568,6 @@
     {
       "name": "unicode-304-empty",
       "input": "İ[line][/line]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
       "expected": [
         {
           "type": "text",
@@ -3449,13 +3583,9 @@
           },
           "raw": {
             "open": "[line]",
-            "close": null
+            "close": "[/line]"
           },
           "children": []
-        },
-        {
-          "type": "text",
-          "value": "[/line]"
         }
       ]
     },
@@ -25574,6 +25704,71 @@
         {
           "type": "text",
           "value": "[/b]"
+        }
+      ]
+    },
+    {
+      "name": "registry-quoted-head",
+      "input": "[quote=\"a]b\"]x[/quote]",
+      "registry": {
+        "tags": {
+          "b": "recursive",
+          "i": "recursive",
+          "u": "recursive",
+          "color": "recursive",
+          "size": "recursive",
+          "url": "recursive",
+          "quote": "recursive",
+          "spoiler": "recursive",
+          "code": "text",
+          "md": "text",
+          "noubb": "text",
+          "line": "empty",
+          "em00": "empty",
+          "user": "autoclose"
+        },
+        "families": [
+          {
+            "name": "em",
+            "pattern": "^em[0-9]{2}$",
+            "mode": "empty"
+          },
+          {
+            "name": "ga",
+            "pattern": "^ga[0-9]+$",
+            "mode": "empty"
+          },
+          {
+            "name": "gb",
+            "pattern": "^g[a-z][0-9]+$",
+            "mode": "empty"
+          }
+        ],
+        "parseTag": "cc98",
+        "mergeAdjacentText": false,
+        "tagSyntax": "quoted"
+      },
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "quote",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "a]b"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[quote=\"a]b\"]",
+            "close": "[/quote]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "x"
+            }
+          ]
         }
       ]
     },

@@ -39,6 +39,8 @@ export type UbbTagHandlers<
 >;
 
 interface UbbRendererBaseOptions<Output, Context = void> {
+  /** 单次渲染的最大标签调用深度，默认 128。 */
+  readonly maxDepth?: number;
   /** 把一个 AST 文本节点转换为目标输出。 */
   readonly renderText: (value: string, context: Context) => Output;
   /** 把兄弟节点的输出合并为一个目标输出。 */
@@ -75,6 +77,15 @@ export interface UbbRenderer<Output, Context = void> {
 
 type ParseUbb = (source: string) => UbbNode[];
 
+export class UbbRenderDepthError extends Error {
+  readonly maxDepth: number;
+  constructor(maxDepth: number) {
+    super(`UBB: 渲染深度超过 ${maxDepth}`);
+    this.name = "UbbRenderDepthError";
+    this.maxDepth = maxDepth;
+  }
+}
+
 export function createUbbRenderer<
   Tags extends UbbTagModes,
   Families extends UbbTagModes,
@@ -88,50 +99,60 @@ export function createUbbRenderer<
   const concat = options.concat;
   const fallback = options.fallback;
   const finalizeOutput = options.finalize;
+  const maxDepth = options.maxDepth ?? 128;
+  if (!Number.isSafeInteger(maxDepth) || maxDepth < 1)
+    throw new TypeError("UBB: maxDepth 必须是正安全整数");
   const handlers = new Map(
     Object.entries(options.handlers) as [string, UbbTagHandler<Output, Context> | undefined][],
   );
 
-  function renderNodes(nodes: readonly UbbNode[], context: Context): Output {
+  class HandlerProps implements UbbTagHandlerProps<Output, Context> {
+    readonly node: UbbTagNode;
+    readonly context: Context;
+    private readonly depth: number;
+    readonly attrs: Readonly<UbbAttrs>;
+    readonly renderNodes: (nodes: readonly UbbNode[]) => Output;
+    private hasContent = false;
+    private cachedContent!: Output;
+    private hasTextContent = false;
+    private cachedTextContent = "";
+    constructor(node: UbbTagNode, context: Context, depth: number) {
+      this.node = node;
+      this.context = context;
+      this.depth = depth;
+      this.attrs = node.attrs;
+      this.renderNodes = (nodes) => renderNodes(nodes, context, depth);
+    }
+    get content(): Output {
+      if (!this.hasContent) {
+        this.cachedContent = renderNodes(this.node.children, this.context, this.depth);
+        this.hasContent = true;
+      }
+      return this.cachedContent;
+    }
+    get textContent(): string {
+      if (!this.hasTextContent) {
+        this.cachedTextContent = getUbbTextContent(this.node.children);
+        this.hasTextContent = true;
+      }
+      return this.cachedTextContent;
+    }
+  }
+
+  function renderNodes(nodes: readonly UbbNode[], context: Context, depth = 0): Output {
     return concat(
-      nodes.map((node) => renderNode(node, context)),
+      nodes.map((node) => renderNode(node, context, depth)),
       context,
     );
   }
 
-  function renderNode(node: UbbNode, context: Context): Output {
+  function renderNode(node: UbbNode, context: Context, depth: number): Output {
     if (node.type === "text") return renderText(node.value, context);
+    if (depth >= maxDepth) throw new UbbRenderDepthError(maxDepth);
 
     const handler = handlers.get(node.family ?? node.tag) ?? fallback;
-    if (!handler) return renderNodes(node.children, context);
-
-    let hasContent = false;
-    let content: Output;
-    let hasTextContent = false;
-    let textContent = "";
-
-    const props: UbbTagHandlerProps<Output, Context> = {
-      node,
-      attrs: node.attrs,
-      context,
-      renderNodes: (nodes) => renderNodes(nodes, context),
-      get content() {
-        if (!hasContent) {
-          content = renderNodes(node.children, context);
-          hasContent = true;
-        }
-        return content;
-      },
-      get textContent() {
-        if (!hasTextContent) {
-          textContent = getUbbTextContent(node.children);
-          hasTextContent = true;
-        }
-        return textContent;
-      },
-    };
-
-    return handler(props);
+    if (!handler) return renderNodes(node.children, context, depth + 1);
+    return handler(new HandlerProps(node, context, depth + 1));
   }
 
   function finalize(output: Output, context: Context): Output {

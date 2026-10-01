@@ -2,6 +2,7 @@ import { parseUbb, type UbbTagMode, type UbbTagSpec } from "./parser.ts";
 import { createUbbRenderer, type UbbRenderer, type UbbRendererOptions } from "./renderer.ts";
 import type { UbbTagParser } from "./tag-data.ts";
 import type { UbbNode } from "./types.ts";
+import type { UbbTagSyntax } from "./lexer.ts";
 
 export type UbbTagModes = Readonly<Record<string, UbbTagMode>>;
 
@@ -25,6 +26,8 @@ type FamilyModes<Families extends UbbTagFamilies> = {
 
 /** 与标签登记无关的解析配置，可在创建后通过 configure 调整。 */
 export interface UbbRegistryConfig {
+  /** 标签头边界；quoted 在参数值起始处识别引号及成对同类引号转义。 */
+  readonly tagSyntax?: UbbTagSyntax;
   /** 自定义 [标签头] 中的名称和参数；默认支持 [tag] 与 [tag=value]。 */
   readonly parseTag?: UbbTagParser;
   /** 把相邻的文本节点合并成一个，例如降级为文本的标签和前后正文。默认 false。 */
@@ -164,6 +167,7 @@ function createRegistry<Tags extends UbbTagModes, Families extends UbbTagModes>(
       resolveTag,
       parseTag: state.parseTag,
       mergeAdjacentText: state.mergeAdjacentText,
+      tagSyntax: state.tagSyntax,
     });
 
   const registry: UbbRegistry<Tags, Families> = {
@@ -199,6 +203,7 @@ export function createUbbRegistry<
     families: new Map(),
     parseTag: options.parseTag,
     mergeAdjacentText: options.mergeAdjacentText,
+    tagSyntax: options.tagSyntax,
   };
   for (const [name, mode] of Object.entries(options.tags ?? {})) {
     state = withTag(state, name, mode);

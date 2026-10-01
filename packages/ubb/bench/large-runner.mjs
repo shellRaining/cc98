@@ -2,7 +2,14 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const caseFile = fileURLToPath(new URL("./large-case.mjs", import.meta.url));
-const caseNames = ["regular-1m", "regular-12m", "unclosed-text", "mismatched-deep"];
+const caseNames = [
+  "regular-1m",
+  "regular-12m",
+  "unclosed-text",
+  "mismatched-deep",
+  "wide-unclosed",
+  "mixed-text-modes",
+];
 const results = [];
 
 for (const name of caseNames) {

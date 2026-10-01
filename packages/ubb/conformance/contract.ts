@@ -1,4 +1,9 @@
-import { createUbbRegistry, type UbbNode, type UbbTagMode } from "../src/index.ts";
+import {
+  createUbbRegistry,
+  type UbbNode,
+  type UbbTagMode,
+  type UbbTagSyntax,
+} from "../src/index.ts";
 import { cc98Registry, parseCc98Tag } from "../cc98/index.ts";
 import { ubbToHtml } from "../cc98/html.ts";
 import { ubbToMarkdown } from "../cc98/markdown.ts";
@@ -8,6 +13,7 @@ export interface RegistrySpec {
   families: { name: string; pattern: string; mode: UbbTagMode }[];
   parseTag: "default" | "cc98";
   mergeAdjacentText: boolean;
+  tagSyntax?: UbbTagSyntax;
 }
 
 export interface InputCase {
@@ -39,6 +45,7 @@ export function createHarness(spec: RegistrySpec) {
     ),
     parseTag: spec.parseTag === "cc98" ? parseCc98Tag : undefined,
     mergeAdjacentText: spec.mergeAdjacentText,
+    tagSyntax: spec.tagSyntax,
   });
 }
 

@@ -5,6 +5,7 @@ import * as ubb from "../src/index.ts";
 test("根入口只暴露注册器相关的运行时 API，不导出底层 parseUbb", () => {
   expect(Object.keys(ubb).sort()).toEqual([
     "UBB_VERSION",
+    "UbbRenderDepthError",
     "createUbbRegistry",
     "getUbbTextContent",
     "parseUbbTag",

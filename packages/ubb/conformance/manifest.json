@@ -1,36 +1,36 @@
 {
   "schema": "ubb-conformance-manifest/1",
-  "specVersion": "1.1.0",
+  "specVersion": "2.0.0",
   "reference": {
     "repository": "https://github.com/shellRaining/cc98",
-    "commit": "739181057294c2e07e89fe1887acd53ecf5a9c4c",
+    "commit": "6596b53",
     "runtime": "Node.js 24",
-    "policy": "现有 JS 行为，包括用例 note 标记的历史边界行为"
+    "policy": "基于 6596b53 的 TS 重构；原文 Unicode 偏移修正及 CC98 引号规则升级，详见执行计划"
   },
   "files": [
     {
       "name": "parse-core.json",
       "kind": "parse-core",
-      "cases": 440,
-      "sha256": "2bbbf1b87c991d898ecd5f198ad93bd36d24d0154f1fe8945ff03f67d5226a4f"
+      "cases": 446,
+      "sha256": "3b6e82c67a821e41e4e8ea3d50ac5914665caa151a0f18cfb40eafe3337b97be"
     },
     {
       "name": "parse-cc98.json",
       "kind": "parse-cc98",
-      "cases": 451,
-      "sha256": "0350ed83778f1f6d907cf164bb333b098475a10d281854ebf81f65eb4464d763"
+      "cases": 456,
+      "sha256": "44dc7f372b5c27a4cf51ac850e6bb4122ebace3f871eca746c8a3380cfed5aa4"
     },
     {
       "name": "render-html.json",
       "kind": "render-html",
-      "cases": 428,
-      "sha256": "443b793c62aa5321c7cf0f0b142cd56b539bf7dbbeec675d8712bc5b74769992"
+      "cases": 433,
+      "sha256": "938e834475f2a3045264f5146e9b30131026197ab051b58c6d5cf6072aef2df2"
     },
     {
       "name": "render-markdown.json",
       "kind": "render-markdown",
-      "cases": 430,
-      "sha256": "f73bf22ab2f4ed8f874dc1f0a9160aa1bf515e374682227e7d66f9de2a69c341"
+      "cases": 435,
+      "sha256": "621063c6db3fb201841c6f0a64a524d809273dca0bc77d29aee1f1d73dfd887d"
     }
   ]
 }

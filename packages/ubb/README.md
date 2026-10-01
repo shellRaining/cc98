@@ -58,6 +58,8 @@ registry.parse("[badge:gold]");
 
 `parseTag` 用来替换不同论坛的参数语法，不必重写整个 UBB 解析器。
 
+`tagSyntax` 控制标签头边界，默认 `"literal"` 在第一个 `]` 结束；`"quoted"` 在等号或逗号后的参数值起始处识别单双引号，允许引号内出现 `]`，并支持成对同类引号转义。它只负责边界，不剥离参数引号；参数转换仍由 `parseTag` 完成。不匹配引号回退到第一个 `]`，继续按原文容错。
+
 降级为文本的标签默认各自占一个文本节点，`价格[约[b]100[/b]` 会得到四个相邻的文本节点。需要更紧凑的 AST 时，传入 `mergeAdjacentText: true`，相邻文本会合并成一个节点。
 
 `parseTag` 收到 `[` 与 `]` 之间的原始字符串，返回标签名和属性；返回 `null` 或抛错时，原文会作为文本保留。标签名会转为小写，`attrs` 使用 `{ positionals: string[], named: Record<string, string> }`。这是标签头的参数解析接口，不负责匹配结束标签或修改文本容错规则。回调可作为独立函数复用，避免在每个标签上重复拆参数。
@@ -102,9 +104,11 @@ const html = ubb.createRenderer<string>({
 
 `createRenderer<Output, Context>()` 的 `Output` 不限于字符串。调用方只需提供 `renderText()` 和 `concat()`，就能输出 VNode、ReactNode 或自己的 AST。
 
+renderer 的 `maxDepth` 默认是 128，须为正安全整数。超过实际标签调用深度时抛出根入口导出的 `UbbRenderDepthError`，其 `maxDepth` 属性记录预算；仅读取 `textContent` 不会递归渲染子节点。调用方可以捕获该错误展示完整原文。提高预算仍受 JavaScript 调用栈限制，不保证任意深度。
+
 ## CC98 预设
 
-CC98 标签和表情规则从 `ubb-core/cc98` 导入。它沿用旧论坛的逗号、等号、引号参数语法，表情登记为 `em`、`ac`、`ms`、`mahjong`、`cc98`、`tb` 六个标签族；HTML、Markdown 输出从独立子路径导入：
+CC98 标签和表情规则从 `ubb-core/cc98` 导入。它沿用旧论坛的逗号、等号参数语法，并启用 `quoted` 标签头；参数中每组 `""` 或 `''` 还原为一个同类引号。表情登记为 `em`、`ac`、`ms`、`mahjong`、`cc98`、`tb` 六个标签族；HTML、Markdown 输出从独立子路径导入：
 
 ```ts
 import { cc98Registry } from "ubb-core/cc98";

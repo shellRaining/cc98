@@ -4,6 +4,8 @@ export type { UbbNode, UbbTextNode, UbbTagNode, UbbAttrs, UbbTagRaw } from "./ty
 
 export { getUbbTextContent } from "./node-utils.ts";
 export type { UbbTagMode } from "./parser.ts";
+export type { UbbTagSyntax } from "./lexer.ts";
+export { UbbRenderDepthError } from "./renderer.ts";
 export { parseUbbTag } from "./tag-data.ts";
 export type { UbbTagParser, UbbTagData } from "./tag-data.ts";
 export { createUbbRegistry } from "./registry.ts";

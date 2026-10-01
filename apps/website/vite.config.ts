@@ -81,6 +81,26 @@ const pwaPlugins = VitePWA({
 export default defineConfig({
   logLevel: "warn",
   plugins: [UnoCSS(), vue(), ...pwaPlugins, appShellPlugin(pwaPlugins)],
+  test: {
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "node",
+          environment: "node",
+          exclude: ["tests/rich-content/deep-fallback.test.ts", "**/node_modules/**", "**/.git/**"],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "mount",
+          environment: "./tests/rich-content/mount-environment.ts",
+          include: ["tests/rich-content/deep-fallback.test.ts"],
+        },
+      },
+    ],
+  },
   build: {
     // hls.js 只在播放 HLS 视频时按需加载，超过此大小的 chunk 仍会触发告警。
     chunkSizeWarningLimit: 520,

@@ -1,6 +1,6 @@
 {
   "schema": "ubb-conformance/1",
-  "specVersion": "1.1.0",
+  "specVersion": "2.0.0",
   "kind": "parse-cc98",
   "cases": [
     {
@@ -929,6 +929,170 @@
               "value": "x"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "quoted-bracket",
+      "input": "[url=\"https://a.test/a]b\"]甲[/url]尾",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "url",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "https://a.test/a]b"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[url=\"https://a.test/a]b\"]",
+            "close": "[/url]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "尾"
+        }
+      ]
+    },
+    {
+      "name": "double-quote-escapes",
+      "input": "[font=\"a\"\"b\"\"c\"]甲[/font]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "font",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "a\"b\"c"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[font=\"a\"\"b\"\"c\"]",
+            "close": "[/font]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "single-quote-escapes",
+      "input": "[font='a''b''c']甲[/font]",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "font",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "a'b'c"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[font='a''b''c']",
+            "close": "[/font]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unclosed-quote-recovery",
+      "input": "[font=\"未闭合][b]恢复[/b][/font]尾",
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "font",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "未闭合"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[font=\"未闭合]",
+            "close": "[/font]"
+          },
+          "children": [
+            {
+              "type": "tag",
+              "tag": "b",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[b]",
+                "close": "[/b]"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "恢复"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "尾"
+        }
+      ]
+    },
+    {
+      "name": "unicode-text-tail",
+      "input": "İ[code]甲[/CoDe]乙😀",
+      "expected": [
+        {
+          "type": "text",
+          "value": "İ"
+        },
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[code]",
+            "close": "[/CoDe]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "乙😀"
         }
       ]
     },
@@ -3350,7 +3514,6 @@
     {
       "name": "unicode-304-prefix",
       "input": "İ[code]x[/code]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
       "expected": [
         {
           "type": "text",
@@ -3366,12 +3529,12 @@
           },
           "raw": {
             "open": "[code]",
-            "close": "/code]"
+            "close": "[/code]"
           },
           "children": [
             {
               "type": "text",
-              "value": "x["
+              "value": "x"
             }
           ]
         }
@@ -3380,7 +3543,6 @@
     {
       "name": "unicode-304-content",
       "input": "[code]İ[/code]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
       "expected": [
         {
           "type": "tag",
@@ -3392,12 +3554,12 @@
           },
           "raw": {
             "open": "[code]",
-            "close": "/code]"
+            "close": "[/code]"
           },
           "children": [
             {
               "type": "text",
-              "value": "İ["
+              "value": "İ"
             }
           ]
         }
@@ -3406,7 +3568,6 @@
     {
       "name": "unicode-304-empty",
       "input": "İ[line][/line]",
-      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
       "expected": [
         {
           "type": "text",
@@ -3422,13 +3583,9 @@
           },
           "raw": {
             "open": "[line]",
-            "close": null
+            "close": "[/line]"
           },
           "children": []
-        },
-        {
-          "type": "text",
-          "value": "[/line]"
         }
       ]
     },
@@ -26681,6 +26838,175 @@
       ]
     },
     {
+      "name": "quoted-bracket-merged",
+      "input": "[url=\"https://a.test/a]b\"]甲[/url]尾",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "url",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "https://a.test/a]b"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[url=\"https://a.test/a]b\"]",
+            "close": "[/url]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "尾"
+        }
+      ]
+    },
+    {
+      "name": "double-quote-escapes-merged",
+      "input": "[font=\"a\"\"b\"\"c\"]甲[/font]",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "font",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "a\"b\"c"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[font=\"a\"\"b\"\"c\"]",
+            "close": "[/font]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "single-quote-escapes-merged",
+      "input": "[font='a''b''c']甲[/font]",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "font",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "a'b'c"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[font='a''b''c']",
+            "close": "[/font]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unclosed-quote-recovery-merged",
+      "input": "[font=\"未闭合][b]恢复[/b][/font]尾",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "tag",
+          "tag": "font",
+          "family": null,
+          "attrs": {
+            "positionals": [
+              "未闭合"
+            ],
+            "named": {}
+          },
+          "raw": {
+            "open": "[font=\"未闭合]",
+            "close": "[/font]"
+          },
+          "children": [
+            {
+              "type": "tag",
+              "tag": "b",
+              "family": null,
+              "attrs": {
+                "positionals": [],
+                "named": {}
+              },
+              "raw": {
+                "open": "[b]",
+                "close": "[/b]"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "恢复"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "尾"
+        }
+      ]
+    },
+    {
+      "name": "unicode-text-tail-merged",
+      "input": "İ[code]甲[/CoDe]乙😀",
+      "mergeAdjacentText": true,
+      "expected": [
+        {
+          "type": "text",
+          "value": "İ"
+        },
+        {
+          "type": "tag",
+          "tag": "code",
+          "family": null,
+          "attrs": {
+            "positionals": [],
+            "named": {}
+          },
+          "raw": {
+            "open": "[code]",
+            "close": "[/CoDe]"
+          },
+          "children": [
+            {
+              "type": "text",
+              "value": "甲"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "value": "乙😀"
+        }
+      ]
+    },
+    {
       "name": "unclosed-quote-merged",
       "input": "[quote=\"a,b]x[/quote]",
       "mergeAdjacentText": true,
@@ -27367,138 +27693,6 @@
           "raw": {
             "open": "[url=\thttps://x]",
             "close": "[/url]"
-          },
-          "children": [
-            {
-              "type": "text",
-              "value": "x"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "whitespace-9-quote-merged",
-      "input": "[quote]\t[/quote]",
-      "mergeAdjacentText": true,
-      "expected": [
-        {
-          "type": "tag",
-          "tag": "quote",
-          "family": null,
-          "attrs": {
-            "positionals": [],
-            "named": {}
-          },
-          "raw": {
-            "open": "[quote]",
-            "close": "[/quote]"
-          },
-          "children": [
-            {
-              "type": "text",
-              "value": "\t"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "whitespace-10-head-merged",
-      "input": "[\nb]x[/b]",
-      "mergeAdjacentText": true,
-      "expected": [
-        {
-          "type": "tag",
-          "tag": "b",
-          "family": null,
-          "attrs": {
-            "positionals": [],
-            "named": {}
-          },
-          "raw": {
-            "open": "[\nb]",
-            "close": "[/b]"
-          },
-          "children": [
-            {
-              "type": "text",
-              "value": "x"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "whitespace-10-value-merged",
-      "input": "[url=\nhttps://x]x[/url]",
-      "mergeAdjacentText": true,
-      "expected": [
-        {
-          "type": "tag",
-          "tag": "url",
-          "family": null,
-          "attrs": {
-            "positionals": [
-              "https://x"
-            ],
-            "named": {}
-          },
-          "raw": {
-            "open": "[url=\nhttps://x]",
-            "close": "[/url]"
-          },
-          "children": [
-            {
-              "type": "text",
-              "value": "x"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "whitespace-10-quote-merged",
-      "input": "[quote]\n[/quote]",
-      "mergeAdjacentText": true,
-      "expected": [
-        {
-          "type": "tag",
-          "tag": "quote",
-          "family": null,
-          "attrs": {
-            "positionals": [],
-            "named": {}
-          },
-          "raw": {
-            "open": "[quote]",
-            "close": "[/quote]"
-          },
-          "children": [
-            {
-              "type": "text",
-              "value": "\n"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "whitespace-11-head-merged",
-      "input": "[\u000bb]x[/b]",
-      "mergeAdjacentText": true,
-      "expected": [
-        {
-          "type": "tag",
-          "tag": "b",
-          "family": null,
-          "attrs": {
-            "positionals": [],
-            "named": {}
-          },
-          "raw": {
-            "open": "[\u000bb]",
-            "close": "[/b]"
           },
           "children": [
             {

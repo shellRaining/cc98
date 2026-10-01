@@ -11,7 +11,7 @@ import { evaluate, type Corpus, type InputCase, type RegistrySpec } from "./cont
 import { boundaryCases, combinations, configurationCases } from "./inputs.ts";
 
 const SCHEMA = "ubb-conformance/1";
-const SPEC_VERSION = "1.1.0";
+const SPEC_VERSION = "2.0.0";
 
 /** parse-core 的 harness registry 声明，各语言实现按同一声明构建。 */
 const CORE_REGISTRY: RegistrySpec = {
@@ -287,9 +287,9 @@ outputs.set(
       specVersion: SPEC_VERSION,
       reference: {
         repository: "https://github.com/shellRaining/cc98",
-        commit: "739181057294c2e07e89fe1887acd53ecf5a9c4c",
+        commit: "6596b53",
         runtime: "Node.js 24",
-        policy: "现有 JS 行为，包括用例 note 标记的历史边界行为",
+        policy: "基于 6596b53 的 TS 重构；原文 Unicode 偏移修正及 CC98 引号规则升级，详见执行计划",
       },
       files,
     },

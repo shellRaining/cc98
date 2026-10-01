@@ -38,6 +38,14 @@ const cases = {
     source: `${"[b]".repeat(3000)}${"[/i]".repeat(3000)}${"[/b]".repeat(3000)}`,
     runs: 5,
   },
+  "wide-unclosed": {
+    source: "[b]" + "甲[ac01]".repeat(8000),
+    runs: 7,
+  },
+  "mixed-text-modes": {
+    source: "[code][md][noubb]未闭合".repeat(8000),
+    runs: 7,
+  },
 };
 
 function countNodes(nodes) {
@@ -46,7 +54,7 @@ function countNodes(nodes) {
   while (stack.length > 0) {
     const node = stack.pop();
     count += 1;
-    if (node.type === "tag") stack.push(...node.children);
+    if (node.type === "tag") for (const child of node.children) stack.push(child);
   }
   return count;
 }

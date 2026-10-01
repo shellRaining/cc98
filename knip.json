@@ -5,6 +5,7 @@
       "entry": ["src/main.ts", "tests/**/*.test.ts"],
       "project": ["src/**/*.{ts,vue}", "tests/**/*.ts"],
       "includeEntryExports": true,
+      "ignore": ["tests/rich-content/mount-environment.ts"],
       "vite": false
     },
     "apps/docs": {
