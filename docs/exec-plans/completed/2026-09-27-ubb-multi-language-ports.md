@@ -2,7 +2,7 @@
 
 ## 背景
 
-`@cc98/ubb`（npm 包名 `ubb-core` 1.0.0）已发布，是框架无关的 UBB 解析与输出工具。目标是把同一套行为带到 Rust、Go、C# 生态，形成 ubb-core 多语言系列。决策与总体布局见对话结论，要点：
+`ubb-core` 1.0.0 已发布，是框架无关的 UBB 解析与输出工具；本计划实施期间从 `@cc98/ubb` 改名。目标是把同一套行为带到 Rust、Go、C# 生态，形成 ubb-core 多语言系列。决策与总体布局见对话结论，要点：
 
 - 各语言手写惯用实现，不做 FFI/WASM 统一核心（registry/handler 依赖闭包，跨 FFI 不自然）。
 - 行为一致性靠共享一致性语料（conformance corpus）保证，语料以本仓库 TS 实现为规范源生成。
@@ -43,7 +43,7 @@
 
 ## 结果
 
-- 语料：4 个 JSON、132 个用例（parse-core 44、parse-cc98 31、render-html 39、render-markdown 41，render 两类含 mixed-post 集成用例），specVersion 1.0.0。
+- 语料：4 个 JSON、152 个用例（parse-core 43、parse-cc98 31、render-html 38、render-markdown 40，render 两类含 mixed-post 集成用例），specVersion 1.0.0。后续扩充记录见 `2026-09-27-ubb-conformance-performance.md`。
 - 解析器移植采用显式栈替代 TS 版 parent 指针（开放标签驻留栈上，关闭时挂入父级），三语言结构一致，避免深嵌套递归栈溢出并保持 forceClose 语义。
 - TS 版 `??`（nullish）与 `||`（falsy）语义差异在 url/pm/user 等 handler 中逐一对齐（空字符串属性不回落到 textContent 等）。
 - crate/包结构：ubb-rs 为单 crate + `cc98`/`serde` default feature；ubb-go 为根包 + `cc98` 子包（module 名 `ubb-go` 待定址）；ubb-dotnet 为 `Ubb.Core`（net8.0）+ xUnit 测试项目。
