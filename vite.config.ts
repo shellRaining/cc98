@@ -4,7 +4,13 @@ export default defineConfig({
   staged: {
     "*": "vp check --fix",
   },
-  fmt: {},
+  fmt: {
+    ignorePatterns: [
+      "packages/ubb/conformance/parse-*.json",
+      "packages/ubb/conformance/render-*.json",
+      "packages/ubb/conformance/manifest.json",
+    ],
+  },
   lint: {
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     rules: { "vite-plus/prefer-vite-plus-imports": "error" },

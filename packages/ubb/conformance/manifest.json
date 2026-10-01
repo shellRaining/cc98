@@ -1,0 +1,36 @@
+{
+  "schema": "ubb-conformance-manifest/1",
+  "specVersion": "1.1.0",
+  "reference": {
+    "repository": "https://github.com/shellRaining/cc98",
+    "commit": "739181057294c2e07e89fe1887acd53ecf5a9c4c",
+    "runtime": "Node.js 24",
+    "policy": "现有 JS 行为，包括用例 note 标记的历史边界行为"
+  },
+  "files": [
+    {
+      "name": "parse-core.json",
+      "kind": "parse-core",
+      "cases": 440,
+      "sha256": "2bbbf1b87c991d898ecd5f198ad93bd36d24d0154f1fe8945ff03f67d5226a4f"
+    },
+    {
+      "name": "parse-cc98.json",
+      "kind": "parse-cc98",
+      "cases": 451,
+      "sha256": "0350ed83778f1f6d907cf164bb333b098475a10d281854ebf81f65eb4464d763"
+    },
+    {
+      "name": "render-html.json",
+      "kind": "render-html",
+      "cases": 428,
+      "sha256": "443b793c62aa5321c7cf0f0b142cd56b539bf7dbbeec675d8712bc5b74769992"
+    },
+    {
+      "name": "render-markdown.json",
+      "kind": "render-markdown",
+      "cases": 430,
+      "sha256": "f73bf22ab2f4ed8f874dc1f0a9160aa1bf515e374682227e7d66f9de2a69c341"
+    }
+  ]
+}

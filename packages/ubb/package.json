@@ -40,6 +40,8 @@
     "dev": "vp pack --watch",
     "test": "vp test",
     "check": "vp check",
+    "conformance:generate": "node conformance/generate.ts",
+    "conformance:check": "node conformance/generate.ts --check",
     "prepublishOnly": "vp test && vp pack"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "schema": "ubb-conformance/1",
-  "specVersion": "1.0.0",
+  "specVersion": "1.1.0",
   "kind": "render-html",
   "cases": [
     {
@@ -192,6 +192,1960 @@
       "name": "mixed-post",
       "input": "[quote=用户A][b]原帖[/b][/quote]\n[size=5][color=red]回复正文[/color][/size] [em01]\n[url=/topic/123]相关帖子[/url]\n[table][tr][th]姓名[/th][th]分数[/th][/tr][tr][td]张三[/td][td]90[/td][/tr][/table]\n[code]const answer = 42;[/code]\n<script>alert(1)</script>",
       "expected": "<blockquote><cite>用户A：</cite><strong>原帖</strong></blockquote>\n<span style=\"font-size: 5pt\"><span style=\"color: red\">回复正文</span></span> \n<a href=\"/topic/123\">相关帖子</a>\n<table><tr><th>姓名</th><th>分数</th></tr><tr><td>张三</td><td>90</td></tr></table>\n<pre><code>const answer = 42;</code></pre>\n&lt;script&gt;alert(1)&lt;/script&gt;"
+    },
+    {
+      "name": "empty-input",
+      "input": "",
+      "expected": ""
+    },
+    {
+      "name": "empty-recursive",
+      "input": "[b][/b]",
+      "expected": "<strong></strong>"
+    },
+    {
+      "name": "empty-text",
+      "input": "[code][/code]",
+      "expected": "<pre><code></code></pre>"
+    },
+    {
+      "name": "empty-autoclose",
+      "input": "[user=][/user]",
+      "expected": "<a href=\"/user/\">@</a>"
+    },
+    {
+      "name": "crlf-and-nul",
+      "input": "a\r\nb\u0000[b]c\r\n[/b]",
+      "expected": "a\r\nb\u0000<strong>c\r\n</strong>"
+    },
+    {
+      "name": "duplicate-named",
+      "input": "[img=1,title=a,title=b]x[/img]",
+      "expected": "<img src=\"#\" alt=\"b\">"
+    },
+    {
+      "name": "prototype-key",
+      "input": "[img=1,__proto__=x,title=y]u[/img]",
+      "note": "兼容 JS 普通对象属性赋值：__proto__ 字符串赋值不产生自有属性。",
+      "expected": "<img src=\"#\" alt=\"y\">"
+    },
+    {
+      "name": "quoted-commas",
+      "input": "[quote=\"a,b=c\"]x[/quote]",
+      "expected": "<blockquote><cite>a,b=c：</cite>x</blockquote>"
+    },
+    {
+      "name": "unclosed-quote",
+      "input": "[quote=\"a,b]x[/quote]",
+      "expected": "<blockquote><cite>a,b：</cite>x</blockquote>"
+    },
+    {
+      "name": "empty-positionals",
+      "input": "[td=,,]x[/td]",
+      "expected": "<td>x</td>"
+    },
+    {
+      "name": "misnested-autoclose",
+      "input": "[b][user=x][i]a[/b]b[/i]",
+      "expected": "<strong><a href=\"/user/x\">@x</a>[i]a</strong>b[/i]"
+    },
+    {
+      "name": "force-close-siblings",
+      "input": "[b]a[i]b[/i][u]c[line]d",
+      "expected": "[b]a<em>b</em>[u]c<hr>d"
+    },
+    {
+      "name": "unicode-digits-fullwidth",
+      "input": "[em１２][ga１]",
+      "expected": "[em１２][ga１]"
+    },
+    {
+      "name": "unicode-digits-arabic",
+      "input": "[em١٢][ga١]",
+      "expected": "[em١٢][ga١]"
+    },
+    {
+      "name": "empty-link-attributes",
+      "input": "[url=]x[/url][pm=]x[/pm][user=]x[/user]",
+      "expected": "<a href=\"#\">x</a><span class=\"ubb-pm\">@</span><a href=\"/user/x\">@x</a>"
+    },
+    {
+      "name": "protocol-case",
+      "input": "[url=HTTPS://example.com?a=1&b=2]x[/url]",
+      "expected": "<a href=\"HTTPS://example.com?a=1&amp;b=2\">x</a>"
+    },
+    {
+      "name": "protocol-controls",
+      "input": "[url=java\tscript:alert(1)]x[/url]",
+      "expected": "<a href=\"#\">x</a>"
+    },
+    {
+      "name": "protocol-relative",
+      "input": "[img]//example.com/a.png[/img]",
+      "expected": "<img src=\"//example.com/a.png\" alt=\"\">"
+    },
+    {
+      "name": "table-ragged",
+      "input": "[table][tr][td]a[/td][/tr]x[tr][th]b[/th][td]c[/td][/tr][/table]",
+      "expected": "<table><tr><td>a</td></tr>x<tr><th>b</th><td>c</td></tr></table>"
+    },
+    {
+      "name": "table-empty",
+      "input": "[table][tr][/tr][/table]",
+      "expected": "<table><tr></tr></table>"
+    },
+    {
+      "name": "table-finalize-scope",
+      "input": "[table][tr][td][line][/td][/tr][/table]",
+      "expected": "<table><tr><td><hr></td></tr></table>"
+    },
+    {
+      "name": "nested-quotes",
+      "input": "[quote=a]x\n[quote=b]y\n\nz[/quote][/quote]",
+      "expected": "<blockquote><cite>a：</cite>x\n<blockquote><cite>b：</cite>y\n\nz</blockquote></blockquote>"
+    },
+    {
+      "name": "markdown-delimiters",
+      "input": "[code]```\n`x`\n```[/code][img=1,title=a]b)c[/img]",
+      "expected": "<pre><code>```\n`x`\n```</code></pre><img src=\"#\" alt=\"a\">"
+    },
+    {
+      "name": "whitespace-9-head",
+      "input": "[\tb]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-9-value",
+      "input": "[url=\thttps://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-9-quote",
+      "input": "[quote]\t[/quote]",
+      "expected": "<blockquote>\t</blockquote>"
+    },
+    {
+      "name": "whitespace-10-head",
+      "input": "[\nb]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-10-value",
+      "input": "[url=\nhttps://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-10-quote",
+      "input": "[quote]\n[/quote]",
+      "expected": "<blockquote>\n</blockquote>"
+    },
+    {
+      "name": "whitespace-11-head",
+      "input": "[\u000bb]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-11-value",
+      "input": "[url=\u000bhttps://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-11-quote",
+      "input": "[quote]\u000b[/quote]",
+      "expected": "<blockquote>\u000b</blockquote>"
+    },
+    {
+      "name": "whitespace-12-head",
+      "input": "[\fb]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-12-value",
+      "input": "[url=\fhttps://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-12-quote",
+      "input": "[quote]\f[/quote]",
+      "expected": "<blockquote>\f</blockquote>"
+    },
+    {
+      "name": "whitespace-13-head",
+      "input": "[\rb]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-13-value",
+      "input": "[url=\rhttps://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-13-quote",
+      "input": "[quote]\r[/quote]",
+      "expected": "<blockquote>\r</blockquote>"
+    },
+    {
+      "name": "whitespace-32-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-32-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-32-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-133-head",
+      "input": "[b]x[/b]",
+      "expected": "[b]x[/b]"
+    },
+    {
+      "name": "whitespace-133-value",
+      "input": "[url=https://x]x[/url]",
+      "expected": "<a href=\"#\">x</a>"
+    },
+    {
+      "name": "whitespace-133-quote",
+      "input": "[quote][/quote]",
+      "expected": "<blockquote></blockquote>"
+    },
+    {
+      "name": "whitespace-160-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-160-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-160-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-5760-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-5760-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-5760-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-8192-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-8192-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-8192-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-8203-head",
+      "input": "[​b]x[/b]",
+      "expected": "[​b]x[/b]"
+    },
+    {
+      "name": "whitespace-8203-value",
+      "input": "[url=​https://x]x[/url]",
+      "expected": "<a href=\"#\">x</a>"
+    },
+    {
+      "name": "whitespace-8203-quote",
+      "input": "[quote]​[/quote]",
+      "expected": "<blockquote>​</blockquote>"
+    },
+    {
+      "name": "whitespace-8232-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-8232-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-8232-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-8233-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-8233-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-8233-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-8239-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-8239-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-8239-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-8287-head",
+      "input": "[ b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-8287-value",
+      "input": "[url= https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-8287-quote",
+      "input": "[quote] [/quote]",
+      "expected": "<blockquote> </blockquote>"
+    },
+    {
+      "name": "whitespace-12288-head",
+      "input": "[　b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-12288-value",
+      "input": "[url=　https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-12288-quote",
+      "input": "[quote]　[/quote]",
+      "expected": "<blockquote>　</blockquote>"
+    },
+    {
+      "name": "whitespace-65279-head",
+      "input": "[﻿b]x[/b]",
+      "expected": "<strong>x</strong>"
+    },
+    {
+      "name": "whitespace-65279-value",
+      "input": "[url=﻿https://x]x[/url]",
+      "expected": "<a href=\"https://x\">x</a>"
+    },
+    {
+      "name": "whitespace-65279-quote",
+      "input": "[quote]﻿[/quote]",
+      "expected": "<blockquote>﻿</blockquote>"
+    },
+    {
+      "name": "unicode-8490-prefix",
+      "input": "K[code]x[/code]",
+      "expected": "K<pre><code>x</code></pre>"
+    },
+    {
+      "name": "unicode-8490-content",
+      "input": "[code]K[/code]",
+      "expected": "<pre><code>K</code></pre>"
+    },
+    {
+      "name": "unicode-8490-empty",
+      "input": "K[line][/line]",
+      "expected": "K<hr>"
+    },
+    {
+      "name": "unicode-570-prefix",
+      "input": "Ⱥ[code]x[/code]",
+      "expected": "Ⱥ<pre><code>x</code></pre>"
+    },
+    {
+      "name": "unicode-570-content",
+      "input": "[code]Ⱥ[/code]",
+      "expected": "<pre><code>Ⱥ</code></pre>"
+    },
+    {
+      "name": "unicode-570-empty",
+      "input": "Ⱥ[line][/line]",
+      "expected": "Ⱥ<hr>"
+    },
+    {
+      "name": "unicode-7838-prefix",
+      "input": "ẞ[code]x[/code]",
+      "expected": "ẞ<pre><code>x</code></pre>"
+    },
+    {
+      "name": "unicode-7838-content",
+      "input": "[code]ẞ[/code]",
+      "expected": "<pre><code>ẞ</code></pre>"
+    },
+    {
+      "name": "unicode-7838-empty",
+      "input": "ẞ[line][/line]",
+      "expected": "ẞ<hr>"
+    },
+    {
+      "name": "unicode-931-prefix",
+      "input": "Σ[code]x[/code]",
+      "expected": "Σ<pre><code>x</code></pre>"
+    },
+    {
+      "name": "unicode-931-content",
+      "input": "[code]Σ[/code]",
+      "expected": "<pre><code>Σ</code></pre>"
+    },
+    {
+      "name": "unicode-931-empty",
+      "input": "Σ[line][/line]",
+      "expected": "Σ<hr>"
+    },
+    {
+      "name": "unicode-66560-prefix",
+      "input": "𐐀[code]x[/code]",
+      "expected": "𐐀<pre><code>x</code></pre>"
+    },
+    {
+      "name": "unicode-66560-content",
+      "input": "[code]𐐀[/code]",
+      "expected": "<pre><code>𐐀</code></pre>"
+    },
+    {
+      "name": "unicode-66560-empty",
+      "input": "𐐀[line][/line]",
+      "expected": "𐐀<hr>"
+    },
+    {
+      "name": "unicode-128512-prefix",
+      "input": "😀[code]x[/code]",
+      "expected": "😀<pre><code>x</code></pre>"
+    },
+    {
+      "name": "unicode-128512-content",
+      "input": "[code]😀[/code]",
+      "expected": "<pre><code>😀</code></pre>"
+    },
+    {
+      "name": "unicode-128512-empty",
+      "input": "😀[line][/line]",
+      "expected": "😀<hr>"
+    },
+    {
+      "name": "unicode-304-prefix",
+      "input": "İ[code]x[/code]",
+      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
+      "expected": "İ<pre><code>x[</code></pre>"
+    },
+    {
+      "name": "unicode-304-content",
+      "input": "[code]İ[/code]",
+      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
+      "expected": "<pre><code>İ[</code></pre>"
+    },
+    {
+      "name": "unicode-304-empty",
+      "input": "İ[line][/line]",
+      "note": "兼容 JS 历史行为：整体小写扩展 UTF-16 长度后仍以相同偏移切原文，本轮不修正。",
+      "expected": "İ<hr>[/line]"
+    },
+    {
+      "name": "static-b",
+      "input": "[b=x]a[b]b[/b]&<\"[/B]",
+      "expected": "<strong>a<strong>b</strong>&amp;&lt;&quot;</strong>"
+    },
+    {
+      "name": "static-i",
+      "input": "[i=x]a[b]b[/b]&<\"[/I]",
+      "expected": "<em>a<strong>b</strong>&amp;&lt;&quot;</em>"
+    },
+    {
+      "name": "static-u",
+      "input": "[u=x]a[b]b[/b]&<\"[/U]",
+      "expected": "<u>a<strong>b</strong>&amp;&lt;&quot;</u>"
+    },
+    {
+      "name": "static-del",
+      "input": "[del=x]a[b]b[/b]&<\"[/DEL]",
+      "expected": "<s>a<strong>b</strong>&amp;&lt;&quot;</s>"
+    },
+    {
+      "name": "static-english",
+      "input": "[english=x]a[b]b[/b]&<\"[/ENGLISH]",
+      "expected": "<span style=\"font-family: Arial\">a<strong>b</strong>&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-left",
+      "input": "[left=x]a[b]b[/b]&<\"[/LEFT]",
+      "expected": "<div style=\"text-align: left\">a<strong>b</strong>&amp;&lt;&quot;</div>"
+    },
+    {
+      "name": "static-center",
+      "input": "[center=x]a[b]b[/b]&<\"[/CENTER]",
+      "expected": "<div style=\"text-align: center\">a<strong>b</strong>&amp;&lt;&quot;</div>"
+    },
+    {
+      "name": "static-right",
+      "input": "[right=x]a[b]b[/b]&<\"[/RIGHT]",
+      "expected": "<div style=\"text-align: right\">a<strong>b</strong>&amp;&lt;&quot;</div>"
+    },
+    {
+      "name": "static-size",
+      "input": "[size=x]a[b]b[/b]&<\"[/SIZE]",
+      "expected": "<span style=\"font-size: xpt\">a<strong>b</strong>&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-color",
+      "input": "[color=x]a[b]b[/b]&<\"[/COLOR]",
+      "expected": "<span style=\"color: x\">a<strong>b</strong>&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-font",
+      "input": "[font=x]a[b]b[/b]&<\"[/FONT]",
+      "expected": "<span style=\"font-family: x\">a<strong>b</strong>&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-align",
+      "input": "[align=x]a[b]b[/b]&<\"[/ALIGN]",
+      "expected": "<div style=\"text-align: x\">a<strong>b</strong>&amp;&lt;&quot;</div>"
+    },
+    {
+      "name": "static-cursor",
+      "input": "[cursor=x]a[b]b[/b]&<\"[/CURSOR]",
+      "expected": "<span style=\"cursor: x\">a<strong>b</strong>&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-url",
+      "input": "[url=x]a[b]b[/b]&<\"[/URL]",
+      "expected": "<a href=\"#\">a<strong>b</strong>&amp;&lt;&quot;</a>"
+    },
+    {
+      "name": "static-table",
+      "input": "[table=x]a[b]b[/b]&<\"[/TABLE]",
+      "expected": "<table>a<strong>b</strong>&amp;&lt;&quot;</table>"
+    },
+    {
+      "name": "static-tr",
+      "input": "[tr=x]a[b]b[/b]&<\"[/TR]",
+      "expected": "<tr>a<strong>b</strong>&amp;&lt;&quot;</tr>"
+    },
+    {
+      "name": "static-td",
+      "input": "[td=x]a[b]b[/b]&<\"[/TD]",
+      "expected": "<td>a<strong>b</strong>&amp;&lt;&quot;</td>"
+    },
+    {
+      "name": "static-th",
+      "input": "[th=x]a[b]b[/b]&<\"[/TH]",
+      "expected": "<th>a<strong>b</strong>&amp;&lt;&quot;</th>"
+    },
+    {
+      "name": "static-quote",
+      "input": "[quote=x]a[b]b[/b]&<\"[/QUOTE]",
+      "expected": "<blockquote><cite>x：</cite>a<strong>b</strong>&amp;&lt;&quot;</blockquote>"
+    },
+    {
+      "name": "static-quotex",
+      "input": "[quotex=x]a[b]b[/b]&<\"[/QUOTEX]",
+      "expected": "<blockquote><cite>x：</cite>a<strong>b</strong>&amp;&lt;&quot;</blockquote>"
+    },
+    {
+      "name": "static-user",
+      "input": "[user=x]a[b]b[/b]&<\"[/USER]",
+      "expected": "<a href=\"/user/ab&amp;&lt;&quot;\">@ab&amp;&lt;&quot;</a>"
+    },
+    {
+      "name": "static-topic",
+      "input": "[topic=x]a[b]b[/b]&<\"[/TOPIC]",
+      "expected": "<a href=\"/topic/x\">a<strong>b</strong>&amp;&lt;&quot;</a>"
+    },
+    {
+      "name": "static-board",
+      "input": "[board=x]a[b]b[/b]&<\"[/BOARD]",
+      "expected": "<a href=\"/board/x\">a<strong>b</strong>&amp;&lt;&quot;</a>"
+    },
+    {
+      "name": "static-pm",
+      "input": "[pm=x]a[b]b[/b]&<\"[/PM]",
+      "expected": "<span class=\"ubb-pm\">@x</span>"
+    },
+    {
+      "name": "static-code",
+      "input": "[code=x]a[b]b[/b]&<\"[/CODE]",
+      "expected": "<pre><code>a[b]b[/b]&amp;&lt;&quot;</code></pre>"
+    },
+    {
+      "name": "static-md",
+      "input": "[md=x]a[b]b[/b]&<\"[/MD]",
+      "expected": "<div class=\"ubb-md\">a[b]b[/b]&amp;&lt;&quot;</div>"
+    },
+    {
+      "name": "static-noubb",
+      "input": "[noubb=x]a[b]b[/b]&<\"[/NOUBB]",
+      "expected": "a[b]b[/b]&amp;&lt;&quot;"
+    },
+    {
+      "name": "static-img",
+      "input": "[img=x]a[b]b[/b]&<\"[/IMG]",
+      "expected": "<img src=\"#\" alt=\"\">"
+    },
+    {
+      "name": "static-audio",
+      "input": "[audio=x]a[b]b[/b]&<\"[/AUDIO]",
+      "expected": "<audio src=\"#\" controls></audio>"
+    },
+    {
+      "name": "static-mp3",
+      "input": "[mp3=x]a[b]b[/b]&<\"[/MP3]",
+      "expected": "<audio src=\"#\" controls></audio>"
+    },
+    {
+      "name": "static-video",
+      "input": "[video=x]a[b]b[/b]&<\"[/VIDEO]",
+      "expected": "<video src=\"#\" controls></video>"
+    },
+    {
+      "name": "static-upload",
+      "input": "[upload=x]a[b]b[/b]&<\"[/UPLOAD]",
+      "expected": "<a href=\"#\">下载文件</a>"
+    },
+    {
+      "name": "static-bili",
+      "input": "[bili=x]a[b]b[/b]&<\"[/BILI]",
+      "expected": "<a href=\"https://www.bilibili.com/video/a[b]b[/b]&amp;&lt;&quot;\">bili:a[b]b[/b]&amp;&lt;&quot;</a>"
+    },
+    {
+      "name": "static-math",
+      "input": "[math=x]a[b]b[/b]&<\"[/MATH]",
+      "expected": "<span class=\"ubb-math\">a[b]b[/b]&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-m",
+      "input": "[m=x]a[b]b[/b]&<\"[/M]",
+      "expected": "<span class=\"ubb-math\">a[b]b[/b]&amp;&lt;&quot;</span>"
+    },
+    {
+      "name": "static-line",
+      "input": "[line=x]a[b]b[/b]&<\"[/LINE]",
+      "expected": "<hr>a<strong>b</strong>&amp;&lt;&quot;[/LINE]"
+    },
+    {
+      "name": "static-needreply",
+      "input": "[needreply=x]a[b]b[/b]&<\"[/NEEDREPLY]",
+      "expected": "a<strong>b</strong>&amp;&lt;&quot;[/NEEDREPLY]"
+    },
+    {
+      "name": "static-posteronly",
+      "input": "[posteronly=x]a[b]b[/b]&<\"[/POSTERONLY]",
+      "expected": "a<strong>b</strong>&amp;&lt;&quot;[/POSTERONLY]"
+    },
+    {
+      "name": "static-allowviewer",
+      "input": "[allowviewer=x]a[b]b[/b]&<\"[/ALLOWVIEWER]",
+      "expected": "a<strong>b</strong>&amp;&lt;&quot;[/ALLOWVIEWER]"
+    },
+    {
+      "name": "generated-739181-0",
+      "input": "[/table][url=][i][/color][][/img][color=red][b][[b][/quote][/color][/table][em01][bad][",
+      "expected": "[/table][url=][i][/color][][/img]<span style=\"color: red\">[b][[b][/quote]</span>[/table][bad]["
+    },
+    {
+      "name": "generated-739181-1",
+      "input": "][em01][/line]x[em01][[/table][/i][/code][line][/img]",
+      "expected": "][/line]x[[/table][/i][/code]<hr>[/img]"
+    },
+    {
+      "name": "generated-739181-2",
+      "input": "[/quote][/quote][/img][user=张三][bad][em01][b]",
+      "expected": "[/quote][/quote][/img]<a href=\"/user/张三\">@张三</a>[bad][b]"
+    },
+    {
+      "name": "generated-739181-3",
+      "input": "[/i][/i][/table][/i][quote][quote]正文",
+      "expected": "[/i][/i][/table][/i][quote][quote]正文"
+    },
+    {
+      "name": "generated-739181-4",
+      "input": "[color=red][line][[/color][/url][needreply][td]",
+      "expected": "[color=red]<hr>[[/color][/url][td]"
+    },
+    {
+      "name": "generated-739181-5",
+      "input": "[/b][/i][b]😀[b]x[em01]x正文[img=1,title=封面][/table]x正文[user=张三][tr]x[i]][line][/b][/quote][b][url=]",
+      "expected": "[/b][/i][b]😀<strong>xx正文[img=1,title=封面][/table]x正文<a href=\"/user/张三\">@张三</a>[tr]x[i]]<hr></strong>[/quote][b][url=]"
+    },
+    {
+      "name": "generated-739181-6",
+      "input": "[/b][quote][code][quote][quote][b][needreply][[line][b][/img][color=red][/line][/user][bad]",
+      "expected": "[/b][quote][code][quote][quote][b][[line][b][/img][color=red][/line][/user][bad]"
+    },
+    {
+      "name": "generated-739181-7",
+      "input": "😀[/i][/img][line][tr]\n[user=张三][/quote][/quote][/table][/user]\n[user=张三][color=red][table][img=1,title=封面][/img][em01][code][img=1,title=封面][code][/quote]\n",
+      "expected": "😀[/i][/img]<hr>[tr]\n<a href=\"/user/[/quote][/quote][/table]\">@[/quote][/quote][/table]</a>\n<a href=\"/user/张三\">@张三</a>[color=red][table]<img src=\"#\" alt=\"封面\">[code][img=1,title=封面][code][/quote]\n"
+    },
+    {
+      "name": "generated-739181-8",
+      "input": "[/color][/url][table][img=1,title=封面][i][url=][code]",
+      "expected": "[/color][/url][table][img=1,title=封面][i][url=][code]"
+    },
+    {
+      "name": "generated-739181-9",
+      "input": "[img=1,title=封面][user=张三][/table][quote]][em01][color=red][/user][quote][quote][quote][/url][/user]正文]",
+      "expected": "[img=1,title=封面]<a href=\"/user/[/table][quote]][color=red]\">@[/table][quote]][color=red]</a>[quote][quote][quote][/url][/user]正文]"
+    },
+    {
+      "name": "generated-739181-10",
+      "input": "][/quote][[user=张三][/url][b=][quote]",
+      "expected": "][/quote][[user=张三][/url][b=][quote]"
+    },
+    {
+      "name": "generated-739181-11",
+      "input": "[code][/line]正文[table][url=][i][/url][/url][/color][b=][/img][url=][user=张三][/img][line]",
+      "expected": "[code][/line]正文[table]<a href=\"#\">[i]</a>[/url][/color][b=][/img][url=]<a href=\"/user/张三\">@张三</a>[/img]<hr>"
+    },
+    {
+      "name": "generated-739181-12",
+      "input": "[b][b=]正文[tr][[url=][/user][/quote][em01][url=][[code][/b][line][/i]",
+      "expected": "[b]<strong>正文[tr][[url=][/user][/quote][url=][[code]</strong><hr>[/i]"
+    },
+    {
+      "name": "generated-739181-13",
+      "input": "[needreply][[quote]\n[user=张三][/line][/i][/url][tr][b=][/table][b=][/b]\n[/i]",
+      "expected": "[[quote]\n<a href=\"/user/张三\">@张三</a>[/line][/i][/url][tr][b=][/table]<strong></strong>\n[/i]"
+    },
+    {
+      "name": "generated-739181-14",
+      "input": "[/color][em01][table]😀][tr][user=张三][tr]正文[img=1,title=封面][code]][code][em01][code]",
+      "expected": "[/color][table]😀][tr]<a href=\"/user/张三\">@张三</a>[tr]正文[img=1,title=封面][code]][code][code]"
+    },
+    {
+      "name": "generated-739181-15",
+      "input": "[/user][/quote][/user][/img]x[/color][/line][/table][/user][code][b=]xx[table]正文[b]xx[b=][/user][line][table][/quote]",
+      "expected": "[/user][/quote][/user][/img]x[/color][/line][/table][/user][code][b=]xx[table]正文[b]xx[b=][/user]<hr>[table][/quote]"
+    },
+    {
+      "name": "generated-739181-16",
+      "input": "[b][/url][/code][table][td][needreply]😀",
+      "expected": "[b][/url][/code][table][td]😀"
+    },
+    {
+      "name": "generated-739181-17",
+      "input": "[/table][/color][/line][em01][/code][code][/color][td][b][code][needreply]😀[url=][/img][/code][/img]正文[/i][/b][/i][/line][/code][bad]",
+      "expected": "[/table][/color][/line][/code]<pre><code>[/color][td][b][code][needreply]😀[url=][/img]</code></pre>[/img]正文[/i][/b][/i][/line][/code][bad]"
+    },
+    {
+      "name": "generated-739181-18",
+      "input": "[/i][b=]][url=][b][/color][tr][url=][/i][td][needreply][bad][bad][needreply][/user][url=][url=]][b=][quote][table][/color][quote]",
+      "expected": "[/i][b=]][url=][b][/color][tr][url=][/i][td][bad][bad][/user][url=][url=]][b=][quote][table][/color][quote]"
+    },
+    {
+      "name": "generated-739181-19",
+      "input": "[/table][line][needreply][bad][tr][code][color=red]",
+      "expected": "[/table]<hr>[bad][tr][code][color=red]"
+    },
+    {
+      "name": "generated-739181-20",
+      "input": "]正文][/url][b=][/quote][/url]",
+      "expected": "]正文][/url][b=][/quote][/url]"
+    },
+    {
+      "name": "generated-739181-21",
+      "input": "[tr][line][/b][/user][/line][/i][td]",
+      "expected": "[tr]<hr>[/b][/user][/line][/i][td]"
+    },
+    {
+      "name": "generated-739181-22",
+      "input": "[code]😀[needreply][td][[table][url=]",
+      "expected": "[code]😀[td][[table][url=]"
+    },
+    {
+      "name": "generated-739181-23",
+      "input": "[td][/table][/line]x[td][b=][/table]😀[tr][[/code][color=red][tr][b=]x",
+      "expected": "[td][/table][/line]x[td][b=][/table]😀[tr][[/code][color=red][tr][b=]x"
+    },
+    {
+      "name": "generated-739181-24",
+      "input": "[/b][/user][b=][url=][/quote][tr][/b][tr][quote][line][b=][b=][/i][user=张三][b=]\n[url=][/b][code][/table]正文[img=1,title=封面][em01]",
+      "expected": "[/b][/user]<strong>[url=][/quote][tr]</strong>[tr][quote]<hr>[b=][b=][/i]<a href=\"/user/张三\">@张三</a><strong>\n[url=]</strong>[code][/table]正文[img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-25",
+      "input": "正文\n[/code][b]\n[/code][b][color=red]😀[quote][tr][b][url=][b]][tr][/url][/line][needreply][color=red][b][/color]\n",
+      "expected": "正文\n[/code][b]\n[/code][b][color=red]😀[quote][tr][b]<a href=\"#\">[b]][tr]</a>[/line]<span style=\"color: red\">[b]</span>\n"
+    },
+    {
+      "name": "generated-739181-26",
+      "input": "[em01][[/quote][table]x[i][line]",
+      "expected": "[[/quote][table]x[i]<hr>"
+    },
+    {
+      "name": "generated-739181-27",
+      "input": "[bad]]][quote][b=][em01][i]",
+      "expected": "[bad]]][quote][b=][i]"
+    },
+    {
+      "name": "generated-739181-28",
+      "input": "[/color]xx[code][/img]][needreply][/line]😀[tr][b=]😀正文[/line][table]",
+      "expected": "[/color]xx[code][/img]][/line]😀[tr][b=]😀正文[/line][table]"
+    },
+    {
+      "name": "generated-739181-29",
+      "input": "[table][tr]x[/code][/color][b][",
+      "expected": "[table][tr]x[/code][/color][b]["
+    },
+    {
+      "name": "generated-739181-30",
+      "input": "[/i][bad]][img=1,title=封面][em01][needreply][/img]",
+      "expected": "[/i][bad]]<img src=\"#\" alt=\"封面\">"
+    },
+    {
+      "name": "generated-739181-31",
+      "input": "[[td][/quote][/table]正文[color=red][/img][/line][img=1,title=封面][tr][needreply][i][em01][user=张三][/img][table]😀\n[tr][/user][b]\n[b=]",
+      "expected": "[[td][/quote][/table]正文[color=red][/img][/line]<img src=\"#\" alt=\"封面\">[table]😀\n[tr][/user][b]\n[b=]"
+    },
+    {
+      "name": "generated-739181-32",
+      "input": "[code]😀[/code][user=张三]\n[/color]][/b][color=red]][code][/b]][/img][tr][table][color=red][url=][[td]]x[color=red]",
+      "expected": "<pre><code>😀</code></pre><a href=\"/user/张三\">@张三</a>\n[/color]][/b][color=red]][code][/b]][/img][tr][table][color=red][url=][[td]]x[color=red]"
+    },
+    {
+      "name": "generated-739181-33",
+      "input": "[/code][img=1,title=封面][[/quote][quote]x[/i]x[table][quote][line][code][user=张三][/quote][/line]正文[b=][user=张三][em01]][bad][td][bad]",
+      "expected": "[/code][img=1,title=封面][[/quote][quote]x[/i]x[table]<blockquote><hr>[code]<a href=\"/user/张三\">@张三</a></blockquote>[/line]正文[b=]<a href=\"/user/张三\">@张三</a>][bad][td][bad]"
+    },
+    {
+      "name": "generated-739181-34",
+      "input": "[table][url=][color=red][/user][/img][/line]😀[quote][code][line][i][bad][/quote][/table][/b]",
+      "expected": "<table>[url=][color=red][/user][/img][/line]😀<blockquote>[code]<hr>[i][bad]</blockquote></table>[/b]"
+    },
+    {
+      "name": "generated-739181-35",
+      "input": "[/table][tr]😀😀[/line][/img][url=][line][/table][b][color=red][needreply][table][/quote][",
+      "expected": "[/table][tr]😀😀[/line][/img][url=]<hr>[/table][b][color=red][table][/quote]["
+    },
+    {
+      "name": "generated-739181-36",
+      "input": "[user=张三][/table][[color=red][i][/img][i]",
+      "expected": "<a href=\"/user/张三\">@张三</a>[/table][[color=red][i][/img][i]"
+    },
+    {
+      "name": "generated-739181-37",
+      "input": "[b=]正文[color=red][needreply][/i][td]\nx[bad][/quote]😀[table][color=red][/code][needreply]",
+      "expected": "[b=]正文[color=red][/i][td]\nx[bad][/quote]😀[table][color=red][/code]"
+    },
+    {
+      "name": "generated-739181-38",
+      "input": "[img=1,title=封面]正文[i][/quote][/quote]😀[/url][line][/color][needreply][color=red][line][/color]x[/table]",
+      "expected": "[img=1,title=封面]正文[i][/quote][/quote]😀[/url]<hr>[/color]<span style=\"color: red\"><hr></span>x[/table]"
+    },
+    {
+      "name": "generated-739181-39",
+      "input": "[/img][/b][em01][td][user=张三][em01]正文[b=][img=1,title=封面][td][line][url=][/i][em01][/color]",
+      "expected": "[/img][/b][td]<a href=\"/user/张三\">@张三</a>正文[b=][img=1,title=封面][td]<hr>[url=][/i][/color]"
+    },
+    {
+      "name": "generated-739181-40",
+      "input": "[tr][em01][😀[td]\n[/quote]",
+      "expected": "[tr][😀[td]\n[/quote]"
+    },
+    {
+      "name": "generated-739181-41",
+      "input": "[em01]正文[[i][/url][table][code]",
+      "expected": "正文[[i][/url][table][code]"
+    },
+    {
+      "name": "generated-739181-42",
+      "input": "[user=张三][code][/code][/line][[line][td]正文[code][/img][line]正文😀[/table][quote]",
+      "expected": "<a href=\"/user/张三\">@张三</a><pre><code></code></pre>[/line][[line][td]正文[code][/img]<hr>正文😀[/table][quote]"
+    },
+    {
+      "name": "generated-739181-43",
+      "input": "[quote][[td]正文[/img][b=][line]][/user]x[color=red][url=][/line][/img][b][/color][/i][td][img=1,title=封面][code]]][table]",
+      "expected": "[quote][[td]正文[/img][b=]<hr>][/user]x<span style=\"color: red\">[url=][/line][/img][b]</span>[/i][td][img=1,title=封面][code]]][table]"
+    },
+    {
+      "name": "generated-739181-44",
+      "input": "[/line][/table]😀[color=red][color=red][/color][img=1,title=封面]",
+      "expected": "[/line][/table]😀[color=red]<span style=\"color: red\"></span>[img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-45",
+      "input": "😀[img=1,title=封面]\n[img=1,title=封面][needreply][/url]x[code][quote][/color][[/user][[color=red][em01]",
+      "expected": "😀[img=1,title=封面]\n[img=1,title=封面][/url]x[code][quote][/color][[/user][[color=red]"
+    },
+    {
+      "name": "generated-739181-46",
+      "input": "[/quote][/color]\n[/img][line][b=][/code][/url][/table][b=]😀[b][img=1,title=封面][/quote][/user]",
+      "expected": "[/quote][/color]\n[/img]<hr>[b=][/code][/url][/table][b=]😀[b][img=1,title=封面][/quote][/user]"
+    },
+    {
+      "name": "generated-739181-47",
+      "input": "\n[b][img=1,title=封面][/line][[img=1,title=封面][/user]",
+      "expected": "\n[b][img=1,title=封面][/line][[img=1,title=封面][/user]"
+    },
+    {
+      "name": "generated-739181-48",
+      "input": "[/url][/color][color=red]\n[img=1,title=封面][table][/user][[quote][/img][td][/quote][/line][user=张三][code]",
+      "expected": "[/url][/color][color=red]\n<img src=\"#\" alt=\"封面\">[td][/quote][/line]<a href=\"/user/张三\">@张三</a>[code]"
+    },
+    {
+      "name": "generated-739181-49",
+      "input": "[/color][needreply][line][quote]😀[/img][line]",
+      "expected": "[/color]<hr>[quote]😀[/img]<hr>"
+    },
+    {
+      "name": "generated-739181-50",
+      "input": "][/table][/code]x[b][/line][url=]",
+      "expected": "][/table][/code]x[b][/line][url=]"
+    },
+    {
+      "name": "generated-739181-51",
+      "input": "][bad]][line][b][/i]\n[tr][b]😀][/color][tr][/i][/img][url=][/quote][[/line][img=1,title=封面]正文[/code][tr]",
+      "expected": "][bad]]<hr>[b][/i]\n[tr][b]😀][/color][tr][/i][/img][url=][/quote][[/line][img=1,title=封面]正文[/code][tr]"
+    },
+    {
+      "name": "generated-739181-52",
+      "input": "x[/line][url=][user=张三][table][bad][/b]",
+      "expected": "x[/line][url=]<a href=\"/user/张三\">@张三</a>[table][bad][/b]"
+    },
+    {
+      "name": "generated-739181-53",
+      "input": "[/quote][bad][/color][/quote][needreply][color=red][/line]",
+      "expected": "[/quote][bad][/color][/quote][color=red][/line]"
+    },
+    {
+      "name": "generated-739181-54",
+      "input": "[/color]正文[/i][needreply][td][quote][/quote]",
+      "expected": "[/color]正文[/i][td]<blockquote></blockquote>"
+    },
+    {
+      "name": "generated-739181-55",
+      "input": "[b=][/color][table][/user][/quote][/line][/table]",
+      "expected": "[b=][/color]<table>[/user][/quote][/line]</table>"
+    },
+    {
+      "name": "generated-739181-56",
+      "input": "[b=][/user][/color][em01][i][/code][/code][/user][needreply][/b]][url=][url=][/line][img=1,title=封面][quote]x[/quote][/color][em01][/url][bad][b]",
+      "expected": "<strong>[/user][/color][i][/code][/code][/user]</strong>][url=]<a href=\"#\">[/line][img=1,title=封面]<blockquote>x</blockquote>[/color]</a>[bad][b]"
+    },
+    {
+      "name": "generated-739181-57",
+      "input": "[/line]][table][code][/code][/table]x",
+      "expected": "[/line]]<table><pre><code></code></pre></table>x"
+    },
+    {
+      "name": "generated-739181-58",
+      "input": "[/url][/quote][/i][/color][td]正文[needreply][/user]😀[i][/color][b=][line][/i]正文",
+      "expected": "[/url][/quote][/i][/color][td]正文[/user]😀<em>[/color][b=]<hr></em>正文"
+    },
+    {
+      "name": "generated-739181-59",
+      "input": "正文[code][url=][line]正文[/color][color=red][/quote][/url][b][/line]😀[/url][/color][bad]正文[img=1,title=封面]\n][/user][user=张三][user=张三][/i]",
+      "expected": "正文[code]<a href=\"#\"><hr>正文[/color][color=red][/quote]</a>[b][/line]😀[/url][/color][bad]正文[img=1,title=封面]\n][/user]<a href=\"/user/张三\">@张三</a><a href=\"/user/张三\">@张三</a>[/i]"
+    },
+    {
+      "name": "generated-739181-60",
+      "input": "[/i][/quote]]\n[b=]x]",
+      "expected": "[/i][/quote]]\n[b=]x]"
+    },
+    {
+      "name": "generated-739181-61",
+      "input": "[needreply][url=][line][[/color][needreply][/url][em01][/color][table][/line][tr][/b][quote][i]",
+      "expected": "<a href=\"#\"><hr>[[/color]</a>[/color][table][/line][tr][/b][quote][i]"
+    },
+    {
+      "name": "generated-739181-62",
+      "input": "[em01][td][/table][tr][needreply][em01][table][/img][color=red][img=1,title=封面][/color]😀[/quote][/line][quote][/table][/table][b][/img][img=1,title=封面][b][/url][em01]",
+      "expected": "[td][/table][tr][table][/img][color=red]<img src=\"#\" alt=\"封面\">[img=1,title=封面][b][/url]"
+    },
+    {
+      "name": "generated-739181-63",
+      "input": "[i][/b][table][url=][/code][/img][user=张三][/img][quote]😀[bad][b][code][/b][/color][/i][em01][user=张三]][/quote][/color][img=1,title=封面][td]",
+      "expected": "<em>[/b][table][url=][/code][/img]<a href=\"/user/张三\">@张三</a>[/img][quote]😀[bad]<strong>[code]</strong>[/color]</em><a href=\"/user/张三\">@张三</a>][/quote][/color][img=1,title=封面][td]"
+    },
+    {
+      "name": "generated-739181-64",
+      "input": "[url=][user=张三][bad][/b][quote][em01]😀",
+      "expected": "[url=]<a href=\"/user/张三\">@张三</a>[bad][/b][quote]😀"
+    },
+    {
+      "name": "generated-739181-65",
+      "input": "[b=][tr][table]正文[/table][/code][[b][line][/user][/img][[/color][line][",
+      "expected": "[b=][tr]<table>正文</table>[/code][[b]<hr>[/user][/img][[/color]<hr>["
+    },
+    {
+      "name": "generated-739181-66",
+      "input": "[/user][user=张三][/color][/table][/table]x[[img=1,title=封面][em01][table][/table][/color][/quote][table]]",
+      "expected": "[/user]<a href=\"/user/张三\">@张三</a>[/color][/table][/table]x[[img=1,title=封面]<table></table>[/color][/quote][table]]"
+    },
+    {
+      "name": "generated-739181-67",
+      "input": "😀[i][/line][color=red][/b][/line][table]",
+      "expected": "😀[i][/line][color=red][/b][/line][table]"
+    },
+    {
+      "name": "generated-739181-68",
+      "input": "[bad][/b][line][td][/line][color=red][/table][img=1,title=封面][bad][b=]😀[b=][/line]😀[b]][table][needreply]😀[/url][/i]😀[/user]",
+      "expected": "[bad][/b]<hr>[td][/line][color=red][/table][img=1,title=封面][bad][b=]😀[b=][/line]😀[b]][table]😀[/url][/i]😀[/user]"
+    },
+    {
+      "name": "generated-739181-69",
+      "input": "[url=][td][em01][b][[/table][url=]",
+      "expected": "[url=][td][b][[/table][url=]"
+    },
+    {
+      "name": "generated-739181-70",
+      "input": "[/code]x[/url][quote][i][/user][/quote][/quote][url=][b=][b][/color][code][img=1,title=封面][tr][url=]😀[/quote][user=张三][em01][user=张三][code][/i]",
+      "expected": "[/code]x[/url]<blockquote>[i][/user]</blockquote>[/quote][url=][b=][b][/color][code][img=1,title=封面][tr][url=]😀[/quote]<a href=\"/user/张三\">@张三</a><a href=\"/user/张三\">@张三</a>[code][/i]"
+    },
+    {
+      "name": "generated-739181-71",
+      "input": "x[user=张三][tr][/quote][td][color=red]正文[i]x[em01][b]][url=][/table]😀",
+      "expected": "x<a href=\"/user/张三\">@张三</a>[tr][/quote][td][color=red]正文[i]x[b]][url=][/table]😀"
+    },
+    {
+      "name": "generated-739181-72",
+      "input": "[[code]😀😀[/img][color=red][user=张三]",
+      "expected": "[[code]😀😀[/img][color=red]<a href=\"/user/张三\">@张三</a>"
+    },
+    {
+      "name": "generated-739181-73",
+      "input": "[/code]][b]][b=][/user][quote][line][i][/table][tr][img=1,title=封面][bad][quote][/color]x[/user]][user=张三][/url][user=张三][i]x",
+      "expected": "[/code]][b]][b=][/user][quote]<hr>[i][/table][tr][img=1,title=封面][bad][quote][/color]x[/user]]<a href=\"/user/张三\">@张三</a>[/url]<a href=\"/user/张三\">@张三</a>[i]x"
+    },
+    {
+      "name": "generated-739181-74",
+      "input": "[quote][/code][b][i][quote]😀[color=red][i][code][url=][/url][b=][[/img]\n\n[/user][/user][em01][/user][b=][/img][/b]",
+      "expected": "[quote][/code][b][i][quote]😀[color=red][i][code]<a href=\"#\"></a>[b=][[/img]\n\n[/user][/user][/user]<strong>[/img]</strong>"
+    },
+    {
+      "name": "generated-739181-75",
+      "input": "[/url][/img]😀[/quote]正文[table][/img][quote][/table]]😀[/table][color=red][/i][line][code][[bad][/line][/i][line][/quote][needreply]",
+      "expected": "[/url][/img]😀[/quote]正文<table>[/img][quote]</table>]😀[/table][color=red][/i]<hr>[code][[bad][/line][/i]<hr>[/quote]"
+    },
+    {
+      "name": "generated-739181-76",
+      "input": "😀[color=red][em01][/code][em01][code][img=1,title=封面][b=][/i][b][needreply][/code][code][/color][em01]",
+      "expected": "😀<span style=\"color: red\">[/code]<pre><code>[img=1,title=封面][b=][/i][b][needreply]</code></pre>[code]</span>"
+    },
+    {
+      "name": "generated-739181-77",
+      "input": "]😀[b][/user][td][color=red][i][table][b=][/user][b=][b][/line][/b][td]\n[td][code][tr]😀[bad][/line][b=]",
+      "expected": "]😀[b][/user][td][color=red][i][table][b=][/user][b=]<strong>[/line]</strong>[td]\n[td][code][tr]😀[bad][/line][b=]"
+    },
+    {
+      "name": "generated-739181-78",
+      "input": "[em01][needreply][quote]正文\n[[bad][b][/i][/line]😀[/color][line][line][/url]",
+      "expected": "[quote]正文\n[[bad][b][/i][/line]😀[/color]<hr><hr>[/url]"
+    },
+    {
+      "name": "generated-739181-79",
+      "input": "[user=张三][/line][quote]x[tr][/color][/line]",
+      "expected": "<a href=\"/user/张三\">@张三</a>[/line][quote]x[tr][/color][/line]"
+    },
+    {
+      "name": "generated-739181-80",
+      "input": "x[/color][tr][tr][/user][/table][/code][needreply][/b][em01][b=][/i][line][needreply][/code][b][color=red][/line][b][/line][/user][/i][/code]",
+      "expected": "x[/color][tr][tr][/user][/table][/code][/b][b=][/i]<hr>[/code][b][color=red][/line][b][/line][/user][/i][/code]"
+    },
+    {
+      "name": "generated-739181-81",
+      "input": "[/i][color=red][needreply][/url][td]x[line]",
+      "expected": "[/i][color=red][/url][td]x<hr>"
+    },
+    {
+      "name": "generated-739181-82",
+      "input": "[quote][/code][em01][url=][em01][color=red][em01]",
+      "expected": "[quote][/code][url=][color=red]"
+    },
+    {
+      "name": "generated-739181-83",
+      "input": "[/line][code][/line][line][/quote][img=1,title=封面]正文[bad][/line][tr][table][i][/quote]正文[quote][/img][/quote][i][table][table][/url]正文[",
+      "expected": "[/line][code][/line]<hr>[/quote]<img src=\"#\" alt=\"封面\">[/quote][i][table][table][/url]正文["
+    },
+    {
+      "name": "generated-739181-84",
+      "input": "[user=张三][b][url=]正文[/color][quote][/table][user=张三][b][img=1,title=封面]正文[color=red][url=][tr][/i]",
+      "expected": "<a href=\"/user/张三\">@张三</a>[b][url=]正文[/color][quote][/table]<a href=\"/user/张三\">@张三</a>[b][img=1,title=封面]正文[color=red][url=][tr][/i]"
+    },
+    {
+      "name": "generated-739181-85",
+      "input": "[user=张三][tr][/b][/url]\n[line][url=][line][quote]][/user]]正文[td][/img]",
+      "expected": "<a href=\"/user/[tr][/b][/url]\n[url=][quote]]\">@[tr][/b][/url]\n[url=][quote]]</a>]正文[td][/img]"
+    },
+    {
+      "name": "generated-739181-86",
+      "input": "[/code][/line][td][/color][user=张三][img=1,title=封面][color=red][/color][/code]\n[/b][user=张三][/img][quote][/line][/color]\n[url=][table][/user][needreply][img=1,title=封面][b=]",
+      "expected": "[/code][/line][td][/color]<a href=\"/user/[color=red][/color][/code]\n[/b][user=张三][quote][/line][/color]\n[url=][table]\">@[color=red][/color][/code]\n[/b][user=张三][quote][/line][/color]\n[url=][table]</a>[img=1,title=封面][b=]"
+    },
+    {
+      "name": "generated-739181-87",
+      "input": "[b][/table][/b][user=张三][color=red][tr][i][/user][td][/b][td][b][table][code][bad]",
+      "expected": "<strong>[/table]</strong><a href=\"/user/[color=red][tr][i]\">@[color=red][tr][i]</a>[td][/b][td][b][table][code][bad]"
+    },
+    {
+      "name": "generated-739181-88",
+      "input": "[color=red][/table][/user][table]正文][/color][/color][em01][/url][/b]\n[tr]正文\n[/color][/color][bad]正文[i][/color][/line][b]",
+      "expected": "<span style=\"color: red\">[/table][/user][table]正文]</span>[/color][/url][/b]\n[tr]正文\n[/color][/color][bad]正文[i][/color][/line][b]"
+    },
+    {
+      "name": "generated-739181-89",
+      "input": "[color=red][em01][url=][/quote][color=red][/line][/quote][/code][/user][table][table][/color][x[/user]",
+      "expected": "[color=red][url=][/quote]<span style=\"color: red\">[/line][/quote][/code][/user][table][table]</span>[x[/user]"
+    },
+    {
+      "name": "generated-739181-90",
+      "input": "[b=][/table][table][/line][/code]😀[table][/i]\n[b=][em01][bad][quote][/code]x",
+      "expected": "[b=][/table][table][/line][/code]😀[table][/i]\n[b=][bad][quote][/code]x"
+    },
+    {
+      "name": "generated-739181-91",
+      "input": "[quote][/i][url=][/img][img=1,title=封面][td][user=张三]",
+      "expected": "[quote][/i][url=][/img][img=1,title=封面][td]<a href=\"/user/张三\">@张三</a>"
+    },
+    {
+      "name": "generated-739181-92",
+      "input": "[/table][/user][color=red][/img]\n[/img][td]",
+      "expected": "[/table][/user][color=red][/img]\n[/img][td]"
+    },
+    {
+      "name": "generated-739181-93",
+      "input": "[bad][needreply][/b][/quote][user=张三][img=1,title=封面][img=1,title=封面][x[em01][正文[/quote][[/url]",
+      "expected": "[bad][/b][/quote]<a href=\"/user/张三\">@张三</a>[img=1,title=封面][img=1,title=封面][x[em01][正文[/quote][[/url]"
+    },
+    {
+      "name": "generated-739181-94",
+      "input": "[/img][url=][td][/user][table][color=red][code]x[/i][i][/quote][tr]😀[url=][/b][needreply][/table]x[table][/url][quote][needreply][needreply]",
+      "expected": "[/img]<a href=\"#\">[td][/user]<table>[color=red][code]x[/i][i][/quote][tr]😀[url=][/b]</table>x[table]</a>[quote]"
+    },
+    {
+      "name": "generated-739181-95",
+      "input": "[needreply]x[/quote][td][/i][/img][tr][/i][/code][user=张三][td][/code]x[quote]😀",
+      "expected": "x[/quote][td][/i][/img][tr][/i][/code]<a href=\"/user/张三\">@张三</a>[td][/code]x[quote]😀"
+    },
+    {
+      "name": "generated-739181-96",
+      "input": "[tr]\n[[bad][quote][/quote]😀[needreply]]x[/b][x😀😀正文[/table][/i][color=red][table][user=张三][/i][table]",
+      "expected": "[tr]\n[[bad]<blockquote></blockquote>😀]x[/b][x😀😀正文[/table][/i][color=red][table]<a href=\"/user/张三\">@张三</a>[/i][table]"
+    },
+    {
+      "name": "generated-739181-97",
+      "input": "[em01][/url][url=]😀[img=1,title=封面][img=1,title=封面][td][b=][i][url=][em01][b=][td][line][color=red]",
+      "expected": "[/url][url=]😀[img=1,title=封面][img=1,title=封面][td][b=][i][url=][b=][td]<hr>[color=red]"
+    },
+    {
+      "name": "generated-739181-98",
+      "input": "[i][/color][tr]\n[td][i][i][quote][url=][/code][tr][code][b=][i][/code]",
+      "expected": "[i][/color][tr]\n[td][i][i][quote][url=][/code][tr]<pre><code>[b=][i]</code></pre>"
+    },
+    {
+      "name": "generated-739181-99",
+      "input": "[needreply][/user][/url][tr][line][code]正文[/b][table]😀x[url=][/img]\n[/img][/url][needreply][/color][i][table]😀[needreply][/table]",
+      "expected": "[/user][/url][tr]<hr>[code]正文[/b][table]😀x<a href=\"#\">[/img]\n[/img]</a>[/color][i]<table>😀</table>"
+    },
+    {
+      "name": "generated-739181-100",
+      "input": "[em01][/table][code][user=张三][[bad][/user][em01][b]x[/table][/url]正文[line]\n[/table][b][/img][i][quote][needreply][code][tr]",
+      "expected": "[/table][code]<a href=\"/user/[[bad]\">@[[bad]</a>[b]x[/table][/url]正文<hr>\n[/table][b][/img][i][quote][code][tr]"
+    },
+    {
+      "name": "generated-739181-101",
+      "input": "[line][bad][tr][/quote][code][line][code][line][table][/b][i][quote][/code]\n[img=1,title=封面]",
+      "expected": "<hr>[bad][tr][/quote]<pre><code>[line][code][line][table][/b][i][quote]</code></pre>\n[img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-102",
+      "input": "[/img][code][/table]正文[i][td][/b][line]][/b][code][code][[/url][bad]",
+      "expected": "[/img][code][/table]正文[i][td][/b]<hr>][/b][code][code][[/url][bad]"
+    },
+    {
+      "name": "generated-739181-103",
+      "input": "[/i][quote][i][/table][/i][i][b][/table]😀[b=]x\n[line][color=red][quote][/line]]\n[/url][/color][/code][color=red][/i]",
+      "expected": "[/i][quote]<em>[/table]</em><em>[b][/table]😀[b=]x\n<hr><span style=\"color: red\">[quote][/line]]\n[/url]</span>[/code][color=red]</em>"
+    },
+    {
+      "name": "generated-739181-104",
+      "input": "[color=red][color=red][tr][/url][/color][/i][[url=]x[/b][tr][[bad]正文[em01]",
+      "expected": "[color=red]<span style=\"color: red\">[tr][/url]</span>[/i][[url=]x[/b][tr][[bad]正文"
+    },
+    {
+      "name": "generated-739181-105",
+      "input": "[line][tr][url=][needreply][tr][/table][/color][/b][em01][line][/url][/b][/table][bad][b=]\n[b=][em01][/color][/b]😀[/line][/url]",
+      "expected": "<hr>[tr]<a href=\"#\">[tr][/table][/color][/b]<hr></a>[/b][/table][bad][b=]\n<strong>[/color]</strong>😀[/line][/url]"
+    },
+    {
+      "name": "generated-739181-106",
+      "input": "[/line][i][i][/color]正文[line][user=张三][img=1,title=封面][/code]\n][tr][td][url=][needreply][/line]正文[bad][/table][/quote][i][img=1,title=封面]]",
+      "expected": "[/line][i][i][/color]正文<hr><a href=\"/user/张三\">@张三</a>[img=1,title=封面][/code]\n][tr][td][url=][/line]正文[bad][/table][/quote][i][img=1,title=封面]]"
+    },
+    {
+      "name": "generated-739181-107",
+      "input": "[/table][/code][img=1,title=封面][/code][/b][b][/quote]",
+      "expected": "[/table][/code][img=1,title=封面][/code][/b][b][/quote]"
+    },
+    {
+      "name": "generated-739181-108",
+      "input": "[b=][img=1,title=封面][tr][table][tr][/quote]x][[img=1,title=封面][img=1,title=封面][line][/url][/line][url=]",
+      "expected": "[b=][img=1,title=封面][tr][table][tr][/quote]x][[img=1,title=封面][img=1,title=封面]<hr>[/url][/line][url=]"
+    },
+    {
+      "name": "generated-739181-109",
+      "input": "[b][/line][/table][/img]][code][/line]",
+      "expected": "[b][/line][/table][/img]][code][/line]"
+    },
+    {
+      "name": "generated-739181-110",
+      "input": "[img=1,title=封面][/img]][needreply][tr][/code][/line]",
+      "expected": "<img src=\"#\" alt=\"封面\">][tr][/code][/line]"
+    },
+    {
+      "name": "generated-739181-111",
+      "input": "[bad][img=1,title=封面][i][/i]]正文[/line]",
+      "expected": "[bad][img=1,title=封面]<em></em>]正文[/line]"
+    },
+    {
+      "name": "generated-739181-112",
+      "input": "[b=][line][/color][code]正文😀[em01][line][/i][quote][/url][/user][/table][line][/url]",
+      "expected": "[b=]<hr>[/color][code]正文😀<hr>[/i][quote][/url][/user][/table]<hr>[/url]"
+    },
+    {
+      "name": "generated-739181-113",
+      "input": "[td][bad][url=][i][user=张三][needreply]\n[em01][td][user=张三][td][/table][user=张三]][img=1,title=封面]",
+      "expected": "[td][bad][url=][i]<a href=\"/user/张三\">@张三</a>\n[td]<a href=\"/user/张三\">@张三</a>[td][/table]<a href=\"/user/张三\">@张三</a>][img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-114",
+      "input": "[user=张三][/url][td][img=1,title=封面][color=red]]😀[/color][[em01]正文[/code][quote][td][color=red]",
+      "expected": "<a href=\"/user/张三\">@张三</a>[/url][td][img=1,title=封面]<span style=\"color: red\">]😀</span>[[em01]正文[/code][quote][td][color=red]"
+    },
+    {
+      "name": "generated-739181-115",
+      "input": "[/quote][needreply]\n😀[needreply][user=张三][/user][/line][[user=张三][/i][code][/b][/quote]正文",
+      "expected": "[/quote]\n😀<a href=\"/user/张三\">@张三</a>[/line][[user=张三][/i][code][/b][/quote]正文"
+    },
+    {
+      "name": "generated-739181-116",
+      "input": "[/i][/b][/code][quote][/color][/user][",
+      "expected": "[/i][/b][/code][quote][/color][/user]["
+    },
+    {
+      "name": "generated-739181-117",
+      "input": "[table][img=1,title=封面][needreply][table][[needreply][b]",
+      "expected": "[table][img=1,title=封面][table][[needreply][b]"
+    },
+    {
+      "name": "generated-739181-118",
+      "input": "[table][table][/i][color=red][code][td][url=]",
+      "expected": "[table][table][/i][color=red][code][td][url=]"
+    },
+    {
+      "name": "generated-739181-119",
+      "input": "[/b][b=][td][/color]\n[needreply]][/user][/quote][code][/i][color=red][bad][user=张三][user=张三][/color]正文[url=][needreply][tr][url=][bad][/quote]",
+      "expected": "[/b][b=][td][/color]\n][/user][/quote][code][/i]<span style=\"color: red\">[bad]<a href=\"/user/张三\">@张三</a><a href=\"/user/张三\">@张三</a></span>正文[url=][tr][url=][bad][/quote]"
+    },
+    {
+      "name": "generated-739181-120",
+      "input": "[bad][code][/code][img=1,title=封面][/color][/b][/b][table][/table][[/i][/line][/url]][quote]",
+      "expected": "[bad]<pre><code></code></pre>[img=1,title=封面][/color][/b][/b]<table></table>[[/i][/line][/url]][quote]"
+    },
+    {
+      "name": "generated-739181-121",
+      "input": "[quote][tr]\n[/table][quote][img=1,title=封面][i][code][bad][/img]正文[/url][bad][img=1,title=封面][/img][/b]][/i][td][table][line]😀[/code]",
+      "expected": "[quote][tr]\n[/table][quote]<img src=\"#\" alt=\"封面\">正文[/url][bad]<img src=\"#\" alt=\"封面\">[/b]][/i][td][table]<hr>😀[/code]"
+    },
+    {
+      "name": "generated-739181-122",
+      "input": "[/code][code][td][/i][table][i][td][needreply][/b][/color][/url][em01][/i][quote][bad]",
+      "expected": "[/code][code][td][/i][table]<em>[td][/b][/color][/url]</em>[quote][bad]"
+    },
+    {
+      "name": "generated-739181-123",
+      "input": "[/i]正文正文x[/user][/user][code]",
+      "expected": "[/i]正文正文x[/user][/user][code]"
+    },
+    {
+      "name": "generated-739181-124",
+      "input": "x\n[b]x[/b][color=red][needreply]",
+      "expected": "x\n<strong>x</strong>[color=red]"
+    },
+    {
+      "name": "generated-739181-125",
+      "input": "[i][/code][/i][/url][[needreply][b=]",
+      "expected": "<em>[/code]</em>[/url][[needreply][b=]"
+    },
+    {
+      "name": "generated-739181-126",
+      "input": "[b][/img]😀[/code][user=张三][b]x",
+      "expected": "[b][/img]😀[/code]<a href=\"/user/张三\">@张三</a>[b]x"
+    },
+    {
+      "name": "generated-739181-127",
+      "input": "[code][b=][needreply][/color][url=][line][line]",
+      "expected": "[code][b=][/color][url=]<hr><hr>"
+    },
+    {
+      "name": "generated-739181-128",
+      "input": "[b=][/url][/img][/img][em01][b=][/i]]x😀[td][code][/i][/code][/color]",
+      "expected": "[b=][/url][/img][/img][b=][/i]]x😀[td]<pre><code>[/i]</code></pre>[/color]"
+    },
+    {
+      "name": "generated-739181-129",
+      "input": "\n😀[/img][b=][b=][color=red][/table][needreply][table]x[needreply][/b][b][td][tr]",
+      "expected": "\n😀[/img][b=]<strong>[color=red][/table][table]x</strong>[b][td][tr]"
+    },
+    {
+      "name": "generated-739181-130",
+      "input": "[/url][table]😀[em01][/i][/table][tr]][/line]😀[/i][bad][b][i][tr]",
+      "expected": "[/url]<table>😀[/i]</table>[tr]][/line]😀[/i][bad][b][i][tr]"
+    },
+    {
+      "name": "generated-739181-131",
+      "input": "x正文[b][img=1,title=封面][正文[td][/user][/table][正文[/quote][/user][needreply][needreply]\n[/img][b=][/url]\n正文[/quote][b]",
+      "expected": "x正文[b]<img src=\"#\" alt=\"封面\">[b=][/url]\n正文[/quote][b]"
+    },
+    {
+      "name": "generated-739181-132",
+      "input": "[/img][/line][/table][/line]正文[/url][user=张三][url=][needreply][quote][/table][b][/code][/url][/line][/table]\n\nx[/img][tr][bad]\n",
+      "expected": "[/img][/line][/table][/line]正文[/url]<a href=\"/user/张三\">@张三</a><a href=\"#\">[quote][/table][b][/code]</a>[/line][/table]\n\nx[/img][tr][bad]\n"
+    },
+    {
+      "name": "generated-739181-133",
+      "input": "[url=][i][bad][/user][code][table][",
+      "expected": "[url=][i][bad][/user][code][table]["
+    },
+    {
+      "name": "generated-739181-134",
+      "input": "\n[/line][user=张三][img=1,title=封面][em01][/code][color=red]",
+      "expected": "\n[/line]<a href=\"/user/张三\">@张三</a>[img=1,title=封面][/code][color=red]"
+    },
+    {
+      "name": "generated-739181-135",
+      "input": "[/table][code][line][color=red][line][tr][/code][user=张三][/quote]😀[color=red][code][/color][/quote][quote]",
+      "expected": "[/table]<pre><code>[line][color=red][line][tr]</code></pre><a href=\"/user/张三\">@张三</a>[/quote]😀<span style=\"color: red\">[code]</span>[/quote][quote]"
+    },
+    {
+      "name": "generated-739181-136",
+      "input": "[/quote][color=red][user=张三][url=]\n[bad][/table][[tr][tr][/table][/url]😀[/quote][line][i][url=][url=][user=张三][url=][table][table][b=]",
+      "expected": "[/quote][color=red]<a href=\"/user/张三\">@张三</a><a href=\"#\">\n[bad][/table][[tr][tr][/table]</a>😀[/quote]<hr>[i][url=][url=]<a href=\"/user/张三\">@张三</a>[url=][table][table][b=]"
+    },
+    {
+      "name": "generated-739181-137",
+      "input": "[code][bad][color=red][/code][/img][/user][/i]",
+      "expected": "<pre><code>[bad][color=red]</code></pre>[/img][/user][/i]"
+    },
+    {
+      "name": "generated-739181-138",
+      "input": "[/line][url=][line][b][line][[/quote][[b=][td][user=张三][[b=][/url][i]",
+      "expected": "[/line]<a href=\"#\"><hr>[b]<hr>[[/quote][[b=][td]<a href=\"/user/张三\">@张三</a>[[b=]</a>[i]"
+    },
+    {
+      "name": "generated-739181-139",
+      "input": "[em01][/color][bad][/line][tr][line][img=1,title=封面][/i][/line][table]x[table][table][line][/user][color=red][bad][line][/table][code][quote]正文😀",
+      "expected": "[/color][bad][/line][tr]<hr>[img=1,title=封面][/i][/line][table]x[table]<table><hr>[/user][color=red][bad]<hr></table>[code][quote]正文😀"
+    },
+    {
+      "name": "generated-739181-140",
+      "input": "[b][url=][/table][bad][i]][/url][tr][tr][user=张三]正文][/url][code][/b][td][/table][/quote]x[td]x[tr]]",
+      "expected": "<strong><a href=\"#\">[/table][bad][i]]</a>[tr][tr]<a href=\"/user/张三\">@张三</a>正文][/url][code]</strong>[td][/table][/quote]x[td]x[tr]]"
+    },
+    {
+      "name": "generated-739181-141",
+      "input": "[/code][/img][/b][td][em01][img=1,title=封面]x",
+      "expected": "[/code][/img][/b][td][img=1,title=封面]x"
+    },
+    {
+      "name": "generated-739181-142",
+      "input": "[td][/url][user=张三][table][/color][/quote][code]",
+      "expected": "[td][/url]<a href=\"/user/张三\">@张三</a>[table][/color][/quote][code]"
+    },
+    {
+      "name": "generated-739181-143",
+      "input": "[table][table][table][/img]正文[b=][/color][/i][/color][tr][color=red][/url][/img][needreply][table][/user]x[quote][b=][/b][img=1,title=封面][em01][/img]",
+      "expected": "[table][table][table][/img]正文[b=][/color][/i][/color][tr][color=red][/url][/img][table][/user]x[quote]<strong></strong><img src=\"#\" alt=\"封面\">"
+    },
+    {
+      "name": "generated-739181-144",
+      "input": "[/code][needreply][/table][img=1,title=封面][/url][/table][bad][quote][line][needreply][b=][i][color=red][img=1,title=封面]正文[tr][/quote][img=1,title=封面][color=red]x[/line][bad][url=]",
+      "expected": "[/code][/table][img=1,title=封面][/url][/table][bad]<blockquote><hr>[b=][i][color=red][img=1,title=封面]正文[tr]</blockquote>[img=1,title=封面][color=red]x[/line][bad][url=]"
+    },
+    {
+      "name": "generated-739181-145",
+      "input": "[/user][color=red][table]][/url][quote][url=][/img][i][needreply][user=张三][needreply][/line]][url=]",
+      "expected": "[/user][color=red][table]][/url][quote][url=][/img][i]<a href=\"/user/张三\">@张三</a>[/line]][url=]"
+    },
+    {
+      "name": "generated-739181-146",
+      "input": "[/code][/quote][/b][b][/color][i][/url][i][b=][td]x[/color]x[/quote]x[/url]正文[tr]正文[/table][[/code][quote]",
+      "expected": "[/code][/quote][/b][b][/color][i][/url][i][b=][td]x[/color]x[/quote]x[/url]正文[tr]正文[/table][[/code][quote]"
+    },
+    {
+      "name": "generated-739181-147",
+      "input": "正文x[needreply][[[/b][b=]",
+      "expected": "正文x[[[/b][b=]"
+    },
+    {
+      "name": "generated-739181-148",
+      "input": "[[[needreply]正文[bad][/b][tr]",
+      "expected": "[[[needreply]正文[bad][/b][tr]"
+    },
+    {
+      "name": "generated-739181-149",
+      "input": "[line][/img]\n[/b][/i][/user][b]😀[user=张三][/code][quote][/quote]\nx[/code][/i][line]x[/user][b][img=1,title=封面][/table]\n",
+      "expected": "<hr>[/img]\n[/b][/i][/user][b]😀<a href=\"/user/[/code]\nx[/code][/i]x\">@[/code]\nx[/code][/i]x</a>[b][img=1,title=封面][/table]\n"
+    },
+    {
+      "name": "generated-739181-150",
+      "input": "[b=][url=][/line][url=][quote]\n😀",
+      "expected": "[b=][url=][/line][url=][quote]\n😀"
+    },
+    {
+      "name": "generated-739181-151",
+      "input": "[url=][needreply][/color][img=1,title=封面][line][/code][i][img=1,title=封面][url=][/i][/user]😀😀[/user]正文[img=1,title=封面][img=1,title=封面][/color][needreply][table][/b][/code][table]",
+      "expected": "[url=][/color][img=1,title=封面]<hr>[/code]<em>[img=1,title=封面][url=]</em>[/user]😀😀[/user]正文[img=1,title=封面][img=1,title=封面][/color][table][/b][/code][table]"
+    },
+    {
+      "name": "generated-739181-152",
+      "input": "[user=张三][bad][/user]😀[i]x[code][table][/color][b=][/color][/img][needreply][tr][/img][/color][i][bad][/line]正文[quote][url=][/i]",
+      "expected": "<a href=\"/user/[bad]\">@[bad]</a>😀[i]x[code][table][/color][b=][/color][/img][tr][/img][/color]<em>[bad][/line]正文[quote][url=]</em>"
+    },
+    {
+      "name": "generated-739181-153",
+      "input": "x[b][/user][/i][color=red][/b][img=1,title=封面][img=1,title=封面][/i][user=张三][quote][[/i][needreply][user=张三][b][i][color=red]\n[code][i][needreply][",
+      "expected": "x<strong>[/user][/i][color=red]</strong>[img=1,title=封面][img=1,title=封面][/i]<a href=\"/user/张三\">@张三</a>[quote][[/i]<a href=\"/user/张三\">@张三</a>[b][i][color=red]\n[code][i]["
+    },
+    {
+      "name": "generated-739181-154",
+      "input": "[/line]正文[needreply][img=1,title=封面][tr][i][/line][i][table][bad][needreply][needreply][url=][/url][needreply]][img=1,title=封面][/line]x[user=张三][b=][td][/quote]",
+      "expected": "[/line]正文[img=1,title=封面][tr][i][/line][i][table][bad]<a href=\"#\"></a>][img=1,title=封面][/line]x<a href=\"/user/张三\">@张三</a>[b=][td][/quote]"
+    },
+    {
+      "name": "generated-739181-155",
+      "input": "[b=]]\n[line]]\n[line]",
+      "expected": "[b=]]\n<hr>]\n<hr>"
+    },
+    {
+      "name": "generated-739181-156",
+      "input": "[b][table][i][line][img=1,title=封面][line][/color][i][/img][quote][/user][code][line][/code]]",
+      "expected": "[b][table][i]<hr><img src=\"#\" alt=\"封面\">[quote][/user]<pre><code>[line]</code></pre>]"
+    },
+    {
+      "name": "generated-739181-157",
+      "input": "[/quote][color=red][tr][/b][[em01][bad][b]😀[/color][/color][table][needreply][/quote][em01]",
+      "expected": "[/quote]<span style=\"color: red\">[tr][/b][[em01][bad][b]😀</span>[/color][table][/quote]"
+    },
+    {
+      "name": "generated-739181-158",
+      "input": "[/code][[x[/table][/color][/user]",
+      "expected": "[/code][[x[/table][/color][/user]"
+    },
+    {
+      "name": "generated-739181-159",
+      "input": "[b][i][needreply][b][b=][quote][/b]x[/b][i][\n[/code][line][color=red]",
+      "expected": "[b][i]<strong><strong>[quote]</strong>x</strong>[i][\n[/code]<hr>[color=red]"
+    },
+    {
+      "name": "generated-739181-160",
+      "input": "[url=]😀[/color][td][/quote][/user][/table]x[color=red][/i][tr][user=张三][b=][code][/table][quote][td][i][/user][em01][/quote][/url][/table]",
+      "expected": "<a href=\"#\">😀[/color][td][/quote][/user][/table]x[color=red][/i][tr]<a href=\"/user/[b=][code][/table][quote][td][i]\">@[b=][code][/table][quote][td][i]</a>[/quote]</a>[/table]"
+    },
+    {
+      "name": "generated-739181-161",
+      "input": "[b]][i]正文[line]][needreply][/color]x[b]\n[/url]][/code][/color]",
+      "expected": "[b]][i]正文<hr>][/color]x[b]\n[/url]][/code][/color]"
+    },
+    {
+      "name": "generated-739181-162",
+      "input": "[code][/color]x[/line][/color][/table][i]",
+      "expected": "[code][/color]x[/line][/color][/table][i]"
+    },
+    {
+      "name": "generated-739181-163",
+      "input": "[code][img=1,title=封面][color=red][/i][/color][[code][/user]\n[td][color=red][tr][table][[url=][[/b][table][bad]x[/url][tr][quote]",
+      "expected": "[code][img=1,title=封面]<span style=\"color: red\">[/i]</span>[[code][/user]\n[td][color=red][tr][table][[url=][[/b][table][bad]x[/url][tr][quote]"
+    },
+    {
+      "name": "generated-739181-164",
+      "input": "[needreply][/url][/quote][/color]😀[/i]😀[b][/b][img=1,title=封面][code]正文[/table][quote][b][table]x[bad][em01]😀[tr][user=张三][/line]",
+      "expected": "[/url][/quote][/color]😀[/i]😀<strong></strong>[img=1,title=封面][code]正文[/table][quote][b][table]x[bad]😀[tr]<a href=\"/user/张三\">@张三</a>[/line]"
+    },
+    {
+      "name": "generated-739181-165",
+      "input": "[user=张三][i][b][b][quote][/table][img=1,title=封面]",
+      "expected": "<a href=\"/user/张三\">@张三</a>[i][b][b][quote][/table][img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-166",
+      "input": "[user=张三][line][code][/user][/b][tr][color=red][bad][/url][user=张三][color=red][code][em01][/table][em01]",
+      "expected": "<a href=\"/user/[code]\">@[code]</a>[/b][tr][color=red][bad][/url]<a href=\"/user/张三\">@张三</a>[color=red][code][/table]"
+    },
+    {
+      "name": "generated-739181-167",
+      "input": "[needreply][b=][code][/user][url=][/i]][😀[tr][b][/b][code]\n[/user]",
+      "expected": "[b=][code][/user][url=][/i]][😀[tr]<strong></strong>[code]\n[/user]"
+    },
+    {
+      "name": "generated-739181-168",
+      "input": "[td][b=][em01][tr][tr][b][/img][bad][/code][/user][code][bad][/code][[user=张三][bad][/table][/line][/quote][/i][/url][/quote][b=]",
+      "expected": "[td][b=][tr][tr][b][/img][bad][/code][/user]<pre><code>[bad]</code></pre>[[user=张三][bad][/table][/line][/quote][/i][/url][/quote][b=]"
+    },
+    {
+      "name": "generated-739181-169",
+      "input": "[td][/i][bad][img=1,title=封面][url=][/quote][/code]😀[i][/quote][color=red][b][/i]][tr]",
+      "expected": "[td][/i][bad][img=1,title=封面][url=][/quote][/code]😀<em>[/quote][color=red][b]</em>][tr]"
+    },
+    {
+      "name": "generated-739181-170",
+      "input": "[/quote][b=][color=red][em01][/img][/b]x[/img][/url]x\n[quote][color=red][bad][/i][b=]x[/table][bad][b=][b][user=张三][table]",
+      "expected": "[/quote]<strong>[color=red][/img]</strong>x[/img][/url]x\n[quote][color=red][bad][/i][b=]x[/table][bad][b=][b]<a href=\"/user/张三\">@张三</a>[table]"
+    },
+    {
+      "name": "generated-739181-171",
+      "input": "[table][color=red][/i][b=][/table][needreply][bad]",
+      "expected": "<table>[color=red][/i][b=]</table>[bad]"
+    },
+    {
+      "name": "generated-739181-172",
+      "input": "正文[[code][img=1,title=封面][quote][/table][line]",
+      "expected": "正文[[code][img=1,title=封面][quote][/table]<hr>"
+    },
+    {
+      "name": "generated-739181-173",
+      "input": "[url=][/i][td]x[/color][/color][/b]",
+      "expected": "[url=][/i][td]x[/color][/color][/b]"
+    },
+    {
+      "name": "generated-739181-174",
+      "input": "[quote][user=张三][b][code][code][/code][td]",
+      "expected": "[quote]<a href=\"/user/张三\">@张三</a>[b]<pre><code>[code]</code></pre>[td]"
+    },
+    {
+      "name": "generated-739181-175",
+      "input": "[b][td]][td][/user][/img][x[table][/code][color=red]正文[color=red][code][/quote][url=][tr][/code]][/table][bad][needreply]\n",
+      "expected": "[b][td]][td][/user][/img][x[table][/code][color=red]正文[color=red]<pre><code>[/quote][url=][tr]</code></pre>][/table][bad]\n"
+    },
+    {
+      "name": "generated-739181-176",
+      "input": "[user=张三][needreply][b][line][td][tr]正文",
+      "expected": "<a href=\"/user/张三\">@张三</a>[b]<hr>[td][tr]正文"
+    },
+    {
+      "name": "generated-739181-177",
+      "input": "][line][td][quote][color=red][td]正文",
+      "expected": "]<hr>[td][quote][color=red][td]正文"
+    },
+    {
+      "name": "generated-739181-178",
+      "input": "[/img][/code][code]][td][/b]正文[color=red][table][/table][/i][tr][quote][/url]x[/table][/code][/user][bad][table][b][/table][bad]",
+      "expected": "[/img][/code]<pre><code>][td][/b]正文[color=red][table][/table][/i][tr][quote][/url]x[/table]</code></pre>[/user][bad]<table>[b]</table>[bad]"
+    },
+    {
+      "name": "generated-739181-179",
+      "input": "[/color][user=张三]\n[[line][quote][img=1,title=封面][color=red][/color]😀[/color][bad][line][url=]][i][line][b][/color][/code][i][url=][/table]",
+      "expected": "[/color]<a href=\"/user/张三\">@张三</a>\n[[line][quote][img=1,title=封面]<span style=\"color: red\"></span>😀[/color][bad]<hr>[url=]][i]<hr>[b][/color][/code][i][url=][/table]"
+    },
+    {
+      "name": "generated-739181-180",
+      "input": "[tr][color=red][quote][td][b=]\n[i][/quote][[quote][img=1,title=封面][/url][/b]😀[/line]",
+      "expected": "[tr][color=red]<blockquote>[td][b=]\n[i]</blockquote>[[quote][img=1,title=封面][/url][/b]😀[/line]"
+    },
+    {
+      "name": "generated-739181-181",
+      "input": "[tr]😀[/code][tr][/user][code][quote][[/code][b=][url=][/user][/i][table][tr][td][needreply][/code][/b]正文[tr][quote][user=张三]",
+      "expected": "[tr]😀[/code][tr][/user]<pre><code>[quote][</code></pre><strong>[url=][/user][/i][table][tr][td][/code]</strong>正文[tr][quote]<a href=\"/user/张三\">@张三</a>"
+    },
+    {
+      "name": "generated-739181-182",
+      "input": "[needreply]正文[/code][/quote][em01]\n\n",
+      "expected": "正文[/code][/quote]\n\n"
+    },
+    {
+      "name": "generated-739181-183",
+      "input": "[/user][/line][/color][img=1,title=封面][img=1,title=封面][quote][td][table][[tr][/code][/quote][/img]😀[line]",
+      "expected": "[/user][/line][/color]<img src=\"#\" alt=\"封面\">😀<hr>"
+    },
+    {
+      "name": "generated-739181-184",
+      "input": "[quote][/color][/b]x\n[user=张三][",
+      "expected": "[quote][/color][/b]x\n<a href=\"/user/张三\">@张三</a>["
+    },
+    {
+      "name": "generated-739181-185",
+      "input": "[/img][tr][url=][/code][/i][b=][/user]正文[b][em01][/code][needreply][bad][url=][b=]正文[b=]x[img=1,title=封面][bad][b=][/code][code]",
+      "expected": "[/img][tr][url=][/code][/i][b=][/user]正文[b][/code][bad][url=][b=]正文[b=]x[img=1,title=封面][bad][b=][/code][code]"
+    },
+    {
+      "name": "generated-739181-186",
+      "input": "[/img][line][quote][b][/img][/code]😀[b=][td]][/color]正文[/url][/url][url=][/table][url=][tr][/color]][needreply][[/color]",
+      "expected": "[/img]<hr>[quote][b][/img][/code]😀[b=][td]][/color]正文[/url][/url][url=][/table][url=][tr][/color]][[/color]"
+    },
+    {
+      "name": "generated-739181-187",
+      "input": "[/user][img=1,title=封面][bad][color=red][/code][/user][/img]",
+      "expected": "[/user]<img src=\"#\" alt=\"封面\">"
+    },
+    {
+      "name": "generated-739181-188",
+      "input": "[/code][/b][quote][i][/line][table][em01]",
+      "expected": "[/code][/b][quote][i][/line][table]"
+    },
+    {
+      "name": "generated-739181-189",
+      "input": "[/quote][/i][user=张三][i][/user][/quote][/b][/table][code][td][/code][b][tr][quote][table][user=张三][user=张三][line][/table][td][line][/img][/quote]",
+      "expected": "[/quote][/i]<a href=\"/user/[i]\">@[i]</a>[/quote][/b][/table]<pre><code>[td]</code></pre>[b][tr]<blockquote><table><a href=\"/user/张三\">@张三</a><a href=\"/user/张三\">@张三</a><hr></table>[td]<hr>[/img]</blockquote>"
+    },
+    {
+      "name": "generated-739181-190",
+      "input": "[em01][/line][/b][img=1,title=封面]\n[/table][/url][/table][table][b]😀[line]x[/line][/code]",
+      "expected": "[/line][/b][img=1,title=封面]\n[/table][/url][/table][table][b]😀<hr>x[/line][/code]"
+    },
+    {
+      "name": "generated-739181-191",
+      "input": "[/quote][/url][/color][tr][/code][td][/i][line][img=1,title=封面][/url]😀[/line][table][/quote][b]",
+      "expected": "[/quote][/url][/color][tr][/code][td][/i]<hr>[img=1,title=封面][/url]😀[/line][table][/quote][b]"
+    },
+    {
+      "name": "generated-739181-192",
+      "input": "[needreply][i][/b][b=][user=张三]\n[color=red][line][bad]正文[/table][color=red][/code][bad][color=red]",
+      "expected": "[i][/b][b=]<a href=\"/user/张三\">@张三</a>\n[color=red]<hr>[bad]正文[/table][color=red][/code][bad][color=red]"
+    },
+    {
+      "name": "generated-739181-193",
+      "input": "正文[/url][/code][user=张三][user=张三][[color=red][td][/quote][/b][user=张三][/code][tr][/b][/color]",
+      "expected": "正文[/url][/code]<a href=\"/user/张三\">@张三</a><a href=\"/user/张三\">@张三</a>[[color=red][td][/quote][/b]<a href=\"/user/张三\">@张三</a>[/code][tr][/b][/color]"
+    },
+    {
+      "name": "generated-739181-194",
+      "input": "[b][em01][quote][code][/line][quote][/b]",
+      "expected": "<strong>[quote][code][/line][quote]</strong>"
+    },
+    {
+      "name": "generated-739181-195",
+      "input": "😀[/line][bad][/i][quote][code][user=张三][td]😀[needreply][b][needreply][quote][b][line]",
+      "expected": "😀[/line][bad][/i][quote][code]<a href=\"/user/张三\">@张三</a>[td]😀[b][quote][b]<hr>"
+    },
+    {
+      "name": "generated-739181-196",
+      "input": "[/b][/user][b][/img][url=][b]正文[bad][img=1,title=封面][/i][/quote][line][color=red][user=张三][img=1,title=封面]",
+      "expected": "[/b][/user][b][/img][url=][b]正文[bad][img=1,title=封面][/i][/quote]<hr>[color=red]<a href=\"/user/张三\">@张三</a>[img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-197",
+      "input": "\n[[/img][table][em01]正文[tr]",
+      "expected": "\n[[/img][table]正文[tr]"
+    },
+    {
+      "name": "generated-739181-198",
+      "input": "[img=1,title=封面][needreply][line][/code]x[td][i][img=1,title=封面][b][tr][/url][/quote][/url]x[url=]😀[[/url][i][tr][/i][code][b=]",
+      "expected": "[img=1,title=封面]<hr>[/code]x[td][i][img=1,title=封面][b][tr][/url][/quote][/url]x[url=]😀[[/url]<em>[tr]</em>[code][b=]"
+    },
+    {
+      "name": "generated-739181-199",
+      "input": "[[/quote][line][/color][img=1,title=封面][user=张三][b][em01][color=red]x[b][b][/table][code][/url][\n[/color][line][/color][needreply]正文[table]",
+      "expected": "[[/quote]<hr>[/color][img=1,title=封面]<a href=\"/user/张三\">@张三</a>[b]<span style=\"color: red\">x[b][b][/table][code][/url][\n[/color]<hr></span>正文[table]"
+    },
+    {
+      "name": "generated-739181-200",
+      "input": "[em01][user=张三][i][td]😀[table][/code][正文[/color][/url][/img][/url][em01][",
+      "expected": "<a href=\"/user/张三\">@张三</a>[i][td]😀[table][/code][正文[/color][/url][/img][/url]["
+    },
+    {
+      "name": "generated-739181-201",
+      "input": "[table]\n[line][em01][table][b][code][em01]x[img=1,title=封面][/img][needreply][color=red][/table]]]正文正文[/quote]正文[needreply][/table][/line]",
+      "expected": "<table>\n<hr><table>[b][code]x<img src=\"#\" alt=\"封面\">[color=red]</table>]]正文正文[/quote]正文</table>[/line]"
+    },
+    {
+      "name": "generated-739181-202",
+      "input": "[/img][/table][b][tr][b=][/b][/table][table][user=张三][/color][b][user=张三][code][url=][bad]",
+      "expected": "[/img][/table][b][tr]<strong></strong>[/table][table]<a href=\"/user/张三\">@张三</a>[/color][b]<a href=\"/user/张三\">@张三</a>[code][url=][bad]"
+    },
+    {
+      "name": "generated-739181-203",
+      "input": "[color=red]😀[quote][url=][bad][tr][/user]",
+      "expected": "[color=red]😀[quote][url=][bad][tr][/user]"
+    },
+    {
+      "name": "generated-739181-204",
+      "input": "[b][code][/quote]\n[/quote]x[td][needreply][url=][line][/user]\nx[/code][/quote][table][/color][b][line]正文[/i][code][em01]",
+      "expected": "[b]<pre><code>[/quote]\n[/quote]x[td][needreply][url=][line][/user]\nx</code></pre>[/quote][table][/color][b]<hr>正文[/i][code]"
+    },
+    {
+      "name": "generated-739181-205",
+      "input": "[needreply]正文[needreply][line][quote][/line][/i]][/i]x[i][b]😀[quote][needreply][table][/quote][/user][table][b=]][color=red]😀",
+      "expected": "正文<hr>[quote][/line][/i]][/i]x[i][b]😀<blockquote>[table]</blockquote>[/user][table][b=]][color=red]😀"
+    },
+    {
+      "name": "generated-739181-206",
+      "input": "[url=][quote][b][/code][bad][bad][/img][/user][/url][quote][table][[i][/code][quote]x[[/code][i][i]正文[user=张三]\n",
+      "expected": "<a href=\"#\">[quote][b][/code][bad][bad][/img][/user]</a>[quote][table][[i][/code][quote]x[[/code][i][i]正文<a href=\"/user/张三\">@张三</a>\n"
+    },
+    {
+      "name": "generated-739181-207",
+      "input": "[/line][/quote][needreply][url=][bad][/user]\n[line][code][quote][line][quote]正文[url=]\n😀[url=][code][/user][/img][/i][[bad]",
+      "expected": "[/line][/quote][url=][bad][/user]\n<hr>[code][quote]<hr>[quote]正文[url=]\n😀[url=][code][/user][/img][/i][[bad]"
+    },
+    {
+      "name": "generated-739181-208",
+      "input": "[table]\n[/quote][img=1,title=封面][/quote][code][/quote]",
+      "expected": "[table]\n[/quote][img=1,title=封面][/quote][code][/quote]"
+    },
+    {
+      "name": "generated-739181-209",
+      "input": "[quote]x[quote][bad][tr][td][b=]😀[quote][i][/b][em01][tr][b=][table]",
+      "expected": "[quote]x[quote][bad][tr][td]<strong>😀[quote][i]</strong>[tr][b=][table]"
+    },
+    {
+      "name": "generated-739181-210",
+      "input": "[tr][em01][/b][/b][/img][b=][color=red]正文[/url][line][img=1,title=封面][b=][/code][table][user=张三]",
+      "expected": "[tr][/b][/b][/img][b=][color=red]正文[/url]<hr>[img=1,title=封面][b=][/code][table]<a href=\"/user/张三\">@张三</a>"
+    },
+    {
+      "name": "generated-739181-211",
+      "input": "[line][td][b=][code][img=1,title=封面][i][url=]][/url][i][/line][/img]][bad][img=1,title=封面]",
+      "expected": "<hr>[td][b=][code]<img src=\"#\" alt=\"封面\">][bad][img=1,title=封面]"
+    },
+    {
+      "name": "generated-739181-212",
+      "input": "[table][/color]正文[/color][b=][/i][/table]",
+      "expected": "<table>[/color]正文[/color][b=][/i]</table>"
+    },
+    {
+      "name": "generated-739181-213",
+      "input": "\n[quote][/i][/code][/url][td][code]",
+      "expected": "\n[quote][/i][/code][/url][td][code]"
+    },
+    {
+      "name": "generated-739181-214",
+      "input": "\n][/line][/url][/table][table][quote][/code]][img=1,title=封面][/b]正文[/user][td][needreply]",
+      "expected": "\n][/line][/url][/table][table][quote][/code]][img=1,title=封面][/b]正文[/user][td]"
+    },
+    {
+      "name": "generated-739181-215",
+      "input": "[line][user=张三][/line][/url][code][i][em01]正文[/i][/line][/i][line][/b]x😀",
+      "expected": "<hr><a href=\"/user/张三\">@张三</a>[/line][/url][code]<em>正文</em>[/line][/i]<hr>[/b]x😀"
+    },
+    {
+      "name": "generated-739181-216",
+      "input": "[code][user=张三]正文[/b][b=][/color][/code][/code][/quote][/img][/line]][i][b=]][/code][/code]😀[b=][em01][/code][quote][line]",
+      "expected": "<pre><code>[user=张三]正文[/b][b=][/color]</code></pre>[/code][/quote][/img][/line]][i][b=]][/code][/code]😀[b=][/code][quote]<hr>"
+    },
+    {
+      "name": "generated-739181-217",
+      "input": "[code][/quote][img=1,title=封面][tr][code][quote][tr]",
+      "expected": "[code][/quote][img=1,title=封面][tr][code][quote][tr]"
+    },
+    {
+      "name": "generated-739181-218",
+      "input": "正文[/b][/b][/code][color=red][正文[[needreply][user=张三][/b][quote]\n[b][/b][url=]][needreply][/quote]😀[table]\n[",
+      "expected": "正文[/b][/b][/code][color=red][正文[[needreply]<a href=\"/user/张三\">@张三</a>[/b]<blockquote>\n<strong></strong>[url=]]</blockquote>😀[table]\n["
+    },
+    {
+      "name": "generated-739181-219",
+      "input": "[table][url=][img=1,title=封面][/table][td][/i][/url]",
+      "expected": "<table>[url=][img=1,title=封面]</table>[td][/i][/url]"
+    },
+    {
+      "name": "generated-739181-220",
+      "input": "[user=张三]正文[code][/table]][/table][/i][😀[/user][/line][tr][/url][td][td]",
+      "expected": "<a href=\"/user/张三\">@张三</a>正文[code][/table]][/table][/i][😀[/user][/line][tr][/url][td][td]"
+    },
+    {
+      "name": "generated-739181-221",
+      "input": "[[/quote][color=red][b=][tr][color=red][/img][/img][/table][img=1,title=封面][/i]正文[/b][code]x",
+      "expected": "[[/quote][color=red]<strong>[tr][color=red][/img][/img][/table][img=1,title=封面][/i]正文</strong>[code]x"
+    },
+    {
+      "name": "generated-739181-222",
+      "input": "[url=][em01][tr][i][b][img=1,title=封面][/line][/user][user=张三][[/b][/img][table][/user][/user][i][/user][[tr][/i][url=][/table][i]",
+      "expected": "[url=][tr][i][b]<img src=\"#\" alt=\"封面\"><table>[/user][/user]<em>[/user][[tr]</em>[url=]</table>[i]"
+    },
+    {
+      "name": "generated-739181-223",
+      "input": "\n[/url][/i]\n[[table][b][i][i]][color=red]😀[table][tr][b]",
+      "expected": "\n[/url][/i]\n[[table][b][i][i]][color=red]😀[table][tr][b]"
+    },
+    {
+      "name": "generated-739181-224",
+      "input": "[/color][[/line][color=red][[b][b][b=][user=张三][url=][code][/b][/url][url=][/b][img=1,title=封面][/quote][/img][img=1,title=封面][b][td][td][/i]",
+      "expected": "[/color][[/line][color=red][[b]<strong><strong><a href=\"/user/张三\">@张三</a>[url=][code]</strong>[/url][url=]</strong><img src=\"#\" alt=\"封面\">[img=1,title=封面][b][td][td][/i]"
+    },
+    {
+      "name": "generated-739181-225",
+      "input": "[em01][img=1,title=封面][/quote][needreply][/i][bad][code]",
+      "expected": "[img=1,title=封面][/quote][/i][bad][code]"
+    },
+    {
+      "name": "generated-739181-226",
+      "input": "[em01][/code][i]][/i][em01][em01][table][img=1,title=封面]\n[i]x[needreply][em01]\n",
+      "expected": "[/code]<em>]</em>[table][img=1,title=封面]\n[i]x\n"
+    },
+    {
+      "name": "generated-739181-227",
+      "input": "[/user]正文[/img][i][bad]x[b=][/line][/b][b][[img=1,title=封面][/table]][/table]",
+      "expected": "[/user]正文[/img][i][bad]x<strong>[/line]</strong>[b][[img=1,title=封面][/table]][/table]"
+    },
+    {
+      "name": "generated-739181-228",
+      "input": "[/user][/code][em01][/b][b][/user][user=张三]正文[/quote][user=张三]x[/url][color=red]😀正文",
+      "expected": "[/user][/code][/b][b][/user]<a href=\"/user/张三\">@张三</a>正文[/quote]<a href=\"/user/张三\">@张三</a>x[/url][color=red]😀正文"
+    },
+    {
+      "name": "generated-739181-229",
+      "input": "[line][[user=张三][/img][b=][bad]][user=张三][line][/table][em01][table][/user]x[i]",
+      "expected": "<hr>[[user=张三][/img][b=][bad]]<a href=\"/user/[/table][table]\">@[/table][table]</a>x[i]"
+    },
+    {
+      "name": "generated-739181-230",
+      "input": "[bad]😀[i][tr]x[bad]x[bad][/b][/line][em01][table]\n][td][em01][/table]x[user=张三][b=][em01][/i][/line]",
+      "expected": "[bad]😀<em>[tr]x[bad]x[bad][/b][/line]<table>\n][td]</table>x<a href=\"/user/张三\">@张三</a>[b=]</em>[/line]"
+    },
+    {
+      "name": "generated-739181-231",
+      "input": "[/color][/line]xx[color=red][/img]😀[user=张三][url=][table][em01][user=张三][url=][em01][line][user=张三][b][needreply][][bad][code][table]",
+      "expected": "[/color][/line]xx[color=red][/img]😀<a href=\"/user/张三\">@张三</a>[url=][table]<a href=\"/user/张三\">@张三</a>[url=]<hr><a href=\"/user/张三\">@张三</a>[b][][bad][code][table]"
+    },
+    {
+      "name": "generated-739181-232",
+      "input": "[/color]][/img][/code]\n[code][url=][/url][code][code][i][/img][/code][url=][color=red]",
+      "expected": "[/color]][/img][/code]\n<pre><code>[url=][/url][code][code][i][/img]</code></pre>[url=][color=red]"
+    },
+    {
+      "name": "generated-739181-233",
+      "input": "[[/line][i][color=red]😀[b=][/quote]",
+      "expected": "[[/line][i][color=red]😀[b=][/quote]"
+    },
+    {
+      "name": "generated-739181-234",
+      "input": "[bad][i][img=1,title=封面][/user][i][user=张三][/code][/line][/quote][bad][/img][/line][user=张三]😀[needreply]][needreply][/quote][/code][/line][b][quote][/img]",
+      "expected": "[bad][i]<img src=\"#\" alt=\"封面\">[/line]<a href=\"/user/张三\">@张三</a>😀][/quote][/code][/line][b][quote][/img]"
+    },
+    {
+      "name": "generated-739181-235",
+      "input": "[quote][em01][em01][/code][b=][bad][/url][td]\n][/color][i][/i][img=1,title=封面][/user]",
+      "expected": "[quote][/code][b=][bad][/url][td]\n][/color]<em></em>[img=1,title=封面][/user]"
+    },
+    {
+      "name": "generated-739181-236",
+      "input": "[b=]😀[user=张三][tr][em01][td][/color]",
+      "expected": "[b=]😀<a href=\"/user/张三\">@张三</a>[tr][td][/color]"
+    },
+    {
+      "name": "generated-739181-237",
+      "input": "[user=张三]\n[td]\n[/line][line][tr][i][needreply][td][i][/b][i][tr][",
+      "expected": "<a href=\"/user/张三\">@张三</a>\n[td]\n[/line]<hr>[tr][i][td][i][/b][i][tr]["
+    },
+    {
+      "name": "generated-739181-238",
+      "input": "[color=red][td][td][bad][/img][quote][img=1,title=封面][line][line][quote][user=张三][/table][/color]x[quote][/color][td][/table][/color][/user][i]\n[quote]",
+      "expected": "<span style=\"color: red\">[td][td][bad][/img][quote][img=1,title=封面]<hr><hr>[quote]<a href=\"/user/张三\">@张三</a>[/table]</span>x[quote][/color][td][/table][/color][/user][i]\n[quote]"
+    },
+    {
+      "name": "generated-739181-239",
+      "input": "😀[td][em01][url=][/color][b=][quote][/quote][needreply][bad][/code]x[b=][b][/quote]",
+      "expected": "😀[td][url=][/color][b=]<blockquote></blockquote>[bad][/code]x[b=][b][/quote]"
+    },
+    {
+      "name": "generated-739181-240",
+      "input": "[url=][table][/img]正文[user=张三][bad][/img][tr][/i]😀[img=1,title=封面][em01][/url][/user]]",
+      "expected": "<a href=\"#\">[table][/img]正文<a href=\"/user/张三\">@张三</a>[bad][/img][tr][/i]😀[img=1,title=封面]</a>[/user]]"
+    },
+    {
+      "name": "generated-739181-241",
+      "input": "[/i][/url][/i][user=张三][/url][/color][td][[/url][/img][/i][td][code][/color][b][/code][color=red][/quote][b=]\n[table][/i][code]",
+      "expected": "[/i][/url][/i]<a href=\"/user/张三\">@张三</a>[/url][/color][td][[/url][/img][/i][td]<pre><code>[/color][b]</code></pre>[color=red][/quote][b=]\n[table][/i][code]"
+    },
+    {
+      "name": "generated-739181-242",
+      "input": "[tr][/user]][b][/user][/url]正文[quote][color=red][/url][url=]x[/line][tr][b=][em01][url=][/line]\n[table][/code]正文[color=red]",
+      "expected": "[tr][/user]][b][/user][/url]正文[quote][color=red][/url][url=]x[/line][tr][b=][url=][/line]\n[table][/code]正文[color=red]"
+    },
+    {
+      "name": "generated-739181-243",
+      "input": "[/b][td][/user][/b][color=red][/user][line][/b][/b][/b][url=][code]x[/i][img=1,title=封面][/b][/line][needreply][/i][/code]][/user][/color]",
+      "expected": "[/b][td][/user][/b]<span style=\"color: red\">[/user]<hr>[/b][/b][/b][url=]<pre><code>x[/i][img=1,title=封面][/b][/line][needreply][/i]</code></pre>][/user]</span>"
+    },
+    {
+      "name": "generated-739181-244",
+      "input": "[tr]x[url=][code]😀[/url][/url][/code][b=][img=1,title=封面][/user][i][img=1,title=封面]😀[tr]",
+      "expected": "[tr]x[url=]<pre><code>😀[/url][/url]</code></pre>[b=][img=1,title=封面][/user][i][img=1,title=封面]😀[tr]"
+    },
+    {
+      "name": "generated-739181-245",
+      "input": "😀x\n[td][/code][/line][/line][/b][user=张三][color=red][url=][quote][/img][/color][table][/b][table][i]][user=张三][table][td][em01]",
+      "expected": "😀x\n[td][/code][/line][/line][/b]<a href=\"/user/张三\">@张三</a><span style=\"color: red\">[url=][quote][/img]</span>[table][/b][table][i]]<a href=\"/user/张三\">@张三</a>[table][td]"
+    },
+    {
+      "name": "generated-739181-246",
+      "input": "😀[/table][b=][/img]😀[td][/table][/line][/color][url=][/i][/b][bad][b]\n",
+      "expected": "😀[/table]<strong>[/img]😀[td][/table][/line][/color][url=][/i]</strong>[bad][b]\n"
+    },
+    {
+      "name": "generated-739181-247",
+      "input": "\nx[/i][url=][/b][em01][/i][/user][/line][/code][/img][/quote][url=][table]😀",
+      "expected": "\nx[/i][url=][/b][/i][/user][/line][/code][/img][/quote][url=][table]😀"
+    },
+    {
+      "name": "generated-739181-248",
+      "input": "[url=][b=][b=][正文正文x[/img][][line][[/line][code][/user][bad][em01]\n[url=][/img][color=red][/user][needreply]",
+      "expected": "[url=][b=][b=][正文正文x[/img][]<hr>[[/line][code][/user][bad]\n[url=][/img][color=red][/user]"
+    },
+    {
+      "name": "generated-739181-249",
+      "input": "[line][/table][b]\n[/url][line][",
+      "expected": "<hr>[/table][b]\n[/url]<hr>["
+    },
+    {
+      "name": "generated-739181-250",
+      "input": "x[needreply][/user][/code][img=1,title=封面][bad][bad]",
+      "expected": "x[/user][/code][img=1,title=封面][bad][bad]"
+    },
+    {
+      "name": "generated-739181-251",
+      "input": "[needreply][/img][/table][/table][/quote][needreply][url=][/color][[b][/i]x[url=]\n[/code]",
+      "expected": "[/img][/table][/table][/quote][url=][/color][[b][/i]x[url=]\n[/code]"
+    },
+    {
+      "name": "generated-739181-252",
+      "input": "][b][/table][needreply][needreply][code][user=张三][/user][/b][[/user][/line][line][/i][i]",
+      "expected": "]<strong>[/table][code]<a href=\"/user/张三\">@张三</a></strong>[[/user][/line]<hr>[/i][i]"
+    },
+    {
+      "name": "generated-739181-253",
+      "input": "[/img][/b][b][/quote][url=][user=张三][i]",
+      "expected": "[/img][/b][b][/quote][url=]<a href=\"/user/张三\">@张三</a>[i]"
+    },
+    {
+      "name": "generated-739181-254",
+      "input": "[quote][b][url=]😀[line][em01][i]\n[[b=][line][td][color=red][b=][/i]正文[user=张三][color=red][b=][tr]正文[/user][/user]",
+      "expected": "[quote][b][url=]😀<hr><em>\n[[b=]<hr>[td][color=red][b=]</em>正文<a href=\"/user/[color=red][b=][tr]正文\">@[color=red][b=][tr]正文</a>[/user]"
+    },
+    {
+      "name": "generated-739181-255",
+      "input": "[/table][needreply][/img]][b=][tr][line]\n[/table][quote][user=张三][quote][b=][/img][/url]",
+      "expected": "[/table][/img]][b=][tr]<hr>\n[/table][quote]<a href=\"/user/张三\">@张三</a>[quote][b=][/img][/url]"
     }
   ]
 }

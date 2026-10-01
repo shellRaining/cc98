@@ -4,18 +4,17 @@
  * 用例输入在这里维护，期望值由 TS 参考实现生成，禁止手改 JSON。
  * 运行：vp node conformance/generate.ts
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
-import { createUbbRegistry, type UbbNode, type UbbTagMode } from "../src/index.ts";
-import { cc98Registry } from "../cc98/index.ts";
-import { ubbToHtml } from "../cc98/html.ts";
-import { ubbToMarkdown } from "../cc98/markdown.ts";
+import { evaluate, type Corpus, type InputCase, type RegistrySpec } from "./contract.ts";
+import { boundaryCases, combinations, configurationCases } from "./inputs.ts";
 
 const SCHEMA = "ubb-conformance/1";
-const SPEC_VERSION = "1.0.0";
+const SPEC_VERSION = "1.1.0";
 
 /** parse-core 的 harness registry 声明，各语言实现按同一声明构建。 */
-const CORE_REGISTRY = {
+const CORE_REGISTRY: RegistrySpec = {
   tags: {
     b: "recursive",
     i: "recursive",
@@ -33,33 +32,13 @@ const CORE_REGISTRY = {
     user: "autoclose",
   },
   families: [
-    { name: "em", pattern: "^em\\d{2}$", mode: "empty" },
-    { name: "ga", pattern: "^ga\\d+$", mode: "empty" },
-    { name: "gb", pattern: "^g[a-z]\\d+$", mode: "empty" },
+    { name: "em", pattern: "^em[0-9]{2}$", mode: "empty" },
+    { name: "ga", pattern: "^ga[0-9]+$", mode: "empty" },
+    { name: "gb", pattern: "^g[a-z][0-9]+$", mode: "empty" },
   ],
   parseTag: "default",
   mergeAdjacentText: false,
-} as const;
-
-const coreHarness = createUbbRegistry({
-  tags: CORE_REGISTRY.tags as Record<string, UbbTagMode>,
-  families: Object.fromEntries(
-    CORE_REGISTRY.families.map((f) => [f.name, { pattern: new RegExp(f.pattern), mode: f.mode }]),
-  ),
-});
-
-/** 把 AST 节点序列化成语料规范 JSON。 */
-function canonical(node: UbbNode): unknown {
-  if (node.type === "text") return { type: "text", value: node.value };
-  return {
-    type: "tag",
-    tag: node.tag,
-    family: node.family ?? null,
-    attrs: { positionals: node.attrs.positionals, named: node.attrs.named },
-    raw: { open: node.raw.open, close: node.raw.close },
-    children: node.children.map(canonical),
-  };
-}
+};
 
 interface ParseCase {
   name: string;
@@ -259,66 +238,73 @@ const renderMarkdownCases: RenderCase[] = [
   { name: "mixed-post", input: mixedPost },
 ];
 
-function parseCoreOutput(input: string, mergeAdjacentText?: boolean): unknown {
-  const registry = mergeAdjacentText
-    ? coreHarness.configure({ mergeAdjacentText: true })
-    : coreHarness;
-  return registry.parse(input).map(canonical);
+const outputs = new Map<string, string>();
+const files: { name: string; kind: string; cases: number; sha256: string }[] = [];
+const shared = [...boundaryCases(), ...combinations(739181, 256)];
+
+function addCorpus(kind: Corpus["kind"], inputs: InputCase[], registry?: RegistrySpec) {
+  if (new Set(inputs.map((item) => item.name)).size !== inputs.length) {
+    throw new Error(`${kind} 用例名称重复`);
+  }
+  const corpus: Corpus = {
+    schema: SCHEMA,
+    specVersion: SPEC_VERSION,
+    kind,
+    ...(registry ? { registry } : {}),
+    cases: inputs.map((item) => ({ ...item, expected: evaluate(kind, item, registry) })),
+  };
+  const content = `${JSON.stringify(corpus, null, 2)}\n`;
+  const name = `${kind}.json`;
+  outputs.set(name, content);
+  files.push({
+    name,
+    kind,
+    cases: inputs.length,
+    sha256: createHash("sha256").update(content).digest("hex"),
+  });
 }
 
-function writeJson(name: string, data: unknown): void {
-  const dir = join(dirname(import.meta.filename));
-  writeFileSync(join(dir, name), `${JSON.stringify(data, null, 2)}\n`);
+addCorpus(
+  "parse-core",
+  [...parseCoreCases, ...shared, ...configurationCases(CORE_REGISTRY)],
+  CORE_REGISTRY,
+);
+addCorpus("parse-cc98", [
+  ...parseCc98Cases,
+  ...shared,
+  ...shared
+    .slice(0, 30)
+    .map((item) => ({ ...item, name: `${item.name}-merged`, mergeAdjacentText: true })),
+]);
+addCorpus("render-html", [...renderHtmlCases, ...shared]);
+addCorpus("render-markdown", [...renderMarkdownCases, ...shared]);
+
+outputs.set(
+  "manifest.json",
+  `${JSON.stringify(
+    {
+      schema: "ubb-conformance-manifest/1",
+      specVersion: SPEC_VERSION,
+      reference: {
+        repository: "https://github.com/shellRaining/cc98",
+        commit: "739181057294c2e07e89fe1887acd53ecf5a9c4c",
+        runtime: "Node.js 24",
+        policy: "现有 JS 行为，包括用例 note 标记的历史边界行为",
+      },
+      files,
+    },
+    null,
+    2,
+  )}\n`,
+);
+
+const check = process.argv.includes("--check");
+for (const [name, content] of outputs) {
+  const path = join(dirname(import.meta.filename), name);
+  if (check) {
+    if (readFileSync(path, "utf8") !== content) throw new Error(`${name} 与生成结果不一致`);
+  } else {
+    writeFileSync(path, content);
+  }
 }
-
-mkdirSync(dirname(import.meta.filename), { recursive: true });
-
-writeJson("parse-core.json", {
-  schema: SCHEMA,
-  specVersion: SPEC_VERSION,
-  kind: "parse-core",
-  registry: CORE_REGISTRY,
-  cases: parseCoreCases.map(({ name, input, mergeAdjacentText }) => ({
-    name,
-    input,
-    ...(mergeAdjacentText === undefined ? {} : { mergeAdjacentText }),
-    expected: parseCoreOutput(input, mergeAdjacentText),
-  })),
-});
-
-writeJson("parse-cc98.json", {
-  schema: SCHEMA,
-  specVersion: SPEC_VERSION,
-  kind: "parse-cc98",
-  cases: parseCc98Cases.map(({ name, input, mergeAdjacentText }) => ({
-    name,
-    input,
-    ...(mergeAdjacentText === undefined ? {} : { mergeAdjacentText }),
-    expected: (mergeAdjacentText
-      ? cc98Registry.configure({ mergeAdjacentText: true })
-      : cc98Registry
-    )
-      .parse(input)
-      .map(canonical),
-  })),
-});
-
-writeJson("render-html.json", {
-  schema: SCHEMA,
-  specVersion: SPEC_VERSION,
-  kind: "render-html",
-  cases: renderHtmlCases.map(({ name, input }) => ({ name, input, expected: ubbToHtml(input) })),
-});
-
-writeJson("render-markdown.json", {
-  schema: SCHEMA,
-  specVersion: SPEC_VERSION,
-  kind: "render-markdown",
-  cases: renderMarkdownCases.map(({ name, input }) => ({
-    name,
-    input,
-    expected: ubbToMarkdown(input),
-  })),
-});
-
-console.log("conformance corpus generated");
+console.log(check ? "一致性语料校验通过" : "一致性语料已生成");

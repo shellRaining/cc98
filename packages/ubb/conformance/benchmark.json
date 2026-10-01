@@ -1,0 +1,25 @@
+{
+  "schema": "ubb-benchmark/1",
+  "cases": [
+    {
+      "name": "short",
+      "unit": "[b]你好[/b] [url=/topic/123]帖子[/url]",
+      "repeat": 1,
+      "operations": ["parse", "html", "markdown"]
+    },
+    {
+      "name": "mixed",
+      "unit": "[quote=用户A][b]原帖[/b][/quote]\n[size=5][color=red]回复正文[/color][/size] [em01]\n[url=/topic/123]相关帖子[/url]\n[table][tr][td]张三[/td][td]90[/td][/tr][/table]\n[code]const answer = 42;[/code]\n",
+      "repeat": 6,
+      "operations": ["parse", "html", "markdown"]
+    },
+    {
+      "name": "large",
+      "unit": "[quote=用户A][b]原帖[/b][/quote]\n[size=5][color=red]回复正文[/color][/size] [em01]\n[url=/topic/123]相关帖子[/url]\n[table][tr][td]张三[/td][td]90[/td][/tr][/table]\n[code]const answer = 42;[/code]\n",
+      "repeat": 600,
+      "operations": ["parse", "html", "markdown"]
+    },
+    { "name": "plain", "unit": "中文正文 hello world ", "repeat": 5000, "operations": ["parse"] },
+    { "name": "unclosed-text", "unit": "[code]", "repeat": 8000, "operations": ["parse"] }
+  ]
+}
