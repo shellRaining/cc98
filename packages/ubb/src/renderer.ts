@@ -111,7 +111,7 @@ export function createUbbRenderer<
     readonly context: Context;
     private readonly depth: number;
     readonly attrs: Readonly<UbbAttrs>;
-    readonly renderNodes: (nodes: readonly UbbNode[]) => Output;
+    private cachedRenderNodes: ((nodes: readonly UbbNode[]) => Output) | undefined;
     private hasContent = false;
     private cachedContent!: Output;
     private hasTextContent = false;
@@ -121,7 +121,10 @@ export function createUbbRenderer<
       this.context = context;
       this.depth = depth;
       this.attrs = node.attrs;
-      this.renderNodes = (nodes) => renderNodes(nodes, context, depth);
+      this.cachedRenderNodes = undefined;
+    }
+    get renderNodes(): (nodes: readonly UbbNode[]) => Output {
+      return (this.cachedRenderNodes ??= (nodes) => renderNodes(nodes, this.context, this.depth));
     }
     get content(): Output {
       if (!this.hasContent) {

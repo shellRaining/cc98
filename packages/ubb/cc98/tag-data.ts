@@ -48,33 +48,39 @@ export const parseCc98Tag: UbbTagParser = (source) => {
     let token: string;
     if (char === '"' || char === "'") {
       let start = ++index;
-      const parts: string[] = [];
-      while (true) {
-        const end = source.indexOf(char, index);
-        if (end < 0) {
-          parts.push(source.slice(start));
-          index = source.length;
-          break;
+      const immediate = source.indexOf(char, index);
+      if (immediate >= 0 && source[immediate + 1] !== char) {
+        token = source.slice(start, immediate);
+        index = immediate + 1;
+      } else {
+        const parts: string[] = [];
+        while (true) {
+          const end = source.indexOf(char, index);
+          if (end < 0) {
+            parts.push(source.slice(start));
+            index = source.length;
+            break;
+          }
+          if (source[end + 1] === char) {
+            parts.push(source.slice(start, end), char);
+            index = end + 2;
+            start = index;
+          } else {
+            parts.push(source.slice(start, end));
+            index = end + 1;
+            break;
+          }
         }
-        if (source[end + 1] === char) {
-          parts.push(source.slice(start, end), char);
-          index = end + 2;
-          start = index;
-        } else {
-          parts.push(source.slice(start, end));
-          index = end + 1;
-          break;
-        }
+        token = parts.join("");
       }
-      token = parts.join("");
     } else {
       const start = index++;
-      while (
-        index < source.length &&
-        source[index] !== "," &&
-        (scanLast !== "separator" || source[index] !== "=")
-      )
-        index++;
+      if (scanLast === "separator") {
+        while (index < source.length && source[index] !== "," && source[index] !== "=") index++;
+      } else {
+        const comma = source.indexOf(",", index);
+        index = comma < 0 ? source.length : comma;
+      }
       token = source.slice(start, index);
     }
     if (last === "string") throw new Error("UBB: 参数连续出现多个值");

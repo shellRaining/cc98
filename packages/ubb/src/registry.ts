@@ -153,11 +153,18 @@ function withoutName(state: RegistryState, name: string): RegistryState {
 function createRegistry<Tags extends UbbTagModes, Families extends UbbTagModes>(
   state: RegistryState,
 ): UbbRegistry<Tags, Families> {
+  const specs = new Map<string, UbbTagSpec>(
+    [...state.tags].map(([name, mode]) => [name, { mode }]),
+  );
+  const familyEntries = [...state.families].map(([family, { pattern, mode }]) => ({
+    pattern,
+    spec: { mode, family },
+  }));
   const resolveTag = (tagName: string): UbbTagSpec | null => {
-    const mode = state.tags.get(tagName);
-    if (mode) return { mode };
-    for (const [family, { pattern, mode }] of state.families) {
-      if (pattern.test(tagName)) return { mode, family };
+    const spec = specs.get(tagName);
+    if (spec) return spec;
+    for (const entry of familyEntries) {
+      if (entry.pattern.test(tagName)) return entry.spec;
     }
     return null;
   };

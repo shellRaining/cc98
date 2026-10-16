@@ -21,13 +21,15 @@ interface Pending {
   readonly node: UbbTagNode;
   readonly mode: UbbTagMode;
   readonly parent: Frame;
-  readonly previous?: Pending;
+  previous?: Pending;
   children: Entry[];
+  unresolved: boolean;
 }
 
 type Entry = UbbNode | Pending;
 interface Frame {
   children: Entry[];
+  unresolved: boolean;
 }
 
 function isPending(entry: Entry): entry is Pending {
@@ -35,7 +37,8 @@ function isPending(entry: Entry): entry is Pending {
 }
 
 /** 未闭合节点只展开一次，已完成子树直接保留。 */
-function finishChildren(children: Entry[]): UbbNode[] {
+function finishChildren(children: Entry[], unresolved: boolean): UbbNode[] {
+  if (!unresolved) return children as UbbNode[];
   const result: UbbNode[] = [];
   const frames = [{ children, next: 0 }];
   while (frames.length) {
@@ -82,9 +85,9 @@ function mergeText(root: UbbNode[]): void {
 }
 
 export function parseUbb(source: string, options: ParseUbbOptions = {}): UbbNode[] {
-  const root: Frame = { children: [] };
+  const root: Frame = { children: [], unresolved: false };
   let current: Frame = root;
-  const active = new Map<string, Pending>();
+  let active: Map<string, Pending> | undefined;
   const scanner = createUbbScanner(source, options.tagSyntax ?? "literal");
   const parseTag = options.parseTag ?? parseUbbTag;
   let cursor = 0;
@@ -92,6 +95,7 @@ export function parseUbb(source: string, options: ParseUbbOptions = {}): UbbNode
     if (value) current.children.push({ type: "text", value });
   };
   const retire = (frame: Pending) => {
+    if (!active) return;
     if (frame.previous) active.set(frame.node.tag, frame.previous);
     else active.delete(frame.node.tag);
   };
@@ -104,11 +108,33 @@ export function parseUbb(source: string, options: ParseUbbOptions = {}): UbbNode
       break;
     }
     addText(source.slice(cursor, open));
-    const header = source.slice(open + 1, close);
+    const isEnd = source.charCodeAt(open + 1) === 47 && close > open + 2;
+    const header = isEnd ? "" : source.slice(open + 1, close);
     const raw = source.slice(open, close + 1);
     cursor = close + 1;
-    if (header.startsWith("/") && header.length > 1) {
-      const target = active.get(header.slice(1).toLowerCase());
+    if (isEnd) {
+      const endName = source.slice(open + 2, close).toLowerCase();
+      let target: Pending | undefined;
+      if (current !== root && (current as Pending).node.tag === endName) {
+        target = current as Pending;
+      } else {
+        // 正常嵌套只访问栈顶；首次错配才建立同名链，随后保持恢复路径的常数查找。
+        if (!active) {
+          active = new Map();
+          const frames: Pending[] = [];
+          let frame = current;
+          while (frame !== root) {
+            frames.push(frame as Pending);
+            frame = (frame as Pending).parent;
+          }
+          for (let i = frames.length - 1; i >= 0; i--) {
+            const pending = frames[i];
+            pending.previous = active.get(pending.node.tag);
+            active.set(pending.node.tag, pending);
+          }
+        }
+        target = active.get(endName);
+      }
       if (!target) {
         addText(raw);
         continue;
@@ -116,13 +142,12 @@ export function parseUbb(source: string, options: ParseUbbOptions = {}): UbbNode
       while (current !== target) {
         const frame = current as Pending;
         retire(frame);
+        frame.parent.unresolved = true;
         current = frame.parent;
       }
-      const node: UbbTagNode = {
-        ...target.node,
-        raw: { open: target.node.raw.open, close: raw },
-        children: finishChildren(target.children),
-      };
+      const node = target.node;
+      node.raw.close = raw;
+      node.children = finishChildren(target.children, target.unresolved);
       // 活跃 frame 总是父节点的最后一个子段。
       target.parent.children[target.parent.children.length - 1] = node;
       retire(target);
@@ -159,10 +184,8 @@ export function parseUbb(source: string, options: ParseUbbOptions = {}): UbbNode
         if (end) {
           if (spec.mode === "text" && end.start > cursor)
             node.children.push({ type: "text", value: source.slice(cursor, end.start) });
-          current.children.push({
-            ...node,
-            raw: { open: raw, close: source.slice(end.start, end.end) },
-          });
+          node.raw.close = source.slice(end.start, end.end);
+          current.children.push(node);
           cursor = end.end;
         } else current.children.push(node);
       } else {
@@ -171,18 +194,20 @@ export function parseUbb(source: string, options: ParseUbbOptions = {}): UbbNode
           node,
           mode: spec.mode,
           parent: current,
-          previous: active.get(name),
-          children: [],
+          previous: active?.get(name),
+          // 内部数组交付前可能含 Pending；闭合或 EOF 时保证仅剩公开节点。
+          children: node.children,
+          unresolved: false,
         };
         current.children.push(frame);
-        active.set(name, frame);
+        active?.set(name, frame);
         current = frame;
       }
     } catch {
       addText(raw);
     }
   }
-  const result = finishChildren(root.children);
+  const result = finishChildren(root.children, root.unresolved || current !== root);
   if (options.mergeAdjacentText) mergeText(result);
   return result;
 }

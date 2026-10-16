@@ -9,8 +9,11 @@ export interface UbbSourceRange {
 /** 所有偏移均来自原文，缓存仅存活于一次解析。 */
 export function createUbbScanner(source: string, syntax: UbbTagSyntax) {
   const missingQuotes = new Map<string, number>();
-  let endings: Map<string, UbbSourceRange[]> | undefined;
+  const endings = new Map<string, UbbSourceRange[]>();
   const endingCursors = new Map<string, number>();
+  let searchCursor = 0;
+  let closingBracket = -1;
+  let exhausted = false;
 
   function headerEnd(open: number): number {
     const first = source.indexOf("]", open + 1);
@@ -38,6 +41,14 @@ export function createUbbScanner(source: string, syntax: UbbTagSyntax) {
           end += 2;
         }
         i = end;
+      } else if (valueStart) {
+        // 普通值跳到下一个状态分隔符；保留值中等号触发引号的历史边界语义。
+        const boundary = i < first ? first : source.indexOf("]", i);
+        if (boundary < 0) return first;
+        const rest = source.slice(i, boundary);
+        const next = rest.search(/[=,]/);
+        if (next < 0) return boundary;
+        i += next - 1;
       }
       valueStart = false;
     }
@@ -45,35 +56,40 @@ export function createUbbScanner(source: string, syntax: UbbTagSyntax) {
   }
 
   function findEnd(name: string, from: number): UbbSourceRange | undefined {
-    if (!endings) {
-      endings = new Map();
-      let cursor = from;
-      let closingBracket = -1;
-      while (true) {
-        const start = source.indexOf("[/", cursor);
-        if (start < 0) break;
-        if (closingBracket < start + 2) closingBracket = source.indexOf("]", start + 2);
-        const end = closingBracket;
-        if (end < 0) break;
-        // 内层 [/ 也可能是 text 模式的合法结束标记。
-        cursor = start + 2;
-        const nested = source.indexOf("[", start + 2);
-        if (nested >= 0 && nested < end) continue;
-        const candidate = source.slice(start + 2, end);
-        if (!candidate || /[\s[\]/]/.test(candidate)) continue;
-        const key = candidate.toLowerCase();
-        const ranges = endings.get(key);
-        const range = { start, end: end + 1 };
-        if (ranges) ranges.push(range);
-        else endings.set(key, [range]);
-      }
-    }
     const ranges = endings.get(name);
-    if (!ranges) return undefined;
     let index = endingCursors.get(name) ?? 0;
-    while (index < ranges.length && ranges[index].start < from) index++;
-    endingCursors.set(name, index);
-    return ranges[index];
+    if (ranges) {
+      while (index < ranges.length && ranges[index].start < from) index++;
+      endingCursors.set(name, index);
+      if (index < ranges.length) return ranges[index];
+    }
+    if (exhausted) return undefined;
+    searchCursor = Math.max(searchCursor, from);
+    while (true) {
+      const start = source.indexOf("[/", searchCursor);
+      if (start < 0) {
+        exhausted = true;
+        return undefined;
+      }
+      if (closingBracket < start + 2) closingBracket = source.indexOf("]", start + 2);
+      const end = closingBracket;
+      if (end < 0) {
+        exhausted = true;
+        return undefined;
+      }
+      // 内层 [/ 也可能是合法结束标记；全局游标只前进，失败搜索不会重扫余文。
+      searchCursor = start + 2;
+      const nested = source.indexOf("[", start + 2);
+      if (nested >= 0 && nested < end) continue;
+      const candidate = source.slice(start + 2, end);
+      if (!candidate || /[\s[\]/]/.test(candidate)) continue;
+      const key = candidate.toLowerCase();
+      const cached = endings.get(key);
+      const range = { start, end: end + 1 };
+      if (cached) cached.push(range);
+      else endings.set(key, [range]);
+      if (key === name) return range;
+    }
   }
 
   function adjacentEnd(name: string, from: number): UbbSourceRange | undefined {
